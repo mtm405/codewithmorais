@@ -1,0 +1,17 @@
+<div class="block-multiple-choice mcq-image-style">
+  <div class="mcq-questions-grid">
+    {% for q in block.questions %}
+      {% set q_idx = loop.index0 %}
+      <div class="mcq-question-row" data-question-idx="{{ q_idx }}">
+        <div class="mcq-question">{{ q.question | markdown | safe }}</div>
+        <div class="mcq-options-grid">
+          {% for opt in q.options %}
+            <button type="button" class="mcq-option-btn" data-question-idx="{{ q_idx }}" data-option-idx="{{ loop.index0 }}">{{ opt | markdown | safe }}</button>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <button class="quiz-next-btn mcq-next-btn" style="display:none;">Next</button>
+  <div class="feedback" style="display:none;"></div>
+</div>

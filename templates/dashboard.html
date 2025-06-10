@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Dashboard - CodeLab{% endblock %}
+
+{# Override content block to avoid main-content-wrapper for dashboard #}
+{% block content %}
+{% include 'partials/header_bar.html' %}
+
+<div class="dashboard-grid">
+    <!-- Leaderboard Section (pinned, celebratory, top-left) -->
+    <div class="grid-item leaderboard-block-modern pinned" id="leaderboard-block">
+        <h3 class="section-title accent-yellow celebratory-title">
+            <span class="material-symbols-outlined">emoji_events</span>
+            Leaderboard
+        </h3>
+        <div class="leaderboard-content">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>User</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <!-- JS will populate leaderboard rows here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="leaderboard-celebrate">
+            <span class="material-symbols-outlined accent-yellow" style="font-size:2em;">celebration</span>
+            <span class="leaderboard-message">Congrats to our top coders!</span>
+        </div>
+    </div>
+
+    <!-- Rotating Python Nuggets Block with Python Interpreter -->
+    <div class="grid-item rotating-nugget-block dashboard-option" id="nugget-block">
+        <h3 class="section-title accent-purple"><span class="material-symbols-outlined">lightbulb</span> CodeSpark Console</h3>
+        <div id="nugget-content" class="nugget-content"></div>
+        <div class="nugget-interpreter">
+            <textarea id="nugget-python-input" placeholder="Type your Python code here..."></textarea>
+            <button id="nugget-run-btn">Run</button>
+            <pre id="nugget-python-output"></pre>
+        </div>
+        <div class="nugget-controls">
+            <button id="nugget-prev" class="nugget-nav-btn">&#8592;</button>
+            <button id="nugget-next" class="nugget-nav-btn">&#8594;</button>
+        </div>
+    </div>
+
+    <!-- Daily Challenge Section (now below the top row) -->
+    <div class="grid-item challenge-block-modern" id="challenge-block">
+        <h3 class="section-title accent-pink">
+            <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">flag</span>
+            Challenge of the Day
+        </h3>
+        <div class="challenge-header">
+            <h2 id="challenge-title" class="challenge-title">Daily Coding Challenge</h2>
+            <span id="challenge-difficulty" class="challenge-difficulty">Difficulty</span>
+        </div>
+        <div id="challenge-desc" class="challenge-desc">Loading...</div>
+        <textarea id="challenge-code" rows="8" class="challenge-code-input" placeholder="Write your code here..."></textarea>
+        <button id="submit-challenge" class="challenge-submit-btn">Submit</button>
+        <div id="challenge-result" class="challenge-result"></div>
+    </div>
+
+    <!-- Search Results Display Area -->
+    <div id="search-results-display" class="grid-item hidden" style="grid-column: 1 / -1;"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+<script src="{{ url_for('static', filename='js/dashboard_logic.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Daily Challenge logic
+    fetch('/api/daily_challenge')
+    .then(res => res.json())
+    .then(data => {
+        // Update challenge UI
+        if (data.title) {
+            document.getElementById('challenge-title').textContent = data.title;
+            const diffElem = document.getElementById('challenge-difficulty');
+            diffElem.textContent = data.difficulty || '';
+            diffElem.classList.remove('easy', 'medium', 'hard');
+            if (data.difficulty) {
+                if (data.difficulty.toLowerCase() === 'easy') diffElem.classList.add('easy');
+                else if (data.difficulty.toLowerCase() === 'medium') diffElem.classList.add('medium');
+                else if (data.difficulty.toLowerCase() === 'hard') diffElem.classList.add('hard');
+            }
+            let desc = data.description || '';
+            desc = desc.replace(/`([^`]+)`/g, '<code>$1</code>');
+            document.getElementById('challenge-desc').innerHTML = desc;
+        } else {
+            document.getElementById('challenge-desc').textContent = 'No challenge for today.';
+        }
+
+        // --- Notification logic ---
+        if (data.id) { // assuming each challenge has a unique id
+            const lastSeenChallenge = localStorage.getItem('lastSeenChallengeId');
+            if (lastSeenChallenge !== String(data.id)) {
+                // New challenge detected!
+                showChallengeNotification(data);
+                // Update badge
+                document.querySelector('.notification-icon .badge').textContent = '1';
+            } else {
+                // No new challenge, clear badge
+                document.querySelector('.notification-icon .badge').textContent = '0';
+            }
+        }
+    });
+
+    // Mark notification as read when dropdown is opened
+    document.querySelector('.notification-icon').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const dropdown = document.getElementById('notificationDropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+
+        // If there is a new challenge notification, mark as read
+        const list = document.getElementById('notificationList');
+        const firstLi = list.querySelector('li');
+        if (firstLi && firstLi.textContent.startsWith('New Challenge')) {
+            document.querySelector('.notification-icon .badge').textContent = '0';
+            firstLi.style.fontWeight = 'normal';
+            // Optionally, store last seen challenge id here if you want to mark as read on open
+            // localStorage.setItem('lastSeenChallengeId', ...);
+        }
+    });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function() {
+        const dropdown = document.getElementById('notificationDropdown');
+        if (dropdown) dropdown.style.display = 'none';
+    });
+
+    document.getElementById('submit-challenge').onclick = function() {
+        const code = document.getElementById('challenge-code').value;
+        fetch('/api/submit_challenge', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({code})
+        })
+        .then(res => res.json())
+        .then(data => {
+            let resultDiv = document.getElementById('challenge-result');
+            if (data.correct) {
+                resultDiv.innerHTML = '<b>Correct! Points awarded!</b>';
+            } else {
+                resultDiv.innerHTML = '<b>Incorrect. See details below:</b>';
+            }
+            if (data.results) {
+                resultDiv.innerHTML += '<ul>' + data.results.map(r =>
+                    `<li>Input: ${r.input}, Expected: ${r.expected || ''}, Output: ${r.output || ''}, Passed: ${r.passed ? '✅' : '❌'} ${r.error ? 'Error: ' + r.error : ''}</li>`
+                ).join('') + '</ul>';
+            }
+            if (data.error) {
+                resultDiv.innerHTML += `<pre>${data.error}</pre>`;
+            }
+        });
+    };
+
+    // Modern circular progress update
+    document.querySelectorAll('.circular-progress-modern').forEach(function(el) {
+        const percent = parseInt(el.getAttribute('data-progress'), 10) || 0;
+        el.style.setProperty('--progress', percent / 100);
+        el.querySelector('.progress-value-modern').textContent = percent + '%';
+    });
+
+    // Live clock
+    function updateClock() {
+        const clock = document.getElementById('live-clock');
+        if (!clock) return;
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        clock.textContent = `${h}:${m}:${s}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // (Optional) Fetch notifications from backend
+    function loadNotifications() {
+        fetch('/api/notifications')
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById('notificationList');
+                if (data.notifications && data.notifications.length > 0) {
+                    list.innerHTML = '';
+                    data.notifications.forEach(n => {
+                        const li = document.createElement('li');
+                        li.textContent = n.message;
+                        list.appendChild(li);
+                    });
+                } else {
+                    list.innerHTML = '<li>No new notifications.</li>';
+                }
+            });
+    }
+    // Call this on page load or when opening dropdown
+    // loadNotifications();
+
+    // Example: To fetch real progress, replace above with:
+    /*
+    fetch('/api/user_progress')
+      .then(res => res.json())
+      .then(progressData => {
+        document.querySelectorAll('.circular-progress-modern').forEach(function(el) {
+            const topic = el.getAttribute('data-topic');
+            const percent = progressData[topic] || 0;
+            el.style.setProperty('--progress', percent / 100);
+            el.querySelector('.progress-value-modern').textContent = percent + '%';
+        });
+      });
+    */
+});
+
+function showChallengeNotification(challenge) {
+    const list = document.getElementById('notificationList');
+    // Remove "No new notifications" if present
+    if (list.children.length === 1 && list.children[0].textContent.includes('No new notifications')) {
+        list.innerHTML = '';
+    }
+    // Add the new notification
+    const li = document.createElement('li');
+    li.textContent = `New Challenge: "${challenge.title}" is available!`;
+    li.style.fontWeight = 'bold';
+    li.onclick = function() {
+        // Mark as read when clicked
+        localStorage.setItem('lastSeenChallengeId', challenge.id);
+        document.querySelector('.notification-icon .badge').textContent = '0';
+        li.style.fontWeight = 'normal';
+    };
+    list.prepend(li);
+}
+
+// --- Dark mode toggle logic ---
+(function() {
+    const toggleBtn = document.getElementById('dark-mode-toggle');
+    const icon = document.getElementById('dark-mode-icon');
+    // Check localStorage for theme
+    function setTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        icon.textContent = theme === 'dark' ? 'dark_mode' : 'light_mode';
+    }
+    function getPreferredTheme() {
+        return localStorage.getItem('theme') || 'dark';
+    }
+    // Set initial theme
+    setTheme(getPreferredTheme());
+    toggleBtn.addEventListener('click', function() {
+        const current = document.body.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+})();
+</script>
+{% endblock %}

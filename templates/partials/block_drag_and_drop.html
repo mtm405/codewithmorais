@@ -1,0 +1,17 @@
+<div class="block-drag-and-drop">
+  {% if block.instructions is defined and block.instructions %}
+    <p><strong>{{ block.instructions | markdown | safe }}</strong></p>
+  {% endif %}
+  <div class="drag-items">
+    {% for stem in block.stems %}
+      <div class="drag-item" draggable="true" data-stem="{{ stem }}">{{ stem | markdown | safe }}</div>
+    {% endfor %}
+  </div>
+  <div class="drop-zones">
+    {% for option in block.options %}
+      <div class="drop-zone" data-option="{{ option }}">{{ option | markdown | safe }}</div>
+    {% endfor %}
+  </div>
+  <button class="check-drag-drop-btn" type="button">Next</button>
+  <div class="feedback"></div>
+</div>

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Admin Panel - CodeLab{% endblock %}
+{% block content %}
+<div class="main-content-wrapper admin-panel">
+    <div class="header-bar">
+        <h1 class="blog-title">Admin Panel</h1>
+        <div class="greeting"><strong>Welcome, {{ session.get('user_name', 'Admin') }}</strong></div>
+    </div>
+    <div class="admin-sections">
+        <!-- Students Section -->
+        <div class="admin-section" id="admin-students">
+            <h2><span class="material-symbols-outlined accent-blue">group</span> Students</h2>
+            <table class="admin-table" id="students-table">
+                <thead>
+                    <tr><th>Name</th><th>Progress</th><th>Points</th><th>Currency</th><th>Actions</th></tr>
+                </thead>
+                <tbody><!-- Populated by JS --></tbody>
+            </table>
+        </div>
+        <!-- Content Section -->
+        <div class="admin-section" id="admin-content">
+            <h2><span class="material-symbols-outlined accent-green">edit_note</span> Content</h2>
+            <button class="admin-add-btn">Add Challenge</button>
+            <div id="challenges-list"><!-- Populated by JS --></div>
+        </div>
+        <!-- Quizzes Section -->
+        <div class="admin-section" id="admin-quizzes">
+            <h2><span class="material-symbols-outlined accent-yellow">quiz</span> Quizzes</h2>
+            <button class="admin-add-btn" id="add-quiz-btn">Add Quiz Question</button>
+            <div id="quizzes-list"><!-- Populated by JS --></div>
+        </div>
+        <!-- Store Section -->
+        <div class="admin-section" id="admin-store">
+            <h2><span class="material-symbols-outlined accent-red">storefront</span> Store</h2>
+            <button class="admin-add-btn" id="add-store-btn">Add Store Item</button>
+            <div id="store-list"><!-- Populated by JS --></div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ lesson.title }} - CodeLab{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/content.css', v=g.css_version) }}">
+{% endblock %}
+
+{% block content %}
+  {% include 'partials/header_bar.html' %}
+  <div class="lesson-main">
+    <h1 class="lesson-title">{{ lesson.title }}</h1>
+    {% for block in lesson.blocks %}
+      {% if block.type == 'text' %}
+        {% include 'partials/block_text.html' %}
+      {% elif block.type == 'fill_in_the_blank' %}
+        {% include 'partials/block_fill_in_blank.html' %}
+      {% elif block.type == 'multiple_choice' %}
+        {% include 'partials/block_multiple_choice.html' %}
+      {% elif block.type == 'drag_and_drop' %}
+        {% include 'partials/block_drag_and_drop.html' %}
+      {% elif block.type == 'ide' %}
+        {% include 'partials/code_editor.html' %}
+      {% elif block.type == 'key_takeaway' %}
+        {% include 'partials/block_key_takeaway.html' %}
+      {% elif block.type == 'image' %}
+        {% include 'partials/block_image.html' %}
+      {% elif block.type == 'code_snippet' %}
+        {% include 'partials/block_code_snippet.html' %}
+      {% elif block.type == 'quiz_section' %}
+        {% include 'partials/block_quiz_section.html' %}
+      {% elif block.type == 'debug_challenge' %}
+        {% include 'partials/block_debug_challenge.html' %}
+      {% else %}
+        <p><em>Unknown block type: {{ block.type }}</em></p>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <script src="{{ url_for('static', filename='js/lesson_interactions.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{# partials/block_quiz_section.html - Renders a quiz section block #}
+<div class="quiz-section-unified">
+  {% if block.content.header %}
+    <div class="quiz-header-unified">{{ block.content.header }}</div>
+  {% endif %}
+  {% if block.content.blocks %}
+    <div class="quiz-blocks-unified">
+      {% for quiz_block in block.content.blocks %}
+        <div class="quiz-step-block" data-step="{{ loop.index }}">
+          {% if quiz_block.instructions %}
+            <div class="quiz-block-instructions">{{ quiz_block.instructions }}</div>
+          {% endif %}
+          <div class="quiz-block-unified">
+            {% if quiz_block.type == 'fill_in_the_blanks' %}
+              {% set block = quiz_block %}
+              {% include 'partials/block_fill_in_blank.html' %}
+            {% elif quiz_block.type == 'multiple_choice_quiz' %}
+              {% set block = quiz_block %}
+              {% include 'partials/block_multiple_choice.html' %}
+            {% elif quiz_block.type == 'drag_and_drop' %}
+              {% set block = quiz_block %}
+              {% include 'partials/block_drag_and_drop.html' %}
+            {% else %}
+              <p><em>Unknown quiz block type: {{ quiz_block.type }}</em></p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

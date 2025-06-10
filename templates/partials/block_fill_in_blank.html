@@ -1,0 +1,13 @@
+<div class="block-fill-in-blank">
+  {% if block.instructions %}
+    <div class="fill-blank-title">{{ block.instructions }}</div>
+  {% endif %}
+  {% for q in block.questions %}
+    <div class="fill-blank-question">
+      {% set qtext = q.text.replace('_________', '<input type="text" class="fill-blank-input" data-answer="' ~ q.answers|join(',') ~ '">') %}
+      {{ qtext | replace('`', '<code class="inline-code">', 1) | replace('`', '</code>', 1) | safe }}
+    </div>
+  {% endfor %}
+  <div class="feedback"></div>
+  <button class="check-fill-blank-btn" type="button">Next</button>
+</div>
