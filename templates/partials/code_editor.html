@@ -1,0 +1,42 @@
+<!-- templates/partials/code_editor.html -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/code_editor.css') }}">
+<div class="code-editor-block">
+  {% set editor_id = editor_id or 'student-code-editor' %}
+  {% set default_code = default_code or '# Write your Python code here\n' %}
+  <label for="{{ editor_id }}">{{ label or "Try it yourself:" }}</label>
+  <div id="{{ editor_id }}" style="height: 300px; width: 100%; margin-bottom: 1em;"></div>
+  <button type="button" onclick="runStudentCode('{{ editor_id }}')">Run Code</button>
+  <pre id="{{ editor_id }}-output" class="code-editor-output"></pre>
+</div>
+
+{% block code_editor_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3/ace.js" crossorigin="anonymous"></script>
+<script>
+  if (!window.aceEditors) window.aceEditors = {};
+  function setupAceEditor(editorId, defaultCode) {
+    if (window.aceEditors[editorId]) return;
+    var editor = ace.edit(editorId);
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/python");
+    editor.setValue(defaultCode, -1);
+    window.aceEditors[editorId] = editor;
+  }
+  setupAceEditor("{{ editor_id }}", {{ default_code|tojson|safe }});
+
+  function runStudentCode(editorId) {
+    var code = window.aceEditors[editorId].getValue();
+    fetch('/run_python', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({code: code})
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById(editorId + '-output').textContent = data.output || 'No output.';
+    })
+    .catch(() => {
+      document.getElementById(editorId + '-output').textContent = 'Error running code.';
+    });
+  }
+</script>
+{% endblock %}
