@@ -1,13 +1,12 @@
-<div class="block-fill-in-blank">
+<div class="block-fill-in-blank" style="margin:0;padding:0;">
   {% if block.instructions %}
-    <div class="fill-blank-title">{{ block.instructions }}</div>
+    <div class="fill-blank-title" style="margin-bottom:0.2em; font-size:1.08em; color:#7f53ac; font-weight:600;">{{ block.instructions | markdown | safe }}</div>
   {% endif %}
-  {% for q in block.questions %}
-    <div class="fill-blank-question">
-      {% set qtext = q.text.replace('_________', '<input type="text" class="fill-blank-input" data-answer="' ~ q.answers|join(',') ~ '">') %}
-      {{ qtext | replace('`', '<code class="inline-code">', 1) | replace('`', '</code>', 1) | safe }}
+  {% if block.question %}
+    <div class="fill-blank-question" style="margin-bottom:0.7em; font-size:1.22em; font-weight:700; color:#222;">
+      {% set qtext = block.question.replace('1 pt','').replace('_________', '<input type="text" class="fill-blank-input" data-answer="' ~ block.answers|join(',') ~ '" style="margin:0 0.3em; font-size:1.1em; padding:0.6em 1em; border-radius:8px; background:#fff; color:#222; border:1.5px solid #e6eaf3; width:180px;">') %}
+      {{ qtext | markdown | safe }}
     </div>
-  {% endfor %}
-  <div class="feedback"></div>
-  <button class="check-fill-blank-btn" type="button">Next</button>
+  {% endif %}
+  <div class="fill-blank-feedback quiz-feedback" style="display:none;"></div>
 </div>

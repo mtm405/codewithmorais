@@ -1,0 +1,837 @@
+{% extends 'base.html' %}
+{% block title %}Console I/O - CodeLab{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='content.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="console-io-section data-types-modern"> 
+    <h1>Console I/O</h1>
+    <p>Python allows you to interact with the console using functions like <code>input()</code> and <code>print()</code>. This is essential for user interaction and displaying results.</p>
+    <div class="python-example" aria-label="Python example for Console I/O">
+        <pre><code>user_name = input("Enter your name: ")
+print(f"Hello, {user_name}!")
+
+age_str = input("Enter your age: ")
+age_num = int(age_str) # Remember input() returns a string!
+print(f"You will be {age_num + 1} next year.")</code></pre>
+    </div>
+    <div class="activity-block">
+        <div class="activity-title">✨ Try It: Console Input</div>
+        <label for="console-input-test" class="activity-question">If you type "Python" when prompted by <code>name = input("Enter language: ")</code>, what will be the data type of the variable <code>name</code>?</label>
+        <input type="text" id="console-input-test" placeholder="e.g., int, str, etc.">
+        <button type="button" onclick="checkConsoleInputTest()">Check</button>
+        <span id="console-input-feedback" class="feedback-message" aria-live="polite"></span>
+        <div class="hint">Hint: The <code>input()</code> function always returns a certain data type.</div>
+    </div>
+</div>
+
+
+{% include 'partials/header_bar.html' %} 
+
+<main class="main-content-wrapper blog-style no-center data-types-modern">
+    <section class="blog-section intro-section" aria-labelledby="intro-title">
+        <h1 class="blog-title" id="intro-title" style="margin-bottom:0.5em;">Data Types: <span style="font-weight:400;">The Building Blocks of Information</span></h1>
+        <p class="lead">Welcome to the Data Types module! Here you'll learn about the fundamental building blocks of Python programming. Think of data types like different kinds of containers, each designed to hold a specific kind of information.</p>
+    </section>
+
+    <section class="blog-section types-section" aria-labelledby="core-types-title">
+        <h2 class="section-title accent-blue" id="core-types-title">🧐 Meet the Core Four Data Types!</h2>
+        <p>Python has several built-in data types, but we'll start with the four most common ones.</p>
+
+        <div class="type-section" aria-labelledby="int-type-heading">
+            <h3 class="subheading accent-green" id="int-type-heading">1. Integers (<code>int</code>): The Whole Crew</h3>
+            <p>Core Concept: Integers are your whole numbers. They can be positive, negative, or zero, but they don't have any decimal points.</p>
+            <div class="python-example" aria-label="Python example for Integers">
+                <pre><code>user_count = 100
+player_score = -50
+items_in_cart = 0</code></pre>
+            </div>
+            <div class="activity-block">
+                <div class="activity-title">✨ Mini-Challenge: Integer Identifier!</div>
+                <label for="int-activity-answer" class="activity-question">If you have <code>number_of_chapters = 25</code> in your Python code, what data type is <code>number_of_chapters</code>? (Type your answer: int, str, float, or bool)</label>
+                <input type="text" id="int-activity-answer" placeholder="e.g., int">
+                <button type="button" onclick="checkIntActivity()">Check</button>
+                <span id="int-activity-feedback" class="feedback-message" aria-live="polite"></span>
+                <div class="hint">Hint: Is it a whole number?</div>
+            </div>
+        </div>
+
+        <div class="type-section" aria-labelledby="float-type-heading">
+            <h3 class="subheading accent-blue" id="float-type-heading">2. Floating-Point Numbers (<code>float</code>): The Precise Ones</h3>
+            <p>Core Concept: Floats are numbers that do have a decimal point. They are used when you need more precision than whole numbers can offer.</p>
+            <div class="python-example" aria-label="Python example for Floating-Point Numbers">
+                <pre><code>item_price = 19.99
+gravity_constant = 9.81
+account_balance = -123.45</code></pre>
+            </div>
+            <div class="activity-block">
+                <div class="activity-title">✨ Brain Teaser: Float or Not?</div>
+                <fieldset>
+                    <legend class="activity-question">Which of the following variables is a float?</legend>
+                    <pre aria-hidden="true">a) app_version = 3
+b) website_name = "CodeSpark"
+c) pi_value = 3.14159
+d) is_active_user = True</pre>
+                    <label><input type="radio" name="float-activity" value="a"> a) <code>app_version = 3</code></label>
+                    <label><input type="radio" name="float-activity" value="b"> b) <code>website_name = "CodeSpark"</code></label>
+                    <label><input type="radio" name="float-activity" value="c"> c) <code>pi_value = 3.14159</code></label>
+                    <label><input type="radio" name="float-activity" value="d"> d) <code>is_active_user = True</code></label>
+                </fieldset>
+                <button type="button" onclick="checkFloatActivity()">Check</button>
+                <span id="float-activity-feedback" class="feedback-message" aria-live="polite"></span>
+                <div class="hint">Hint: Look for the decimal point!</div>
+            </div>
+        </div>
+
+        <div class="type-section" aria-labelledby="str-type-heading">
+            <h3 class="subheading accent-yellow" id="str-type-heading">3. Strings (<code>str</code>): The Word Masters</h3>
+            <p>Core Concept: Strings represent text. In Python, strings are sequences of characters enclosed in either single quotes (<code>' '</code>) or double quotes (<code>" "</code>).</p>
+            <div class="python-example" aria-label="Python example for Strings">
+                <pre><code>user_greeting = "Hello, Pythonista!"
+favorite_food = 'pizza'
+empty_message = ""  # Yes, an empty string is still a string!
+error_code = "404"  # Numbers in quotes are strings!</code></pre>
+            </div>
+            <div class="activity-block">
+                <div class="activity-title">✨ Game Time: Quote Quest!</div>
+                <div class="activity-question">Is it a string? Look at the Python code snippets below. For each, type "Yes" if the variable will be a string, or "No" if it won't.</div>
+                <div><label for="str-q1">Code: <code>book_title = Learning Python</code></label><input type="text" id="str-q1" placeholder="Yes or No"></div>
+                <div><label for="str-q2">Code: <code>system_message = "All systems go."</code></label><input type="text" id="str-q2" placeholder="Yes or No"></div>
+                <div><label for="str-q3">Code: <code>zip_code = '90210'</code></label><input type="text" id="str-q3" placeholder="Yes or No"></div>
+                <div><label for="str-q4">Code: <code>counter = 2024</code></label><input type="text" id="str-q4" placeholder="Yes or No"></div>
+                <button type="button" onclick="checkStringActivity()">Check</button>
+                <span id="string-activity-feedback" class="feedback-message" aria-live="polite"></span>
+                <div class="hint">Hint: Strings always need those quote marks around them!</div>
+            </div>
+        </div>
+
+        <div class="type-section" aria-labelledby="bool-type-heading">
+            <h3 class="subheading accent-red" id="bool-type-heading">4. Booleans (<code>bool</code>): The Truth Tellers</h3>
+            <p>Core Concept: Booleans represent one of two values: <code>True</code> or <code>False</code>. They are crucial for making decisions and controlling the flow of your programs. <b>(Important: True and False must be capitalized in Python!)</b></p>
+            <div class="python-example" aria-label="Python example for Booleans">
+                <pre><code>is_logged_in = True
+has_permission = False
+light_is_on = 10 > 5  # This expression evaluates to True</code></pre>
+            </div>
+            <div class="activity-block">
+                <div class="activity-title">✨ Quick Question: Boolean Basics!</div>
+                <fieldset>
+                    <legend class="activity-question">Which of the following correctly assigns a boolean False value to a variable in Python?</legend>
+                    <label><input type="radio" name="bool-activity" value="a"> a) <code>is_valid = false</code></label>
+                    <label><input type="radio" name="bool-activity" value="b"> b) <code>is_valid = "False"</code></label>
+                    <label><input type="radio" name="bool-activity" value="c"> c) <code>is_valid = False</code></label>
+                    <label><input type="radio" name="bool-activity" value="d"> d) <code>is_valid = 0</code></label>
+                </fieldset>
+                <button type="button" onclick="checkBoolActivity()">Check</button>
+                <span id="bool-activity-feedback" class="feedback-message" aria-live="polite"></span>
+                <div class="hint">Hint: Python is case-sensitive, especially with keywords like True and False!</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="blog-section type-inference-section" aria-labelledby="type-inference-title">
+        <h2 class="section-title accent-purple" id="type-inference-title">🤖 Python: The Smart Type Assigner!</h2>
+        <h3 class="subheading">Type Inference</h3>
+        <p>Here’s a cool feature: you usually don't have to explicitly tell Python, "Hey, this variable is an integer!" When you assign a value to a variable using the <code>=</code> sign, Python intelligently infers (figures out) the data type based on the value you provide.</p>
+        <div class="python-example" aria-label="Python example for Type Inference">
+            <pre><code>my_number = 100  # Python infers int
+my_number = "One Hundred"  # Now Python infers str</code></pre>
+        </div>
+        <p>If you write <code>my_number = 100</code>, Python says, "Ah, a whole number! That's an int."<br>If you then write <code>my_number = "One Hundred"</code>, Python says, "Okay, now it's text! That's a str."</p>
+    </section>
+
+    <section class="blog-section type-function-section" aria-labelledby="type-function-title">
+        <h2 class="section-title accent-blue" id="type-function-title">🔍 Your Superpower: The <code>type()</code> Function!</h2>
+        <h3 class="subheading"><code>type()</code> function</h3>
+        <p>What if you're working with code and you're not sure what data type a variable holds? Python gives you a built-in superpower: the <code>type()</code> function! Just place the variable name inside the parentheses of the <code>type()</code> function, and Python will tell you its class (which, for our purposes here, tells you its data type).</p>
+        <div class="python-example" aria-label="Python example for type() function">
+            <pre><code>student_name = "Alex"
+print(type(student_name))
+# Output: <class 'str'>
+
+student_age = 19
+print(type(student_age))
+# Output: <class 'int'>
+
+gpa = 3.85
+print(type(gpa))
+# Output: <class 'float'>
+
+is_enrolled = True
+print(type(is_enrolled))
+# Output: <class 'bool'></code></pre>
+        </div>
+        <div class="activity-block">
+            <div class="activity-title">✨ Game: Type Detective! 🕵️‍♀️</div>
+            <div class="activity-question">Let's put on our detective hats! For each variable assignment below, predict what <code>print(type(variable_name))</code> would output.</div>
+            <div><label for="type-q1">Code:<br><code>secret_code = 7007<br>print(type(secret_code))</code></label><input type="text" id="type-q1" placeholder="e.g., <class 'int'>"></div>
+            <div><label for="type-q2">Code:<br><code>case_file_name = "Project_Alpha.txt"<br>print(type(case_file_name))</code></label><input type="text" id="type-q2" placeholder="e.g., <class 'str'>"></div>
+            <div><label for="type-q3">Code:<br><code>mission_status_go = 10 > 1<br>print(type(mission_status_go))</code></label><input type="text" id="type-q3" placeholder="e.g., <class 'bool'>"></div>
+            <div><label for="type-q4">Code:<br><code>agent_id = "007" # Careful with this one!<br>print(type(agent_id))</code></label><input type="text" id="type-q4" placeholder="e.g., <class 'str'>"></div>
+            <div><label for="type-q5">Code:<br><code>accuracy_percentage = 99.9<br>print(type(accuracy_percentage))</code></label><input type="text" id="type-q5" placeholder="e.g., <class 'float'>"></div>
+            <button type="button" onclick="checkTypeDetective()">Check</button>
+            <span id="type-detective-feedback" class="feedback-message" aria-live="polite"></span>
+        </div>
+    </section>
+
+    <section class="blog-section interactive-connect-section" aria-labelledby="interactive-connect-title">
+        <h2 class="section-title accent-yellow" id="interactive-connect-title">🧠 Interactive Concept Connect</h2>
+        
+        <div class="activity-block">
+            <div class="activity-title">✨ Data Type Sort (Drag & Drop)</div>
+            <p class="activity-question">Drag each data type to its correct category description.</p>
+            <div class="drag-drop-container">
+                <div class="draggable-items" id="draggableItemContainer">
+                    <h4>Data Types (Drag these)</h4>
+                    <div class="draggable" draggable="true" id="drag-int" data-type="int">int</div>
+                    <div class="draggable" draggable="true" id="drag-float" data-type="float">float</div>
+                    <div class="draggable" draggable="true" id="drag-str" data-type="str">str</div>
+                    <div class="draggable" draggable="true" id="drag-bool" data-type="bool">bool</div>
+                </div>
+                <div class="drop-zones">
+                    <h4>Categories (Drop here)</h4>
+                    <div class="drop-zone" id="zone-int" data-accepts="int"><p>Whole Numbers (e.g., 10, -3)</p></div>
+                    <div class="drop-zone" id="zone-float" data-accepts="float"><p>Decimal Numbers (e.g., 3.14, -0.5)</p></div>
+                    <div class="drop-zone" id="zone-str" data-accepts="str"><p>Text / Characters (e.g., "hello", 'A')</p></div>
+                    <div class="drop-zone" id="zone-bool" data-accepts="bool"><p>True or False Values</p></div>
+                </div>
+            </div>
+            <button type="button" onclick="resetDragDrop()">Reset Drag & Drop</button>
+            <span id="drag-drop-feedback" class="feedback-message" aria-live="polite"></span>
+        </div>
+
+        <div class="activity-block">
+            <div class="activity-title">✨ Complete the Concept (Fill in the Blanks)</div>
+            <div class="fill-blank-question">
+                <p>1. A variable holding the value <code>42</code> is an example of an <input type="text" id="blank-1" class="fill-blank-input" placeholder="data type">.</p>
+                <p>2. Text in Python, like <code>'Hello!'</code>, is called a <input type="text" id="blank-2" class="fill-blank-input" placeholder="data type"> and must be enclosed in quotes.</p>
+                <p>3. The data type that represents numbers with decimal points, such as <code>3.14</code>, is <input type="text" id="blank-3" class="fill-blank-input" placeholder="data type">.</p>
+                <p>4. A <input type="text" id="blank-4" class="fill-blank-input" placeholder="data type"> variable can only hold one of two values: <code>True</code> or <code>False</code>.</p>
+            </div>
+            <button type="button" onclick="checkFillBlanks()">Check Blanks</button>
+            <span id="fill-blanks-feedback" class="feedback-message" aria-live="polite"></span>
+        </div>
+    </section>
+
+    <section class="blog-section debugging-section" aria-labelledby="debugging-title">
+        <h2 class="section-title accent-red" id="debugging-title">🛠️ Debugging Corner: Spot the Type!</h2>
+        <h3 class="subheading">Debugging with Data Types</h3>
+        <p>Understanding data types is crucial for debugging! Sometimes, code behaves unexpectedly because of a data type mismatch.</p>
+        <div class="activity-block">
+            <div class="activity-title">Debugging Challenge 1: The Age Mix-Up</div>
+            <div class="activity-question">Context: An aspiring programmer wrote this:</div>
+            <pre aria-label="Code for debugging challenge 1"><code>entered_age = "16" # User typed their age from a form
+can_drive = entered_age >= 16
+print(f"Can drive: {can_drive}")</code></pre>
+            <div><label for="debug1-q1" class="activity-question">When <code>entered_age</code> is first assigned, what is its data type?</label>
+            <input type="text" id="debug1-q1" placeholder="Data type"></div>
+            <div><label for="debug1-q2" class="activity-question">Why might the comparison <code>entered_age >= 16</code> lead to unexpected results or an error? (Hint: What types are being compared?)</label>
+            <input type="text" id="debug1-q2" placeholder="Your thoughts"></div>
+            <div><label for="debug1-q3" class="activity-question">What Python function could be used to convert <code>entered_age</code> to the correct type before the comparison?</label>
+            <input type="text" id="debug1-q3" placeholder="Function: ____(entered_age)"></div>
+            <button type="button" onclick="checkDebug1()">Check</button>
+            <span id="debug1-feedback" class="feedback-message" aria-live="polite"></span>
+        </div>
+
+        <div class="activity-block">
+            <div class="activity-title">Debugging Challenge 2: Expression Evaluation</div>
+            <div class="activity-question">Context: Predict the data type of the <code>result_type_is</code> variable's value (i.e., what <code>print(result_type_is)</code> shows) in the following code:</div>
+            <pre aria-label="Code for debugging challenge 2"><code>value_a = 50
+value_b = 25.0
+is_greater = value_a > value_b
+result_type_is = type(is_greater)
+print(result_type_is)</code></pre>
+            <label for="debug2-q1" class="sr-only">Prediction for Debugging Challenge 2</label>
+            <input type="text" id="debug2-q1" placeholder="The print statement will show: <class '...'>">
+            <button type="button" onclick="checkDebug2()">Check</button>
+            <span id="debug2-feedback" class="feedback-message" aria-live="polite"></span>
+        </div>
+    </section>
+
+    <section class="blog-section recap-section" aria-labelledby="recap-title">
+        <h2 class="section-title accent-green" id="recap-title">🎯 Quick Recap: Data Type Drill!</h2>
+        <div class="activity-block">
+            <div class="activity-title">Activity 1: Match It! (Click to Pair)</div>
+            <p class="activity-question">Click a value from the left column, then click its corresponding data type from the right column to make a match.</p>
+            <div class="matching-activity-container" id="clickableMatchContainer">
+                <div class="matching-column" id="matchValuesColumn">
+                    <h4>Values</h4>
+                    <div class="match-item" data-match-id="val-101" data-correct-type="type-int"><code>101</code></div>
+                    <div class="match-item" data-match-id="val-test" data-correct-type="type-str"><code>"Is this a test?"</code></div>
+                    <div class="match-item" data-match-id="val-2718" data-correct-type="type-float"><code>2.718</code></div>
+                    <div class="match-item" data-match-id="val-false" data-correct-type="type-bool"><code>False</code></div>
+                    <div class="match-item" data-match-id="val-str5" data-correct-type="type-str"><code>"-5"</code></div>
+                </div>
+                <div class="matching-column" id="matchTypesColumn">
+                    <h4>Data Types</h4>
+                    <div class="match-item" data-match-id="type-int">int</div>
+                    <div class="match-item" data-match-id="type-str">str</div>
+                    <div class="match-item" data-match-id="type-float">float</div>
+                    <div class="match-item" data-match-id="type-bool">bool</div>
+                </div>
+            </div>
+            <button type="button" onclick="resetClickableMatch()">Reset Matches</button>
+            <span id="clickable-match-feedback" class="feedback-message" aria-live="polite"></span>
+        </div>
+
+        <div class="activity-block">
+            <div class="activity-title">Activity 2: Tool Check</div>
+            <label for="recap-q6" class="activity-question">What is the name of the Python function used to find out the data type of any variable?</label>
+            <input type="text" id="recap-q6" placeholder="e.g., functionName()">
+            <button type="button" onclick="checkRecap2()">Check</button>
+            <span id="recap2-feedback" class="feedback-message" aria-live="polite"></span>
+        </div>
+
+        <div class="activity-block">
+            <div class="activity-title">Activity 3: Automatic Python</div>
+            <label for="recap-q7" class="activity-question">If you write <code>distance_km = 15.7</code> in your code, what data type will Python automatically assign to the <code>distance_km</code> variable?</label>
+            <input type="text" id="recap-q7" placeholder="e.g., int">
+            <button type="button" onclick="checkRecap3()">Check</button>
+            <span id="recap3-feedback" class="feedback-message" aria-live="polite"></span>
+        </div>
+
+        <div class="activity-block">
+            <div class="activity-title">Activity 4: Final Type Check!</div>
+            <fieldset>
+                <legend class="activity-question">What is the data type of the variable <code>user_input</code> after this line of Python code executes: <code>user_input = "False"</code>?</legend>
+                <label><input type="radio" name="recap-final" value="a"> a) bool</label>
+                <label><input type="radio" name="recap-final" value="b"> b) str</label>
+                <label><input type="radio" name="recap-final" value="c"> c) int</label>
+                <label><input type="radio" name="recap-final" value="d"> d) This would cause an error.</label>
+            </fieldset>
+            <button type="button" onclick="checkRecap4()">Check</button>
+            <span id="recap4-feedback" class="feedback-message" aria-live="polite"></span>
+        </div>
+    </section>
+
+    <div class="blog-section outro-section">
+        <p>You've now explored the very basics of Python's core data types! Understanding these is the first giant leap in your programming journey. Keep experimenting!</p>
+    </div>
+</main>
+
+<script>
+// Helper function to set feedback
+function setFeedback(elementId, message, typeClass) {
+    const feedbackEl = document.getElementById(elementId);
+    if (!feedbackEl) {
+        console.error("Feedback element not found:", elementId);
+        return;
+    }
+    feedbackEl.innerHTML = ''; 
+    
+    const strongEl = document.createElement('strong');
+    strongEl.textContent = message;
+    
+    feedbackEl.appendChild(strongEl);
+    feedbackEl.className = 'feedback-message ' + typeClass; 
+}
+
+function checkConsoleInputTest() {
+    const userAnswer = document.getElementById('console-input-test').value.trim().toLowerCase();
+    if (userAnswer === 'str' || userAnswer === 'string') {
+        setFeedback('console-input-feedback', 'Correct! The input() function always returns a string.', 'feedback-correct');
+    } else {
+        setFeedback('console-input-feedback', 'Not quite. Remember what input() always returns by default.', 'feedback-incorrect');
+    }
+}
+
+// Integer activity
+function checkIntActivity() {
+    const val = document.getElementById('int-activity-answer').value.trim().toLowerCase();
+    if (val === 'int') {
+        setFeedback('int-activity-feedback', 'Correct! 🎉', 'feedback-correct');
+    } else {
+        setFeedback('int-activity-feedback', 'Try again! The answer is int.', 'feedback-incorrect');
+    }
+}
+// Float activity
+function checkFloatActivity() {
+    const val = document.querySelector('input[name="float-activity"]:checked');
+    if (val && val.value === 'c') {
+        setFeedback('float-activity-feedback', 'Correct! pi_value has a decimal, making it a float.', 'feedback-correct');
+    } else {
+        setFeedback('float-activity-feedback', 'Not quite. Remember, floats are numbers with decimal points. Option (a) is an int, (b) is a str, and (d) is a bool.', 'feedback-incorrect');
+    }
+}
+// String activity
+function checkStringActivity() {
+    const answers = [
+        document.getElementById('str-q1').value.trim().toLowerCase(),
+        document.getElementById('str-q2').value.trim().toLowerCase(),
+        document.getElementById('str-q3').value.trim().toLowerCase(),
+        document.getElementById('str-q4').value.trim().toLowerCase()
+    ];
+    const correct = ['no', 'yes', 'yes', 'no'];
+    let allCorrect = true;
+    let feedbackMsg = '';
+    for (let i = 0; i < 4; i++) {
+        if (answers[i] !== correct[i]) {
+            allCorrect = false;
+            feedbackMsg += `Q${i+1}: Incorrect (Correct: ${correct[i]})\n`;
+        } else {
+            feedbackMsg += `Q${i+1}: Correct\n`;
+        }
+    }
+    const feedbackEl = document.getElementById('string-activity-feedback');
+    feedbackEl.innerHTML = ''; 
+    feedbackMsg.trim().split('\n').forEach(line => {
+        const p = document.createElement('p');
+        const strong = document.createElement('strong');
+        if (line.includes('Incorrect')) {
+            strong.style.color = 'var(--accent-red)';
+        } else if (line.includes('Correct')) {
+            strong.style.color = 'var(--accent-green)';
+        }
+        strong.textContent = line;
+        p.appendChild(strong);
+        feedbackEl.appendChild(p);
+    });
+
+    if (allCorrect) {
+        const p = document.createElement('p');
+        const strong = document.createElement('strong');
+        strong.style.color = 'var(--accent-green)';
+        strong.textContent = 'All correct! 🎉';
+        p.appendChild(strong);
+        feedbackEl.appendChild(p);
+    }
+    feedbackEl.className = 'feedback-message feedback-info'; 
+}
+
+// Boolean activity
+function checkBoolActivity() {
+    const val = document.querySelector('input[name="bool-activity"]:checked');
+    if (val && val.value === 'c') {
+        setFeedback('bool-activity-feedback', 'Spot on! False (capitalized) is the correct boolean value.', 'feedback-correct');
+    } else if (val && val.value === 'a') {
+        setFeedback('bool-activity-feedback', 'Close! Remember Python keywords like False are case-sensitive and need to be capitalized.', 'feedback-incorrect');
+    } else if (val && val.value === 'b') {
+        setFeedback('bool-activity-feedback', 'Careful! Putting False in quotes makes it a string, not a boolean.', 'feedback-incorrect');
+    } else if (val && val.value === 'd') {
+        setFeedback('bool-activity-feedback', 'While 0 can evaluate to False in a boolean context, False itself is the specific boolean keyword.', 'feedback-incorrect');
+    } else {
+        setFeedback('bool-activity-feedback', 'Please select an option.', 'feedback-incorrect');
+    }
+}
+
+// Type detective
+function checkTypeDetective() {
+    const answers = [
+        document.getElementById('type-q1').value.trim().toLowerCase(),
+        document.getElementById('type-q2').value.trim().toLowerCase(),
+        document.getElementById('type-q3').value.trim().toLowerCase(),
+        document.getElementById('type-q4').value.trim().toLowerCase(),
+        document.getElementById('type-q5').value.trim().toLowerCase()
+    ];
+    const correct = ["<class 'int'>", "<class 'str'>", "<class 'bool'>", "<class 'str'>", "<class 'float'>"];
+    let allCorrect = true;
+    let feedbackMsg = '';
+
+    for (let i = 0; i < 5; i++) {
+        if (answers[i] !== correct[i]) {
+            allCorrect = false;
+            feedbackMsg += `Q${i+1}: Incorrect (Correct: ${correct[i]})\n`;
+        } else {
+            feedbackMsg += `Q${i+1}: Correct\n`;
+        }
+    }
+    const feedbackEl = document.getElementById('type-detective-feedback');
+    feedbackEl.innerHTML = ''; 
+    feedbackMsg.trim().split('\n').forEach(line => {
+        const p = document.createElement('p');
+        const strong = document.createElement('strong');
+         if (line.includes('Incorrect')) {
+            strong.style.color = 'var(--accent-red)';
+        } else if (line.includes('Correct')) {
+            strong.style.color = 'var(--accent-green)';
+        }
+        strong.textContent = line;
+        p.appendChild(strong);
+        feedbackEl.appendChild(p);
+    });
+    if (allCorrect) {
+         const p = document.createElement('p');
+        const strong = document.createElement('strong');
+        strong.style.color = 'var(--accent-green)';
+        strong.textContent = 'All correct! 🎉';
+        p.appendChild(strong);
+        feedbackEl.appendChild(p);
+    }
+     feedbackEl.className = 'feedback-message feedback-info';
+}
+
+// Debugging challenge 1
+function checkDebug1() {
+    const q1 = document.getElementById('debug1-q1').value.trim().toLowerCase();
+    const q2_text = document.getElementById('debug1-q2').value.trim().toLowerCase();
+    const q3_input = document.getElementById('debug1-q3').value.trim().toLowerCase();
+    const q3 = q3_input.replace(/\s*\(\s*(entered_age)?\s*\)\s*$/, '');
+
+
+    let feedback = '';
+    let q1Correct = (q1 === 'str');
+    let q2Correct = (q2_text.includes('string') && (q2_text.includes('integer') || q2_text.includes('int')));
+    let q3Correct = (q3 === 'int');
+
+    feedback += `1. ${q1Correct ? 'Correct!' : 'Incorrect. The answer is str.'}\n`;
+    feedback += `2. ${q2Correct ? 'Correct!' : 'Incorrect. The issue is comparing a string to an integer.'}\n`;
+    feedback += `3. ${q3Correct ? 'Correct!' : 'Incorrect. The function is int().'}`;
+    
+    const feedbackEl = document.getElementById('debug1-feedback');
+    feedbackEl.innerHTML = ''; 
+    feedback.trim().split('\n').forEach((line, index) => {
+        const p = document.createElement('p');
+        const strong = document.createElement('strong');
+        let currentCorrect = false;
+        if (index === 0) currentCorrect = q1Correct;
+        else if (index === 1) currentCorrect = q2Correct;
+        else if (index === 2) currentCorrect = q3Correct;
+
+        if (currentCorrect) {
+             strong.style.color = 'var(--accent-green)';
+        } else {
+             strong.style.color = 'var(--accent-red)';
+        }
+        strong.textContent = line;
+        p.appendChild(strong);
+        feedbackEl.appendChild(p);
+    });
+    feedbackEl.className = 'feedback-message feedback-info';
+}
+
+// Debugging challenge 2
+function checkDebug2() {
+    const val = document.getElementById('debug2-q1').value.trim().toLowerCase();
+    if (val === "<class 'bool'>") {
+        setFeedback('debug2-feedback', 'Correct!', 'feedback-correct');
+    } else {
+        setFeedback('debug2-feedback', "The answer is <class 'bool'>.", 'feedback-incorrect');
+    }
+}
+
+// Recap 2
+function checkRecap2() {
+    const val = document.getElementById('recap-q6').value.trim().toLowerCase();
+    if (val === 'type' || val === 'type()') {
+        setFeedback('recap2-feedback', 'Correct!', 'feedback-correct');
+    } else {
+        setFeedback('recap2-feedback', 'The answer is type().', 'feedback-incorrect');
+    }
+}
+// Recap 3
+function checkRecap3() {
+    const val = document.getElementById('recap-q7').value.trim().toLowerCase();
+    if (val === 'float') {
+        setFeedback('recap3-feedback', 'Correct!', 'feedback-correct');
+    } else {
+        setFeedback('recap3-feedback', 'The answer is float.', 'feedback-incorrect');
+    }
+}
+// Recap 4
+function checkRecap4() {
+    const val = document.querySelector('input[name="recap-final"]:checked');
+    if (val && val.value === 'b') {
+        setFeedback('recap4-feedback', 'Exactly! Anything enclosed in quotes is a string, even if it looks like a boolean or number.', 'feedback-correct');
+    } else if (val && val.value === 'a') {
+        setFeedback('recap4-feedback', "Not quite. While the content looks like a boolean, the quotes make it text. So it's a string!", 'feedback-incorrect');
+    } else if (val && val.value === 'c') {
+        setFeedback('recap4-feedback', 'Remember, numbers in quotes are treated as text (strings), not integers.', 'feedback-incorrect');
+    } else if (val && val.value === 'd') {
+        setFeedback('recap4-feedback', 'This is valid Python code! It creates a string.', 'feedback-incorrect');
+    } else {
+        setFeedback('recap4-feedback', 'Please select an option.', 'feedback-incorrect');
+    }
+}
+
+
+// Drag and Drop Logic
+const draggables = document.querySelectorAll('.draggable');
+const dropZones = document.querySelectorAll('.drop-zone');
+let draggedItem = null;
+
+if (draggables.length && dropZones.length) { // Ensure elements exist before adding listeners
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', (e) => {
+            draggedItem = e.target;
+            setTimeout(() => e.target.style.opacity = '0.5', 0); 
+        });
+        draggable.addEventListener('dragend', (e) => {
+            setTimeout(() => {
+                e.target.style.opacity = '1';
+                draggedItem = null;
+            }, 0);
+        });
+    });
+
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault(); 
+            zone.classList.add('drag-over');
+        });
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('drag-over');
+        });
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            if (draggedItem && zone.dataset.accepts === draggedItem.dataset.type) {
+                if (zone.children.length === 1) { 
+                    zone.appendChild(draggedItem); 
+                    draggedItem.draggable = false; 
+                    setFeedback('drag-drop-feedback', `${draggedItem.textContent.toUpperCase()} correctly placed!`, 'feedback-correct');
+                } else {
+                    setFeedback('drag-drop-feedback', `This zone already has a type. Try another!`, 'feedback-incorrect');
+                }
+            } else if (draggedItem) {
+                setFeedback('drag-drop-feedback', `Oops! ${draggedItem.textContent.toUpperCase()} doesn't fit here. Try again!`, 'feedback-incorrect');
+            }
+        });
+    });
+}
+
+function resetDragDrop() {
+    const draggableItemContainer = document.getElementById('draggableItemContainer');
+    if (!draggableItemContainer) return;
+    dropZones.forEach(zone => {
+        while (zone.children.length > 1) {
+            const itemToMove = zone.lastChild;
+            itemToMove.draggable = true; 
+            draggableItemContainer.appendChild(itemToMove);
+        }
+    });
+    setFeedback('drag-drop-feedback', 'Drag and Drop reset.', 'feedback-info');
+}
+
+
+// Fill in the Blanks Logic
+function checkFillBlanks() {
+    const answers = {
+        'blank-1': 'int',
+        'blank-2': 'str', 
+        'blank-3': 'float',
+        'blank-4': 'bool' 
+    };
+    let allCorrect = true;
+    let feedbackText = "";
+
+    for (const id in answers) {
+        const inputEl = document.getElementById(id);
+        if (!inputEl) continue; // Skip if element not found
+        const userAnswer = inputEl.value.trim().toLowerCase();
+        const correctAnswer = answers[id];
+        const questionNum = id.split('-')[1];
+
+        if (userAnswer === correctAnswer || (correctAnswer === 'str' && userAnswer === 'string') || (correctAnswer === 'bool' && userAnswer === 'boolean')) {
+            feedbackText += `Blank ${questionNum}: Correct! \n`;
+            inputEl.style.borderColor = 'var(--accent-green)';
+        } else {
+            allCorrect = false;
+            feedbackText += `Blank ${questionNum}: Incorrect. (Hint: Expected '${correctAnswer}') \n`;
+            inputEl.style.borderColor = 'var(--accent-red)';
+        }
+    }
+    const feedbackEl = document.getElementById('fill-blanks-feedback');
+    if (!feedbackEl) return;
+
+    if (allCorrect) {
+        setFeedback('fill-blanks-feedback', 'All blanks correct! Great job! 🎉', 'feedback-correct');
+    } else {
+        feedbackEl.innerHTML = ''; 
+        feedbackText.trim().split('\n').forEach(line => {
+            const p = document.createElement('p');
+            const strong = document.createElement('strong');
+            if (line.includes('Incorrect')) {
+                strong.style.color = 'var(--accent-red)';
+            } else if (line.includes('Correct')) {
+                strong.style.color = 'var(--accent-green)';
+            }
+            strong.textContent = line;
+            p.appendChild(strong);
+            feedbackEl.appendChild(p);
+        });
+        feedbackEl.className = 'feedback-message feedback-info';
+    }
+}
+
+// Clickable Match Activity Logic
+let selectedValueItem = null;
+let selectedTypeItem = null;
+let matchesMade = 0;
+const totalMatches = 5; 
+
+const valueItems = document.querySelectorAll('#matchValuesColumn .match-item');
+const typeItems = document.querySelectorAll('#matchTypesColumn .match-item');
+
+if (valueItems.length && typeItems.length) { // Ensure elements exist
+    valueItems.forEach(item => {
+        item.addEventListener('click', handleValueItemClick);
+    });
+    typeItems.forEach(item => {
+        item.addEventListener('click', handleTypeItemClick);
+    });
+}
+
+
+function handleValueItemClick(e) {
+    const targetItem = e.currentTarget; 
+    if (targetItem.classList.contains('matched-correctly')) return;
+    if (selectedValueItem) {
+        selectedValueItem.classList.remove('selected');
+    }
+    selectedValueItem = targetItem;
+    selectedValueItem.classList.add('selected');
+    checkClickableMatch();
+}
+
+function handleTypeItemClick(e) {
+    const targetItem = e.currentTarget; 
+    if (targetItem.classList.contains('matched-correctly')) return;
+    if (selectedTypeItem) {
+        selectedTypeItem.classList.remove('selected');
+    }
+    selectedTypeItem = targetItem;
+    selectedTypeItem.classList.add('selected');
+    checkClickableMatch();
+}
+
+function checkClickableMatch() {
+    if (selectedValueItem && selectedTypeItem) {
+        const valueCorrectType = selectedValueItem.dataset.correctType;
+        const typeId = selectedTypeItem.dataset.matchId;
+
+        if (valueCorrectType === typeId) {
+            selectedValueItem.classList.add('matched-correctly');
+            selectedTypeItem.classList.add('matched-correctly');
+            selectedValueItem.classList.remove('selected');
+            selectedTypeItem.classList.remove('selected');
+            
+            selectedValueItem.removeEventListener('click', handleValueItemClick);
+            selectedTypeItem.removeEventListener('click', handleTypeItemClick);
+
+            matchesMade++;
+            setFeedback('clickable-match-feedback', 'Correct Match!', 'feedback-correct');
+            if (matchesMade === totalMatches) {
+                 setFeedback('clickable-match-feedback', 'All items matched correctly! 🎉', 'feedback-correct');
+            }
+        } else {
+            setFeedback('clickable-match-feedback', 'Incorrect Match. Try again.', 'feedback-incorrect');
+            selectedValueItem.classList.add('matched-incorrectly');
+            selectedTypeItem.classList.add('matched-incorrectly');
+            setTimeout(() => {
+                if (selectedValueItem) selectedValueItem.classList.remove('matched-incorrectly', 'selected');
+                if (selectedTypeItem) selectedTypeItem.classList.remove('matched-incorrectly', 'selected');
+                 if(selectedValueItem) selectedValueItem.classList.remove('selected'); 
+                 if(selectedTypeItem) selectedTypeItem.classList.remove('selected'); 
+                 selectedValueItem = null;
+                 selectedTypeItem = null;
+
+            }, 1000);
+        }
+        if (valueCorrectType === typeId && matchesMade < totalMatches) {
+            selectedValueItem = null;
+            selectedTypeItem = null;
+        }
+    }
+}
+
+function resetClickableMatch() {
+    document.querySelectorAll('#clickableMatchContainer .match-item').forEach(item => {
+        item.classList.remove('selected', 'matched-correctly', 'matched-incorrectly');
+        item.removeEventListener('click', handleValueItemClick); 
+        item.removeEventListener('click', handleTypeItemClick); 
+        if (item.parentElement.id === 'matchValuesColumn') {
+            item.addEventListener('click', handleValueItemClick);
+        } else if (item.parentElement.id === 'matchTypesColumn') {
+            item.addEventListener('click', handleTypeItemClick);
+        }
+    });
+    selectedValueItem = null;
+    selectedTypeItem = null;
+    matchesMade = 0;
+    setFeedback('clickable-match-feedback', 'Matcher reset. Try again!', 'feedback-info');
+}
+
+
+// Dark Mode Toggle and other header functionalities
+document.addEventListener('DOMContentLoaded', () => {
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const darkModeIcon = document.getElementById('dark-mode-icon');
+    const body = document.body; 
+
+    function applyTheme(theme) {
+        body.setAttribute('data-theme', theme);
+        if (darkModeIcon) { 
+            darkModeIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        }
+        if (darkModeToggle) { 
+             darkModeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+        }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', () => {
+            let newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
+
+    function updateClock() {
+        const clockElement = document.getElementById('live-clock');
+        if (clockElement) {
+            const now = new Date();
+            clockElement.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+    }
+    setInterval(updateClock, 1000);
+    updateClock(); 
+
+    const greetingSpan = document.getElementById('time-based-greeting');
+    if (greetingSpan) {
+        const hour = new Date().getHours();
+        if (hour < 12) greetingSpan.textContent = 'Good morning,';
+        else if (hour < 18) greetingSpan.textContent = 'Good afternoon,';
+        else greetingSpan.textContent = 'Good evening,';
+    }
+    
+    const searchToggleIcon = document.getElementById('search-toggle-icon');
+    const searchInput = document.getElementById('searchInput');
+    if (searchToggleIcon && searchInput) {
+        searchToggleIcon.addEventListener('click', () => {
+            searchInput.classList.toggle('active');
+            if (searchInput.classList.contains('active')) {
+                searchInput.focus();
+            }
+        });
+        document.addEventListener('click', (event) => {
+            const searchContainer = document.getElementById('searchInputWrapper');
+            if (searchContainer && !searchContainer.contains(event.target) && searchInput.classList.contains('active')) {
+                searchInput.classList.remove('active');
+            }
+        });
+    }
+
+    const notificationIcon = document.querySelector('.notification-icon');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    if (notificationIcon && notificationDropdown) {
+        notificationIcon.addEventListener('click', (event) => {
+            event.stopPropagation(); 
+            const isDisplayed = notificationDropdown.style.display === 'block';
+            notificationDropdown.style.display = isDisplayed ? 'none' : 'block';
+        });
+        document.addEventListener('click', (event) => {
+            if (notificationDropdown.style.display === 'block' && !notificationIcon.contains(event.target) && !notificationDropdown.contains(event.target)) {
+                notificationDropdown.style.display = 'none';
+            }
+        });
+    }
+});
+
+</script>
+{% endblock %}

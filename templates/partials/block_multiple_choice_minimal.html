@@ -1,0 +1,14 @@
+{% set q = (block.questions[0] if block.questions and block.questions|length > 0 else None) %}
+{% if q %}
+  <div class="block-multiple-choice-minimal">
+    <div class="mcq-question" style="font-size:1.22em; font-weight:700; color:#181c2a; margin-bottom:1em;">{{ q.question | markdown | safe }}</div>
+    <div class="mcq-options-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:1em;">
+      {% for opt in q.options %}
+        <button type="button" class="mcq-option-btn-minimal{% if loop.index0 == q.correct_index %} correct-answer{% endif %}" data-option-idx="{{ loop.index0 }}" style="font-size:1.1em; padding:0.8em 1.2em; border-radius:8px; background:#8F00FF !important; color:#fff; border:none; font-weight:600; cursor:pointer;">{{ opt | markdown | safe }}</button>
+      {% endfor %}
+    </div>
+    <div class="quiz-feedback" style="display:none;"></div>
+  </div>
+{% else %}
+  <div class="block-multiple-choice-minimal" style="color:#ff4e6a;">ERROR: No question data found for this block. block.questions = {{ block.questions }}</div>
+{% endif %}

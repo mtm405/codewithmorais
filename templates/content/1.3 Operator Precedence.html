@@ -1,0 +1,471 @@
+{% extends 'base.html' %}
+{% block content %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/content.css') }}">
+{% endblock %}
+{% include 'partials/header_bar.html' %}
+
+<div class="data-types-modern"> <h1 class="blog-title">Data Types: <span>The Building Blocks of Information</span></h1>
+    <p class="lead">Welcome to the Data Types module! Here you'll learn about the fundamental building blocks of Python programming. Think of data types like different kinds of containers, each designed to hold a specific kind of information.</p>
+
+    <section class="type-section">
+        <h2 class="section-title">🧐 Meet the Core Four Data Types!</h2>
+        <p>Python has several built-in data types, but we'll start with the four most common ones.</p>
+    </section>
+
+    <section class="type-section">
+        <h3 class="subheading accent-blue">1. Integers (<code>int</code>): The Whole Crew</h3>
+        <p><strong>Core Concept:</strong> Integers are your whole numbers. They can be positive, negative, or zero, but they don't have any decimal points.</p>
+        <p>Examples:</p>
+        <div class="python-example">
+            <pre><code>user_count = 100
+player_score = -50
+items_in_cart = 0</code></pre>
+        </div>
+        <div class="activity-block"> <p class="activity-title">✨ Mini-Challenge: Integer Identifier!</p>
+            <p class="activity-question">If you have <code>number_of_chapters = 25</code> in your Python code, what data type is <code>number_of_chapters</code>?</p>
+            <label for="integer_identifier_answer">Type your answer (int, str, float, or bool):</label>
+            <input type="text" id="integer_identifier_answer" name="integer_identifier_answer" placeholder="Your Answer Here">
+            <p class="hint">Hint: Is it a whole number?</p>
+            <button onclick="checkIntegerAnswer()">Submit Answer</button>
+            <div id="integer_identifier_feedback" class="feedback-message" style="display: none;"></div>
+        </div>
+    </section>
+
+    <section class="type-section">
+        <h3 class="subheading accent-green">2. Floating-Point Numbers (<code>float</code>): The Precise Ones</h3>
+        <p><strong>Core Concept:</strong> Floats are numbers that do have a decimal point. They are used when you need more precision than whole numbers can offer.</p>
+        <p>Examples:</p>
+        <div class="python-example">
+            <pre><code>item_price = 19.99
+gravity_constant = 9.81
+account_balance = -123.45</code></pre>
+        </div>
+        <div class="activity-block"> <p class="activity-title">✨ Brain Teaser: Float or Not?</p>
+            <p class="activity-question">Which of the following variables is a float?</p>
+            <p>Code Block for Context:</p>
+            <div class="python-example"> <pre><code>a) app_version = 3
+b) website_name = "CodeSpark"
+c) pi_value = 3.14159
+d) is_active_user = True</code></pre>
+            </div>
+            <label><input type="radio" name="float_or_not" value="a" id="float_a"> a) app_version = 3</label>
+            <label><input type="radio" name="float_or_not" value="b" id="float_b"> b) website_name = "CodeSpark"</label>
+            <label><input type="radio" name="float_or_not" value="c" id="float_c"> c) pi_value = 3.14159</label>
+            <label><input type="radio" name="float_or_not" value="d" id="float_d"> d) is_active_user = True</label>
+            <input type="text" id="float_or_not_choice_display" placeholder="Your Choice (a, b, c, or d)" readonly class="fill-blank-input" style="margin-top: 0.5em;">
+            <p class="hint">Hint: Look for the decimal point!</p>
+            <button onclick="checkFloatAnswer()">Check Answer</button>
+            <div id="float_or_not_feedback" class="feedback-message" style="display: none;"></div>
+        </div>
+    </section>
+
+    <section class="type-section">
+        <h3 class="subheading accent-yellow">3. Strings (<code>str</code>): The Word Masters</h3>
+        <p><strong>Core Concept:</strong> Strings represent text. In Python, strings are sequences of characters enclosed in either single quotes (<code>' '</code>) or double quotes (<code>" "</code>).</p>
+        <p>Examples:</p>
+        <div class="python-example">
+            <pre><code>user_greeting = "Hello, Pythonista!"
+favorite_food = 'pizza'
+empty_message = "" <span style="color: var(--ide-text-secondary); font-style: italic;"># Yes, an empty string is still a string!</span>
+error_code = "404" <span style="color: var(--ide-text-secondary); font-style: italic;"># Numbers in quotes are strings!</span></code></pre>
+            </div>
+        <div class="activity-block"> <p class="activity-title">✨ Game Time: Quote Quest!</p>
+            <p class="activity-question">Is it a string? Look at the Python code snippets below. For each, type "Yes" if the variable will be a string, or "No" if it won't.</p>
+            
+            <label for="quote_quest_1">Code: <code>book_title = Learning Python</code></label>
+            <input type="text" id="quote_quest_1" name="quote_quest_1" placeholder="Your Answer (Yes/No)">
+            
+            <label for="quote_quest_2">Code: <code>system_message = "All systems go."</code></label>
+            <input type="text" id="quote_quest_2" name="quote_quest_2" placeholder="Your Answer (Yes/No)">
+            
+            <label for="quote_quest_3">Code: <code>zip_code = '90210'</code></label>
+            <input type="text" id="quote_quest_3" name="quote_quest_3" placeholder="Your Answer (Yes/No)">
+            
+            <label for="quote_quest_4">Code: <code>counter = 2024</code></label>
+            <input type="text" id="quote_quest_4" name="quote_quest_4" placeholder="Your Answer (Yes/No)">
+            
+            <p class="hint">Hint: Strings always need those quote marks around them!</p>
+            <button onclick="checkQuoteQuestAnswers()">Check Answers</button>
+            <div id="quote_quest_feedback_1" class="feedback-message" style="display: none;"></div>
+            <div id="quote_quest_feedback_2" class="feedback-message" style="display: none;"></div>
+            <div id="quote_quest_feedback_3" class="feedback-message" style="display: none;"></div>
+            <div id="quote_quest_feedback_4" class="feedback-message" style="display: none;"></div>
+        </div>
+    </section>
+
+    <section class="type-section">
+        <h3 class="subheading accent-red">4. Booleans (<code>bool</code>): The Truth Tellers</h3>
+        <p><strong>Core Concept:</strong> Booleans represent one of two values: <code>True</code> or <code>False</code>. They are crucial for making decisions and controlling the flow of your programs. (Important: <code>True</code> and <code>False</code> must be capitalized in Python!)</p>
+        <p>Examples:</p>
+        <div class="python-example">
+            <pre><code>is_logged_in = True
+has_permission = False
+light_is_on = 10 > 5 <span style="color: var(--ide-text-secondary); font-style: italic;"># This expression evaluates to True</span></code></pre>
+            </div>
+        <div class="activity-block"> <p class="activity-title">✨ Quick Question: Boolean Basics!</p>
+            <p class="activity-question">Which of the following correctly assigns a boolean <code>False</code> value to a variable in Python?</p>
+            <label><input type="radio" name="boolean_basics" value="a" id="bool_a"> a) is_valid = false</label>
+            <label><input type="radio" name="boolean_basics" value="b" id="bool_b"> b) is_valid = "False"</label>
+            <label><input type="radio" name="boolean_basics" value="c" id="bool_c"> c) is_valid = False</label>
+            <label><input type="radio" name="boolean_basics" value="d" id="bool_d"> d) is_valid = 0</label>
+            <input type="text" id="boolean_basics_choice_display" placeholder="Your Answer (a, b, c, or d)" readonly class="fill-blank-input" style="margin-top: 0.5em;">
+            <p class="hint">Hint: Python is case-sensitive, especially with keywords like <code>True</code> and <code>False</code>!</p>
+            <button onclick="checkBooleanBasicsAnswer()">Submit Answer</button>
+            <div id="boolean_basics_feedback" class="feedback-message" style="display: none;"></div>
+        </div>
+    </section>
+
+    <section class="type-section">
+        <h2 class="section-title accent-purple">🤖 Python: The Smart Type Assigner!</h2>
+        <p><strong>Core Concept: Type Inference</strong></p>
+        <p>Here’s a cool feature: you usually don't have to explicitly tell Python, "Hey, this variable is an integer!" When you assign a value to a variable using the <code>=</code> sign, Python intelligently infers (figures out) the data type based on the value you provide.</p>
+        <p><em>(Visual Suggestion: Show <code>my_number = 100</code> transforming into a box labeled <code>int</code>. Then, show <code>my_number = "One Hundred"</code> transforming into a box labeled <code>str</code>.)</em></p>
+        <p>If you write <code>my_number = 100</code>, Python says, "Ah, a whole number! That's an <code>int</code>."</p>
+        <p>If you then write <code>my_number = "One Hundred"</code>, Python says, "Okay, now it's text! That's a <code>str</code>."</p>
+    </section>
+
+    <section class="type-section">
+        <h2 class="section-title accent-purple">🔍 Your Superpower: The <code>type()</code> Function!</h2>
+        <p><strong>Core Concept: <code>type()</code> function</strong></p>
+        <p>What if you're working with code and you're not sure what data type a variable holds? Python gives you a built-in superpower: the <code>type()</code> function! Just place the variable name inside the parentheses of the <code>type()</code> function, and Python will tell you its class (which, for our purposes here, tells you its data type).</p>
+        
+        <div class="console-io-section">
+            <h1>Example: Using <code>type()</code></h1>
+            <div class="python-example"> <pre><code>student_name = "Alex"
+print(type(student_name))
+<span style="color: var(--ide-text-secondary); font-style: italic;"># Output: &lt;class 'str'&gt;</span>
+
+student_age = 19
+print(type(student_age))
+<span style="color: var(--ide-text-secondary); font-style: italic;"># Output: &lt;class 'int'&gt;</span>
+
+gpa = 3.85
+print(type(gpa))
+<span style="color: var(--ide-text-secondary); font-style: italic;"># Output: &lt;class 'float'&gt;</span>
+
+is_enrolled = True
+print(type(is_enrolled))
+<span style="color: var(--ide-text-secondary); font-style: italic;"># Output: &lt;class 'bool'&gt;</span></code></pre>
+                </div>
+        </div>
+
+        <div class="activity-block interpreter-style"> <p class="activity-title">✨ Game: Type Detective! 🕵️‍♀️</p>
+            <p class="activity-question">Let's put on our detective hats! For each variable assignment below, predict what <code>print(type(variable_name))</code> would output.</p>
+            
+            <label for="detective_1">Code: <code>secret_code = 7007</code><br><code>print(type(secret_code))</code></label>
+            <input type="text" id="detective_1" name="detective_1" placeholder="Predicted Output: <class '...'>">
+            
+            <label for="detective_2">Code: <code>case_file_name = "Project_Alpha.txt"</code><br><code>print(type(case_file_name))</code></label>
+            <input type="text" id="detective_2" name="detective_2" placeholder="Predicted Output: <class '...'>">
+            
+            <label for="detective_3">Code: <code>mission_status_go = 10 > 1</code><br><code>print(type(mission_status_go))</code></label>
+            <input type="text" id="detective_3" name="detective_3" placeholder="Predicted Output: <class '...'>">
+            
+            <label for="detective_4">Code: <code>agent_id = "007" # Careful with this one!</code><br><code>print(type(agent_id))</code></label>
+            <input type="text" id="detective_4" name="detective_4" placeholder="Predicted Output: <class '...'>">
+            
+            <label for="detective_5">Code: <code>accuracy_percentage = 99.9</code><br><code>print(type(accuracy_percentage))</code></label>
+            <input type="text" id="detective_5" name="detective_5" placeholder="Predicted Output: <class '...'>">
+            
+            <button onclick="checkDetectiveAnswers()">Reveal Outputs</button>
+            <div id="detective_feedback_1" class="feedback-message" style="display: none;"></div>
+            <div id="detective_feedback_2" class="feedback-message" style="display: none;"></div>
+            <div id="detective_feedback_3" class="feedback-message" style="display: none;"></div>
+            <div id="detective_feedback_4" class="feedback-message" style="display: none;"></div>
+            <div id="detective_feedback_5" class="feedback-message" style="display: none;"></div>
+        </div>
+    </section>
+
+    <section class="type-section">
+        <h2 class="section-title accent-purple">🛠️ Debugging Corner: Spot the Type!</h2>
+        <p>Understanding data types is crucial for debugging! Sometimes, code behaves unexpectedly because of a data type mismatch.</p>
+
+        <div class="activity-block interpreter-style"> <p class="activity-title">Debugging Challenge 1: The Age Mix-Up</p>
+            <p class="activity-question">Context: An aspiring programmer wrote this:</p>
+            <div class="python-example"> <pre><code># Interactive Python Snippet (conceptual)
+entered_age = "16" # User typed their age from a form
+can_drive = entered_age >= 16
+print(f"Can drive: {can_drive}")</code></pre>
+            </div>
+            
+            <label for="debug_age_type">Question: When <code>entered_age</code> is first assigned, what is its data type?</label>
+            <input type="text" id="debug_age_type" name="debug_age_type" placeholder="Your Answer">
+            
+            <label for="debug_age_comparison">Question: Why might the comparison <code>entered_age >= 16</code> lead to unexpected results or an error?</label>
+            <input type="text" id="debug_age_comparison" name="debug_age_comparison" placeholder="Your Thoughts">
+            <p class="hint">Hint: What types are being compared?</p>
+            
+            <label for="debug_age_conversion">Question: What Python function could be used to convert <code>entered_age</code> to the correct type before the comparison?</label>
+            <input type="text" id="debug_age_conversion" name="debug_age_conversion" placeholder="Function: ____(entered_age)">
+            
+            <button onclick="checkDebugAgeAnswers()">Show Explanations</button>
+            <div id="debug_age_feedback_type" class="feedback-message" style="display: none;"></div>
+            <div id="debug_age_feedback_comparison" class="feedback-message" style="display: none;"></div>
+            <div id="debug_age_feedback_conversion" class="feedback-message" style="display: none;"></div>
+        </div>
+
+        <div class="activity-block interpreter-style"> <p class="activity-title">Debugging Challenge 2: Expression Evaluation</p>
+            <p class="activity-question">Context: Predict the data type of the <code>result_type_is</code> variable's value (i.e., what <code>print(result_type_is)</code> shows) in the following code:</p>
+            <div class="python-example"> <pre><code># Interactive Python Snippet (conceptual)
+value_a = 50
+value_b = 25.0
+is_greater = value_a > value_b
+result_type_is = type(is_greater)
+print(result_type_is)</code></pre>
+            </div>
+            <label for="debug_expression_type">The <code>print</code> statement will show:</label>
+            <input type="text" id="debug_expression_type" name="debug_expression_type" placeholder="<class '...'>">
+            <button onclick="checkDebugExpressionAnswer()">Show Answer</button>
+            <div id="debug_expression_feedback" class="feedback-message" style="display: none;"></div>
+        </div>
+    </section>
+
+    <section class="type-section">
+        <h2 class="section-title accent-purple">🎯 Quick Recap: Data Type Drill!</h2>
+        <p>Let's solidify what you've learned.</p>
+
+        <div class="activity-block interpreter-style"> <p class="activity-title">1. Match It!</p>
+            <p class="activity-question">Instruction: Type the correct data type (int, float, str, or bool) next to each value.</p>
+            
+            <label for="match_1">Value: <code>101</code> &rarr; Data Type:</label>
+            <input type="text" id="match_1" name="match_1" placeholder="int, float, str, or bool?">
+            
+            <label for="match_2">Value: <code>"Is this a test?"</code> &rarr; Data Type:</label>
+            <input type="text" id="match_2" name="match_2" placeholder="int, float, str, or bool?">
+            
+            <label for="match_3">Value: <code>2.718</code> &rarr; Data Type:</label>
+            <input type="text" id="match_3" name="match_3" placeholder="int, float, str, or bool?">
+            
+            <label for="match_4">Value: <code>False</code> &rarr; Data Type:</label>
+            <input type="text" id="match_4" name="match_4" placeholder="int, float, str, or bool?">
+            
+            <label for="match_5">Value: <code>"-5"</code> (Tricky one!) &rarr; Data Type:</label>
+            <input type="text" id="match_5" name="match_5" placeholder="int, float, str, or bool?">
+            
+            <button onclick="checkMatchItAnswers()">Check Matches</button>
+            <div id="match_it_feedback" class="feedback-message" style="display: none;"></div>
+        </div>
+
+        <div class="activity-block interpreter-style"> <p class="activity-title">2. Tool Check</p>
+            <p class="activity-question">What is the name of the Python function used to find out the data type of any variable?</p>
+            <label for="tool_check_answer">Your Answer:</label>
+            <input type="text" id="tool_check_answer" name="tool_check_answer">
+            <button onclick="checkToolCheckAnswer()">Submit</button>
+            <div id="tool_check_feedback" class="feedback-message" style="display: none;"></div>
+        </div>
+
+        <div class="activity-block interpreter-style"> <p class="activity-title">3. Automatic Python</p>
+            <p class="activity-question">If you write <code>distance_km = 15.7</code> in your code, what data type will Python automatically assign to the <code>distance_km</code> variable?</p>
+            <label for="auto_python_answer">Your Answer:</label>
+            <input type="text" id="auto_python_answer" name="auto_python_answer">
+            <button onclick="checkAutoPythonAnswer()">Submit</button>
+            <div id="auto_python_feedback" class="feedback-message" style="display: none;"></div>
+        </div>
+
+        <div class="activity-block"> <p class="activity-title">4. Final Type Check!</p>
+            <p class="activity-question">What is the data type of the variable <code>user_input</code> after this line of Python code executes: <code>user_input = "False"</code>?</p>
+            <label><input type="radio" name="final_type_check" value="a" id="final_a"> a) bool</label>
+            <label><input type="radio" name="final_type_check" value="b" id="final_b"> b) str</label>
+            <label><input type="radio" name="final_type_check" value="c" id="final_c"> c) int</label>
+            <label><input type="radio" name="final_type_check" value="d" id="final_d"> d) This would cause an error.</label>
+            <button onclick="checkFinalTypeAnswer()">Check Answer</button>
+            <div id="final_type_feedback" class="feedback-message" style="display: none;"></div>
+        </div>
+    </section>
+
+    <section class="type-section">
+        <h2 class="section-title accent-purple">🧑‍💻 Try Python Yourself!</h2>
+        <p>Use the code editor below to experiment with Python code. You can edit the code and press <strong>Run Code</strong> to see the output.</p>
+        {% with editor_id='editor_data_operations', default_code='print("Hello, Python!")', label='Try this code:' %}
+          {% include 'partials/code_editor.html' %}
+        {% endwith %}
+    </section>
+
+    <p style="margin-top: 2rem;">You've now explored the very basics of Python's core data types! Understanding these is the first giant leap in your programming journey. Keep experimenting!</p>
+
+    <script>
+        // Helper function to display feedback
+        function displayFeedback(elementId, message, type) {
+            const feedbackEl = document.getElementById(elementId);
+            feedbackEl.textContent = message;
+            feedbackEl.className = 'feedback-message'; // Reset classes
+            if (type === 'correct') {
+                feedbackEl.classList.add('feedback-correct');
+            } else if (type === 'incorrect') {
+                feedbackEl.classList.add('feedback-incorrect');
+            } else {
+                feedbackEl.classList.add('feedback-info');
+            }
+            feedbackEl.style.display = 'block';
+        }
+
+        // Example: Integer Identifier
+        function checkIntegerAnswer() {
+            const answer = document.getElementById('integer_identifier_answer').value.trim().toLowerCase();
+            if (answer === 'int') {
+                displayFeedback('integer_identifier_feedback', 'Correct! `int` is the right data type for whole numbers.', 'correct');
+            } else {
+                displayFeedback('integer_identifier_feedback', 'Not quite. Remember, `int` is for whole numbers. The correct answer is `int`.', 'incorrect');
+            }
+        }
+
+        // Example: Float or Not?
+        document.querySelectorAll('input[name="float_or_not"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('float_or_not_choice_display').value = this.value;
+            });
+        });
+        function checkFloatAnswer() {
+            const selected = document.querySelector('input[name="float_or_not"]:checked');
+            if (selected) {
+                if (selected.value === 'c') {
+                    displayFeedback('float_or_not_feedback', 'Correct! pi_value has a decimal, making it a float.', 'correct');
+                } else {
+                    let msg = "Not quite. Remember, floats are numbers with decimal points. ";
+                    if (selected.value === 'a') msg += "Option (a) is an int.";
+                    if (selected.value === 'b') msg += "Option (b) is a str.";
+                    if (selected.value === 'd') msg += "Option (d) is a bool.";
+                    displayFeedback('float_or_not_feedback', msg, 'incorrect');
+                }
+            } else {
+                displayFeedback('float_or_not_feedback', 'Please select an option.', 'info');
+            }
+        }
+
+        // Example: Quote Quest
+        function checkQuoteQuestAnswers() {
+            const answers = {
+                'quote_quest_1': { val: document.getElementById('quote_quest_1').value.trim().toLowerCase(), correct: 'no', el_id: 'quote_quest_feedback_1' },
+                'quote_quest_2': { val: document.getElementById('quote_quest_2').value.trim().toLowerCase(), correct: 'yes', el_id: 'quote_quest_feedback_2' },
+                'quote_quest_3': { val: document.getElementById('quote_quest_3').value.trim().toLowerCase(), correct: 'yes', el_id: 'quote_quest_feedback_3' },
+                'quote_quest_4': { val: document.getElementById('quote_quest_4').value.trim().toLowerCase(), correct: 'no', el_id: 'quote_quest_feedback_4' }
+            };
+            const correctAnswers = { 'quote_quest_1': 'No', 'quote_quest_2': 'Yes', 'quote_quest_3': 'Yes', 'quote_quest_4': 'No' };
+            for (const key in answers) {
+                if (answers[key].val === answers[key].correct) {
+                    displayFeedback(answers[key].el_id, `Correct! Answer: ${correctAnswers[key]}`, 'correct');
+                } else if (answers[key].val === "") {
+                     displayFeedback(answers[key].el_id, `Please provide an answer. Correct Answer: ${correctAnswers[key]}`, 'info');
+                }
+                else {
+                    displayFeedback(answers[key].el_id, `Incorrect. Correct Answer: ${correctAnswers[key]}`, 'incorrect');
+                }
+            }
+        }
+        
+        // Example: Boolean Basics
+        document.querySelectorAll('input[name="boolean_basics"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('boolean_basics_choice_display').value = this.value;
+            });
+        });
+        function checkBooleanBasicsAnswer() {
+            const selected = document.querySelector('input[name="boolean_basics"]:checked');
+            if (selected) {
+                if (selected.value === 'c') {
+                    displayFeedback('boolean_basics_feedback', 'Spot on! False (capitalized) is the correct boolean value.', 'correct');
+                } else if (selected.value === 'a') {
+                    displayFeedback('boolean_basics_feedback', 'Close! Remember Python keywords like False are case-sensitive and need to be capitalized.', 'incorrect');
+                } else if (selected.value === 'b') {
+                    displayFeedback('boolean_basics_feedback', 'Careful! Putting False in quotes makes it a string, not a boolean.', 'incorrect');
+                } else if (selected.value === 'd') {
+                     displayFeedback('boolean_basics_feedback', "While 0 can evaluate to False in a boolean context, False itself is the specific boolean keyword.", 'incorrect');
+                }
+            } else {
+                displayFeedback('boolean_basics_feedback', 'Please select an option.', 'info');
+            }
+        }
+
+        // Example: Type Detective
+        function checkDetectiveAnswers() {
+            const correct = {
+                'detective_1': "<class 'int'>",
+                'detective_2': "<class 'str'>",
+                'detective_3': "<class 'bool'>",
+                'detective_4': "<class 'str'>",
+                'detective_5': "<class 'float'>"
+            };
+            for (let i = 1; i <= 5; i++) {
+                const userAnswer = document.getElementById(`detective_${i}`).value.trim();
+                const feedbackId = `detective_feedback_${i}`;
+                if (userAnswer === correct[`detective_${i}`]) {
+                    displayFeedback(feedbackId, `Correct: ${correct[`detective_${i}`]}`, 'correct');
+                } else if (userAnswer === "") {
+                     displayFeedback(feedbackId, `Predicted Output: ${correct[`detective_${i}`]}`, 'info');
+                }
+                else {
+                    displayFeedback(feedbackId, `Incorrect. Correct Output: ${correct[`detective_${i}`]}`, 'incorrect');
+                }
+            }
+        }
+
+        // Debugging Challenge 1
+        function checkDebugAgeAnswers() {
+            displayFeedback('debug_age_feedback_type', '1. Data type of entered_age: str (because it\'s in quotes).', 'info');
+            displayFeedback('debug_age_feedback_comparison', '2. Comparison issue: You are comparing a string ("16") to an integer (16). This can lead to errors or lexicographical comparison (alphabetical) instead of numerical, e.g., "5" > "16" would be True.', 'info');
+            displayFeedback('debug_age_feedback_conversion', '3. Conversion function: int(entered_age) would convert the string to an integer.', 'info');
+        }
+        
+        // Debugging Challenge 2
+        function checkDebugExpressionAnswer() {
+            displayFeedback('debug_expression_feedback', "The print statement will show: <class 'bool'> (because `is_greater` will be True or False, which is a boolean).", 'correct');
+        }
+
+        // Quick Recap - Match It
+        function checkMatchItAnswers() {
+            const answers = {
+                'match_1': { val: document.getElementById('match_1').value.trim().toLowerCase(), correct: 'int' },
+                'match_2': { val: document.getElementById('match_2').value.trim().toLowerCase(), correct: 'str' },
+                'match_3': { val: document.getElementById('match_3').value.trim().toLowerCase(), correct: 'float' },
+                'match_4': { val: document.getElementById('match_4').value.trim().toLowerCase(), correct: 'bool' },
+                'match_5': { val: document.getElementById('match_5').value.trim().toLowerCase(), correct: 'str' }
+            };
+            let allCorrect = true;
+            let summary = "Results:\n";
+            for (const key in answers) {
+                summary += `${key.replace('match_', 'Value ')}: Your answer '${answers[key].val}', Correct: '${answers[key].correct}'. ${answers[key].val === answers[key].correct ? '✅' : '❌'}\n`;
+                if(answers[key].val !== answers[key].correct) allCorrect = false;
+            }
+            displayFeedback('match_it_feedback', summary, allCorrect ? 'correct' : 'incorrect');
+        }
+
+        // Quick Recap - Tool Check
+        function checkToolCheckAnswer() {
+            const answer = document.getElementById('tool_check_answer').value.trim();
+            if (answer === 'type()' || answer === 'type') {
+                displayFeedback('tool_check_feedback', 'Correct! The `type()` function is what you need.', 'correct');
+            } else {
+                displayFeedback('tool_check_feedback', 'Not quite. The function is `type()`.', 'incorrect');
+            }
+        }
+
+        // Quick Recap - Automatic Python
+        function checkAutoPythonAnswer() {
+            const answer = document.getElementById('auto_python_answer').value.trim().toLowerCase();
+            if (answer === 'float') {
+                displayFeedback('auto_python_feedback', 'Correct! Python infers `float` due to the decimal point.', 'correct');
+            } else {
+                displayFeedback('auto_python_feedback', 'Incorrect. The correct answer is `float`.', 'incorrect');
+            }
+        }
+        
+        // Quick Recap - Final Type Check
+        function checkFinalTypeAnswer() {
+            const selected = document.querySelector('input[name="final_type_check"]:checked');
+            if (selected) {
+                if (selected.value === 'b') {
+                    displayFeedback('final_type_feedback', 'Exactly! Anything enclosed in quotes is a string, even if it looks like a boolean or number.', 'correct');
+                } else if (selected.value === 'a') {
+                    displayFeedback('final_type_feedback', "Not quite. While the content looks like a boolean, the quotes make it text. So it's a string!", 'incorrect');
+                } else if (selected.value === 'c') {
+                    displayFeedback('final_type_feedback', "Remember, numbers in quotes are treated as text (strings), not integers.", 'incorrect');
+                } else if (selected.value === 'd') {
+                    displayFeedback('final_type_feedback', "This is valid Python code! It creates a string.", 'incorrect');
+                }
+            } else {
+                displayFeedback('final_type_feedback', 'Please select an option.', 'info');
+            }
+        }
+    </script>
+</div> {% endblock %}

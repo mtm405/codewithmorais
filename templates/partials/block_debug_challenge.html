@@ -1,10 +1,17 @@
 {# partials/block_debug_challenge.html - Renders a debug challenge block #}
 <div class="debug-challenge-block">
   <div class="debug-challenge-label">{{ block.label }}</div>
-  <pre class="debug-challenge-buggy"><code>{{ block.buggy_code }}</code></pre>
+  {% if block.instructions %}
+    <div class="debug-challenge-instructions" style="font-weight:600;color:#ffd700;margin-bottom:0.5em;">{{ block.instructions | markdown | safe }}</div>
+  {% endif %}
+  <form class="debug-challenge-ide-form" onsubmit="return runDebugChallengeCode(this, '{{ block.id }}');">
+    <textarea class="debug-challenge-ide" name="user_code" rows="8" style="width:100%;font-family:'Fira Mono','Consolas','Menlo',monospace;font-size:1em;background:#23263A;color:#ffecb3;border-radius:6px;padding:1em;border:1.5px solid #2196f3;resize:vertical;">{{ block.buggy_code }}</textarea>
+    <button type="submit" class="debug-challenge-run-btn" style="margin-top:0.7em;background:linear-gradient(90deg,#00FFF7,#8F00FF);color:#fff;font-weight:600;border:none;border-radius:6px;padding:0.6em 1.4em;">Run Code</button>
+    <div class="debug-challenge-feedback" id="debug-feedback-{{ block.id }}"></div>
+  </form>
   {% if block.solution and block.solution.explanation %}
     <div class="debug-challenge-explanation">
-      <strong>Explanation:</strong> {{ block.solution.explanation }}
+      <strong>Explanation:</strong> {{ block.solution.explanation | markdown | safe }}
     </div>
   {% endif %}
   {% if block.solution and block.solution.correct_code %}
@@ -14,3 +21,27 @@
     </div>
   {% endif %}
 </div>
+<script>
+function runDebugChallengeCode(form, blockId) {
+  const userCode = form.user_code.value;
+  fetch('/run_debug_code', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ block_id: blockId, user_code: userCode })
+  })
+  .then(res => res.json())
+  .then(data => {
+    const feedback = document.getElementById('debug-feedback-' + blockId);
+    if (data.correct) {
+      feedback.innerHTML = '<span style="color:#22c55e;font-weight:600;">✔ Correct! ' + (data.output ? 'Output: ' + data.output : '') + '</span>';
+    } else {
+      feedback.innerHTML = '<span style="color:#ef4444;font-weight:600;">✘ Incorrect. ' + (data.error ? 'Error: ' + data.error : '') + (data.output ? '<br>Output: ' + data.output : '') + '</span>';
+    }
+  })
+  .catch(() => {
+    const feedback = document.getElementById('debug-feedback-' + blockId);
+    feedback.innerHTML = '<span style="color:#ef4444;font-weight:600;">Error running code.</span>';
+  });
+  return false;
+}
+</script>

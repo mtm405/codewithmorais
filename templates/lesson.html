@@ -4,10 +4,101 @@
 
 {% block styles %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/content.css', v=g.css_version) }}">
+  <style>
+    .quiz-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .quiz-modal {
+      background: #23272e;
+      color: #f8fafd;
+      border-radius: 12px;
+      max-width: 700px;
+      width: 95vw;
+      padding: 2.5em 2em;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.28);
+      position: relative;
+      z-index: 1001;
+      animation: popIn 0.2s;
+    }
+    @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .quiz-unlock-btns {
+      display: flex;
+      justify-content: center;
+      gap: 1.5em;
+      margin-bottom: 2em;
+    }
+    .quiz-unlock-btn {
+      background: #2b7cff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.8em 2.2em;
+      font-size: 1.1em;
+      font-weight: 700;
+      margin: 0 0.5em;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+    }
+    .quiz-unlock-btn.medium { background: #ffb300; color: #23272e; }
+    .quiz-unlock-btn.hard { background: #ff4e6a; color: #fff; }
+    .quiz-unlock-btn:disabled {
+      background: #ccc;
+      color: #888;
+      cursor: not-allowed;
+    }
+    .quiz-token-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2em;
+      background: rgba(40,40,40,0.13);
+      border-radius: 999px;
+      padding: 0.18em 0.7em 0.18em 0.5em;
+      font-size: 1em;
+      font-weight: 600;
+      margin-left: 0.3em;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .quiz-unlock-btn.medium .quiz-token-pill {
+      background: rgba(30,30,30,0.18);
+      color: #23272e;
+    }
+    .quiz-unlock-btn.hard .quiz-token-pill {
+      background: rgba(255,255,255,0.13);
+      color: #fff;
+    }
+    .coin-icon {
+      font-size: 1.2em;
+      vertical-align: middle;
+      color: #ffb300;
+      margin-left: 0.2em;
+    }
+    .quiz-mcq-question { color: #fff; }
+    .quiz-mcq-option { background: #31343c !important; color: #fff !important; }
+    .quiz-mcq-option[disabled] { opacity: 0.7; }
+    .quiz-mcq-feedback { color: #ffb300; }
+  </style>
 {% endblock %}
 
 {% block content %}
+  <!-- Token/Currency Bar for Quiz -->
+   <!--
+  <div style="display:flex;justify-content:flex-end;align-items:center;gap:0.5em;margin-bottom:1em;">
+    <span style="font-weight:600;">Tokens:</span>
+    <span id="currency-value">20</span>
+    <span class="material-symbols-outlined coin-icon">token</span>
+  </div>
+  -->
   {% include 'partials/header_bar.html' %}
+  <body data-lesson-id="{{ lesson.id }}">
   <div class="lesson-main">
     <h1 class="lesson-title">{{ lesson.title }}</h1>
     {% for block in lesson.blocks %}
@@ -27,14 +118,33 @@
         {% include 'partials/block_image.html' %}
       {% elif block.type == 'code_snippet' %}
         {% include 'partials/block_code_snippet.html' %}
-      {% elif block.type == 'quiz_section' %}
-        {% include 'partials/block_quiz_section.html' %}
       {% elif block.type == 'debug_challenge' %}
         {% include 'partials/block_debug_challenge.html' %}
       {% else %}
         <p><em>Unknown block type: {{ block.type }}</em></p>
       {% endif %}
     {% endfor %}
+    <!-- Quiz Unlock Buttons (bottom of page) -->
+    <div class="quiz-unlock-section" style="margin:3em 0 2em 0;">
+      <div style="text-align:center; font-size:1.4em; font-weight:700; margin-bottom:0.7em;">Test your knowledge!</div>
+      <div class="quiz-unlock-btns">
+        <button class="quiz-unlock-btn easy" data-quiz-id="quiz1" data-quiz-price="5">Easy <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>5</span></button>
+        <button class="quiz-unlock-btn medium" data-quiz-id="quiz2" data-quiz-price="10">Medium <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>10</span></button>
+        <button class="quiz-unlock-btn hard" data-quiz-id="quiz3" data-quiz-price="15">Hard <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>15</span></button>
+      </div>
+    </div>
+    <!-- Modal for Quiz Popup -->
+    <div class="quiz-modal-overlay" id="quiz-modal-overlay">
+      <div class="quiz-modal" id="quiz-modal">
+        <div id="quiz-modal-content">
+          <!-- Quiz content will be loaded here by JS -->
+        </div>
+      </div>
+    </div>
   </div>
+  </body>
   <script src="{{ url_for('static', filename='js/lesson_interactions.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/quiz_data_easy.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/quiz_mcq_inline.js') }}"></script>
 {% endblock %}

@@ -7,24 +7,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Modular Firebase config is provided by base.html and imported in JS files. -->
+    <script>
+      window.firebaseConfig = {{ firebase_config | tojson | safe }};
+      window.googleClientId = '{{ google_client_id }}';
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('DEBUG: google_client_id from template:', '{{ google_client_id }}');
+        console.log('DEBUG: window.location.origin:', window.location.origin);
+      });
+    </script>
 </head>
 <body>
     <div id="particles-js"></div>
     <div class="content-wrapper">
         <div class="welcome-container">
             <h1>Welcome, Future Python Developers!</h1>
-            <div id="g_id_onload"
-                data-client_id="{{ google_client_id }}" data-callback="handleCredentialResponse"
-                data-auto_prompt="true">
-            </div>
-            <div class="g_id_signin"
-                 data-type="standard"
-                 data-size="large"
-                 data-theme="outline"
-                 data-text="sign_in_with"
-                 data-shape="rectangular"
-                 data-logo_alignment="left">
-            </div>
+            <!-- Google Sign-In button -->
+            <div class="g_id_signin"></div>
             <p>Embark on a transformative journey with Mr. Morais to master Python and excel in your IT Specialist exam. This program is meticulously designed to equip you with essential, real-world coding skills:</p>
             <ul>
                 <li>Develop clean, well-structured, and logically sound Python programs.</li>
@@ -39,69 +38,94 @@
     <footer class="footer"></footer>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        // Particle.js configuration
-        particlesJS("particles-js", {
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.particlesJS) {
+          particlesJS("particles-js", {
             "particles": {
-                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#BBBBBB" },
-                "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 }, "image": { "src": "img/github.svg", "width": 100, "height": 100 } },
-                "opacity": { "value": 0.5, "random": false, "anim": { "enable": false, "speed": 1, "opacity_min": 0.1, "sync": false } },
-                "size": { "value": 3, "random": true, "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false } },
-                "line_linked": { "enable": true, "distance": 150, "color": "#BBBBBB", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 3, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 } }
+              "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+              "color": { "value": "#BBBBBB" },
+              "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 }, "image": { "src": "img/github.svg", "width": 100, "height": 100 } },
+              "opacity": { "value": 0.5, "random": false, "anim": { "enable": false, "speed": 1, "opacity_min": 0.1, "sync": false } },
+              "size": { "value": 3, "random": true, "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false } },
+              "line_linked": { "enable": true, "distance": 150, "color": "#BBBBBB", "opacity": 0.4, "width": 1 },
+              "move": { "enable": true, "speed": 6, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 } }
             },
             "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": { "enable": true, "mode": "grab" },
-                    "onclick": { "enable": true, "mode": "push" },
-                    "resize": true
-                },
-                "modes": {
-                    "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
-                    "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 },
-                    "repulse": { "distance": 200, "duration": 0.4 },
-                    "push": { "particles_nb": 4 },
-                    "remove": { "particles_nb": 2 }
-                }
+              "detect_on": "canvas",
+              "events": {
+                "onhover": { "enable": true, "mode": "attract" },
+                "onclick": { "enable": true, "mode": "push" },
+                "resize": true
+              },
+              "modes": {
+                "grab": { "distance": 400, "line_linked": { "opacity": 1 } },
+                "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 },
+                "repulse": { "distance": 200, "duration": 0.4 },
+                "push": { "particles_nb": 4 },
+                "remove": { "particles_nb": 2 },
+                "attract": { "distance": 200, "duration": 0.4 }
+              }
             },
             "retina_detect": true
-        });
-    </script>
-    <script>
-        function handleCredentialResponse(response) {
-            // Fetch online time before login
-            fetch('/api/time')
-                .then(res => res.json())
-                .then(timeData => {
-                    // Include the online time in the login request
-                    fetch('/auth', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `credential=${response.credential}&login_time=${encodeURIComponent(timeData.utc_datetime)}`
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log('Login successful, redirecting...');
-                            window.location.href = data.redirect;
-                        } else {
-                            console.error('Login failed:', data.error);
-                            alert('Login failed: ' + data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error during fetch:', error);
-                        alert('An error occurred during login. Please try again.');
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching online time:', error);
-                    alert('Could not fetch online time. Please try again.');
-                });
+          });
+        } else {
+          console.error('particlesJS is not loaded');
         }
+      });
+    </script>
+    <!-- Removed compat Firebase SDKs. Modular SDKs are imported in JS files. -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, signInWithCredential, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      // Use config from global variables injected in <head>
+      const firebaseConfig = window.firebaseConfig;
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // Google Identity Services callback
+      window.handleCredentialResponse = async function(response) {
+        try {
+          console.log('DEBUG: handleCredentialResponse called.');
+          const credential = response.credential;
+          const login_time = new Date().toISOString();
+          console.log('DEBUG: credential:', credential);
+          // Call Flask backend /auth to create/update user in Firestore
+          const resp = await fetch('/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ credential, login_time })
+          });
+          console.log('DEBUG: /auth response status:', resp.status);
+          const result = await resp.json();
+          console.log('DEBUG: /auth response JSON:', result);
+          if (result.success) {
+            // Redirect to dashboard
+            console.log('DEBUG: Redirecting to /dashboard');
+            window.location.href = result.redirect || "/dashboard";
+          } else {
+            alert('Login failed: ' + (result.error || 'Unknown error'));
+          }
+        } catch (error) {
+          console.error('Sign-in error:', error);
+        }
+      };
+
+      // Render the GIS button with callback
+      window.onload = function() {
+        google.accounts.id.initialize({
+          client_id: window.googleClientId,
+          callback: handleCredentialResponse
+        });
+        google.accounts.id.renderButton(
+          document.querySelector('.g_id_signin'),
+          { theme: 'outline', size: 'large' }
+        );
+        // Optionally prompt automatically:
+        // google.accounts.id.prompt();
+      };
     </script>
 </body>
 </html>

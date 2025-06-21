@@ -1,0 +1,29 @@
+<!-- partials/block_step_card.html: Collapsible card for step-by-step code explanations with markdown and wide layout -->
+<div class="step-card-accordion">
+  <button class="step-card-header" type="button" aria-expanded="false" aria-controls="step-card-{{ block.id }}-body" onclick="toggleStepCard(this, 'step-card-{{ block.id }}-body')">
+    <span class="step-card-title">{{ block.header | markdown | safe }}</span>
+    <span class="step-card-chevron">&#x25BC;</span>
+  </button>
+  <div class="step-card-body" id="step-card-{{ block.id }}-body" hidden>
+    <ol class="step-card-steps">
+      {% for step in block.steps %}
+        <li class="step-card-step">{{ step | markdown | safe }}</li>
+      {% endfor %}
+    </ol>
+    <div class="step-card-code" style="background:#181c23;">
+      <pre><code class="language-{{ block.language|default('python') }}">{{ block.code | e }}</code></pre>
+      {% if block.output %}
+        <div class="step-card-output"><span class="step-card-output-label">Output:</span> <code>{{ block.output }}</code></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<script>
+function toggleStepCard(btn, bodyId) {
+  const body = document.getElementById(bodyId);
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', !expanded);
+  body.hidden = expanded;
+  btn.querySelector('.step-card-chevron').innerHTML = expanded ? '\u25BC' : '\u25B2';
+}
+</script>
