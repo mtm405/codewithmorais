@@ -4,6 +4,7 @@
 
 {% block styles %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/content.css', v=g.css_version) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mcq_inline.css') }}">
   <style>
     .quiz-modal-overlay {
       display: none;
@@ -99,6 +100,9 @@
   -->
   {% include 'partials/header_bar.html' %}
   <body data-lesson-id="{{ lesson.id }}">
+  <script>
+    window.firebaseConfig = {{ firebase_config | tojson | safe }};
+  </script>
   <div class="lesson-main">
     <h1 class="lesson-title">{{ lesson.title }}</h1>
     {% for block in lesson.blocks %}
@@ -106,8 +110,10 @@
         {% include 'partials/block_text.html' %}
       {% elif block.type == 'fill_in_the_blank' %}
         {% include 'partials/block_fill_in_blank.html' %}
-      {% elif block.type == 'multiple_choice' %}
+      {% elif block.type == 'multiple_choice' and block.mcq_inline %}
         {% include 'partials/block_multiple_choice.html' %}
+      {% elif block.type == 'multiple_choice' %}
+        <!-- Optionally, handle non-inline MCQ blocks differently here -->
       {% elif block.type == 'drag_and_drop' %}
         {% include 'partials/block_drag_and_drop.html' %}
       {% elif block.type == 'ide' %}
@@ -145,6 +151,6 @@
   </body>
   <script src="{{ url_for('static', filename='js/lesson_interactions.js') }}"></script>
   <script src="{{ url_for('static', filename='js/quiz_data_easy.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/quiz_mcq_inline.js') }}"></script>
   <script type="module" src="{{ url_for('static', filename='js/quiz.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/quiz_mcq_inline.js') }}"></script>
 {% endblock %}
