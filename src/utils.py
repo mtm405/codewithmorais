@@ -3,6 +3,7 @@ from flask import request, session, g
 from datetime import datetime
 import re
 from markupsafe import Markup
+import random
 
 # Helper function to determine the active page for sidebar highlighting
 def get_active_page():
@@ -42,3 +43,8 @@ def highlight_keywords(text, keywords=None):
     def replacer(match):
         return f'<span class="highlight">{match.group(0)}</span>'
     return Markup(re.sub(pattern, replacer, text))
+
+def shuffle_filter(seq):
+    seq = list(seq)
+    random.shuffle(seq)
+    return seq

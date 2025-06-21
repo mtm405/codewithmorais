@@ -6,14 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set the dynamic greeting based on time of day
     setDynamicGreeting();
 
-    // Only fetch and render leaderboard if we are on the dashboard page
-    if (document.getElementById('leaderboard-table')) {
-        console.log("DEBUG: Dashboard elements found. Fetching leaderboard.");
-        fetchAndRenderLeaderboard();
-    } else {
-        console.log("DEBUG: Not on dashboard or leaderboard element missing. Skipping leaderboard fetch.");
-    }
-
     // --- Search Bar Functionality ---
     const searchInputWrapper = document.getElementById('searchInputWrapper'); // New ID for the input box container
     const searchInput = document.getElementById('searchInput'); // ID for the input field
@@ -131,55 +123,6 @@ function setDynamicGreeting() {
 }
 
 /**
- * Fetches and renders leaderboard data from the server.
- */
-async function fetchAndRenderLeaderboard() {
-    console.log('Attempting to fetch leaderboard data.');
-    try {
-        const response = await fetch('/api/leaderboard'); // Corrected endpoint for API
-        if (!response.ok) {
-            // If the response is 401, it means the user is not authenticated
-            if (response.status === 401) {
-                console.warn('Authentication required to fetch leaderboard. Redirecting to login.');
-                window.location.href = '/';
-                return;
-            }
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log('Fetched leaderboard data:', data);
-
-        if (data.success) {
-            const tbody = document.querySelector('#leaderboard-table tbody');
-            if (tbody) {
-                tbody.innerHTML = '';
-                data.leaderboard.forEach(user => {
-                    const row = tbody.insertRow(); // Changed from insertCell() to insertRow()
-                    if (user.is_current_user) {
-                        row.classList.add('current-user');
-                    }
-                    row.insertCell().textContent = user.rank;
-                    row.insertCell().textContent = user.username;
-                    row.insertCell().textContent = user.points;
-                });
-            }
-        } else {
-            console.error('Failed to load leaderboard:', data.error);
-            const tbody = document.querySelector('#leaderboard-table tbody');
-            if (tbody) {
-                tbody.innerHTML = '<tr><td colspan="3">Failed to load leaderboard.</td></tr>';
-            }
-        }
-    } catch (error) {
-        console.error('Error fetching leaderboard:', error);
-        const tbody = document.querySelector('#leaderboard-table tbody');
-        if (tbody) {
-            tbody.innerHTML = '<tr><td colspan="3">Error loading leaderboard.</td></tr>';
-        }
-    }
-}
-
-/**
  * Placeholder function for website search.
  * This function now updates a dedicated search results display area on the dashboard.
  * @param {string} query The search query entered by the user.
@@ -224,64 +167,6 @@ function performWebsiteSearch(query) {
     //         searchResultsDisplay.innerHTML += '<p>Error performing search. Please try again.</p>';
     //     });
 }
-
-// Only allow the rotating nugget block to be draggable
-function enableDashboardNuggetDrag() {
-    const nuggetBlock = document.getElementById('nugget-block');
-    if (!nuggetBlock) return;
-    nuggetBlock.setAttribute('draggable', 'true');
-    let dragged = null;
-    nuggetBlock.addEventListener('dragstart', function(e) {
-        dragged = this;
-        e.dataTransfer.effectAllowed = 'move';
-    });
-    // Only allow drop between grid-items
-    document.querySelectorAll('.dashboard-grid .grid-item').forEach(item => {
-        if (item !== nuggetBlock) {
-            item.addEventListener('dragover', function(e) {
-                e.preventDefault();
-            });
-            item.addEventListener('drop', function(e) {
-                e.preventDefault();
-                if (dragged && dragged !== this) {
-                    this.parentNode.insertBefore(dragged, this);
-                }
-            });
-        }
-    });
-}
-document.addEventListener('DOMContentLoaded', enableDashboardNuggetDrag);
-
-// Make all dashboard blocks draggable except the pinned leaderboard
-function enableDashboardBlocksDrag() {
-    const grid = document.querySelector('.dashboard-grid');
-    if (!grid) return;
-    const items = Array.from(grid.querySelectorAll('.grid-item'));
-    items.forEach(item => {
-        if (!item.classList.contains('pinned')) {
-            item.setAttribute('draggable', 'true');
-            let dragged = null;
-            item.addEventListener('dragstart', function(e) {
-                dragged = this;
-                e.dataTransfer.effectAllowed = 'move';
-            });
-            items.forEach(target => {
-                if (target !== item && !target.classList.contains('pinned')) {
-                    target.addEventListener('dragover', function(e) {
-                        e.preventDefault();
-                    });
-                    target.addEventListener('drop', function(e) {
-                        e.preventDefault();
-                        if (dragged && dragged !== this) {
-                            this.parentNode.insertBefore(dragged, this);
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
-document.addEventListener('DOMContentLoaded', enableDashboardBlocksDrag);
 
 // Confetti animation for leaderboard block (randomized circles/rects, more pieces, longer, all directions, slow fall)
 let confettiSeed = 0;

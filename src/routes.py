@@ -117,6 +117,13 @@ def dashboard():
         return redirect(url_for('auth.index'))
     return render_template('dashboard.html')
 
+# --- New Dashboard2 route ---
+@routes_bp.route('/dashboard2')
+def dashboard2():
+    if 'user_id' not in session:
+        return redirect(url_for('auth.index'))
+    return render_template('dashboard2.html')
+
 # --- API to fetch a user's progress for the dashboard ---
 # Keeping this as it's general purpose for displaying user data on dashboard
 @routes_bp.route('/api/user_progress', methods=['GET'])
@@ -145,6 +152,13 @@ def get_user_progress_api():
             if content_details:
                 item['content_title'] = content_details.get('title', 'Unknown Content')
                 item['content_type'] = content_details.get('type', 'Unknown Type')
+            # Add a timestamp field for frontend sorting
+            ts = None
+            if 'last_updated' in item and hasattr(item['last_updated'], 'timestamp'):
+                ts = int(item['last_updated'].timestamp() * 1000)
+            elif 'completion_date' in item and hasattr(item['completion_date'], 'timestamp'):
+                ts = int(item['completion_date'].timestamp() * 1000)
+            item['timestamp'] = ts
             progress_list.append(item)
 
         return jsonify(progress_list), 200
@@ -251,6 +265,14 @@ def get_leaderboard():
                 })
                 rank += 1
 
+        # --- Inject 3 fake users for UI testing ---
+        fake_users = [
+            {"rank": rank, "username": "TestUserA", "points": 1200, "is_current_user": False},
+            {"rank": rank+1, "username": "TestUserB", "points": 1100, "is_current_user": False},
+            {"rank": rank+2, "username": "TestUserC", "points": 1000, "is_current_user": False},
+        ]
+        leaderboard_data.extend(fake_users)
+
         return jsonify({"success": True, "leaderboard": leaderboard_data}), 200
 
     except FirebaseError as e:
@@ -301,52 +323,39 @@ def lesson(lesson_id):
 
     lesson_data = None
     try:
-        if db:
-            doc = db.collection('lessons').document(lesson_id).get()
-            if doc.exists:
-                lesson_data = doc.to_dict()
+        # Always use local JSON for lesson 1 for testing
+        if lesson_id == "1":
+            import json
+            with open("lessons/lesson_1_1.json", "r", encoding="utf-8") as f:
+                lesson_data = json.load(f)
+        else:
+            if db:
+                doc = db.collection('lessons').document(lesson_id).get()
+                if doc.exists:
+                    lesson_data = doc.to_dict()
         # Optional fallback/local data example (if Firestore is not ready)
         if not lesson_data:
-            # Example local fallback for lesson 1
+            # Always load the full local JSON for lesson 1
             if lesson_id == "1":
-                lesson_data = {
-                    "title": "Lesson 1: Python Data Types",
-                    "blocks": [
-                        {
-                            "type": "text",
-                            "content": "<p>Python has several basic data types including <strong>str</strong>, <strong>int</strong>, <strong>float</strong>, and <strong>bool</strong>.</p>"
-                        },
-                        {
-                            "type": "fill_in_the_blank",
-                            "prompt": "Fill in the blank: A whole number is called an ____.",
-                            "answer": "int"
-                        },
-                        {
-                            "type": "multiple_choice",
-                            "question": "Which data type would you use to represent True or False?",
-                            "options": ["str", "bool", "int", "float"],
-                            "correct": "bool"
-                        },
-                        {
-                            "type": "drag_and_drop",
-                            "instructions": "Match the data type to its example.",
-                            "pairs": [
-                                {"left": "str", "right": "'Hello'"},
-                                {"left": "int", "right": "42"},
-                                {"left": "float", "right": "3.14"},
-                                {"left": "bool", "right": "True"}
-                            ]
-                        },
-                        {
-                            "type": "ide",
-                            "instructions": "Try assigning different values to variables in the editor below:",
-                            "default_code": "# Assign variables\nname = 'Alice'\nage = 20\nheight = 5.7\nis_student = True\n\nprint(name, age, height, is_student)"
-                        }
-                    ]
-                }
+                import json
+                with open("lessons/lesson_1_1.json", "r", encoding="utf-8") as f:
+                    lesson_data = json.load(f)
         # --- Normalization logic for Firestore/JSON lesson blocks ---
         if lesson_data and 'blocks' in lesson_data:
             for block in lesson_data['blocks']:
+                # If block is a quiz_section, normalize its inner blocks
+                if block.get('type') == 'quiz_section' and 'content' in block and 'blocks' in block['content']:
+                    new_blocks = []
+                    for inner_block in block['content']['blocks']:
+                        # Explode multiple_choice_quiz blocks into one block per question
+                        if inner_block.get('type') == 'multiple_choice_quiz' and 'questions' in inner_block:
+                            for q in inner_block['questions']:
+                                new_block = dict(inner_block)
+                                new_block['questions'] = [q]
+                                new_blocks.append(new_block)
+                        else:
+                            new_blocks.append(inner_block)
+                    block['content']['blocks'] = new_blocks
                 # Normalize fill_in_the_blank
                 if block.get('type') == 'fill_in_the_blank':
                     if 'prompt' not in block and 'question' in block:
@@ -370,4 +379,135 @@ def lesson(lesson_id):
     if not lesson_data:
         return "Lesson not found", 404
 
+    # DEBUG: Print lesson_data to check structure
+    import pprint; pprint.pprint(lesson_data)
+
     return render_template('lesson.html', lesson=lesson_data, active_page='lessons')
+
+from datetime import datetime
+from firebase_admin import firestore
+
+# --- API to get the most current currency value from Firestore ---
+@routes_bp.route('/api/get_currency', methods=['GET'])
+def get_currency():
+    if db is None:
+        return jsonify({'error': 'Database not initialized'}), 500
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'Not logged in'}), 401
+    user_ref = db.collection('users').document(user_id)
+    user_doc = user_ref.get()
+    currency = user_doc.to_dict().get('currency', 0) if user_doc.exists else 0
+    session['user_currency'] = currency
+    return jsonify({'currency': currency})
+
+@routes_bp.route('/api/daily_login', methods=['POST'])
+def daily_login():
+    if db is None:
+        return jsonify({'error': 'Database not initialized'}), 500
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'Not logged in'}), 401
+
+    user_ref = db.collection('users').document(user_id)
+    user_doc = user_ref.get()
+    today_str = datetime.utcnow().strftime('%Y-%m-%d')
+    last_token_login = ''
+    if user_doc.exists:
+        last_token_login = user_doc.to_dict().get('last_token_login', '')
+    if last_token_login == today_str:
+        # Always fetch and return the most current value
+        user_doc = user_ref.get()
+        currency = user_doc.to_dict().get('currency', 0) if user_doc.exists else 0
+        session['user_currency'] = currency
+        return jsonify({'awarded': False, 'currency': currency})
+    # Award tokens
+    user_ref.update({
+        'currency': firestore.Increment(10),
+        'last_token_login': today_str
+    })
+    # Fetch the updated value
+    user_doc = user_ref.get()
+    currency = user_doc.to_dict().get('currency', 0) if user_doc.exists else 0
+    session['user_currency'] = currency
+    return jsonify({'awarded': True, 'currency': currency})
+
+# --- IDE Code Run Token Award Endpoint ---
+@routes_bp.route('/api/award_ide_token', methods=['POST'])
+def award_ide_token():
+    if db is None:
+        return jsonify({'error': 'Database not initialized'}), 500
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'Not logged in'}), 401
+    data = request.get_json()
+    block_id = data.get('block_id')
+    code = data.get('code', '').strip()
+    # Define expected code for each block_id (expand as needed)
+    expected_code_map = {
+        'try_hello_world': 'print("Hello, World!")',
+        # Add more block_id: expected_code pairs as needed
+    }
+    expected_code = expected_code_map.get(block_id)
+    if not expected_code or code != expected_code:
+        # Always fetch and return the most current value
+        user_ref = db.collection('users').document(user_id)
+        user_doc = user_ref.get()
+        currency = user_doc.to_dict().get('currency', 0) if user_doc.exists else 0
+        session['user_currency'] = currency
+        return jsonify({'awarded': False, 'currency': currency})
+    user_ref = db.collection('users').document(user_id)
+    user_doc = user_ref.get()
+    ide_rewards = user_doc.to_dict().get('ide_rewards', {})
+    if ide_rewards.get(block_id):
+        currency = user_doc.to_dict().get('currency', 0) if user_doc.exists else 0
+        session['user_currency'] = currency
+        return jsonify({'awarded': False, 'currency': currency})
+    user_ref.update({
+        'currency': firestore.Increment(5),
+        f'ide_rewards.{block_id}': True
+    })
+    # Fetch the updated value
+    user_doc = user_ref.get()
+    currency = user_doc.to_dict().get('currency', 0) if user_doc.exists else 0
+    session['user_currency'] = currency
+    return jsonify({'awarded': True, 'currency': currency})
+
+# --- API to provide the most recently completed and next topic for the user ---
+@routes_bp.route('/api/whats_next', methods=['GET'])
+def get_whats_next():
+    if db is None:
+        return jsonify({'message': 'Database not initialized'}), 500
+
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'message': 'Authentication required. No user_id in session.'}), 401
+
+    # Fetch all topics/lessons ordered by 'order' field
+    all_content_docs = db.collection('content').order_by('order').stream()
+    all_content = [doc.to_dict() for doc in all_content_docs]
+
+    # Fetch user's completed progress
+    progress_docs = db.collection('user_progress').where('user_id', '==', user_id).where('status', '==', 'completed').stream()
+    completed_ids = set(doc.to_dict().get('content_id') for doc in progress_docs)
+
+    # Find the most recent completed topic (by order)
+    last_completed = None
+    for content in all_content:
+        if content.get('id') in completed_ids:
+            last_completed = content
+
+    # Find the next topic
+    next_topic = None
+    found_last = False
+    for content in all_content:
+        if found_last:
+            next_topic = content
+            break
+        if last_completed and content.get('id') == last_completed.get('id'):
+            found_last = True
+
+    return jsonify({
+        'last_completed': last_completed,
+        'next_topic': next_topic
+    }), 200

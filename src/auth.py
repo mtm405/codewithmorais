@@ -41,27 +41,49 @@ def authenticate():
         user_doc = user_ref.get()
 
         if user_doc.exists:
-            # User exists, update last login
+            # User exists, update all relevant fields but keep existing values for currency, total_points, user_title, is_admin, created_at
+            first_name = user_name.split(' ')[0] if user_name else ''
+            existing = user_doc.to_dict()
             user_ref.update({
+                'email': user_email,
+                'name': user_name,
+                'user_name': first_name,
                 'last_login': firestore.SERVER_TIMESTAMP,
-                'last_login_online_time': login_time  # Store the online time for reference
+                'last_login_online_time': login_time,
+                'picture': idinfo.get('picture', ''),
+                'created_at': existing.get('created_at', firestore.SERVER_TIMESTAMP),
+                'currency': existing.get('currency', 10),
+                'user_title': existing.get('user_title', 'Newbie'),
+                'total_points': existing.get('total_points', 0),
+                'is_admin': existing.get('is_admin', False),
             })
         else:
-            # New user, create document
+            # New user, create document with all required fields
+            first_name = user_name.split(' ')[0] if user_name else ''
             user_ref.set({
                 'email': user_email,
                 'name': user_name,
+                'user_name': first_name,
                 'created_at': firestore.SERVER_TIMESTAMP,
                 'last_login': firestore.SERVER_TIMESTAMP,
-                'last_login_online_time': login_time
+                'last_login_online_time': login_time,
+                'currency': 10,
+                'user_title': 'Newbie',
+                'total_points': 0,
+                'is_admin': False,
+                'picture': idinfo.get('picture', ''),
             })
 
-        # Set session
+        # Set session with first name
         session['user_id'] = user_id
         session['user_email'] = user_email
-        session['user_name'] = user_name
+        session['user_name'] = first_name
 
         return jsonify({'success': True, 'redirect': url_for('routes.dashboard')})
     except Exception as e:
         print(f"ERROR in /auth: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
+@auth_bp.route('/')
+def index():
+    return redirect(url_for('index'))

@@ -15,7 +15,7 @@ async function initializeFirebase() {
     console.log("DEBUG: initializeFirebase() started.");
     try {
         // __firebase_config is typically set in a <script> tag in base.html from Flask
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : {};
 
         if (!firebaseConfig || Object.keys(firebaseConfig).length === 0 || !firebaseConfig.apiKey || !firebaseConfig.projectId) {
             console.warn("Firebase config is missing or incomplete. Firebase features will be limited.");
@@ -70,19 +70,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// CLOCK: Display current time in greeting (dashboard and all pages)
-function updateLiveClock() {
-    const clock = document.getElementById('live-clock');
-    if (clock) {
-        const now = new Date();
-        const h = now.getHours().toString().padStart(2, '0');
-        const m = now.getMinutes().toString().padStart(2, '0');
-        const s = now.getSeconds().toString().padStart(2, '0');
-        clock.textContent = `${h}:${m}:${s}`;
+// --- Set Time-Based Greeting ---
+function updateTimeBasedGreeting() {
+    const greetingEl = document.getElementById('time-based-greeting');
+    if (!greetingEl) return;
+    const now = new Date();
+    const hour = now.getHours();
+    let greeting = 'Good evening,';
+    if (hour >= 5 && hour < 12) greeting = 'Good morning,';
+    else if (hour >= 12 && hour < 18) greeting = 'Good afternoon,';
+    // Get first name from user_name or user display name
+    let firstName = '';
+    const userNameEl = document.getElementById('user-name-display');
+    if (userNameEl) {
+        firstName = userNameEl.textContent.split(' ')[0];
+        userNameEl.textContent = firstName;
     }
+    greetingEl.textContent = `${greeting}`;
 }
-setInterval(updateLiveClock, 1000);
-document.addEventListener('DOMContentLoaded', updateLiveClock);
+document.addEventListener('DOMContentLoaded', updateTimeBasedGreeting);
 
 // Call initializeFirebase when app starts
 initializeFirebase();

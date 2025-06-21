@@ -1,31 +1,146 @@
-{# partials/block_quiz_section.html - Renders a quiz section block #}
-<div class="quiz-section-unified">
-  {% if block.content.header %}
-    <div class="quiz-header-unified">{{ block.content.header }}</div>
-  {% endif %}
-  {% if block.content.blocks %}
-    <div class="quiz-blocks-unified">
-      {% for quiz_block in block.content.blocks %}
-        <div class="quiz-step-block" data-step="{{ loop.index }}">
-          {% if quiz_block.instructions %}
-            <div class="quiz-block-instructions">{{ quiz_block.instructions }}</div>
-          {% endif %}
-          <div class="quiz-block-unified">
-            {% if quiz_block.type == 'fill_in_the_blanks' %}
-              {% set block = quiz_block %}
-              {% include 'partials/block_fill_in_blank.html' %}
-            {% elif quiz_block.type == 'multiple_choice_quiz' %}
-              {% set block = quiz_block %}
-              {% include 'partials/block_multiple_choice.html' %}
-            {% elif quiz_block.type == 'drag_and_drop' %}
-              {% set block = quiz_block %}
-              {% include 'partials/block_drag_and_drop.html' %}
-            {% else %}
-              <p><em>Unknown quiz block type: {{ quiz_block.type }}</em></p>
-            {% endif %}
-          </div>
+{# College-style Quiz Section: Clear, Accessible, Robust #}
+<div class="quiz-section-unified redesigned-quiz">
+  <h2 class="quiz-title" style="text-align:center; font-size:2em; font-weight:800; margin-bottom:0.5em;">Quiz: Test Your Understanding</h2>
+  <div class="quiz-instructions" style="text-align:center; margin-bottom:1.5em; color:#444; font-size:1.1em;">
+    Answer all questions below. You can review your answers before submitting. Your score will be shown at the end.
+  </div>
+  <div class="quiz-progress-bar-linear">
+    <div class="quiz-progress-bar-fill" style="width: 0%;"></div>
+  </div>
+  <div class="quiz-questions-list">
+    {% set shuffled_blocks = block.content.blocks %}
+    {% for quiz_block in shuffled_blocks %}
+      <div class="quiz-card" data-step="{{ loop.index0 }}" style="display: none;">
+        <div class="quiz-header">
+          <span class="quiz-progress">Question {{ loop.index }} of {{ shuffled_blocks|length }}</span>
         </div>
-      {% endfor %}
-    </div>
-  {% endif %}
+        <div class="quiz-question-row">
+          {% if quiz_block.type == 'multiple_choice_quiz' %}
+            {% set block = quiz_block %}
+            {% include 'partials/block_multiple_choice.html' %}
+            <button class="quiz-save-exit-btn themed-btn" style="margin-top: 1.5em;">Save and Exit</button>
+          {% elif quiz_block.type == 'fill_in_the_blanks' %}
+            <div class="block-fill-in-blank-minimal">
+              <div class="fill-blank-question" style="font-size:1.22em; font-weight:700; color:#181c2a; margin-bottom:1em;">
+                {% if 'question' in quiz_block %}
+                  {{ quiz_block.question | markdown | safe }}
+                {% elif 'text' in quiz_block %}
+                  {{ quiz_block.text | markdown | safe }}
+                {% else %}
+                  [No question text found]
+                {% endif %}
+              </div>
+              <input type="text" class="fill-blank-input-minimal" style="width:100%; font-size:1.1em; padding:0.7em; border-radius:8px; border:1.5px solid #e6eaf3; background:#fff; color:#181c2a; margin-bottom:1em;" autocomplete="off" data-answers="{{ quiz_block.answers|join(',') if 'answers' in quiz_block else '' }}" />
+              <button class="fill-blank-next-btn" style="background:linear-gradient(90deg,#2b7cff,#7f53ac); color:#fff; border:none; border-radius:24px; padding:0.7em 2.2em; font-size:1.1em; font-weight:700; cursor:pointer;">Next</button>
+            </div>
+          {% elif quiz_block.type == 'drag_and_drop' %}
+            {% set block = quiz_block %}
+            {% include 'partials/block_drag_and_drop_minimal.html' %}
+          {% else %}
+            <p><em>Unknown quiz block type: {{ quiz_block.type }}</em></p>
+          {% endif %}
+        </div>
+        <div class="quiz-feedback" style="display:none;"></div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="quiz-summary" style="display:none;">
+    <h2>Quiz Summary</h2>
+    <div class="quiz-final-score"></div>
+    <table class="quiz-summary-table">
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Your Answer</th>
+          <th>Correct Answer</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="quiz-retry-btn">Retry Quiz</button>
+  </div>
 </div>
+<script src="/static/js/quiz_minimal.js"></script>
+<style>
+.redesigned-quiz {
+  background: #f8fafd;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  padding: 2.2em 1.5em 2.5em 1.5em;
+  max-width: 900px;
+  margin: 2em auto 2em auto;
+  position: relative;
+}
+.quiz-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+  padding: 2em 1.5em 1.5em 1.5em;
+  margin-bottom: 2em;
+  position: relative;
+  border: 1.5px solid #e6eaf3;
+}
+.quiz-progress {
+  color: #2b7cff !important;
+  font-weight: 700;
+}
+.quiz-feedback {
+  margin-top: 0.7em;
+  font-size: 1.1em;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 0.6em 1em;
+  text-align: center;
+  display: none;
+}
+.quiz-feedback.correct {
+  background: #e6f9e6;
+  color: #1a7f1a;
+}
+.quiz-feedback.incorrect {
+  background: #fff3cd;
+  color: #856404;
+}
+.quiz-nav-btns {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5em;
+  gap: 1em;
+}
+.quiz-nav-btns button {
+  background: linear-gradient(90deg,#2b7cff,#7f53ac);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 0.7em 2.2em;
+  font-size: 1.1em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.quiz-nav-btns button:disabled {
+  background: #e6eaf3;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.quiz-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5em;
+}
+.quiz-summary-table th, .quiz-summary-table td {
+  border: 1px solid #e6eaf3;
+  padding: 0.7em 1em;
+  text-align: left;
+}
+.quiz-summary-table th {
+  background: #f0f4fa;
+}
+.quiz-final-score {
+  font-size: 1.3em;
+  font-weight: 800;
+  color: #2b7cff;
+  margin-bottom: 1em;
+}
+</style>

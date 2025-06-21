@@ -45,4 +45,4 @@ else:
 FIREBASE_DATABASE_ID = "(default)" # Or whatever your specific database ID is
 
 # --- Application Port ---
-PORT = int(os.environ.get('PORT', 5000)) # Get PORT from .env, default to 5000
+PORT = int(os.environ.get('PORT', 8080)) # Get PORT from .env, default to 5000

@@ -1,17 +1,22 @@
-<div class="block-drag-and-drop">
-  {% if block.instructions is defined and block.instructions %}
-    <p><strong>{{ block.instructions | markdown | safe }}</strong></p>
-  {% endif %}
-  <div class="drag-items">
-    {% for stem in block.stems %}
-      <div class="drag-item" draggable="true" data-stem="{{ stem }}">{{ stem | markdown | safe }}</div>
-    {% endfor %}
+<div class="drag-drop-question">
+  <div class="drag-drop-instructions" style="font-size:1.08em; color:#ffd600; font-weight:700;">{{ block.instructions }}</div>
+  <div class="drag-drop-container" style="display:flex; gap:2em; margin:1em 0; flex-wrap:wrap;">
+    <div class="drag-items" style="display:flex; flex-direction:column; gap:1em; min-width:180px;">
+      {% for pair in block.pairs %}
+        <div class="drag-item" draggable="true" data-id="{{ loop.index0 }}" style="background:#ffe066; color:#222; padding:0.7em 1.2em; border-radius:8px; cursor:grab; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.06);">{{ pair.left }}</div>
+      {% endfor %}
+    </div>
+    <div class="drop-zones" style="display:flex; flex-direction:column; gap:1em; min-width:180px;">
+      {% for pair in block.pairs %}
+        <div class="drop-zone" data-id="{{ loop.index0 }}" style="background:#f0f4fa; border:2px dashed #bdbdbd; min-height:2.5em; border-radius:8px; padding:0.7em 1.2em; display:flex; align-items:center; gap:1em;">
+          <span class="drop-label" style="color:#222; font-weight:500;">{{ pair.right }}</span>
+          <span class="drop-target" style="min-width:80px; min-height:1.5em; display:inline-block;"></span>
+        </div>
+      {% endfor %}
+    </div>
   </div>
-  <div class="drop-zones">
-    {% for option in block.options %}
-      <div class="drop-zone" data-option="{{ option }}">{{ option | markdown | safe }}</div>
-    {% endfor %}
+  <div class="drag-drop-actions" style="display:flex; gap:1em; align-items:center; margin-bottom:0.7em;">
+    <button class="check-drag-drop-btn" type="button" style="background:linear-gradient(90deg,#2b7cff,#7f53ac); color:#fff; border:none; border-radius:24px; padding:0.7em 2.2em; font-size:1.1em; font-weight:700; cursor:pointer; transition:background 0.2s;">Check Matches</button>
   </div>
-  <button class="check-drag-drop-btn" type="button">Next</button>
-  <div class="feedback"></div>
+  <div class="drag-drop-feedback quiz-feedback" style="display:none;"></div>
 </div>

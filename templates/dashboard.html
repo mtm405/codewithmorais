@@ -2,261 +2,374 @@
 
 {% block title %}Your Dashboard - CodeLab{% endblock %}
 
-{# Override content block to avoid main-content-wrapper for dashboard #}
 {% block content %}
 {% include 'partials/header_bar.html' %}
-
-<div class="dashboard-grid">
-    <!-- Leaderboard Section (pinned, celebratory, top-left) -->
-    <div class="grid-item leaderboard-block-modern pinned" id="leaderboard-block">
-        <h3 class="section-title accent-yellow celebratory-title">
-            <span class="material-symbols-outlined">emoji_events</span>
-            Leaderboard
-        </h3>
-        <div class="leaderboard-content">
-            <table class="leaderboard-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>User</th>
-                        <th>Points</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard-body">
-                    <!-- JS will populate leaderboard rows here -->
-                </tbody>
-            </table>
-        </div>
-        <div class="leaderboard-celebrate">
-            <span class="material-symbols-outlined accent-yellow" style="font-size:2em;">celebration</span>
-            <span class="leaderboard-message">Congrats to our top coders!</span>
-        </div>
+<div id="dashboard-announcement-block" class="dashboard-announcement-block card" style="background:#23263A;color:#FFD700;border-radius:14px;padding:18px 22px;margin-bottom:24px;box-shadow:0 2px 16px rgba(0,0,0,0.10);font-size:1.13em;position:relative;width:calc(100% - 64px);max-width:none;margin-left:32px;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span class="material-symbols-outlined" style="font-size:1.5em;color:#FFD700;">campaign</span>
+    <span id="announcement-text">Loading announcement...</span>
+    <button id="edit-announcement-btn" style="display:none;margin-left:auto;background:none;border:none;color:#00BFFF;font-weight:600;cursor:pointer;">Edit</button>
+  </div>
+  <textarea id="announcement-edit-area" style="display:none;width:100%;margin-top:10px;font-size:1em;padding:8px;border-radius:8px;border:1.5px solid #00BFFF;background:#181a28;color:#FFD700;"></textarea>
+  <div style="display:none;margin-top:10px;gap:10px;" id="announcement-edit-actions">
+    <button id="save-announcement-btn" style="background:#00BFFF;color:#fff;font-weight:600;padding:6px 18px;border:none;border-radius:6px;cursor:pointer;">Save</button>
+    <button id="cancel-announcement-btn" style="background:#393c54;color:#fff;font-weight:600;padding:6px 18px;border:none;border-radius:6px;cursor:pointer;">Cancel</button>
+  </div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; margin: 32px 0 0 32px;">
+  <div class="leaderboard-block modern-leaderboard card" id="leaderboard-block" style="flex:1 1 320px; min-width: 280px; max-width: 360px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); border-radius: 18px; overflow: hidden; position: relative; background: #23263A; color: #fff; margin-right:12px; align-self: flex-start;">
+    <h3 class="section-title accent-yellow" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-size: 1.3em; margin: 0; padding: 18px 0 10px 18px; background: #23263A; color: #FFD700; border-bottom: 1px solid #393c54;">
+      <span class="material-symbols-outlined" style="font-size:1.5em; color:#FFD700;">emoji_events</span>
+      Leaderboard
+    </h3>
+    <canvas id="confetti-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;"></canvas>
+    <div class="leaderboard-content" style="padding: 0 18px 18px 18px; background: #23263A;">
+      <table class="leaderboard-table" style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background: none; border: none;">
+            <th style="text-align:left; font-weight:600; color:#FFD700; font-size:0.95em;">#</th>
+            <th style="text-align:left; font-weight:600; color:#FFD700; font-size:0.95em;">Name</th>
+            <th style="text-align:right; font-weight:600; color:#FFD700; font-size:0.95em;">Points</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <!-- JS will populate leaderboard rows here -->
+        </tbody>
+      </table>
     </div>
+    <div id="leaderboard-message" class="leaderboard-message" style="text-align:left; font-size:1.1em; color:#32CD32; font-weight:600; padding:12px 0 12px 18px;"></div>
+  </div>
 
-    <!-- Rotating Python Nuggets Block with Python Interpreter -->
-    <div class="grid-item rotating-nugget-block dashboard-option" id="nugget-block">
-        <h3 class="section-title accent-purple"><span class="material-symbols-outlined">lightbulb</span> CodeSpark Console</h3>
-        <div id="nugget-content" class="nugget-content"></div>
-        <div class="nugget-interpreter">
-            <textarea id="nugget-python-input" placeholder="Type your Python code here..."></textarea>
-            <button id="nugget-run-btn">Run</button>
-            <pre id="nugget-python-output"></pre>
-        </div>
-        <div class="nugget-controls">
-            <button id="nugget-prev" class="nugget-nav-btn">&#8592;</button>
-            <button id="nugget-next" class="nugget-nav-btn">&#8594;</button>
-        </div>
+  <div class="bellringer-block card" id="bellringer-block" style="flex:3 1 700px; min-width:420px; max-width:900px; background:#23263A; color:#fff; border-radius:18px; box-shadow:0 4px 24px rgba(0,0,0,0.10); padding:0 0 18px 0; position:relative; margin-right:12px; overflow: hidden;">
+    <h3 style="display:flex;align-items:center;gap:8px;font-size:1.2em;margin:0;padding:18px 0 10px 18px;background:#23263A;color:#00BFFF;border-bottom:1px solid #393c54;">
+      <span class="material-symbols-outlined" style="font-size:1.5em;color:#00BFFF;">flag</span>
+      Bell Ringer (Daily Challenge)
+    </h3>
+    <div id="bellringer-content" style="padding:18px;">
+      <div id="bellringer-title" style="font-weight:600;font-size:1.1em;margin-bottom:6px;"></div>
+      <div id="bellringer-desc" style="font-size:1em;margin-bottom:12px;line-height:1.5;"></div>
+      <div id="bellringer-ide" style="height: 180px; width: 100%; margin-bottom: 10px;"></div>
+      <button id="bellringer-run" style="background:#00BFFF;color:#fff;font-weight:600;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;">Run Code</button>
+      <pre id="bellringer-output" style="background:#181a28;color:#FFD700;padding:10px 12px;border-radius:8px;margin-top:10px;min-height:32px;"></pre>
+      <div id="bellringer-award" style="margin-top:8px;font-size:1.1em;font-weight:600;color:#FFD700;"></div>
     </div>
+  </div>
 
-    <!-- Daily Challenge Section (now below the top row) -->
-    <div class="grid-item challenge-block-modern" id="challenge-block">
-        <h3 class="section-title accent-pink">
-            <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 6px;">flag</span>
-            Challenge of the Day
-        </h3>
-        <div class="challenge-header">
-            <h2 id="challenge-title" class="challenge-title">Daily Coding Challenge</h2>
-            <span id="challenge-difficulty" class="challenge-difficulty">Difficulty</span>
-        </div>
-        <div id="challenge-desc" class="challenge-desc">Loading...</div>
-        <textarea id="challenge-code" rows="8" class="challenge-code-input" placeholder="Write your code here..."></textarea>
-        <button id="submit-challenge" class="challenge-submit-btn">Submit</button>
-        <div id="challenge-result" class="challenge-result"></div>
+  <div class="recent-activity-block card" id="recent-activity-block" style="flex:1 1 320px; min-width:220px; max-width:340px; background:#23263A; color:#fff; border-radius:18px; box-shadow:0 4px 24px rgba(0,0,0,0.10); padding:0 0 10px 0; position:relative; border: 1.5px solid var(--accent-blue); overflow: hidden;">
+    <h3 style="display:flex;align-items:center;gap:8px;font-size:1.1em;margin:0;padding:14px 0 8px 14px;background:#23263A;color:var(--accent-green);border-bottom:1px solid #393c54;">
+      <span class="material-symbols-outlined" style="font-size:1.3em;color:var(--accent-green);">trending_up</span>
+      Recent Activity
+    </h3>
+    <div id="recent-activity-content" style="padding:10px 14px 0 14px;min-height:120px;">
+      <div style="color:var(--text-medium);font-size:0.98em;">Loading your recent progress...</div>
     </div>
+  </div>
 
-    <!-- Search Results Display Area -->
-    <div id="search-results-display" class="grid-item hidden" style="grid-column: 1 / -1;"></div>
+  <div class="whats-next-block card" id="whats-next-block" style="flex:1 1 320px; min-width:220px; max-width:340px; background:#23263A; color:#fff; border-radius:18px; box-shadow:0 4px 24px rgba(0,0,0,0.10); padding:0 0 10px 0; position:relative; border: 1.5px solid var(--accent-green); overflow: hidden; margin-top: 18px;">
+    <h3 style="display:flex;align-items:center;gap:8px;font-size:1.1em;margin:0;padding:14px 0 8px 14px;background:#23263A;color:var(--accent-green);border-bottom:1px solid #393c54;">
+      <span class="material-symbols-outlined" style="font-size:1.3em;color:var(--accent-green);">forward</span>
+      What's Next
+    </h3>
+    <div id="whats-next-content" style="padding:10px 14px 0 14px;min-height:60px;">
+      <div style="color:var(--text-medium);font-size:0.98em;">Loading what's next...</div>
+    </div>
+  </div>
+</div>
+
+<div class="whats-next-block card" id="whats-next-block" style="flex:1 1 320px; min-width:280px; max-width:360px; background:#23263A; color:#fff; border-radius:18px; box-shadow:0 4px 24px rgba(0,0,0,0.10); padding:18px; margin:32px 0 0 32px;">
+  <h3 style="display:flex;align-items:center;gap:8px;font-size:1.2em;margin:0;padding:0 0 18px 0;background:#23263A;color:#00BFFF;border-bottom:1px solid #393c54;">
+    <span class="material-symbols-outlined" style="font-size:1.5em;color:#00BFFF;">arrow_forward</span>
+    What's Next?
+  </h3>
+  <div id="whats-next-content" style="padding-top:10px; font-size:1em;">
+    <!-- JS will populate what's next content here -->
+  </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
-<script src="{{ url_for('static', filename='js/dashboard_logic.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3/ace.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Daily Challenge logic
-    fetch('/api/daily_challenge')
-    .then(res => res.json())
-    .then(data => {
-        // Update challenge UI
-        if (data.title) {
-            document.getElementById('challenge-title').textContent = data.title;
-            const diffElem = document.getElementById('challenge-difficulty');
-            diffElem.textContent = data.difficulty || '';
-            diffElem.classList.remove('easy', 'medium', 'hard');
-            if (data.difficulty) {
-                if (data.difficulty.toLowerCase() === 'easy') diffElem.classList.add('easy');
-                else if (data.difficulty.toLowerCase() === 'medium') diffElem.classList.add('medium');
-                else if (data.difficulty.toLowerCase() === 'hard') diffElem.classList.add('hard');
-            }
-            let desc = data.description || '';
-            desc = desc.replace(/`([^`]+)`/g, '<code>$1</code>');
-            document.getElementById('challenge-desc').innerHTML = desc;
-        } else {
-            document.getElementById('challenge-desc').textContent = 'No challenge for today.';
-        }
-
-        // --- Notification logic ---
-        if (data.id) { // assuming each challenge has a unique id
-            const lastSeenChallenge = localStorage.getItem('lastSeenChallengeId');
-            if (lastSeenChallenge !== String(data.id)) {
-                // New challenge detected!
-                showChallengeNotification(data);
-                // Update badge
-                document.querySelector('.notification-icon .badge').textContent = '1';
-            } else {
-                // No new challenge, clear badge
-                document.querySelector('.notification-icon .badge').textContent = '0';
-            }
-        }
-    });
-
-    // Mark notification as read when dropdown is opened
-    document.querySelector('.notification-icon').addEventListener('click', function(e) {
-        e.stopPropagation();
-        const dropdown = document.getElementById('notificationDropdown');
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-
-        // If there is a new challenge notification, mark as read
-        const list = document.getElementById('notificationList');
-        const firstLi = list.querySelector('li');
-        if (firstLi && firstLi.textContent.startsWith('New Challenge')) {
-            document.querySelector('.notification-icon .badge').textContent = '0';
-            firstLi.style.fontWeight = 'normal';
-            // Optionally, store last seen challenge id here if you want to mark as read on open
-            // localStorage.setItem('lastSeenChallengeId', ...);
-        }
-    });
-
-    // Hide dropdown when clicking outside
-    document.addEventListener('click', function() {
-        const dropdown = document.getElementById('notificationDropdown');
-        if (dropdown) dropdown.style.display = 'none';
-    });
-
-    document.getElementById('submit-challenge').onclick = function() {
-        const code = document.getElementById('challenge-code').value;
-        fetch('/api/submit_challenge', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({code})
-        })
-        .then(res => res.json())
-        .then(data => {
-            let resultDiv = document.getElementById('challenge-result');
-            if (data.correct) {
-                resultDiv.innerHTML = '<b>Correct! Points awarded!</b>';
-            } else {
-                resultDiv.innerHTML = '<b>Incorrect. See details below:</b>';
-            }
-            if (data.results) {
-                resultDiv.innerHTML += '<ul>' + data.results.map(r =>
-                    `<li>Input: ${r.input}, Expected: ${r.expected || ''}, Output: ${r.output || ''}, Passed: ${r.passed ? '✅' : '❌'} ${r.error ? 'Error: ' + r.error : ''}</li>`
-                ).join('') + '</ul>';
-            }
-            if (data.error) {
-                resultDiv.innerHTML += `<pre>${data.error}</pre>`;
-            }
-        });
-    };
-
-    // Modern circular progress update
-    document.querySelectorAll('.circular-progress-modern').forEach(function(el) {
-        const percent = parseInt(el.getAttribute('data-progress'), 10) || 0;
-        el.style.setProperty('--progress', percent / 100);
-        el.querySelector('.progress-value-modern').textContent = percent + '%';
-    });
-
-    // Live clock
-    function updateClock() {
-        const clock = document.getElementById('live-clock');
-        if (!clock) return;
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const s = String(now.getSeconds()).padStart(2, '0');
-        clock.textContent = `${h}:${m}:${s}`;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    // (Optional) Fetch notifications from backend
-    function loadNotifications() {
-        fetch('/api/notifications')
-            .then(res => res.json())
-            .then(data => {
-                const list = document.getElementById('notificationList');
-                if (data.notifications && data.notifications.length > 0) {
-                    list.innerHTML = '';
-                    data.notifications.forEach(n => {
-                        const li = document.createElement('li');
-                        li.textContent = n.message;
-                        list.appendChild(li);
-                    });
-                } else {
-                    list.innerHTML = '<li>No new notifications.</li>';
-                }
-            });
-    }
-    // Call this on page load or when opening dropdown
-    // loadNotifications();
-
-    // Example: To fetch real progress, replace above with:
-    /*
-    fetch('/api/user_progress')
-      .then(res => res.json())
-      .then(progressData => {
-        document.querySelectorAll('.circular-progress-modern').forEach(function(el) {
-            const topic = el.getAttribute('data-topic');
-            const percent = progressData[topic] || 0;
-            el.style.setProperty('--progress', percent / 100);
-            el.querySelector('.progress-value-modern').textContent = percent + '%';
-        });
-      });
-    */
-});
-
-function showChallengeNotification(challenge) {
-    const list = document.getElementById('notificationList');
-    // Remove "No new notifications" if present
-    if (list.children.length === 1 && list.children[0].textContent.includes('No new notifications')) {
-        list.innerHTML = '';
-    }
-    // Add the new notification
-    const li = document.createElement('li');
-    li.textContent = `New Challenge: "${challenge.title}" is available!`;
-    li.style.fontWeight = 'bold';
-    li.onclick = function() {
-        // Mark as read when clicked
-        localStorage.setItem('lastSeenChallengeId', challenge.id);
-        document.querySelector('.notification-icon .badge').textContent = '0';
-        li.style.fontWeight = 'normal';
-    };
-    list.prepend(li);
+// Announcement block logic
+async function loadAnnouncement() {
+  const res = await fetch('/api/announcement');
+  const data = await res.json();
+  const annText = document.getElementById('announcement-text');
+  if (data.success && annText) {
+    annText.textContent = data.announcement;
+  } else if (annText) {
+    annText.textContent = 'No announcement available.';
+  }
 }
 
-// --- Dark mode toggle logic ---
-(function() {
-    const toggleBtn = document.getElementById('dark-mode-toggle');
-    const icon = document.getElementById('dark-mode-icon');
-    // Check localStorage for theme
-    function setTheme(theme) {
-        document.body.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        icon.textContent = theme === 'dark' ? 'dark_mode' : 'light_mode';
+async function checkAdminAndEnableEdit() {
+  const res = await fetch('/api/get_user_info');
+  const data = await res.json();
+  if (data.success && data.is_admin) {
+    const editBtn = document.getElementById('edit-announcement-btn');
+    if (editBtn) editBtn.style.display = '';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadAnnouncement();
+  checkAdminAndEnableEdit();
+  const editBtn = document.getElementById('edit-announcement-btn');
+  const annText = document.getElementById('announcement-text');
+  const editArea = document.getElementById('announcement-edit-area');
+  const actions = document.getElementById('announcement-edit-actions');
+  if (editBtn) {
+    editBtn.onclick = () => {
+      editArea.value = annText.textContent;
+      annText.style.display = 'none';
+      editArea.style.display = '';
+      actions.style.display = 'flex';
+      editBtn.style.display = 'none';
+    };
+  }
+  if (actions) {
+    document.getElementById('save-announcement-btn').onclick = async () => {
+      const newText = editArea.value;
+      const res = await fetch('/api/announcement', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ announcement: newText })
+      });
+      const result = await res.json();
+      if (result.success) {
+        annText.textContent = newText;
+      } else {
+        alert('Failed to update announcement.');
+      }
+      annText.style.display = '';
+      editArea.style.display = 'none';
+      actions.style.display = 'none';
+      editBtn.style.display = '';
+    };
+    document.getElementById('cancel-announcement-btn').onclick = () => {
+      annText.style.display = '';
+      editArea.style.display = 'none';
+      actions.style.display = 'none';
+      editBtn.style.display = '';
+    };
+  }
+
+  // Fetch leaderboard data and render
+  async function fetchLeaderboard() {
+    const tbody = document.getElementById('leaderboard-body');
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#FFD700;">Loading...</td></tr>';
+    try {
+      const res = await fetch('/api/leaderboard');
+      const data = await res.json();
+      if (!data.success) throw new Error('Failed to load leaderboard');
+      tbody.innerHTML = '';
+      let userInTop = false;
+      data.leaderboard.slice(0, 5).forEach((user, i) => {
+        const tr = document.createElement('tr');
+        if (user.is_current_user) {
+          tr.classList.add('current-user');
+          tr.style.background = 'linear-gradient(90deg,#2e7d32 0%,#23263A 100%)';
+          tr.style.fontWeight = 'bold';
+        }
+        tr.innerHTML = `
+          <td style="padding: 8px 6px; font-size:1.1em; color:#FFD700;">${i + 1} ${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : ''}</td>
+          <td style="padding: 8px 6px; font-size:1.1em; color:#fff;">${user.username}</td>
+          <td style="padding: 8px 6px; text-align:right; font-size:1.1em; color:#FFD700; font-weight:700;">${user.total_points !== undefined ? user.total_points : user.points}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      // Festive message
+      const msg = document.getElementById('leaderboard-message');
+      msg.textContent = data.leaderboard.some(u => u.is_current_user && data.leaderboard.indexOf(u) < 5) ? '🎉 Congrats! You’re in the top 5!' : '';
+      // Confetti if user is in top 5
+      if (data.leaderboard.some(u => u.is_current_user && data.leaderboard.indexOf(u) < 5)) triggerConfetti();
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#FFD700;">Could not load leaderboard.</td></tr>';
     }
-    function getPreferredTheme() {
-        return localStorage.getItem('theme') || 'dark';
-    }
-    // Set initial theme
-    setTheme(getPreferredTheme());
-    toggleBtn.addEventListener('click', function() {
-        const current = document.body.getAttribute('data-theme');
-        setTheme(current === 'dark' ? 'light' : 'dark');
+  }
+
+  // Confetti logic
+  function triggerConfetti() {
+    const block = document.getElementById('leaderboard-block');
+    const rect = block.getBoundingClientRect();
+    // Use the main document body for confetti, but set the origin to the bottom-center of the leaderboard block
+    confetti({
+      particleCount: 120,
+      spread: 90,
+      origin: {
+        x: (rect.left + rect.width / 2) / window.innerWidth,
+        y: (rect.bottom - 10) / window.innerHeight // 10px above the bottom of the block
+      },
+      colors: ['#FFD700', '#FF69B4', '#00BFFF', '#32CD32', '#FF4500']
     });
-})();
+  }
+
+  // Bell Ringer logic with Ace editor and real IDE
+  let bellringerEditor;
+  async function fetchBellRinger() {
+    const res = await fetch('/api/bellringer/today');
+    const data = await res.json();
+    if (!data.success) return;
+    document.getElementById('bellringer-title').textContent = data.title;
+    document.getElementById('bellringer-desc').textContent = data.description;
+
+    // Check if already completed today
+    const checkResp = await fetch('/api/bellringer/submit', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ code: '', challenge_id: data.id })
+    });
+    const checkResult = await checkResp.json();
+    if (checkResult.output && checkResult.output.includes('Already completed today')) {
+      // Remove IDE and show message
+      const contentDiv = document.getElementById('bellringer-content');
+      contentDiv.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;">
+          <span style="font-size:2.2em; color:#FFD700; margin-bottom:10px;">🎉</span>
+          <div style="font-size:1.18em; color:#FFD700; font-weight:700; margin-bottom:6px; text-align:center;">You've already completed today's Bell Ringer!</div>
+          <div style="font-size:1.05em; color:#00BFFF; font-weight:600; text-align:center;">Come back tomorrow for a new challenge.</div>
+          <div style="margin-top:14px; font-size:1.08em; color:#32CD32; font-weight:600; text-align:center;">
+            <span>Score:</span> <span style="color:#FFD700;">+${checkResult.points || 0} points</span>, <span style="color:#00BFFF;">+${checkResult.tokens || 0} tokens</span>
+          </div>
+          <button id="bellringer-reset" style="margin-top:22px;padding:8px 18px;background:#ef4444;color:#fff;font-weight:600;border:none;border-radius:6px;cursor:pointer;">Reset for Testing</button>
+        </div>
+      `;
+      document.getElementById('bellringer-reset').onclick = async function() {
+        await fetch('/api/bellringer/reset', { method: 'POST' });
+        location.reload();
+      };
+      return;
+    }
+
+    // Remove and re-add the Ace editor container to ensure it's always clean
+    let oldIde = document.getElementById('bellringer-ide');
+    if (oldIde) oldIde.remove();
+    const newIde = document.createElement('div');
+    newIde.id = 'bellringer-ide';
+    newIde.style.height = '180px';
+    newIde.style.width = '100%';
+    newIde.style.marginBottom = '10px';
+    const contentDiv = document.getElementById('bellringer-content');
+    contentDiv.insertBefore(newIde, document.getElementById('bellringer-run'));
+    // Setup Ace editor
+    bellringerEditor = ace.edit('bellringer-ide');
+    bellringerEditor.setTheme('ace/theme/monokai');
+    bellringerEditor.session.setMode('ace/mode/python');
+    bellringerEditor.setValue(data.starter_code || '# Write your code here\n', -1);
+    bellringerEditor.setOptions({fontSize: '1em', minLines: 8, maxLines: 18, showPrintMargin: false});
+    document.getElementById('bellringer-run').onclick = async function() {
+      const code = bellringerEditor.getValue();
+      const outputDiv = document.getElementById('bellringer-output');
+      const awardDiv = document.getElementById('bellringer-award');
+      outputDiv.textContent = 'Running...';
+      awardDiv.textContent = '';
+      const resp = await fetch('/api/bellringer/submit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ code, challenge_id: data.id })
+      });
+      const result = await resp.json();
+      if (result.success) {
+        outputDiv.textContent = result.output || 'Correct!';
+        if (result.awarded) {
+          awardDiv.textContent = `🏅 +${result.points} points, +${result.tokens} tokens!`;
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.7 },
+            colors: ['#FFD700', '#00BFFF', '#32CD32']
+          });
+        } else if (result.partial) {
+          awardDiv.textContent = `+${result.partial_points} points (partial)`;
+        } else {
+          awardDiv.textContent = '';
+        }
+      } else {
+        outputDiv.textContent = result.error || 'Incorrect.';
+        awardDiv.textContent = '';
+      }
+      if (result.success && result.output && result.output.includes('Already completed today')) {
+        // Show the celebratory message immediately with the correct score
+        const contentDiv = document.getElementById('bellringer-content');
+        contentDiv.innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;">
+            <span style="font-size:2.2em; color:#FFD700; margin-bottom:10px;">🎉</span>
+            <div style="font-size:1.18em; color:#FFD700; font-weight:700; margin-bottom:6px; text-align:center;">You've already completed today's Bell Ringer!</div>
+            <div style="font-size:1.05em; color:#00BFFF; font-weight:600; text-align:center;">Come back tomorrow for a new challenge.</div>
+            <div style="margin-top:14px; font-size:1.08em; color:#32CD32; font-weight:600; text-align:center;">
+              <span>Score:</span> <span style="color:#FFD700;">+${result.points || 0} points</span>, <span style="color:#00BFFF;">+${result.tokens || 0} tokens</span>
+            </div>
+            <button id="bellringer-reset" style="margin-top:22px;padding:8px 18px;background:#ef4444;color:#fff;font-weight:600;border:none;border-radius:6px;cursor:pointer;">Reset for Testing</button>
+          </div>
+        `;
+        document.getElementById('bellringer-reset').onclick = async function() {
+          await fetch('/api/bellringer/reset', { method: 'POST' });
+          location.reload();
+        };
+        return;
+      }
+    };
+  }
+
+  // --- Recent Activity / Progress Block Logic ---
+  async function loadRecentActivity() {
+    const container = document.getElementById('recent-activity-content');
+    container.innerHTML = '<div style="color:var(--text-medium);font-size:0.98em;">Loading your recent progress...</div>';
+    try {
+      const res = await fetch('/api/user_progress');
+      if (!res.ok) throw new Error('Failed to fetch progress');
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-medium);font-size:0.98em;">No recent activity yet. Start a lesson or quiz!</div>';
+        return;
+      }
+      // Sort by most recent (if timestamp exists)
+      data.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      let html = '<ul style="list-style:none;padding:0;margin:0;">';
+      data.slice(0, 5).forEach(item => {
+        const dateStr = item.timestamp ? new Date(item.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '';
+        html += `<li style="margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #23263A;">
+          <span style="color:var(--accent-green);font-weight:600;">${item.content_title || 'Activity'}</span>
+          <span style="color:var(--text-medium);font-size:0.95em;"> (${item.content_type || 'Type'})</span><br>
+          <span style="color:var(--accent-blue);font-size:0.97em;">${item.status || ''}</span>
+          ${dateStr ? `<span style=\"color:var(--accent-yellow);float:right;\">${dateStr}</span>` : ''}
+        </li>`;
+      });
+      html += '</ul>';
+      container.innerHTML = html;
+    } catch (e) {
+      container.innerHTML = '<div style="color:var(--accent-red);">Could not load recent activity.</div>';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', loadRecentActivity);
+
+  // --- What's Next Block Logic ---
+  async function loadWhatsNext() {
+    const container = document.getElementById('whats-next-content');
+    if (!container) return;
+    container.innerHTML = '<div style="color:var(--text-medium);font-size:0.98em;">Loading what\'s next...</div>';
+    try {
+      const res = await fetch('/api/whats_next');
+      if (!res.ok) throw new Error('Failed to fetch next topic');
+      const data = await res.json();
+      if (!data.next_topic) {
+        container.innerHTML = '<div style="color:var(--text-medium);font-size:0.98em;">You\'ve completed all topics! 🎉</div>';
+        return;
+      }
+      const topic = data.next_topic;
+      container.innerHTML = `<div style="color:var(--accent-green);font-weight:600;">Next Up: ${topic.title || topic.id}</div>
+        <div style=\"color:var(--text-medium);font-size:0.98em;\">${topic.description || ''}</div>`;
+    } catch (e) {
+      container.innerHTML = '<div style="color:var(--accent-red);">Could not load what\'s next.</div>';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', loadWhatsNext);
+
+  fetchLeaderboard();
+  fetchBellRinger();
+  document.getElementById('leaderboard-block').addEventListener('click', triggerConfetti);
+});
 </script>
 {% endblock %}
