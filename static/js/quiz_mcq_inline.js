@@ -68,6 +68,14 @@ function saveProgressToLocal(progress) {
 }
 
 function showMcqSummaryBlock(correctCount, totalQuestions, targetBlock) {
+  // Persist completion state and score in localStorage
+  try {
+    const lessonId = window.lessonId || window.location.pathname;
+    localStorage.setItem(
+      `mcq_quiz_summary_${lessonId}`,
+      JSON.stringify({ completed: true, correctCount, totalQuestions })
+    );
+  } catch (e) { console.warn('Could not persist MCQ summary state:', e); }
   let percent = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
   const lastBlock = targetBlock;
   if (!lastBlock) return;
@@ -127,8 +135,14 @@ function showMcqSummaryBlock(correctCount, totalQuestions, targetBlock) {
     console.log('[MCQ DEBUG] (Summary) Found Refresh Quiz button:', refreshQuizBtn);
     refreshQuizBtn.addEventListener('click', function() {
       console.log('[MCQ DEBUG] (Summary) Refresh Quiz button clicked!');
-      // Add your refresh logic here if needed
-      window.location.reload(); // Simple reload for now
+      // Clear summary state for this topic before reload
+      try {
+        const lessonId = window.lessonId || window.location.pathname;
+        // Try to get topicId from the lastBlock or fallback
+        const topicId = lastBlock.dataset.topicId || 'unknown_topic';
+        localStorage.removeItem(`mcq_quiz_summary_${lessonId}_${topicId}`);
+      } catch (e) { console.warn('Could not clear MCQ summary state:', e); }
+      window.location.reload();
     });
   } else {
     console.warn('[MCQ DEBUG] (Summary) Refresh Quiz button not found in summary DOM!');
@@ -207,14 +221,13 @@ function saveMcqAttempts(attempts) {
 
 document.addEventListener('DOMContentLoaded', function () {
   // Remove debug border and zIndex from MCQ blocks
-  const mcqBlocksDebug = Array.from(document.querySelectorAll('.block-multiple-choice'));
-  mcqBlocksDebug.forEach((block) => {
+  const mcqBlocks = Array.from(document.querySelectorAll('.block-multiple-choice'));
+  mcqBlocks.forEach((block) => {
     block.style.border = '';
     block.style.zIndex = '';
   });
 
   // DEBUG: Check for MCQ blocks in DOM
-  const mcqBlocks = Array.from(document.querySelectorAll('.block-multiple-choice'));
   if (mcqBlocks.length === 0) {
     console.warn('[MCQ DEBUG] No .block-multiple-choice elements found in DOM!');
   } else {
@@ -230,7 +243,24 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   console.log('[MCQ DEBUG] Topic groups:', Object.keys(topicGroups));
 
+  // --- Restore MCQ summary if quiz was completed previously, per topic ---
   Object.entries(topicGroups).forEach(([topicId, blocks]) => {
+    const lessonId = window.lessonId || window.location.pathname;
+    const summaryKey = `mcq_quiz_summary_${lessonId}_${topicId}`;
+    try {
+      const summaryState = JSON.parse(localStorage.getItem(summaryKey));
+      if (summaryState && summaryState.completed && typeof summaryState.correctCount === 'number' && typeof summaryState.totalQuestions === 'number') {
+        // Only restore if all blocks in this topic are present
+        if (blocks.length === summaryState.totalQuestions && blocks.length > 0) {
+          const lastBlock = blocks[blocks.length - 1];
+          showMcqSummaryBlock(summaryState.correctCount, summaryState.totalQuestions, lastBlock);
+          // Hide all previous MCQ blocks in this topic
+          blocks.slice(0, -1).forEach(b => b.style.display = 'none');
+          return; // Do not re-initialize quiz logic for this topic
+        }
+      }
+    } catch (e) { /* ignore */ }
+    // --- Initialize MCQ logic for this topic ---
     let totalQuestions = blocks.length;
     let answeredCount = 0;
     let correctCount = 0;
@@ -250,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       // --- Prevent multiple attempts ---
       const prevAttempt = loadAttempt(blockId);
+      console.log('[MCQ DEBUG] [Init] Checking localStorage for blockId:', blockId, 'Key:', getAttemptKey(blockId), 'Found:', prevAttempt);
       if (prevAttempt) {
         answered = true;
         answeredCount++;
@@ -346,6 +377,13 @@ document.addEventListener('DOMContentLoaded', function () {
           // Show summary if last question in topic
           if (blockIdx === totalQuestions - 1) {
             setTimeout(() => {
+              // Save summary state per topic
+              try {
+                localStorage.setItem(
+                  `mcq_quiz_summary_${lessonId}_${topicId}`,
+                  JSON.stringify({ completed: true, correctCount, totalQuestions })
+                );
+              } catch (e) { console.warn('Could not persist MCQ summary state:', e); }
               showMcqSummaryBlock(correctCount, totalQuestions, block);
               // Save per-topic progress to Firebase
               saveProgressToFirebase({
@@ -440,4 +478,34 @@ document.addEventListener('DOMContentLoaded', function () {
       <span style="width:18px;height:18px;border-radius:50%;background:#8F00FF;box-shadow:0 0 8px #8F00FF55;"></span>
     </div>`;
   });
+
+  // Event delegation for all .mcq-refresh-btn clicks (works for dynamic and static buttons)
+  document.body.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('mcq-refresh-btn')) {
+      console.log('[MCQ DEBUG] (Delegated) Refresh Quiz button clicked:', e.target);
+      const lessonId = window.lessonId || window.location.pathname;
+      // --- Robustly clear all MCQ attempt and summary keys for this lesson ---
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(`mcq_attempts_${lessonId}`)) {
+          keysToRemove.push(key);
+        }
+        if (key && key.startsWith(`mcq_quiz_summary_${lessonId}`)) {
+          keysToRemove.push(key);
+        }
+      }
+      console.log('[MCQ DEBUG] (Delegated) Keys to remove:', keysToRemove);
+      keysToRemove.forEach(key => {
+        localStorage.removeItem(key);
+        console.log('[MCQ DEBUG] (Delegated) Cleared key:', key);
+      });
+      console.log('[MCQ DEBUG] (Delegated) After refresh, localStorage keys:', Object.keys(localStorage));
+      window.location.reload();
+    }
+  });
+  // Debug: log if no .mcq-refresh-btn is found at DOMContentLoaded
+  if (document.querySelectorAll('.mcq-refresh-btn').length === 0) {
+    console.warn('[MCQ DEBUG] No .mcq-refresh-btn found at DOMContentLoaded');
+  }
 });
