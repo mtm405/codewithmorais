@@ -341,21 +341,11 @@ def lesson(lesson_id):
                 with open("lessons/lesson_1_1.json", "r", encoding="utf-8") as f:
                     lesson_data = json.load(f)
         # --- Normalization logic for Firestore/JSON lesson blocks ---
-        if lesson_data and 'blocks' in lesson_data:
-            for block in lesson_data['blocks']:
-                # If block is a quiz_section, normalize its inner blocks
+        def normalize_blocks(blocks, parent_type=None):
+            for block in blocks:
+                # If block is a quiz_section, normalize its inner blocks recursively
                 if block.get('type') == 'quiz_section' and 'content' in block and 'blocks' in block['content']:
-                    new_blocks = []
-                    for inner_block in block['content']['blocks']:
-                        # Explode multiple_choice_quiz blocks into one block per question
-                        if inner_block.get('type') == 'multiple_choice_quiz' and 'questions' in inner_block:
-                            for q in inner_block['questions']:
-                                new_block = dict(inner_block)
-                                new_block['questions'] = [q]
-                                new_blocks.append(new_block)
-                        else:
-                            new_blocks.append(inner_block)
-                    block['content']['blocks'] = new_blocks
+                    normalize_blocks(block['content']['blocks'], parent_type='quiz_section')
                 # Normalize fill_in_the_blank
                 if block.get('type') == 'fill_in_the_blank':
                     if 'prompt' not in block and 'question' in block:
@@ -364,14 +354,42 @@ def lesson(lesson_id):
                         block['answer'] = block['answers'][0] if block['answers'] else ''
                 # Normalize multiple_choice
                 if block.get('type') == 'multiple_choice':
-                    if 'correct' not in block:
-                        if 'correct_index' in block and 'options' in block:
-                            idx = block['correct_index']
-                            block['correct'] = block['options'][idx] if idx < len(block['options']) else ''
+                    block['mcq_inline'] = True
+                    options = block.get('options', [])
+                    correct = block.get('correct')
+                    correct_index = block.get('correct_index')
+                    # Support legacy 'answer' field as correct_index
+                    if correct_index is None and 'answer' in block:
+                        correct_index = block['answer']
+                        block['correct_index'] = correct_index
+                    # If correct_index is missing but correct is present
+                    if correct_index is None and correct is not None and options:
+                        try:
+                            correct_index = options.index(correct)
+                        except ValueError:
+                            correct_index = 0
+                        block['correct_index'] = correct_index
+                    # If correct_index is present, ensure it's an int and in range
+                    if correct_index is not None:
+                        try:
+                            correct_index = int(correct_index)
+                        except Exception:
+                            correct_index = 0
+                        if correct_index < 0 or correct_index >= len(options):
+                            correct_index = 0
+                        block['correct_index'] = correct_index
+                    # Always set correct to the option at correct_index
+                    if options and (correct_index is not None):
+                        block['correct'] = options[correct_index] if correct_index < len(options) else options[0]
+                    # DEBUG: Print MCQ block info
+                    print(f"[MCQ DEBUG] options={options} correct_index={block.get('correct_index')} correct={block.get('correct')}")
                 # Normalize drag_and_drop
                 if block.get('type') == 'drag_and_drop':
                     if 'pairs' not in block and 'items' in block:
                         block['pairs'] = [{ 'left': item['name'], 'right': item['match'] } for item in block['items']]
+        # Call normalization on all top-level blocks
+        if lesson_data and 'blocks' in lesson_data:
+            normalize_blocks(lesson_data['blocks'])
     except Exception as e:
         current_app.logger.error(f"Error fetching lesson {lesson_id}: {e}")
         lesson_data = None
