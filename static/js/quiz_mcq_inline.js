@@ -13,7 +13,7 @@ const db = getFirestore(app);
 // --- MCQ Button Color Classes ---
 const MCQ_GREEN = '#22c55e'; // Tailwind green-500
 const MCQ_RED = '#ef4444';   // Tailwind red-500
-const MCQ_PURPLE = '#8F00FF';
+const MCQ_PURPLE = '#6366f1'; // Tailwind indigo-500 (softer, more neutral than #8F00FF)
 
 function setBtnColor(btn, color) {
   btn.style.background = color;
@@ -67,14 +67,114 @@ function saveProgressToLocal(progress) {
   localStorage.setItem(`mcq_progress_${lessonId}_${userId}`, JSON.stringify(progress));
 }
 
-function showMcqSummaryBlock(correctCount, totalQuestions) {
+function showMcqSummaryBlock(correctCount, totalQuestions, targetBlock) {
   let percent = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
-  let summary = document.createElement('div');
-  summary.className = 'mcq-summary-block';
-  summary.innerHTML = `<h3>Quiz Complete!</h3><p>Score: <b>${correctCount} / ${totalQuestions}</b> (${percent}%)</p>`;
-  document.body.appendChild(summary);
-  // Optionally, scroll to summary
-  summary.scrollIntoView({ behavior: 'smooth' });
+  const lastBlock = targetBlock;
+  if (!lastBlock) return;
+  lastBlock.innerHTML = `
+    <div class="mcq-summary-celebration-card" style="position:relative;min-height:260px;max-width:600px;width:96vw;margin:2.5em auto 2.5em auto;background:#232136;border-radius:1.5em;box-shadow:0 6px 32px rgba(53,114,165,0.18);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2em 2.5em 1.5em 2.5em;">
+      <canvas id="mcq-fireworks-canvas" style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
+      <div class="mcq-summary-content" style="position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;">
+        <div class="score-badge" style="width:3.5em;height:3.5em;background:linear-gradient(135deg,#3572A5 60%,#ffb300 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7em;font-weight:900;color:#fff;box-shadow:0 2px 12px #3572A533,0 0 0 #ffb30033;margin-bottom:1em;animation:pulse 1.2s infinite alternate;">
+          <span id="mcq-summary-score">${percent}%</span>
+        </div>
+        <div class="mcq-summary-title" style="font-size:2em;font-weight:800;color:#ffb300;margin-bottom:0.2em;letter-spacing:0.01em;">Quiz Results</div>
+        <div class="mcq-summary-message" id="mcq-summary-message" style="font-size:1.1em;color:#f8fafd;margin-bottom:1.1em;min-height:2.2em;text-align:center;"></div>
+        <div class="mcq-summary-stats-row" style="display:flex;justify-content:center;gap:2em;margin-bottom:0.7em;">
+          <div class="stat-block" style="background:rgba(53,114,165,0.13);padding:0.7em 1.5em;border-radius:12px;box-shadow:0 2px 8px rgba(53,114,165,0.07);">
+            <span class="stat-label" style="color:#ffb300;font-weight:700;">Correct</span><br>
+            <span class="stat-value" style="font-size:1.2em;font-weight:800;">${correctCount} / ${totalQuestions}</span>
+          </div>
+        </div>
+        <button class="mcq-refresh-btn mcq-inline-btn" style="margin-top:1.2em;padding:0.7em 2.2em;font-size:1.1em;font-weight:700;border-radius:10px;background:#3572A5;color:#fff;border:none;box-shadow:0 2px 8px #3572A533;transition:background 0.2s;cursor:pointer;">Refresh Quiz</button>
+      </div>
+    </div>
+    <style>
+      @keyframes pulse { 0%{transform:scale(1);} 100%{transform:scale(1.07);} }
+    </style>
+  `;
+  // Confetti-style Fireworks effect (single burst, fade out)
+  setTimeout(() => { launchFireworks('mcq-fireworks-canvas', 1, true); }, 100);
+  if (!document.getElementById('mcq-summary-celebration-css')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/static/css/mcq_summary_celebration.css';
+    link.id = 'mcq-summary-celebration-css';
+    document.head.appendChild(link);
+  }
+  // Dynamic feedback message
+  let message = "";
+  if (percent === 100) {
+    message = "Perfect Score! Absolutely brilliant work! 🎉";
+  } else if (percent >= 90) {
+    message = "Outstanding! You aced it! 🌟";
+  } else if (percent >= 80) {
+    message = "Excellent job! Keep up the great work! 👍";
+  } else if (percent >= 70) {
+    message = "Good effort! You're on the right track. 😊";
+  } else if (percent >= 60) {
+    message = "Solid attempt. Review the material to improve! 🤔";
+  } else {
+    message = "You can do better! Time to hit the books. 📚";
+  }
+  setTimeout(() => {
+    const msgEl = document.getElementById('mcq-summary-message');
+    if (msgEl) msgEl.textContent = message;
+  }, 800);
+  // Attach event listener to Refresh Quiz button (since it's now in the DOM)
+  const refreshQuizBtn = lastBlock.querySelector('.mcq-refresh-btn');
+  if (refreshQuizBtn) {
+    console.log('[MCQ DEBUG] (Summary) Found Refresh Quiz button:', refreshQuizBtn);
+    refreshQuizBtn.addEventListener('click', function() {
+      console.log('[MCQ DEBUG] (Summary) Refresh Quiz button clicked!');
+      // Add your refresh logic here if needed
+      window.location.reload(); // Simple reload for now
+    });
+  } else {
+    console.warn('[MCQ DEBUG] (Summary) Refresh Quiz button not found in summary DOM!');
+  }
+}
+
+// Fireworks animation (confetti-style: single burst, fade/disappear)
+function launchFireworks(canvasId, burstMultiplier=1, confettiMode=false) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W = canvas.offsetWidth, H = canvas.offsetHeight;
+  canvas.width = W; canvas.height = H;
+  let particles = [];
+  function randomColor() {
+    const colors = ['#8F00FF','#ffb300','#22c55e','#ef4444','#6366f1','#fff'];
+    return colors[Math.floor(Math.random()*colors.length)];
+  }
+  function createFirework() {
+    for(let b=0;b<burstMultiplier;b++){
+      const x = Math.random()*W*0.8+W*0.1, y = Math.random()*H*0.4+H*0.2;
+      const count = 32+Math.floor(Math.random()*12);
+      for(let i=0;i<count;i++){
+        const angle = (Math.PI*2/count)*i + Math.random()*0.1;
+        const speed = confettiMode ? (2+Math.random()*2.5) : (2+Math.random()*2.5);
+        const size = confettiMode ? (2.5+Math.random()*2.5) : 2.7;
+        particles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,color:randomColor(),life:confettiMode?60+Math.random()*30:50+Math.random()*25,size});
+      }
+    }
+  }
+  let frame = 0;
+  createFirework(); // Only one burst for confetti mode
+  function animate() {
+    ctx.clearRect(0,0,W,H);
+    for(let i=particles.length-1;i>=0;i--){
+      let p=particles[i];
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.04; p.life--;
+      ctx.globalAlpha = Math.max(p.life/(confettiMode?80:60),0);
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,2*Math.PI);
+      ctx.fillStyle=p.color; ctx.fill();
+      if(p.life<=0) particles.splice(i,1);
+    }
+    frame++;
+    if(particles.length>0 && frame<180) requestAnimationFrame(animate);
+  }
+  animate();
 }
 
 // --- BEGIN: Persistent attempt tracking and per-topic progress ---
@@ -106,146 +206,178 @@ function saveMcqAttempts(attempts) {
 // --- END: Persistent attempt tracking and per-topic progress ---
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Add refresh button logic
-  const refreshBtn = document.getElementById('mcq-refresh-btn');
-  if (refreshBtn) {
-    refreshBtn.addEventListener('click', () => {
-      // Clear all MCQ attempts for this lesson
-      const lessonId = getLessonId();
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('mcq_attempts_' + lessonId)) localStorage.removeItem(key);
-        if (key.startsWith('mcq_progress_' + lessonId)) localStorage.removeItem(key);
-      });
-      location.reload();
-    });
+  // Remove debug border and zIndex from MCQ blocks
+  const mcqBlocksDebug = Array.from(document.querySelectorAll('.block-multiple-choice'));
+  mcqBlocksDebug.forEach((block) => {
+    block.style.border = '';
+    block.style.zIndex = '';
+  });
+
+  // DEBUG: Check for MCQ blocks in DOM
+  const mcqBlocks = Array.from(document.querySelectorAll('.block-multiple-choice'));
+  if (mcqBlocks.length === 0) {
+    console.warn('[MCQ DEBUG] No .block-multiple-choice elements found in DOM!');
+  } else {
+    console.log('[MCQ DEBUG] Found .block-multiple-choice elements:', mcqBlocks);
   }
 
-  const mcqBlocks = document.querySelectorAll('.block-multiple-choice');
-  let totalQuestions = mcqBlocks.length;
-  let answeredCount = 0;
-  let correctCount = 0;
-  let userAnswers = [];
-  const lessonId = getLessonId();
-  let attempts = loadMcqAttempts();
+  // Group MCQ blocks by topic
+  const topicGroups = {};
+  mcqBlocks.forEach(block => {
+    const topicId = block.dataset.topicId || 'unknown_topic';
+    if (!topicGroups[topicId]) topicGroups[topicId] = [];
+    topicGroups[topicId].push(block);
+  });
+  console.log('[MCQ DEBUG] Topic groups:', Object.keys(topicGroups));
 
-  mcqBlocks.forEach((block, blockIdx) => {
-    const blockId = block.dataset.blockId || `block_${blockIdx}`;
-    const buttons = block.querySelectorAll('.mcq-option-btn');
-    const feedback = block.querySelector('.mcq-feedback');
-    let answered = false;
-    // Get correct answer index from data-correct-idx attribute
-    const optionsGrid = block.querySelector('.mcq-options-grid');
-    let correctIdx = null;
-    if (optionsGrid && optionsGrid.dataset.correctIdx !== undefined) {
-      correctIdx = parseInt(optionsGrid.dataset.correctIdx, 10);
-    }
-    // --- Prevent multiple attempts ---
-    const prevAttempt = loadAttempt(blockId);
-    if (prevAttempt) {
-      answered = true;
-      answeredCount++;
-      if (prevAttempt.isCorrect) correctCount++;
-      // Mark UI as answered
-      buttons.forEach((btn, idx) => {
-        btn.disabled = true;
-        if (idx === prevAttempt.selectedIdx) {
-          if (prevAttempt.isCorrect) {
+  Object.entries(topicGroups).forEach(([topicId, blocks]) => {
+    let totalQuestions = blocks.length;
+    let answeredCount = 0;
+    let correctCount = 0;
+    let userAnswers = [];
+    // Track attempts per topic
+    blocks.forEach((block, blockIdx) => {
+      // Use a unique blockId per topic and index if not provided
+      const blockId = block.dataset.blockId || `${topicId}_block_${blockIdx}`;
+      const buttons = block.querySelectorAll('.mcq-option-btn');
+      const feedback = block.querySelector('.mcq-feedback');
+      let answered = false;
+      // Get correct answer index from data-correct-idx attribute
+      const optionsGrid = block.querySelector('.mcq-options-grid');
+      let correctIdx = null;
+      if (optionsGrid && optionsGrid.dataset.correctIdx !== undefined) {
+        correctIdx = parseInt(optionsGrid.dataset.correctIdx, 10);
+      }
+      // --- Prevent multiple attempts ---
+      const prevAttempt = loadAttempt(blockId);
+      if (prevAttempt) {
+        answered = true;
+        answeredCount++;
+        if (prevAttempt.isCorrect) correctCount++;
+        // Mark UI as answered
+        buttons.forEach((btn, idx) => {
+          // DEBUG: Log button being styled (restore)
+          console.log('[MCQ DEBUG] Styling MCQ option button (restore)', { blockIdx, blockId, btn, idx });
+          btn.disabled = true;
+          btn.classList.remove('mcq-correct', 'mcq-incorrect');
+          if (idx === prevAttempt.selectedIdx) {
+            if (prevAttempt.isCorrect) {
+              btn.classList.add('mcq-correct');
+              setBtnColor(btn, MCQ_GREEN);
+            } else {
+              btn.classList.add('mcq-incorrect');
+              setBtnColor(btn, MCQ_RED);
+            }
+          } else if (idx === correctIdx && !prevAttempt.isCorrect) {
             btn.classList.add('mcq-correct');
             setBtnColor(btn, MCQ_GREEN);
           } else {
+            setBtnColor(btn, MCQ_PURPLE);
+          }
+        });
+        if (feedback) {
+          feedback.textContent = prevAttempt.isCorrect ? 'Correct!' : 'Incorrect.';
+          feedback.className = 'mcq-feedback ' + (prevAttempt.isCorrect ? 'correct' : 'incorrect');
+          feedback.style.display = 'block';
+        }
+        userAnswers[blockIdx] = prevAttempt;
+        // DEBUG: Log restored previous attempt
+        console.log('[MCQ DEBUG] [Topic:', topicId, '] Restored previous attempt', { blockIdx, blockId, prevAttempt, answeredCount, correctCount });
+        return;
+      } else {
+        // Reset all buttons to default state (not selected, enabled)
+        buttons.forEach((btn) => {
+          // DEBUG: Log button being reset (init)
+          console.log('[MCQ DEBUG] Resetting MCQ option button (init)', { blockIdx, blockId, btn });
+          btn.disabled = false;
+          btn.classList.remove('mcq-correct', 'mcq-incorrect');
+          setBtnColor(btn, MCQ_PURPLE);
+        });
+        if (feedback) {
+          feedback.textContent = '';
+          feedback.className = 'mcq-feedback';
+          feedback.style.display = 'none';
+        }
+      }
+      // --- End prevent multiple attempts ---
+      buttons.forEach((btn, idx) => {
+        // DEBUG: Log event listener attachment
+        console.log('[MCQ DEBUG] Attaching click event to MCQ option button', { blockIdx, blockId, btn, idx });
+        btn.addEventListener('click', function () {
+          if (answered) return;
+          answered = true;
+          answeredCount++;
+          // Disable all buttons
+          buttons.forEach(b => {
+            b.disabled = true;
+            b.classList.remove('mcq-correct', 'mcq-incorrect');
+            setBtnColor(b, MCQ_PURPLE);
+          });
+          // Mark selected and correct/incorrect
+          if (idx === correctIdx) {
+            btn.classList.add('mcq-correct');
+            setBtnColor(btn, MCQ_GREEN);
+            if (feedback) {
+              feedback.textContent = 'Correct!';
+              feedback.className = 'mcq-feedback correct';
+              feedback.style.display = 'block';
+            }
+            correctCount++;
+            awardByteToUser();
+          } else {
             btn.classList.add('mcq-incorrect');
             setBtnColor(btn, MCQ_RED);
+            if (feedback) {
+              feedback.textContent = 'Incorrect.';
+              feedback.className = 'mcq-feedback incorrect';
+              feedback.style.display = 'block';
+            }
+            if (typeof correctIdx === 'number' && buttons[correctIdx]) {
+              buttons[correctIdx].classList.add('mcq-correct');
+              setBtnColor(buttons[correctIdx], MCQ_GREEN);
+            }
           }
-        }
-        if (idx === correctIdx) {
-          btn.classList.add('mcq-correct');
-          setBtnColor(btn, MCQ_GREEN);
-        }
-      });
-      if (feedback) {
-        feedback.textContent = prevAttempt.isCorrect ? 'Correct!' : 'Incorrect.';
-        feedback.className = 'mcq-feedback ' + (prevAttempt.isCorrect ? 'correct' : 'incorrect');
-        feedback.style.display = 'block';
-      }
-      // Only show the first unanswered block
-      if (answeredCount === blockIdx + 1 && answeredCount < totalQuestions) {
-        block.style.display = '';
-      } else {
-        block.style.display = 'none';
-      }
-      userAnswers[blockIdx] = prevAttempt;
-      return;
-    }
-    // --- End prevent multiple attempts ---
-    buttons.forEach((btn, idx) => {
-      btn.addEventListener('click', function () {
-        console.log('[MCQ DEBUG] Button clicked', {blockIdx, idx, answered, correctIdx, btn, block});
-        if (answered) return;
-        answered = true;
-        answeredCount++;
-        // Disable all buttons
-        buttons.forEach(b => {
-          b.disabled = true;
-          // Remove all gradients and color classes
-          b.classList.remove('mcq-correct', 'mcq-incorrect');
-          setBtnColor(b, MCQ_PURPLE);
-        });
-        // Mark selected and correct/incorrect
-        if (idx === correctIdx) {
-          btn.classList.add('mcq-correct');
-          setBtnColor(btn, MCQ_GREEN);
-          if (feedback) {
-            feedback.textContent = 'Correct!';
-            feedback.className = 'mcq-feedback correct';
-            feedback.style.display = 'block';
-          }
-          correctCount++;
-          awardByteToUser(); // Award 1 byte in Firebase
-        } else {
-          btn.classList.add('mcq-incorrect');
-          setBtnColor(btn, MCQ_RED);
-          if (feedback) {
-            feedback.textContent = 'Incorrect.';
-            feedback.className = 'mcq-feedback incorrect';
-            feedback.style.display = 'block';
-          }
-          if (typeof correctIdx === 'number' && buttons[correctIdx]) {
-            buttons[correctIdx].classList.add('mcq-correct');
-            setBtnColor(buttons[correctIdx], MCQ_GREEN);
-          }
-        }
-        // Save attempt
-        saveAttempt(blockId, idx, idx === correctIdx);
-        // Hide all blocks after this one
-        mcqBlocks.forEach((b, i) => {
-          if (i > blockIdx) b.style.display = 'none';
-        });
-        // Show summary block if last question
-        if (blockIdx === totalQuestions - 1) {
-          setTimeout(() => {
-            showMcqSummaryBlock(correctCount, totalQuestions);
-          }, 500);
-        } else {
-          // Otherwise, show next unanswered block
-          const nextBlock = Array.from(mcqBlocks).slice(blockIdx + 1).find(b => {
-            const btns = b.querySelectorAll('.mcq-option-btn');
-            return !btns[0].disabled; // Find first block with enabled buttons
+          saveAttempt(blockId, idx, idx === correctIdx);
+          userAnswers[blockIdx] = { selectedIdx: idx, isCorrect: idx === correctIdx };
+          // Hide all blocks after this one in the topic
+          blocks.forEach((b, i) => {
+            if (i > blockIdx) b.style.display = 'none';
           });
-          if (nextBlock) {
+          // Show summary if last question in topic
+          if (blockIdx === totalQuestions - 1) {
             setTimeout(() => {
-              nextBlock.scrollIntoView({ behavior: 'smooth' });
-            }, 500);
+              showMcqSummaryBlock(correctCount, totalQuestions, block);
+              // Save per-topic progress to Firebase
+              saveProgressToFirebase({
+                topic: topicId,
+                correct: correctCount,
+                total: totalQuestions,
+                timestamp: Date.now(),
+              });
+            }, 1200);
+          } else {
+            // Otherwise, show next unanswered block in topic
+            const nextBlock = blocks.slice(blockIdx + 1).find(b => {
+              const btns = b.querySelectorAll('.mcq-option-btn');
+              return !btns[0].disabled;
+            });
+            if (nextBlock) {
+              setTimeout(() => {
+                nextBlock.scrollIntoView({ behavior: 'smooth' });
+              }, 500);
+            }
           }
-        }
+        });
       });
     });
-    // --- END: MCQ Block Logic ---
   });
-
   // --- Auto-save progress example (optional) ---
   const saveProgressBtn = document.getElementById('mcq-save-progress');
   if (saveProgressBtn) {
+    // DEBUG: Log save progress button found
+    console.log('[MCQ DEBUG] Found save progress button:', saveProgressBtn);
     saveProgressBtn.addEventListener('click', async () => {
+      console.log('[MCQ DEBUG] Save progress button clicked');
       const progress = {
         topic: lessonId,
         correct: correctCount,
@@ -255,5 +387,57 @@ document.addEventListener('DOMContentLoaded', function () {
       await saveProgressToFirebase(progress);
       alert('Progress saved!');
     });
+  } else {
+    // DEBUG: Log save progress button not found
+    console.log('[MCQ DEBUG] Save progress button not found');
   }
+
+  // --- DEBUG: Check for all MCQ inline buttons ---
+  const allMcqButtons = document.querySelectorAll('.mcq-option-btn, .mcq-inline-btn');
+  if (allMcqButtons.length === 0) {
+    console.warn('[MCQ DEBUG] No MCQ inline buttons found in DOM!');
+  } else {
+    console.log('[MCQ DEBUG] Found MCQ inline buttons:', allMcqButtons);
+  }
+
+  // Add a modern frame to MCQ inline blocks
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .block-multiple-choice.mcq-inline {
+      border: 3px solid #8F00FF !important;
+      border-radius: 14px !important;
+      box-shadow: 0 2px 12px rgba(143,0,255,0.13) !important;
+      background: linear-gradient(120deg, #232136 70%, #2d1e4a 100%) !important;
+      margin: 2em 0 !important;
+      padding: 1.2em 1.5em !important;
+      color: #f8fafd !important;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .block-multiple-choice.mcq-inline:hover {
+      box-shadow: 0 4px 24px rgba(143,0,255,0.22) !important;
+      border-color: #a020f0 !important;
+    }
+    .block-multiple-choice.mcq-inline .mcq-question, .block-multiple-choice.mcq-inline .mcq-option-btn {
+      color: #f8fafd !important;
+    }
+    .block-multiple-choice.mcq-inline .mcq-feedback {
+      color: #ffb300 !important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Modern divider style for dark theme
+  const dividerBlocks = document.querySelectorAll('.block-divider');
+  dividerBlocks.forEach(div => {
+    div.style.background = 'linear-gradient(90deg, rgba(143,0,255,0.18) 0%, rgba(35,33,54,0.7) 50%, rgba(143,0,255,0.18) 100%)';
+    div.style.height = '3px';
+    div.style.borderRadius = '2px';
+    div.style.margin = '3em 0 3em 0';
+    div.style.boxShadow = '0 2px 12px rgba(143,0,255,0.13)';
+    div.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;gap:0.7em;">
+      <span style="width:18px;height:18px;border-radius:50%;background:#8F00FF;box-shadow:0 0 8px #8F00FF55;"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:#ffb300;box-shadow:0 0 6px #ffb30055;"></span>
+      <span style="width:18px;height:18px;border-radius:50%;background:#8F00FF;box-shadow:0 0 8px #8F00FF55;"></span>
+    </div>`;
+  });
 });

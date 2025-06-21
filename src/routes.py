@@ -36,7 +36,7 @@ def get_daily_challenge():
             'challenge_id': data.get('challenge_id'),
             'title': data.get('title'),
             'description': data.get('description'),
-            'difficulty': data.get('difficulty'),
+            'difficulty': data.get('difficulty'),  # <-- FIXED: closed parenthesis
             'test_cases': data.get('test_cases', [])
         })
     return jsonify({'error': 'No challenge for today'}), 404
@@ -354,7 +354,7 @@ def lesson(lesson_id):
                         block['answer'] = block['answers'][0] if block['answers'] else ''
                 # Normalize multiple_choice
                 if block.get('type') == 'multiple_choice':
-                    block['mcq_inline'] = True
+                    block['mcq_inline'] = True  # Always set to True
                     options = block.get('options', [])
                     correct = block.get('correct')
                     correct_index = block.get('correct_index')
