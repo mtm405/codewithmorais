@@ -6,6 +6,8 @@ from firebase_admin import firestore
 from firebase_admin.exceptions import FirebaseError
 from datetime import datetime, timedelta
 import traceback
+import os
+import json
 
 # No need to import config if it's not directly used for variables in this file
 # from .config import SERVICE_ACCOUNT_KEY_PATH, GOOGLE_CLIENT_ID, FIREBASE_PROJECT_ID, FIREBASE_DATABASE_ID
@@ -115,7 +117,7 @@ def dashboard():
     if 'user_id' not in session:
         # Redirect to auth blueprint's index (login page)
         return redirect(url_for('auth.index'))
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', active_page='dashboard')
 
 # --- New Dashboard2 route ---
 @routes_bp.route('/dashboard2')
@@ -320,87 +322,99 @@ def profile():
 def lesson(lesson_id):
     if 'user_id' not in session:
         return redirect(url_for('auth.index'))
-
     lesson_data = None
-    try:
-        # Always use local JSON for lesson 1 for testing
-        if lesson_id == "1":
-            import json
-            with open("lessons/lesson_1_1.json", "r", encoding="utf-8") as f:
-                lesson_data = json.load(f)
-        else:
-            if db:
-                doc = db.collection('lessons').document(lesson_id).get()
-                if doc.exists:
-                    lesson_data = doc.to_dict()
-        # Optional fallback/local data example (if Firestore is not ready)
-        if not lesson_data:
-            # Always load the full local JSON for lesson 1
-            if lesson_id == "1":
-                import json
-                with open("lessons/lesson_1_1.json", "r", encoding="utf-8") as f:
-                    lesson_data = json.load(f)
-        # --- Normalization logic for Firestore/JSON lesson blocks ---
-        def normalize_blocks(blocks, parent_type=None):
-            for block in blocks:
-                # If block is a quiz_section, normalize its inner blocks recursively
-                if block.get('type') == 'quiz_section' and 'content' in block and 'blocks' in block['content']:
-                    normalize_blocks(block['content']['blocks'], parent_type='quiz_section')
-                # Normalize fill_in_the_blank
-                if block.get('type') == 'fill_in_the_blank':
-                    if 'prompt' not in block and 'question' in block:
-                        block['prompt'] = block['question']
-                    if 'answer' not in block and 'answers' in block:
-                        block['answer'] = block['answers'][0] if block['answers'] else ''
-                # Normalize multiple_choice
-                if block.get('type') == 'multiple_choice':
-                    block['mcq_inline'] = True  # Always set to True
-                    options = block.get('options', [])
-                    correct = block.get('correct')
-                    correct_index = block.get('correct_index')
-                    # Support legacy 'answer' field as correct_index
-                    if correct_index is None and 'answer' in block:
-                        correct_index = block['answer']
-                        block['correct_index'] = correct_index
-                    # If correct_index is missing but correct is present
-                    if correct_index is None and correct is not None and options:
-                        try:
-                            correct_index = options.index(correct)
-                        except ValueError:
-                            correct_index = 0
-                        block['correct_index'] = correct_index
-                    # If correct_index is present, ensure it's an int and in range
-                    if correct_index is not None:
-                        try:
-                            correct_index = int(correct_index)
-                        except Exception:
-                            correct_index = 0
-                        if correct_index < 0 or correct_index >= len(options):
-                            correct_index = 0
-                        block['correct_index'] = correct_index
-                    # Always set correct to the option at correct_index
-                    if options and (correct_index is not None):
-                        block['correct'] = options[correct_index] if correct_index < len(options) else options[0]
-                    # DEBUG: Print MCQ block info
-                    print(f"[MCQ DEBUG] options={options} correct_index={block.get('correct_index')} correct={block.get('correct')}")
-                # Normalize drag_and_drop
-                if block.get('type') == 'drag_and_drop':
-                    if 'pairs' not in block and 'items' in block:
-                        block['pairs'] = [{ 'left': item['name'], 'right': item['match'] } for item in block['items']]
-        # Call normalization on all top-level blocks
-        if lesson_data and 'blocks' in lesson_data:
-            normalize_blocks(lesson_data['blocks'])
-    except Exception as e:
-        current_app.logger.error(f"Error fetching lesson {lesson_id}: {e}")
-        lesson_data = None
+    # Try to load from local file if it exists
+    local_path = os.path.join('lessons', f'{lesson_id}.json')
+    if os.path.exists(local_path):
+        with open(local_path, 'r', encoding='utf-8') as f:
+            lesson_data = json.load(f)
+    else:
+        # Fallback to Firestore if not found locally
+        if db:
+            doc = db.collection('lessons').document(lesson_id).get()
+            if doc.exists:
+                lesson_data = doc.to_dict()
+    # Ensure lesson_data has an 'id' field for template logic
+    if lesson_data is not None:
+        lesson_data['id'] = lesson_id
+    # --- Normalization logic for Firestore/JSON lesson blocks ---
+    def normalize_blocks(blocks, parent_type=None):
+        for block in blocks:
+            # If block is a quiz_section, normalize its inner blocks recursively
+            if block.get('type') == 'quiz_section' and 'content' in block and 'blocks' in block['content']:
+                normalize_blocks(block['content']['blocks'], parent_type='quiz_section')
+            # Normalize fill_in_the_blank
+            if block.get('type') == 'fill_in_the_blank':
+                if 'prompt' not in block and 'question' in block:
+                    block['prompt'] = block['question']
+                if 'answer' not in block and 'answers' in block:
+                    block['answer'] = block['answers'][0] if block['answers'] else ''
+            # Normalize multiple_choice
+            if block.get('type') == 'multiple_choice':
+                block['mcq_inline'] = True  # Always set to True
+                options = block.get('options', [])
+                correct = block.get('correct')
+                correct_index = block.get('correct_index')
+                # Support legacy 'answer' field as correct_index
+                if correct_index is None and 'answer' in block:
+                    correct_index = block['answer']
+                    block['correct_index'] = correct_index
+                # If correct_index is missing but correct is present
+                if correct_index is None and correct is not None and options:
+                    try:
+                        correct_index = options.index(correct)
+                    except ValueError:
+                        correct_index = 0
+                    block['correct_index'] = correct_index
+                # If correct_index is present, ensure it's an int and in range
+                if correct_index is not None:
+                    try:
+                        correct_index = int(correct_index)
+                    except Exception:
+                        correct_index = 0
+                    if correct_index < 0 or correct_index >= len(options):
+                        correct_index = 0
+                    block['correct_index'] = correct_index
+                # Always set correct to the option at correct_index
+                if options and (correct_index is not None):
+                    block['correct'] = options[correct_index] if correct_index < len(options) else options[0]
+                # DEBUG: Print MCQ block info
+                print(f"[MCQ DEBUG] options={options} correct_index={block.get('correct_index')} correct={block.get('correct')}")
+            # Normalize drag_and_drop
+            if block.get('type') == 'drag_and_drop':
+                if 'pairs' not in block and 'items' in block:
+                    block['pairs'] = [{ 'left': item['name'], 'right': item['match'] } for item in block['items']]
+    # Call normalization on all top-level blocks
+    if lesson_data and 'blocks' in lesson_data:
+        normalize_blocks(lesson_data['blocks'])
 
     if not lesson_data:
-        return "Lesson not found", 404
+        return ("Lesson not found", 404) if request.args.get('ajax') else render_template('lesson.html', lesson=None, active_page='lessons')
 
-    # DEBUG: Print lesson_data to check structure
-    import pprint; pprint.pprint(lesson_data)
+    # AJAX: If ?ajax=1, return only the lesson content HTML (not the full page)
+    if request.args.get('ajax'):
+        # Render only the lesson content (not the full base.html)
+        return render_template('partials/lesson_content.html', lesson=lesson_data)
 
-    return render_template('lesson.html', lesson=lesson_data, active_page='lessons')
+    # Map lesson_id to active_page for sidebar highlighting
+    lesson_to_active = {
+        'lesson_1_1': 'python-basics',
+        'lesson_1_2': 'python-basics',
+        'lesson_1_3': 'python-basics',
+        'lesson_1_4': 'python-basics',
+        'lesson_2_1': 'flow-control',
+        'lesson_2_2': 'flow-control',
+        'lesson_3_1': 'io-operations',
+        'lesson_3_2': 'io-operations',
+        'lesson_4_1': 'code-structure',
+        'lesson_5_1': 'error-handling',
+        'lesson_5_2': 'error-handling',
+        'lesson_5_3': 'error-handling',
+        'lesson_6_1': 'module-operations',
+        'lesson_6_2': 'module-operations',
+    }
+    active_page = lesson_to_active.get(lesson_id, 'lessons')
+    return render_template('lesson.html', lesson=lesson_data, active_page=active_page)
 
 from datetime import datetime
 from firebase_admin import firestore

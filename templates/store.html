@@ -7,7 +7,7 @@
         <!-- JS will populate store items here -->
     </div>
     {% if session.get('is_admin') %}
-    <button class="add-store-item-btn" id="add-store-btn" title="Add Store Item">+</button>
+    <button class="btn-primary add-store-item-btn" id="add-store-btn" title="Add Store Item">+</button>
     {% endif %}
 </div>
 {% endblock %}
@@ -17,29 +17,6 @@
 {% endblock %}
 {% block scripts %}
 {{ super() }}
-<script>
-function loadStoreItems() {
-    fetch('/api/admin/store')
-        .then(res => res.json())
-        .then(items => {
-            const list = document.getElementById('store-items-list');
-            list.innerHTML = '';
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'store-item-card dashboard-option';
-                div.id = `store-item-${item.id}`;
-                div.innerHTML = `
-                    <div class="store-item-image">${item.img || '🛒'}</div>
-                    <div class="store-item-title">${item.name}</div>
-                    <div class="store-item-desc">${item.desc || ''}</div>
-                    <div class="store-item-price"><span class="material-symbols-outlined coin-icon">token</span> ${item.price}</div>
-                    <button class="store-buy-btn" data-id="${item.id}">Buy</button>
-                    <button class="pin-btn" title="Pin">📌</button>
-                `;
-                list.appendChild(div);
-            });
-        });
-}
-document.addEventListener('DOMContentLoaded', loadStoreItems);
-</script>
 {% endblock %}
+</body>
+</html>

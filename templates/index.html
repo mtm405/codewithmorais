@@ -8,14 +8,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- Modular Firebase config is provided by base.html and imported in JS files. -->
-    <script>
-      window.firebaseConfig = {{ firebase_config | tojson | safe }};
-      window.googleClientId = '{{ google_client_id }}';
-      document.addEventListener('DOMContentLoaded', function() {
-        console.log('DEBUG: google_client_id from template:', '{{ google_client_id }}');
-        console.log('DEBUG: window.location.origin:', window.location.origin);
-      });
-    </script>
 </head>
 <body>
     <div id="particles-js"></div>
@@ -72,60 +64,6 @@
           console.error('particlesJS is not loaded');
         }
       });
-    </script>
-    <!-- Removed compat Firebase SDKs. Modular SDKs are imported in JS files. -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import { getAuth, signInWithCredential, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-      // Use config from global variables injected in <head>
-      const firebaseConfig = window.firebaseConfig;
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-      // Google Identity Services callback
-      window.handleCredentialResponse = async function(response) {
-        try {
-          console.log('DEBUG: handleCredentialResponse called.');
-          const credential = response.credential;
-          const login_time = new Date().toISOString();
-          console.log('DEBUG: credential:', credential);
-          // Call Flask backend /auth to create/update user in Firestore
-          const resp = await fetch('/auth', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ credential, login_time })
-          });
-          console.log('DEBUG: /auth response status:', resp.status);
-          const result = await resp.json();
-          console.log('DEBUG: /auth response JSON:', result);
-          if (result.success) {
-            // Redirect to dashboard
-            console.log('DEBUG: Redirecting to /dashboard');
-            window.location.href = result.redirect || "/dashboard";
-          } else {
-            alert('Login failed: ' + (result.error || 'Unknown error'));
-          }
-        } catch (error) {
-          console.error('Sign-in error:', error);
-        }
-      };
-
-      // Render the GIS button with callback
-      window.onload = function() {
-        google.accounts.id.initialize({
-          client_id: window.googleClientId,
-          callback: handleCredentialResponse
-        });
-        google.accounts.id.renderButton(
-          document.querySelector('.g_id_signin'),
-          { theme: 'outline', size: 'large' }
-        );
-        // Optionally prompt automatically:
-        // google.accounts.id.prompt();
-      };
     </script>
 </body>
 </html>

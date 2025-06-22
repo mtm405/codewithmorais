@@ -1,94 +1,115 @@
 // static/js/dashboard_logic.js
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     console.log("DEBUG: dashboard_logic.js DOMContentLoaded fired."); // New debug line
 
     // Set the dynamic greeting based on time of day
     setDynamicGreeting();
 
     // --- Search Bar Functionality ---
-    const searchInputWrapper = document.getElementById('searchInputWrapper'); // New ID for the input box container
-    const searchInput = document.getElementById('searchInput'); // ID for the input field
-    const searchIcon = document.getElementById('search-toggle-icon'); // ID for the static search icon
+    const searchInputWrapper = document.getElementById("searchInputWrapper"); // New ID for the input box container
+    const searchInput = document.getElementById("searchInput"); // ID for the input field
+    const searchIcon = document.getElementById("search-toggle-icon"); // ID for the static search icon
 
 
     if (searchIcon && searchInputWrapper && searchInput) { // Ensure all elements are found
-        searchIcon.addEventListener('click', (event) => {
+        searchIcon.addEventListener("click", (event) => {
             event.stopPropagation(); // Prevent clicks from bubbling up
 
             // Toggle expanded class on the input wrapper
-            if (searchInputWrapper.classList.contains('expanded')) {
-                searchInputWrapper.classList.remove('expanded');
+            if (searchInputWrapper.classList.contains("expanded")) {
+                searchInputWrapper.classList.remove("expanded");
                 searchInput.blur(); // Remove focus when collapsed
-                searchInput.setAttribute('tabindex', '-1'); // Make unfocusable
-                searchInput.value = ''; // Clear input on collapse
+                searchInput.setAttribute("tabindex", "-1"); // Make unfocusable
+                searchInput.value = ""; // Clear input on collapse
                 // Hide search results when collapsing
-                const searchResultsDisplay = document.getElementById('search-results-display');
+                const searchResultsDisplay = document.getElementById("search-results-display");
                 if (searchResultsDisplay) {
-                    searchResultsDisplay.classList.add('hidden');
-                    searchResultsDisplay.innerHTML = ''; // Clear previous results
+                    searchResultsDisplay.classList.add("hidden");
+                    searchResultsDisplay.innerHTML = ""; // Clear previous results
                 }
             } else {
-                searchInputWrapper.classList.add('expanded');
+                searchInputWrapper.classList.add("expanded");
                 searchInput.focus(); // Focus input when expanded
-                searchInput.setAttribute('tabindex', '0'); // Make focusable
+                searchInput.setAttribute("tabindex", "0"); // Make focusable
             }
         });
 
         // Optional: Hide search when clicking outside
-        document.body.addEventListener('click', (event) => {
+        document.body.addEventListener("click", (event) => {
             // Check if the click was outside the search input wrapper AND outside the search icon
             // and the search input wrapper is currently expanded.
             const isClickOutsideWrapper = !searchInputWrapper.contains(event.target);
             const isClickOutsideIcon = !searchIcon.contains(event.target); // Check if click was on the icon itself
 
-            if (searchInputWrapper.classList.contains('expanded') && isClickOutsideWrapper && isClickOutsideIcon) {
-                searchInputWrapper.classList.remove('expanded');
+            if (searchInputWrapper.classList.contains("expanded") && isClickOutsideWrapper && isClickOutsideIcon) {
+                searchInputWrapper.classList.remove("expanded");
                 searchInput.blur();
-                searchInput.setAttribute('tabindex', '-1');
-                searchInput.value = '';
+                searchInput.setAttribute("tabindex", "-1");
+                searchInput.value = "";
                 // Hide search results when collapsing
-                const searchResultsDisplay = document.getElementById('search-results-display');
+                const searchResultsDisplay = document.getElementById("search-results-display");
                 if (searchResultsDisplay) {
-                    searchResultsDisplay.classList.add('hidden');
-                    searchResultsDisplay.innerHTML = ''; // Clear previous results
+                    searchResultsDisplay.classList.add("hidden");
+                    searchResultsDisplay.innerHTML = ""; // Clear previous results
                 }
             }
         });
 
         // Handle Escape key to collapse search
-        searchInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                searchInputWrapper.classList.remove('expanded');
+        searchInput.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                searchInputWrapper.classList.remove("expanded");
                 searchInput.blur();
-                searchInput.setAttribute('tabindex', '-1');
-                searchInput.value = '';
+                searchInput.setAttribute("tabindex", "-1");
+                searchInput.value = "";
                 // Hide search results when collapsing
-                const searchResultsDisplay = document.getElementById('search-results-display');
+                const searchResultsDisplay = document.getElementById("search-results-display");
                 if (searchResultsDisplay) {
-                    searchResultsDisplay.classList.add('hidden');
-                    searchResultsDisplay.innerHTML = ''; // Clear previous results
+                    searchResultsDisplay.classList.add("hidden");
+                    searchResultsDisplay.innerHTML = ""; // Clear previous results
                 }
             }
         });
 
         // Handle Enter key for search
-        searchInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
+        searchInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
                 event.preventDefault(); // Prevent default form submission
                 performWebsiteSearch(searchInput.value);
             }
         });
 
         // Initialize state if input has value on page load
-        if (searchInput.value !== '') {
-            searchInputWrapper.classList.add('expanded');
-            searchInput.setAttribute('tabindex', '0'); // Ensure it's focusable if pre-filled
+        if (searchInput.value !== "") {
+            searchInputWrapper.classList.add("expanded");
+            searchInput.setAttribute("tabindex", "0"); // Ensure it's focusable if pre-filled
         }
 
     } else {
         console.warn("Search bar elements not found. Search functionality might not work.");
     }
+
+    // Leaderboard fetch and render logic
+    fetch('/api/leaderboard')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.leaderboard) {
+          const tbody = document.getElementById('leaderboard-body');
+          if (tbody) {
+            tbody.innerHTML = '';
+            data.leaderboard.forEach(user => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${user.rank}</td>
+                <td${user.is_current_user ? ' class="accent-yellow font-weight-700"' : ''}>${user.username}</td>
+                <td class="text-right">${user.points}</td>
+              `;
+              tbody.appendChild(tr);
+            });
+          }
+        }
+      });
 });
 
 /**
@@ -97,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function setDynamicGreeting() {
     console.log("DEBUG: setDynamicGreeting() function called."); // New debug line
 
-    const timeBasedGreetingElement = document.getElementById('time-based-greeting');
+    const timeBasedGreetingElement = document.getElementById("time-based-greeting");
     if (!timeBasedGreetingElement) {
         console.warn("WARNING: Element with ID 'time-based-greeting' not found. Cannot set dynamic greeting.");
         return;
@@ -129,20 +150,20 @@ function setDynamicGreeting() {
  */
 function performWebsiteSearch(query) {
     console.log("DEBUG: Performing website search for query:", query);
-    const searchResultsDisplay = document.getElementById('search-results-display');
+    const searchResultsDisplay = document.getElementById("search-results-display");
 
     if (query.trim() === "") {
-        searchResultsDisplay.classList.add('hidden');
-        searchResultsDisplay.innerHTML = '';
+        searchResultsDisplay.classList.add("hidden");
+        searchResultsDisplay.innerHTML = "";
         return; // Do nothing if query is empty
     }
 
     // Show the search results container
-    searchResultsDisplay.classList.remove('hidden');
+    searchResultsDisplay.classList.remove("hidden");
     searchResultsDisplay.innerHTML = `<h3>Search Results for "${query}" <span class="material-symbols-outlined">search</span></h3>`;
     searchResultsDisplay.innerHTML += `<p>Searching for: "${query}"...</p>`;
-    searchResultsDisplay.innerHTML += `<p>Actual search logic would be implemented here, potentially fetching results from an API or filtering existing content.</p>`;
-    searchResultsDisplay.innerHTML += `<p>For now, this is a placeholder. You would replace this with real search results.</p>`;
+    searchResultsDisplay.innerHTML += "<p>Actual search logic would be implemented here, potentially fetching results from an API or filtering existing content.</p>";
+    searchResultsDisplay.innerHTML += "<p>For now, this is a placeholder. You would replace this with real search results.</p>";
 
     // In a real application, you'd likely fetch results or filter visible content.
     // Example:
@@ -171,10 +192,10 @@ function performWebsiteSearch(query) {
 // Confetti animation for leaderboard block (randomized circles/rects, more pieces, longer, all directions, slow fall)
 let confettiSeed = 0;
 function launchConfetti() {
-    const block = document.getElementById('leaderboard-block');
+    const block = document.getElementById("leaderboard-block");
     if (!block) return;
-    const confetti = document.createElement('div');
-    confetti.className = 'confetti-container';
+    const confetti = document.createElement("div");
+    confetti.className = "confetti-container";
     // Use a new seed for every click for different behavior
     confettiSeed = (confettiSeed + 1) % 100000;
     const rand = (min, max) => {
@@ -185,43 +206,43 @@ function launchConfetti() {
     const numConfetti = 220 + Math.floor(Math.random() * 60); // More confetti
     for (let i = 0; i < numConfetti; i++) {
         const isCircle = Math.random() < 0.6;
-        const piece = document.createElement('div');
-        piece.className = 'confetti-piece' + (isCircle ? ' confetti-circle' : ' confetti-rect');
+        const piece = document.createElement("div");
+        piece.className = "confetti-piece" + (isCircle ? " confetti-circle" : " confetti-rect");
         // Randomize size
         let size = rand(10, 22);
         if (isCircle) {
-            piece.style.width = size + 'px';
-            piece.style.height = size + 'px';
+            piece.style.width = size + "px";
+            piece.style.height = size + "px";
         } else {
-            piece.style.width = rand(8, 18) + 'px';
-            piece.style.height = rand(12, 24) + 'px';
+            piece.style.width = rand(8, 18) + "px";
+            piece.style.height = rand(12, 24) + "px";
         }
         // Randomize color
         piece.style.background = `hsl(${rand(0,360)},90%,${rand(50,70)}%)`;
         // Randomize initial position inside the block
-        piece.style.left = rand(5, 95) + '%';
-        piece.style.top = rand(5, 70) + '%';
+        piece.style.left = rand(5, 95) + "%";
+        piece.style.top = rand(5, 70) + "%";
         // Randomize rotation
         piece.style.transform = `rotate(${rand(0,360)}deg)`;
         // Animation: explode in all directions, then fall to bottom
         const angle = rand(0, 2 * Math.PI); // All directions
         const explodeDist = rand(120, 320); // More dramatic explosion
         const fallDist = window.innerHeight * 0.7 + rand(40, 120); // Fall to bottom of site
-        piece.style.setProperty('--dx', Math.cos(angle) * explodeDist + 'px');
-        piece.style.setProperty('--dy', Math.sin(angle) * explodeDist + fallDist + 'px');
+        piece.style.setProperty("--dx", Math.cos(angle) * explodeDist + "px");
+        piece.style.setProperty("--dy", Math.sin(angle) * explodeDist + fallDist + "px");
         // Longer animation duration for slow fall
         const duration = rand(2.8, 4.2);
         piece.style.animation = `confetti-fly ${duration}s cubic-bezier(.62,.04,.36,1.02) forwards`;
-        piece.style.animationDelay = rand(0, 0.35) + 's';
+        piece.style.animationDelay = rand(0, 0.35) + "s";
         confetti.appendChild(piece);
     }
     block.appendChild(confetti);
     setTimeout(() => confetti.remove(), 5000);
 }
-document.addEventListener('DOMContentLoaded', function() {
-    const block = document.getElementById('leaderboard-block');
+document.addEventListener("DOMContentLoaded", function() {
+    const block = document.getElementById("leaderboard-block");
     if (block) {
-        block.addEventListener('click', launchConfetti);
+        block.addEventListener("click", launchConfetti);
     }
 });
 
@@ -311,17 +332,17 @@ const nuggets = [
 let nuggetIndex = 0;
 function showNugget(idx) {
     const nugget = nuggets[idx];
-    document.getElementById('nugget-content').innerHTML = `<h4>${nugget.title}</h4><div>${nugget.text}</div>`;
-    document.getElementById('nugget-python-input').value = '';
-    document.getElementById('nugget-python-output').textContent = '';
+    document.getElementById("nugget-content").innerHTML = `<h4>${nugget.title}</h4><div>${nugget.text}</div>`;
+    document.getElementById("nugget-python-input").value = "";
+    document.getElementById("nugget-python-output").textContent = "";
 }
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function() {
     showNugget(nuggetIndex);
-    document.getElementById('nugget-prev').onclick = function() {
+    document.getElementById("nugget-prev").onclick = function() {
         nuggetIndex = (nuggetIndex - 1 + nuggets.length) % nuggets.length;
         showNugget(nuggetIndex);
     };
-    document.getElementById('nugget-next').onclick = function() {
+    document.getElementById("nugget-next").onclick = function() {
         nuggetIndex = (nuggetIndex + 1) % nuggets.length;
         showNugget(nuggetIndex);
     };
@@ -330,23 +351,23 @@ document.addEventListener('DOMContentLoaded', function() {
         showNugget(nuggetIndex);
     }, 15 * 60 * 1000); // 15 minutes
     // Python interpreter (Skulpt)
-    document.getElementById('nugget-run-btn').onclick = function() {
-        const code = document.getElementById('nugget-python-input').value;
-        const output = document.getElementById('nugget-python-output');
-        output.textContent = 'Running...';
+    document.getElementById("nugget-run-btn").onclick = function() {
+        const code = document.getElementById("nugget-python-input").value;
+        const output = document.getElementById("nugget-python-output");
+        output.textContent = "Running...";
         if (window.Sk) {
             Sk.configure({
                 output: function(text) { output.textContent += text; },
                 read: function(x) { if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) throw "File not found: '" + x + "'"; return Sk.builtinFiles["files"][x]; }
             });
             Sk.misceval.asyncToPromise(function() {
-                output.textContent = '';
-                return Sk.importMainWithBody('<stdin>', false, code, true);
+                output.textContent = "";
+                return Sk.importMainWithBody("<stdin>", false, code, true);
             }).catch(function(e) {
                 output.textContent = e.toString();
             });
         } else {
-            output.textContent = 'Python interpreter not loaded.';
+            output.textContent = "Python interpreter not loaded.";
         }
     };
 });
