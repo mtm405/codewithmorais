@@ -6,8 +6,8 @@
     <div class="profile-header">
         <div class="avatar-section">
             <img src="{{ user.avatar_url or url_for('static', filename='img/default_avatar.png') }}" alt="Avatar" class="profile-avatar" id="avatar-img">
-            <button class="change-avatar-btn" onclick="document.getElementById('avatar-upload').click()">Change Avatar</button>
-            <input type="file" id="avatar-upload" style="display:none;" accept="image/*">
+            <button class="btn-primary change-avatar-btn" onclick="document.getElementById('avatar-upload').click()">Change Avatar</button>
+            <input type="file" id="avatar-upload" class="d-none" accept="image/*">
         </div>
         <div class="profile-info">
             <h2>{{ user.name or 'User' }}</h2>
@@ -23,61 +23,14 @@
         </div>
     </div>
     <div class="profile-actions">
-        <button class="edit-title-btn">Edit Title</button>
-        <button class="view-history-btn">View History</button>
+        <button class="btn-primary edit-title-btn">Edit Title</button>
+        <button class="btn-primary view-history-btn">View History</button>
     </div>
-    <div class="profile-history" style="display:none;">
+    <div class="profile-history d-none">
         <h3>Challenge & Quiz History</h3>
         <div id="history-list">Loading...</div>
     </div>
 </div>
-<script>
-// Avatar upload preview (no backend upload logic here)
-document.getElementById('avatar-upload').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-            document.getElementById('avatar-img').src = evt.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-});
-// Toggle history
-const historyBtn = document.querySelector('.view-history-btn');
-const historySection = document.querySelector('.profile-history');
-historyBtn.addEventListener('click', () => {
-    historySection.style.display = historySection.style.display === 'none' ? 'block' : 'none';
-});
-// Edit title (simple prompt)
-document.querySelector('.edit-title-btn').addEventListener('click', () => {
-    const newTitle = prompt('Enter your new title:');
-    if (newTitle) {
-        document.querySelector('.profile-title').textContent = newTitle;
-        // TODO: Send to backend
-    }
-});
-</script>
-<style>
-.profile-wrapper {
-    max-width: 1000px;
-    margin: 3rem auto;
-    background: #f8fafc;
-    border-radius: 20px;
-    box-shadow: 0 4px 24px #0002;
-    padding: 2.5rem 2rem 2rem 2rem;
-    border: 1px solid #e0e7ef;
-}
-.profile-header { display: flex; align-items: center; gap: 2rem; }
-.avatar-section { text-align: center; }
-.profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #eee; }
-.change-avatar-btn { margin-top: 0.5rem; background: #2196f3; color: #fff; border: none; border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; }
-.profile-info h2 { margin: 0; font-size: 2rem; }
-.profile-title { color: #888; font-size: 1.1rem; margin-bottom: 0.5rem; }
-.profile-score, .profile-currency { font-size: 1.1rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem; }
-.profile-actions { margin-top: 2rem; display: flex; gap: 1rem; }
-.edit-title-btn, .view-history-btn { background: #4caf50; color: #fff; border: none; border-radius: 8px; padding: 0.5rem 1.2rem; cursor: pointer; transition: background 0.2s; }
-.edit-title-btn:hover, .view-history-btn:hover { background: #388e3c; }
-.profile-history { margin-top: 2rem; background: #f9f9f9; border-radius: 8px; padding: 1rem; }
-</style>
 {% endblock %}
+</body>
+</html>

@@ -4,6 +4,9 @@ from datetime import datetime
 import re
 from markupsafe import Markup
 import random
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import HtmlFormatter
 
 # Helper function to determine the active page for sidebar highlighting
 def get_active_page():
@@ -48,3 +51,15 @@ def shuffle_filter(seq):
     seq = list(seq)
     random.shuffle(seq)
     return seq
+
+def pygments_highlight(code):
+    """
+    Highlight Python code as HTML with inline styles for use in Jinja templates.
+    Returns HTML with inline styles for syntax highlighting and line numbers.
+    """
+    formatter = HtmlFormatter(noclasses=True, style="monokai", linenos=True, nowrap=False)
+    highlighted = highlight(code, PythonLexer(), formatter)
+    # Remove <div> wrapper if present, keep only <pre>...
+    if highlighted.startswith('<div'):
+        highlighted = highlighted.split('>', 1)[1].rsplit('</div>', 1)[0]
+    return Markup(highlighted)

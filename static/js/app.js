@@ -1,9 +1,9 @@
 // static/js/app.js
 
 // --- Firebase Imports (Updated to use CDN paths) ---
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
-import { getAuth, signOut as firebaseSignOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, signOut as firebaseSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // --- Global Firebase Instances (assigned values after initialization) ---
 let firebaseApp;
@@ -15,7 +15,7 @@ async function initializeFirebase() {
     console.log("DEBUG: initializeFirebase() started.");
     try {
         // __firebase_config is typically set in a <script> tag in base.html from Flask
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : {};
+        const firebaseConfig = typeof __firebase_config !== "undefined" ? __firebase_config : {};
 
         if (!firebaseConfig || Object.keys(firebaseConfig).length === 0 || !firebaseConfig.apiKey || !firebaseConfig.projectId) {
             console.warn("Firebase config is missing or incomplete. Firebase features will be limited.");
@@ -45,10 +45,10 @@ async function initializeFirebase() {
 }
 
 // --- Event Listener for Logout Button ---
-document.addEventListener('DOMContentLoaded', () => {
-    const logoutButton = document.getElementById('logout-button');
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutButton = document.getElementById("logout-button");
     if (logoutButton) {
-        logoutButton.addEventListener('click', async (event) => {
+        logoutButton.addEventListener("click", async (event) => {
             event.preventDefault();
             console.log("Logout button clicked.");
             try {
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Then, redirect to your Flask /logout endpoint to clear session on server
-                window.location.href = '/logout';
+                window.location.href = "/logout";
             } catch (error) {
                 console.error("Error during logout:", error);
                 alert("Error during logout. Please try again.");
@@ -72,23 +72,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- Set Time-Based Greeting ---
 function updateTimeBasedGreeting() {
-    const greetingEl = document.getElementById('time-based-greeting');
+    const greetingEl = document.getElementById("time-based-greeting");
     if (!greetingEl) return;
     const now = new Date();
     const hour = now.getHours();
-    let greeting = 'Good evening,';
-    if (hour >= 5 && hour < 12) greeting = 'Good morning,';
-    else if (hour >= 12 && hour < 18) greeting = 'Good afternoon,';
+    let greeting = "Good evening,";
+    if (hour >= 5 && hour < 12) greeting = "Good morning,";
+    else if (hour >= 12 && hour < 18) greeting = "Good afternoon,";
     // Get first name from user_name or user display name
-    let firstName = '';
-    const userNameEl = document.getElementById('user-name-display');
+    let firstName = "";
+    const userNameEl = document.getElementById("user-name-display");
     if (userNameEl) {
-        firstName = userNameEl.textContent.split(' ')[0];
+        firstName = userNameEl.textContent.split(" ")[0];
         userNameEl.textContent = firstName;
     }
     greetingEl.textContent = `${greeting}`;
 }
-document.addEventListener('DOMContentLoaded', updateTimeBasedGreeting);
+document.addEventListener("DOMContentLoaded", updateTimeBasedGreeting);
 
 // Call initializeFirebase when app starts
 initializeFirebase();
@@ -97,12 +97,12 @@ initializeFirebase();
 // For example, any common utilities not specific to sidebar or dashboard
 
 // This listener is important for dynamic elements and ensuring Firebase is ready
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener("DOMContentLoaded", async () => {
     console.log("DEBUG: app.js DOMContentLoaded fired.");
 
     try {
         // Wait for Firebase to be initialized and auth state to be known
-        if (typeof auth !== 'undefined' && auth) {
+        if (typeof auth !== "undefined" && auth) {
             await new Promise(resolve => {
                 onAuthStateChanged(auth, user => {
                     if (user) {
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Call fetchAndRenderLeaderboard only on dashboard page
         // The logic for fetching and rendering leaderboard is now in dashboard_logic.js
         // and is called there directly.
-        const dashboardGridElement = document.querySelector('.dashboard-grid');
+        const dashboardGridElement = document.querySelector(".dashboard-grid");
         if (dashboardGridElement) {
             console.log("DEBUG: '.dashboard-grid' element found.");
             // No need to call fetchAndRenderLeaderboard here, dashboard_logic.js will handle it.

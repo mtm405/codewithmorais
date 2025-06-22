@@ -2,11 +2,11 @@
 <div class="debug-challenge-block">
   <div class="debug-challenge-label">{{ block.label }}</div>
   {% if block.instructions %}
-    <div class="debug-challenge-instructions" style="font-weight:600;color:#ffd700;margin-bottom:0.5em;">{{ block.instructions | markdown | safe }}</div>
+    <div class="debug-challenge-instructions font-weight-600 accent-gold mb-8">{{ block.instructions | markdown | safe }}</div>
   {% endif %}
   <form class="debug-challenge-ide-form" onsubmit="return runDebugChallengeCode(this, '{{ block.id }}');">
-    <textarea class="debug-challenge-ide" name="user_code" rows="8" style="width:100%;font-family:'Fira Mono','Consolas','Menlo',monospace;font-size:1em;background:#23263A;color:#ffecb3;border-radius:6px;padding:1em;border:1.5px solid #2196f3;resize:vertical;">{{ block.buggy_code }}</textarea>
-    <button type="submit" class="debug-challenge-run-btn" style="margin-top:0.7em;background:linear-gradient(90deg,#00FFF7,#8F00FF);color:#fff;font-weight:600;border:none;border-radius:6px;padding:0.6em 1.4em;">Run Code</button>
+    <textarea class="debug-challenge-ide width-100 font-mono font-size-1em bg-card text-accent-yellow rounded-6 p-16 border-accent-blue resize-vertical" name="user_code" rows="8">{{ block.buggy_code }}</textarea>
+    <button type="submit" class="debug-challenge-run-btn mt-10 bg-gradient-accent text-main font-weight-600 border-none rounded-6 p-10-28">Run Code</button>
     <div class="debug-challenge-feedback" id="debug-feedback-{{ block.id }}"></div>
   </form>
   {% if block.solution and block.solution.explanation %}

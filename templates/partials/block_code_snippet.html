@@ -1,5 +1,4 @@
 <!-- partials/block_code_snippet.html: Renders a code_snippet block as a read-only code block with IDE-like line numbers and blue border -->
-{% set code_lines = block.code.split('\n') %}
-<div class="syntax-block-unified ide-look" aria-label="Code example">
-  <pre class="syntax-block-pre ide-pre">{% for line in code_lines %}<div class="ide-row"><span class="ide-line-number">{{ loop.index }}</span><span class="ide-code-line">{{ line | e }}</span></div>{% endfor %}</pre>
+<div class="python-example" aria-label="Code example">
+  {{ block.code | pygments_highlight }}
 </div>

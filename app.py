@@ -10,6 +10,7 @@ import contextlib
 import requests
 import markdown
 
+
 # Import configuration and blueprints from src
 from src.config import (
     SERVICE_ACCOUNT_KEY_PATH,
@@ -20,7 +21,7 @@ from src.config import (
 )
 from src.auth import auth_bp, init_db as init_auth_db
 from src.routes import routes_bp, init_db as init_routes_db
-from src.utils import set_css_version, inject_global_data, highlight_keywords, shuffle_filter
+from src.utils import set_css_version, inject_global_data, highlight_keywords, shuffle_filter, pygments_highlight
 
 import json
 
@@ -39,6 +40,8 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 
 # Register the highlight_keywords filter with Jinja
 app.jinja_env.filters['highlight_keywords'] = highlight_keywords
+# Register the pygments_highlight filter with Jinja
+app.jinja_env.filters['pygments_highlight'] = pygments_highlight
 # Register the markdown filter with Jinja
 app.jinja_env.filters['markdown'] = lambda text: markdown.markdown(text)
 # Register the shuffle filter with Jinja
