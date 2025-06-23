@@ -112,7 +112,35 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 })();
 
-// Notification dropdown open/close logic
+// --- Enhanced Notifications Logic ---
+async function fetchNotifications() {
+  try {
+    const res = await fetch('/api/notifications');
+    if (!res.ok) return;
+    const data = await res.json();
+    updateNotificationUI(data.notifications || []);
+  } catch (e) {
+    console.error('Failed to fetch notifications', e);
+  }
+}
+
+function updateNotificationUI(notifications) {
+  const badge = document.querySelector('.notification-icon .badge');
+  const dropdown = document.getElementById('notificationDropdown');
+  if (badge) badge.textContent = notifications.length > 0 ? notifications.length : '';
+  if (dropdown) {
+    dropdown.innerHTML = notifications.length
+      ? notifications.map((n, i) => `<div class="notification-item" tabindex="0" data-index="${i}">${n.text}</div>`).join('')
+      : '<div class="notification-item empty">No notifications</div>';
+  }
+}
+
+// Mark notifications as read
+async function markNotificationsRead() {
+  await fetch('/api/notifications/read', { method: 'POST' });
+  fetchNotifications();
+}
+
 (function() {
   const notifIcon = document.querySelector('.notification-icon');
   const notifDropdown = document.getElementById('notificationDropdown');
@@ -124,20 +152,47 @@ document.addEventListener("DOMContentLoaded", function() {
     notifDropdown.style.display = isOpen ? 'none' : 'block';
     if (!isOpen) {
       notifDropdown.focus && notifDropdown.focus();
+      markNotificationsRead();
     }
   });
 
-  // Close dropdown on outside click
+  // Keyboard navigation for notifications
+  notifDropdown.addEventListener('keydown', function(e) {
+    const items = notifDropdown.querySelectorAll('.notification-item:not(.empty)');
+    if (!items.length) return;
+    let idx = Array.from(items).findIndex(item => item === document.activeElement);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      items[(idx + 1) % items.length].focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      items[(idx - 1 + items.length) % items.length].focus();
+    } else if (e.key === 'Enter' && idx >= 0) {
+      items[idx].click();
+    }
+  });
+
+  // Click handler for notification items (customize as needed)
+  notifDropdown.addEventListener('click', function(e) {
+    if (e.target.classList.contains('notification-item') && !e.target.classList.contains('empty')) {
+      // Example: show alert or navigate
+      alert(e.target.textContent);
+      notifDropdown.style.display = 'none';
+    }
+  });
+
   document.addEventListener('click', function(e) {
     if (!notifDropdown.contains(e.target) && !notifIcon.contains(e.target)) {
       notifDropdown.style.display = 'none';
     }
   });
 
-  // Close on Escape
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       notifDropdown.style.display = 'none';
     }
   });
 })();
+
+fetchNotifications();
+setInterval(fetchNotifications, 60000); // Poll every minute

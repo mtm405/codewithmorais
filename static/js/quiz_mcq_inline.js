@@ -25,9 +25,23 @@ function setBtnColor(btn, color) {
 // Award 1 byte to the user (Firebase)
 async function awardByteToUser() {
   const user = auth.currentUser;
-  if (!user) return;
-  const userRef = firestoreDoc(db, "users", user.uid);
-  await updateDoc(userRef, { total_points: firestoreIncrement(1) });
+  if (!user) {
+    console.warn('[MCQ DEBUG] No user signed in, cannot award Byte.');
+    return;
+  }
+  try {
+    const userRef = firestoreDoc(db, "users", user.uid);
+    await updateDoc(userRef, { total_points: firestoreIncrement(1) });
+    // Optionally update UI Byte count if you have a badge/element
+    const byteBadge = document.getElementById("byte-points-badge");
+    if (byteBadge) {
+      let val = parseInt(byteBadge.textContent, 10) || 0;
+      byteBadge.textContent = val + 1;
+    }
+    console.log('[MCQ DEBUG] Awarded 1 Byte to user:', user.uid);
+  } catch (e) {
+    console.warn('[MCQ DEBUG] Failed to award Byte to user:', e);
+  }
 }
 
 // Persistent attempt tracking key (per lesson, per user, per blockId)
@@ -197,6 +211,25 @@ function getMcqStorageKey() {
 // --- END: Persistent attempt tracking and per-topic progress ---
 
 document.addEventListener("DOMContentLoaded", function () {
+  // --- Always clear MCQ quiz progress on page load (for dev/testing) ---
+  try {
+    const lessonId = window.lessonId || window.location.pathname;
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(`mcq_attempts_${lessonId}`)) {
+        keysToRemove.push(key);
+      }
+      if (key && key.startsWith(`mcq_quiz_summary_${lessonId}`)) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+    if (keysToRemove.length > 0) {
+      console.log("[MCQ DEBUG] Cleared MCQ quiz progress on reload:", keysToRemove);
+    }
+  } catch (e) { console.warn("[MCQ DEBUG] Could not clear MCQ quiz progress on reload:", e); }
+
   // Remove debug border and zIndex from MCQ blocks
   const mcqBlocks = Array.from(document.querySelectorAll(".block-multiple-choice"));
   mcqBlocks.forEach((block) => {
@@ -311,8 +344,23 @@ document.addEventListener("DOMContentLoaded", function () {
       buttons.forEach((btn, idx) => {
         // DEBUG: Log event listener attachment
         console.log("[MCQ DEBUG] Attaching click event to MCQ option button", { blockIdx, blockId, btn, idx });
-        btn.addEventListener("click", function () {
-          if (answered) return;
+        btn.addEventListener("click", function (event) {
+          console.log("[MCQ DEBUG] Button clicked!", { blockIdx, blockId, idx, btn, disabled: btn.disabled, pointerEvents: getComputedStyle(btn).pointerEvents });
+          if (answered) {
+            console.log("[MCQ DEBUG] Button click ignored: already answered", { blockIdx, blockId, idx });
+            return;
+          }
+          // Check for overlays or parent pointer-events:none
+          let el = btn;
+          let overlayFound = false;
+          while (el && el !== document.body) {
+            const style = getComputedStyle(el);
+            if (style.pointerEvents === "none" || style.visibility === "hidden" || style.display === "none") {
+              overlayFound = true;
+              console.warn("[MCQ DEBUG] Overlay or pointer-events:none detected on ancestor", { el, style });
+            }
+            el = el.parentElement;
+          }
           answered = true;
           answeredCount++;
           // Disable all buttons
@@ -340,11 +388,8 @@ document.addEventListener("DOMContentLoaded", function () {
               feedback.className = "mcq-feedback incorrect";
               feedback.style.display = "block";
             }
-            if (typeof correctIdx === "number" && buttons[correctIdx]) {
-              buttons[correctIdx].classList.add("mcq-correct");
-              setBtnColor(buttons[correctIdx], MCQ_GREEN);
-            }
           }
+          // Save attempt to localStorage
           saveAttempt(blockId, idx, idx === correctIdx);
           userAnswers[blockIdx] = { selectedIdx: idx, isCorrect: idx === correctIdx };
           // Hide all blocks after this one in the topic
@@ -369,7 +414,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 total: totalQuestions,
                 timestamp: Date.now(),
               });
-            }, 1200);
+            }, 1500);
           } else {
             // Otherwise, show next unanswered block in topic
             const nextBlock = blocks.slice(blockIdx + 1).find(b => {
@@ -379,110 +424,12 @@ document.addEventListener("DOMContentLoaded", function () {
             if (nextBlock) {
               setTimeout(() => {
                 nextBlock.scrollIntoView({ behavior: "smooth" });
-              }, 500);
+                nextBlock.style.display = "";
+              }, 1500);
             }
           }
         });
       });
     });
   });
-  // --- Auto-save progress example (optional) ---
-  const saveProgressBtn = document.getElementById("mcq-save-progress");
-  if (saveProgressBtn) {
-    // DEBUG: Log save progress button found
-    console.log("[MCQ DEBUG] Found save progress button:", saveProgressBtn);
-    saveProgressBtn.addEventListener("click", async () => {
-      console.log("[MCQ DEBUG] Save progress button clicked");
-      const progress = {
-        topic: lessonId,
-        correct: correctCount,
-        total: totalQuestions,
-        timestamp: Date.now(),
-      };
-      await saveProgressToFirebase(progress);
-      alert("Progress saved!");
-    });
-  } else {
-    // DEBUG: Log save progress button not found
-    console.log("[MCQ DEBUG] Save progress button not found");
-  }
-
-  // --- DEBUG: Check for all MCQ inline buttons ---
-  const allMcqButtons = document.querySelectorAll(".mcq-option-btn, .mcq-inline-btn");
-  if (allMcqButtons.length === 0) {
-    console.warn("[MCQ DEBUG] No MCQ inline buttons found in DOM!");
-  } else {
-    console.log("[MCQ DEBUG] Found MCQ inline buttons:", allMcqButtons);
-  }
-
-  // Add a modern frame to MCQ inline blocks
-  const style = document.createElement("style");
-  style.innerHTML = `
-    .block-multiple-choice.mcq-inline {
-      border: 3px solid #8F00FF !important;
-      border-radius: 14px !important;
-      box-shadow: 0 2px 12px rgba(143,0,255,0.13) !important;
-      background: linear-gradient(120deg, #232136 70%, #2d1e4a 100%) !important;
-      margin: 2em 0 !important;
-      padding: 1.2em 1.5em !important;
-      color: #f8fafd !important;
-      transition: box-shadow 0.2s, border-color 0.2s;
-    }
-    .block-multiple-choice.mcq-inline:hover {
-      box-shadow: 0 4px 24px rgba(143,0,255,0.22) !important;
-      border-color: #a020f0 !important;
-    }
-    .block-multiple-choice.mcq-inline .mcq-question, .block-multiple-choice.mcq-inline .mcq-option-btn {
-      color: #f8fafd !important;
-    }
-    .block-multiple-choice.mcq-inline .mcq-feedback {
-      color: #ffb300 !important;
-    }
-  `;
-  document.head.appendChild(style);
-
-  // Modern divider style for dark theme
-  const dividerBlocks = document.querySelectorAll(".block-divider");
-  dividerBlocks.forEach(div => {
-    div.style.background = "linear-gradient(90deg, rgba(143,0,255,0.18) 0%, rgba(35,33,54,0.7) 50%, rgba(143,0,255,0.18) 100%)";
-    div.style.height = "3px";
-    div.style.borderRadius = "2px";
-    div.style.margin = "3em 0 3em 0";
-    div.style.boxShadow = "0 2px 12px rgba(143,0,255,0.13)";
-    div.innerHTML = `<div style="display:flex;justify-content:center;align-items:center;gap:0.7em;">
-      <span style="width:18px;height:18px;border-radius:50%;background:#8F00FF;box-shadow:0 0 8px #8F00FF55;"></span>
-      <span style="width:10px;height:10px;border-radius:50%;background:#ffb300;box-shadow:0 0 6px #ffb30055;"></span>
-      <span style="width:18px;height:18px;border-radius:50%;background:#8F00FF;box-shadow:0 0 8px #8F00FF55;"></span>
-    </div>`;
-  });
-
-  // Event delegation for all .mcq-refresh-btn clicks (works for dynamic and static buttons)
-  document.body.addEventListener("click", function(e) {
-    if (e.target && e.target.classList.contains("mcq-refresh-btn")) {
-      console.log("[MCQ DEBUG] (Delegated) Refresh Quiz button clicked:", e.target);
-      const lessonId = window.lessonId || window.location.pathname;
-      // --- Robustly clear all MCQ attempt and summary keys for this lesson ---
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith(`mcq_attempts_${lessonId}`)) {
-          keysToRemove.push(key);
-        }
-        if (key && key.startsWith(`mcq_quiz_summary_${lessonId}`)) {
-          keysToRemove.push(key);
-        }
-      }
-      console.log("[MCQ DEBUG] (Delegated) Keys to remove:", keysToRemove);
-      keysToRemove.forEach(key => {
-        localStorage.removeItem(key);
-        console.log("[MCQ DEBUG] (Delegated) Cleared key:", key);
-      });
-      console.log("[MCQ DEBUG] (Delegated) After refresh, localStorage keys:", Object.keys(localStorage));
-      window.location.reload();
-    }
-  });
-  // Debug: log if no .mcq-refresh-btn is found at DOMContentLoaded
-  if (document.querySelectorAll(".mcq-refresh-btn").length === 0) {
-    console.warn("[MCQ DEBUG] No .mcq-refresh-btn found at DOMContentLoaded");
-  }
 });

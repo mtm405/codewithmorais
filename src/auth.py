@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, session, reques
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from firebase_admin import firestore  # Make sure this import is present
+from pyngrok import ngrok  # For local HTTPS tunnel
 import os
 
 auth_bp = Blueprint('auth', __name__)
@@ -20,28 +21,32 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-@auth_bp.route('/auth', methods=['POST'])
-def authenticate():
-    token = request.form.get('credential')
-    login_time = request.form.get('login_time')  # Get the online time from the request
-    client_id = os.environ.get("GOOGLE_CLIENT_ID")
-    print("DEBUG: Received token:", token[:30], "...")
-    print("DEBUG: Using client ID:", client_id)
-    print("DEBUG: Received login_time from client:", login_time)  # Debug print
-    try:
-        # Verify the ID token with Google
-        idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
+@auth_bp.route('/')
+def index():
+    return redirect(url_for('index'))
 
+@auth_bp.route('/google_signin', methods=['POST'])
+def google_signin():
+    data = request.get_json()
+    credential = data.get('credential')
+    login_time = data.get('login_time')  # Optional: support login_time if sent from frontend
+    client_id = os.environ.get("GOOGLE_CLIENT_ID")
+    print("DEBUG: Received token:", credential[:30], "...")
+    print("DEBUG: Using client ID:", client_id)
+    print("DEBUG: Client ID from frontend (JS): 208072504611-h61tkfvq2ksf1t8pe45d6o90fi8n2ii6.apps.googleusercontent.com")
+    print("DEBUG: Received login_time from client:", login_time)
+    print("DEBUG: Request origin:", request.headers.get('Origin'))
+    print("DEBUG: Request host:", request.host)
+    print("DEBUG: Request referrer:", request.referrer)
+    print("DEBUG: Request URL:", request.url)
+    try:
+        idinfo = id_token.verify_oauth2_token(credential, google_requests.Request(), client_id)
         user_id = idinfo['sub']
         user_email = idinfo.get('email')
-        user_name = idinfo.get('name', user_email)  # Use email as name if name not provided
-
-        # Store or update user info in Firestore
+        user_name = idinfo.get('name', user_email)
         user_ref = db.collection('users').document(user_id)
         user_doc = user_ref.get()
-
         if user_doc.exists:
-            # User exists, update all relevant fields but keep existing values for currency, total_points, user_title, is_admin, created_at
             first_name = user_name.split(' ')[0] if user_name else ''
             existing = user_doc.to_dict()
             user_ref.update({
@@ -58,7 +63,6 @@ def authenticate():
                 'is_admin': existing.get('is_admin', False),
             })
         else:
-            # New user, create document with all required fields
             first_name = user_name.split(' ')[0] if user_name else ''
             user_ref.set({
                 'email': user_email,
@@ -73,17 +77,18 @@ def authenticate():
                 'is_admin': False,
                 'picture': idinfo.get('picture', ''),
             })
-
-        # Set session with first name
         session['user_id'] = user_id
         session['user_email'] = user_email
         session['user_name'] = first_name
-
         return jsonify({'success': True, 'redirect': url_for('routes.dashboard')})
     except Exception as e:
-        print(f"ERROR in /auth: {e}")
+        print(f"ERROR in /google_signin: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@auth_bp.route('/')
-def index():
-    return redirect(url_for('index'))
+if __name__ == "__main__":
+    # Open a tunnel to your local server (replace 8080 with your port)
+    public_url = ngrok.connect(8080)
+    print("ngrok tunnel URL:", public_url)
+    # Start your Flask app as usual
+    from app import app
+    app.run(port=8080)

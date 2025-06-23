@@ -90,6 +90,23 @@ function updateTimeBasedGreeting() {
 }
 document.addEventListener("DOMContentLoaded", updateTimeBasedGreeting);
 
+// --- Live Clock (Header) ---
+function updateClock() {
+  const clock = document.getElementById('live-clock');
+  if (!clock) return;
+  const now = new Date();
+  const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  clock.textContent = timeString;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const clock = document.getElementById('live-clock');
+  if (clock) {
+    updateClock(); // Show instantly
+    setInterval(updateClock, 1000);
+  }
+});
+
 // Call initializeFirebase when app starts
 initializeFirebase();
 
@@ -138,5 +155,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("CRITICAL ERROR: app.js DOMContentLoaded execution halted due to unhandled error:", error);
     }
 }); // End of DOMContentLoaded
+
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.querySelector('.sidebar');
+  const toggleBtn = document.getElementById('sidebar-toggle-btn');
+  const body = document.body;
+
+  // Restore sidebar state from localStorage
+  if (localStorage.getItem('sidebar-collapsed') === 'true') {
+    sidebar.classList.add('sidebar-collapsed');
+    body.classList.add('sidebar-collapsed');
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function() {
+      sidebar.classList.toggle('sidebar-collapsed');
+      body.classList.toggle('sidebar-collapsed');
+      const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+      localStorage.setItem('sidebar-collapsed', isCollapsed);
+    });
+    // Keyboard accessibility
+    toggleBtn.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleBtn.click();
+      }
+    });
+  }
+});
+
 // REMINDER: Set your Firebase config in Flask and inject it as __firebase_config in your base.html template.
 // Example: <script>var __firebase_config = '{{ firebase_config | tojson | safe }}';</script>
