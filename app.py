@@ -35,8 +35,8 @@ except Exception:
 app = Flask(__name__)
 
 # --- SESSION COOKIE SETTINGS FOR CLOUD RUN ---
-app.config['SESSION_COOKIE_SECURE'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True if os.environ.get('FLASK_ENV') == 'production' else False
+app.config['SESSION_COOKIE_SAMESITE'] = 'None' if os.environ.get('FLASK_ENV') == 'production' else 'Lax'
 
 # Register the highlight_keywords filter with Jinja
 app.jinja_env.filters['highlight_keywords'] = highlight_keywords
@@ -209,6 +209,58 @@ def get_user_info():
         'total_points': user_data.get('total_points', 0),
         'is_admin': user_data.get('is_admin', False)
     })
+
+# --- SEARCH API ---
+@app.route('/api/search')
+def search():
+    global db
+    query = request.args.get('q', '').lower()
+    results = []
+    if db is None:
+        return jsonify({'success': False, 'error': 'Database not initialized'}), 500
+    lessons = db.collection('lessons').stream()
+    for doc in lessons:
+        data = doc.to_dict()
+        if query in data.get('title', '').lower() or query in data.get('description', '').lower():
+            results.append({
+                'title': data.get('title'),
+                'url': f"/lesson/{doc.id}",
+                'description': data.get('description', '')
+            })
+    return jsonify({'success': True, 'results': results})
+
+# --- NOTIFICATIONS API ---
+@app.route('/api/notifications')
+def notifications():
+    global db
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'error': 'Not logged in'}), 401
+    if db is None:
+        return jsonify({'success': False, 'error': 'Database not initialized'}), 500
+    notif_ref = db.collection('notifications').where('user_id', '==', user_id)
+    notifications = []
+    unread_count = 0
+    for doc in notif_ref.stream():
+        n = doc.to_dict()
+        notifications.append({'id': doc.id, 'text': n['text'], 'read': n.get('read', False)})
+        if not n.get('read', False):
+            unread_count += 1
+    return jsonify({'success': True, 'unread_count': unread_count, 'notifications': notifications})
+
+# --- MARK NOTIFICATION AS READ (OPTIONAL) ---
+@app.route('/api/notifications/read', methods=['POST'])
+def mark_notification_read():
+    global db
+    notif_id = request.json.get('id')
+    user_id = session.get('user_id')
+    if not notif_id or not user_id:
+        return jsonify({'success': False, 'error': 'Missing notification ID or not logged in'}), 400
+    if db is None:
+        return jsonify({'success': False, 'error': 'Database not initialized'}), 500
+    notif_doc = db.collection('notifications').document(notif_id)
+    notif_doc.update({'read': True})
+    return jsonify({'success': True})
 
 @app.route('/sessionLogin', methods=['POST'])
 def session_login():

@@ -6,7 +6,6 @@
     <title>Welcome to Our App</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- Modular Firebase config is provided by base.html and imported in JS files. -->
 </head>
 <body>
@@ -64,6 +63,40 @@
           console.error('particlesJS is not loaded');
         }
       });
+    </script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      function renderGoogleSignIn() {
+        if (window.google && google.accounts && google.accounts.id) {
+          google.accounts.id.initialize({
+            client_id: "208072504611-h61tkfvq2ksf1t8pe45d6o90fi8n2ii6.apps.googleusercontent.com",
+            callback: function(response) {
+              fetch('/google_signin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential: response.credential })
+              })
+              .then(res => res.json())
+              .then(data => {
+                console.log('Login success:', data);
+                if (data.success && data.redirect) {
+                  window.location.href = data.redirect;
+                }
+              })
+              .catch(err => {
+                console.error('Login failed:', err);
+              });
+            }
+          });
+          google.accounts.id.renderButton(
+            document.querySelector(".g_id_signin"),
+            { theme: "outline", size: "large" }
+          );
+        } else {
+          setTimeout(renderGoogleSignIn, 100);
+        }
+      }
+      renderGoogleSignIn();
     </script>
 </body>
 </html>

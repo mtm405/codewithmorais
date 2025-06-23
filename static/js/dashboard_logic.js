@@ -143,50 +143,68 @@ function setDynamicGreeting() {
     console.log("DEBUG: Greeting set to:", greeting); // New debug line
 }
 
-/**
- * Placeholder function for website search.
- * This function now updates a dedicated search results display area on the dashboard.
- * @param {string} query The search query entered by the user.
- */
-function performWebsiteSearch(query) {
-    console.log("DEBUG: Performing website search for query:", query);
-    const searchResultsDisplay = document.getElementById("search-results-display");
-
-    if (query.trim() === "") {
-        searchResultsDisplay.classList.add("hidden");
-        searchResultsDisplay.innerHTML = "";
-        return; // Do nothing if query is empty
+// --- Enhanced Live Search Logic ---
+const searchInput = document.getElementById('searchInput');
+const searchResultsDisplay = document.getElementById('search-results-display');
+if (searchInput && searchResultsDisplay) {
+  let searchTimeout;
+  searchInput.addEventListener('input', function () {
+    clearTimeout(searchTimeout);
+    const query = this.value.trim();
+    if (!query) {
+      searchResultsDisplay.classList.add('hidden');
+      searchResultsDisplay.innerHTML = '';
+      return;
     }
+    searchTimeout = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+          searchResultsDisplay.classList.remove('hidden');
+          if (data.results && data.results.length > 0) {
+            searchResultsDisplay.innerHTML = data.results.map((r, i) => `<div class="search-result-item" tabindex="0" data-index="${i}">${r.title}</div>`).join('');
+          } else {
+            searchResultsDisplay.innerHTML = '<div class="search-result-item empty">No results</div>';
+          }
+        });
+    }, 250);
+  });
 
-    // Show the search results container
-    searchResultsDisplay.classList.remove("hidden");
-    searchResultsDisplay.innerHTML = `<h3>Search Results for "${query}" <span class="material-symbols-outlined">search</span></h3>`;
-    searchResultsDisplay.innerHTML += `<p>Searching for: "${query}"...</p>`;
-    searchResultsDisplay.innerHTML += "<p>Actual search logic would be implemented here, potentially fetching results from an API or filtering existing content.</p>";
-    searchResultsDisplay.innerHTML += "<p>For now, this is a placeholder. You would replace this with real search results.</p>";
+  // Keyboard navigation for search results
+  searchInput.addEventListener('keydown', function(e) {
+    const items = searchResultsDisplay.querySelectorAll('.search-result-item:not(.empty)');
+    if (!items.length) return;
+    let idx = Array.from(items).findIndex(item => item === document.activeElement);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      (items[(idx + 1) % items.length] || items[0]).focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      (items[(idx - 1 + items.length) % items.length] || items[0]).focus();
+    }
+  });
 
-    // In a real application, you'd likely fetch results or filter visible content.
-    // Example:
-    // fetch(`/api/search?q=${encodeURIComponent(query)}`)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         // Render actual search results here
-    //         searchResultsDisplay.innerHTML = `<h3>Search Results for "${query}"</h3>`;
-    //         if (data.results && data.results.length > 0) {
-    //             let resultsHtml = '<ul>';
-    //             data.results.forEach(item => {
-    //                 resultsHtml += `<li><a href="${item.url}">${item.title}</a> - ${item.description}</li>`;
-    //             });
-    //             resultsHtml += '</ul>';
-    //             searchResultsDisplay.innerHTML += resultsHtml;
-    //         } else {
-    //             searchResultsDisplay.innerHTML += '<p>No results found.</p>';
-    //         }
-    //     })
-    //     .catch(error => {
-    //         console.error('Error during search:', error);
-    //         searchResultsDisplay.innerHTML += '<p>Error performing search. Please try again.</p>';
-    //     });
+  searchResultsDisplay.addEventListener('keydown', function(e) {
+    const items = searchResultsDisplay.querySelectorAll('.search-result-item:not(.empty)');
+    let idx = Array.from(items).findIndex(item => item === document.activeElement);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      (items[(idx + 1) % items.length] || items[0]).focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      (items[(idx - 1 + items.length) % items.length] || items[0]).focus();
+    } else if (e.key === 'Enter' && idx >= 0) {
+      items[idx].click();
+    }
+  });
+
+  // Click handler for search results (customize as needed)
+  searchResultsDisplay.addEventListener('click', function(e) {
+    if (e.target.classList.contains('search-result-item') && !e.target.classList.contains('empty')) {
+      alert('You selected: ' + e.target.textContent);
+      searchResultsDisplay.classList.add('hidden');
+    }
+  });
 }
 
 // Confetti animation for leaderboard block (randomized circles/rects, more pieces, longer, all directions, slow fall)
