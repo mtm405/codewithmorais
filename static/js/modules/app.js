@@ -12,17 +12,28 @@ import { initUserModule } from "./user/index.js";
 import { initHeaderSync } from "./header/sync.js";
 import { initAdminPanel } from "./admin/index.js";
 
+// List of all module initializers
+const initializers = [
+  initDashboardDrag,
+  initDashboardLogic,
+  initSidebar,
+  initQuizMinimal,
+  initQuizMcqInline,
+  loadQuizMarkdown,
+  initLessonInteractions,
+  initUserModule,
+  initHeaderSync,
+  initAdminPanel
+];
+
 // Initialize all modules on DOMContentLoaded
 // (You can add logic here to only initialize modules on relevant pages)
 document.addEventListener("DOMContentLoaded", () => {
-  initDashboardDrag();
-  initDashboardLogic();
-  initSidebar();
-  initQuizMinimal();
-  initQuizMcqInline();
-  loadQuizMarkdown();
-  initLessonInteractions();
-  initUserModule();
-  initHeaderSync();
-  initAdminPanel();
+  initializers.forEach(fn => {
+    try {
+      fn();
+    } catch (e) {
+      console.warn(`${fn.name} failed`, e);
+    }
+  });
 });
