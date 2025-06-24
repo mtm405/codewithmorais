@@ -7,11 +7,14 @@ export function initHeaderClock() {
 
   function updateClock() {
     const now = new Date();
-    // Format: HH:MM:SS (24h)
-    const h = String(now.getHours()).padStart(2, "0");
+    let h = now.getHours();
     const m = String(now.getMinutes()).padStart(2, "0");
     const s = String(now.getSeconds()).padStart(2, "0");
-    clockEl.textContent = `${h}:${m}:${s}`;
+    const ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12;
+    h = h ? h : 12; // the hour '0' should be '12'
+    // Use a span for AM/PM for CSS styling
+    clockEl.innerHTML = `${h}:${m}:${s} <span class="ampm">${ampm}</span>`;
   }
 
   updateClock();

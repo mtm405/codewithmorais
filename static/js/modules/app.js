@@ -21,3 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// Flickering zero effect for counter (e.g., points or timer)
+document.addEventListener('DOMContentLoaded', () => {
+  const counter = document.getElementById('counter'); // Change to your element's ID if needed
+  if (counter) {
+    const actualValue = counter.getAttribute('data-value') || counter.textContent;
+    counter.textContent = '0';
+    counter.classList.add('flicker-zero');
+    setTimeout(() => {
+      counter.textContent = actualValue;
+      counter.classList.remove('flicker-zero');
+    }, 600); // Duration matches the animation
+  }
+});
