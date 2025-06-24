@@ -30,9 +30,9 @@
   --border-radius: 16px;
 
   /* --- Shadows --- */
-  --shadow: 0 4px 12px rgba(0,0,0,0.25);
-  --shadow-dark: 0 2px 8px rgba(0,0,0,0.20);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.35);
+  --shadow: 0 4px 12px rgb(0 0 0 / 25%);
+  --shadow-dark: 0 2px 8px rgb(0 0 0 / 20%);
+  --shadow-lg: 0 8px 24px rgb(0 0 0 / 35%);
   --shadow-blue: 0 0 10px 0 #30699866;
   --shadow-yellow: 0 0 10px 0 #FFD43B66;
   --shadow-green: 0 0 10px #2ECC7166;
@@ -42,7 +42,7 @@
 body {
   background: var(--bg-main);
   color: var(--text-main);
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
   font-size: 1.1rem;
   margin: 0;
   padding: 0;
@@ -52,6 +52,7 @@ body {
 .layout-flex {
   display: flex;
   flex-direction: row;
+
   /* min-height: 100vh; Removed to allow sticky sidebar */
   gap: 0; /* Remove any gap between sidebar and content */
 }
@@ -62,12 +63,13 @@ body {
   min-width: 220px;
   padding: 28px 18px;
   color: var(--text-light);
-  box-shadow: 0 8px 32px rgba(48, 105, 152, 0.25), 0 1.5px 8px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 32px rgb(48 105 152 / 25%), 0 1.5px 8px rgb(0 0 0 / 18%);
   flex-shrink: 0;
   border-right: 2px solid var(--accent-blue); /* Optional: adds a subtle border */
   position: sticky;
   top: 0;
   height: 100vh;
+
   /* z-index: 10; (optional, if needed above content) */
 }
 
@@ -87,7 +89,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 14px 20px;
-  color: var(--text-medium);
+  color: var(--text-main);
   border-radius: 14px;
   text-decoration: none;
   font-weight: 500;
@@ -118,14 +120,14 @@ body {
 .sidebar .menu-item-link:hover,
 .sidebar .menu-item-link:focus {
   color: var(--text-main);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 12%);
 }
 
 .sidebar .menu-item-link.active {
   color: (--text-main);
   font-weight: 600;
   background: var(--accent-blue);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 20%);
   z-index: 1;
 }
 
@@ -146,6 +148,7 @@ body {
 .sidebar .menu-item-link.active svg {
   color: var(--accent-yellow);
 }
+
 /* --- Header --- */
 .header-bar {
   display: grid;
@@ -158,18 +161,6 @@ body {
   border-bottom: 1px solid var(--border-dark);
 }
   
-/* --- Header Element --- */
-header {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-dark);
-  padding: 20px 32px;
-  margin: 24px 0 32px 0;
-  border: none;
-  display: block;
-}
-
 /* --- Header Content Elements --- */
 .header-greeting {
   display: flex;
@@ -195,23 +186,18 @@ header {
   margin: 0 6px;
 }
 
-.header-greeting .greeting-exclamation {
-  color: var(--accent-green); /* Exclamation in green for pop */
-  font-weight: 700;
-  margin-left: 2px;
-}
-
 .header-timer {
   background: var(--bg-accent); /* Keep background */
   color: var(--accent-yellow);
   font-size: 2.1rem;
   font-weight: 700;
-  padding: 0.2em 0.8em 0.25em 0.8em;
+  padding: 0.2em 0.8em 0.25em;
   border-radius: 12px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
+
   /* Use a subtle blue shadow instead of yellow */
   box-shadow: 0 4px 18px 0 #30699833;
   position: relative;
@@ -289,14 +275,16 @@ header {
 
 .grid-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 28px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 28px rgb(0 0 0 / 15%);
 }
 
 /* --- Lesson Content --- */
+
 /* Merge duplicate .lesson-content-wrapper and fix margin */
 .lesson-content-wrapper {
   background: var(--bg-card);
-  padding: 44px 44px 44px 44px;
+  padding: 44px;
+
   /* Add top margin to separate from the header */
   border-radius: 0 var(--border-radius) var(--border-radius) 0;
   box-shadow: var(--shadow);
@@ -307,6 +295,7 @@ header {
   border: 1.5px solid var(--accent-blue);
   margin: 0 auto; /* Center the content */
 }
+
 .lesson-main {
   font-size: 1.55rem;
   color: var(--text-main);
@@ -323,12 +312,12 @@ header {
 /* --- Sidebar Avatar & User Info --- */
 .sidebar-avatar {
   display: block;
-  margin: 0 auto 12px auto;
+  margin: 0 auto 12px;
   width: 72px;
   height: 72px;
   border-radius: 50%;
   border: 3px solid var(--accent-blue);
-  box-shadow: 0 2px 12px rgba(48, 105, 152, 0.18);
+  box-shadow: 0 2px 12px rgb(48 105 152 / 18%);
   object-fit: cover;
   background: var(--bg-main);
   transition: box-shadow 0.2s, border-color 0.2s;
@@ -336,7 +325,7 @@ header {
 
 .sidebar-avatar:hover {
   border-color: var(--accent-yellow);
-  box-shadow: 0 4px 18px rgba(255, 215, 0, 0.18);
+  box-shadow: 0 4px 18px rgb(255 215 0 / 18%);
   cursor: pointer;
 }
 
@@ -366,6 +355,7 @@ header {
   width: fit-content;
   letter-spacing: 0.02em;
 }
+
 .user-points {
   display: flex;
   align-items: center;
@@ -374,11 +364,11 @@ header {
   background: var(--bg-accent);
   border-radius: 12px;
   padding: 10px 18px;
-  margin: 18px 0 24px 0;
+  margin: 18px 0 24px;
   font-size: 1.08em;
   font-weight: 600;
   color: var(--accent-yellow);
-  box-shadow: 0 2px 8px rgba(48, 105, 152, 0.10);
+  box-shadow: 0 2px 8px rgb(48 105 152 / 10%);
 }
 
 .user-points .material-symbols-outlined {
@@ -400,11 +390,12 @@ header {
   font-size: 1em;
   margin-left: 2px;
 }
+
 /* --- Tabs --- */
 .lesson-tabs-wrapper {
   position: relative;
   max-width: 1200px;
-  margin: 0 auto 0 auto;
+  margin: 0 auto;
   padding-top: 0;
 }
 
@@ -481,9 +472,10 @@ a:hover {
   padding: 0.12em 0.38em;
   border: 1.5px solid var(--border-subtle);
   font-size: 0.98em;
-  font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
+  font-family: 'Fira Mono', Consolas, Menlo, Monaco, monospace;
   font-weight: 600;
   letter-spacing: 0.01em;
+
   /* Optional: subtle shadow for pop */
   box-shadow: 0 1px 4px 0 #0002;
   
@@ -502,77 +494,117 @@ a:hover {
   margin-bottom: 1.5em;
 }
 
-/* --- Quiz Styles --- */
+/* --- Quiz Unlock Section --- */
 .quiz-unlock-section {
   background: var(--accent-yellow);
-  color: var(--bg-main);
-  border-radius: 12px;
-  padding: 1.5em 1em;
-  margin: 2em 0;
-  box-shadow: 0 2px 12px #FFD43B33;
+  color: var(--bg-dark); /* Use a dark background color for text on yellow for better contrast */
+  border-radius: var(--border-radius); /* Use the defined border-radius variable */
+  padding: 1.8em 1.5em; /* Slightly more generous padding */
+  margin: 2.5em 0; /* More vertical margin for better separation */
+  box-shadow: var(--shadow-yellow); /* Use the specific shadow variable */
+  font-weight: 700; /* Make it bolder */
+  text-align: center;
+  font-size: 1.25em; /* Slightly larger font */
+  letter-spacing: 0.02em; /* Add a touch of letter spacing */
 }
 
+/* --- MCQ Ribbon --- */
 .mcq-ribbon {
-  background: var(--accent-blue-alt);
-  color: #fff;
-  border-radius: 8px 8px 0 0;
-  padding: 0.3em 1em;
-  font-weight: 700;
+  /* Use a subtle gradient with the accent blue */
+  background: linear-gradient(180deg, var(--accent-blue) 0%, var(--accent-blue-alt) 100%);
+  color: var(--text-main); /* Ensure consistent text color */
+  border-radius: var(--border-radius) var(--border-radius) 0 0; /* Consistent top radius */
+  padding: 0.7em 1.5em; /* More padding for a bolder look */
+  font-weight: 800; /* Extra bold for prominence */
+  font-size: 1.35em; /* Larger and more impactful */
+  letter-spacing: 0.05em; /* More distinct letter spacing */
+  box-shadow: var(--shadow-lg); /* A more pronounced shadow for depth */
+  margin-bottom: -1px; /* Keep it overlapping */
+  position: relative;
+  overflow: hidden;
+  /* Add a subtle top border for more definition */
+  border-top: 3px solid rgba(255, 255, 255, 0.1);
 }
 
-/* --- MCQ Inline Improvements --- */
+/* Subtle texture overlay for Ribbon */
+.mcq-ribbon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* A more subtle, almost fabric-like texture with a darker tone */
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><rect width="3" height="3" fill="%23000000" opacity="0.05"/><rect x="3" y="3" width="3" height="3" fill="%23000000" opacity="0.05"/></svg>');
+  background-size: 6px 6px;
+  opacity: 0.3;
+  mix-blend-mode: overlay;
+}
+
+/* --- MCQ Inline Block --- */
 .mcq-image-style.mcq-inline {
-  background: var(--bg-accent);
-  border: 2px solid var(--accent-blue);
-  border-radius: 14px;
-  box-shadow: 0 4px 18px 0 #30699822;
-  padding: 1.2em 1.5em;
-  margin: 2em 0;
-  transition: box-shadow 0.2s;
+  background: var(--bg-card); /* Use the card background for consistency */
+  border: 1px solid var(--border-dark); /* Use a subtle dark border */
+  border-radius: var(--border-radius); /* Consistent border-radius */
+  box-shadow: var(--shadow); /* Use a general shadow variable */
+  padding: 1.8em 2em; /* Increased padding for more breathing room */
+  margin: 2.5em 0; /* Consistent margin */
+  transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
 }
 
+.mcq-image-style.mcq-inline:hover {
+  box-shadow: var(--shadow-blue); /* Highlight with blue shadow on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* --- MCQ Question --- */
 .mcq-image-style.mcq-inline .mcq-question {
-  color: var(--accent-yellow);
-  font-size: 1.18em;
+  color: var(--text-light); /* Use a lighter text color for the question */
+  font-size: 1.3em; /* Larger question font */
   font-weight: 700;
-  margin-bottom: 0.5em;
+  margin-bottom: 1em; /* More space below the question */
+  line-height: 1.4; /* Improve readability */
 }
 
-/* 2x2 grid for MCQ options */
+/* --- MCQ Options Grid (2x2) --- */
 .mcq-image-style.mcq-inline .mcq-options-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.9em 1.2em;
-  margin-top: 0.7em;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid for options */
+  gap: 1.2em 1.5em; /* Increased gap between options */
+  margin-top: 1.5em; /* More space above the options */
 }
 
+/* --- MCQ Option Button --- */
 .mcq-image-style.mcq-inline .mcq-option-btn {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border: 2px solid var(--accent-blue-alt);
+  background: var(--bg-accent); /* Use a slightly darker accent background for buttons */
+  color: var(--text-light); /* Lighter text color for readability */
+  border: 1px solid var(--border-subtle); /* Subtle border for definition */
   border-radius: 10px;
   font-weight: 600;
-  font-size: 1.05em;
-  padding: 0.7em 1.5em;
-  transition: background 0.18s, color 0.18s, border-color 0.18s;
-  box-shadow: 0 1px 4px #0001;
+  font-size: 1.1em; /* Slightly larger option text */
+  padding: 0.9em 1.8em; /* More padding for a click-friendly area */
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--shadow-dark); /* A more subtle shadow for buttons */
+  cursor: pointer;
+  text-align: center; /* Center the text within the button */
 }
 
 .mcq-image-style.mcq-inline .mcq-option-btn:hover,
 .mcq-image-style.mcq-inline .mcq-option-btn:focus {
-  background: var(--accent-blue-alt);
-  color: var(--accent-yellow);
-  border-color: var(--accent-yellow);
+  background: var(--accent-blue-alt); /* Use accent-blue-alt for hover background */
+  color: var(--text-main); /* Text becomes main white on hover */
+  border-color: var(--accent-blue-alt); /* Border matches the new background */
+  box-shadow: var(--shadow-blue); /* Add a blue glow on hover */
   outline: none;
+  transform: translateY(-1px); /* Slight lift on hover */
 }
-
 /* --- Divider Improvements --- */
 .mcq-topic-divider {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.7em;
-  margin: 2.5em 0 2em 0;
+  margin: 2.5em 0 2em;
   position: relative;
 }
 
@@ -601,20 +633,24 @@ a:hover {
 }
 
 /* --- Media Queries --- */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .layout-flex {
     flex-direction: column;
   }
+
   .sidebar {
     width: 100%;
     border-radius: 0;
   }
+
   .main-content-wrapper {
     padding: 16px;
   }
+
   .lesson-content-wrapper {
     padding: 24px;
   }
+
   .chrome-tab {
     padding: 0.6em 1.2em;
   }
@@ -734,7 +770,7 @@ a:hover {
   justify-content: center;
   align-items: center;
   gap: 0.7em;
-  margin: 2.5em 0 2em 0;
+  margin: 2.5em 0 2em;
   position: relative;
 }
 
@@ -763,20 +799,24 @@ a:hover {
 }
 
 /* --- Media Queries --- */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .layout-flex {
     flex-direction: column;
   }
+
   .sidebar {
     width: 100%;
     border-radius: 0;
   }
+
   .main-content-wrapper {
     padding: 16px;
   }
+
   .lesson-content-wrapper {
     padding: 24px;
   }
+
   .chrome-tab {
     padding: 0.6em 1.2em;
   }
