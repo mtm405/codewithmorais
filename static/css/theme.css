@@ -89,7 +89,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 14px 20px;
-  color: var(--text-main);
+  color: var(--text-medium);
   border-radius: 14px;
   text-decoration: none;
   font-weight: 500;
@@ -161,6 +161,18 @@ body {
   border-bottom: 1px solid var(--border-dark);
 }
   
+/* --- Header Element --- */
+header {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-dark);
+  padding: 20px 32px;
+  margin: 24px 0 32px;
+  border: none;
+  display: block;
+}
+
 /* --- Header Content Elements --- */
 .header-greeting {
   display: flex;
@@ -184,6 +196,12 @@ body {
   color: var(--accent-blue); /* User name in blue */
   font-weight: 700;
   margin: 0 6px;
+}
+
+.header-greeting .greeting-exclamation {
+  color: var(--accent-green); /* Exclamation in green for pop */
+  font-weight: 700;
+  margin-left: 2px;
 }
 
 .header-timer {
@@ -211,6 +229,7 @@ body {
   align-items: center;
   gap: 18px;
   justify-self: end;
+  padding-right: 32px; /* Add padding to align icons with content wrapper */
 }
 
 .header-bar .header-icon, .header-bar .material-symbols-outlined {
@@ -224,6 +243,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0 6px; /* Add horizontal padding for better alignment */
 }
 
 .header-bar .header-icon:hover, .header-bar .material-symbols-outlined:hover {
@@ -236,6 +256,83 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* --- Search Bar Animation & Visibility Fix --- */
+.search-container input[type="search"] {
+  display: none;
+  width: 0;
+  min-width: 0;
+  transition: width 0.25s, border-color 0.2s, display 0s;
+}
+
+.search-container.expanded {
+  background: var(--bg-card);
+  box-shadow: 0 2px 8px #30699833;
+  border-radius: 10px;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.search-container.expanded input[type="search"],
+.search-container input[type="search"]:focus {
+  display: block;
+  width: 220px;
+  min-width: 120px;
+  background: var(--bg-main);
+  color: var(--text-main);
+  border: 1.5px solid var(--accent-blue-alt);
+  box-shadow: 0 2px 8px #30699822;
+  outline: none;
+  transition: width 0.25s, border-color 0.2s, display 0s;
+}
+
+/* --- Improved Search Input UI --- */
+.search-container .search-input {
+  display: none;
+  width: 0;
+  min-width: 0;
+  padding: 0.55em 1.2em 0.55em 2.5em;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-size: 1.08em;
+  font-family: inherit;
+  box-shadow: 0 2px 8px #30699822;
+  outline: none;
+  transition: width 0.25s, border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  position: relative;
+}
+
+.search-container.expanded .search-input,
+.search-container .search-input:focus {
+  display: block;
+  width: 220px;
+  min-width: 120px;
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1.5px solid var(--accent-blue-alt);
+  box-shadow: 0 4px 18px #30699833;
+}
+
+.search-container .search-input::placeholder {
+  color: var(--text-medium-alt);
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.search-container.expanded .search-input:focus {
+  border: 1.5px solid var(--accent-yellow);
+  box-shadow: 0 0 0 2px var(--accent-yellow), 0 4px 18px #FFD43B33;
+  background: var(--bg-main);
+}
+
+/* Optional: add a search icon inside the input using background-image */
+.search-container .search-input {
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%235AA1D1" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99c.41.41 1.09.41 1.5 0s.41-1.09 0-1.5l-4.99-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 10.5 5 15 7.01 15 9.5 12.99 14 10.5 14z"/></svg>');
+  background-repeat: no-repeat;
+  background-size: 1.2em 1.2em;
+  background-position: 0.8em center;
 }
 
 .notification-icon {
@@ -255,6 +352,43 @@ body {
   padding: 2px 6px;
   font-weight: 700;
   box-shadow: 0 1px 4px #0002;
+}
+
+/* Notification Dropdown Styles */
+.notification-dropdown {
+  display: none;
+  position: absolute;
+  top: 120%;
+  right: 0;
+  min-width: 260px;
+  background: var(--bg-card);
+  color: var(--text-main);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px #23213655;
+  padding: 18px 16px 12px 16px;
+  z-index: 100;
+  border: 1.5px solid var(--accent-blue-alt);
+  font-size: 1em;
+}
+
+.notification-dropdown.active {
+  display: block;
+  animation: dropdown-fadein 0.18s;
+}
+
+@keyframes dropdown-fadein {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.notification-icon.active .material-symbols-outlined {
+  color: var(--accent-yellow);
+  transform: scale(1.13) rotate(-8deg);
+}
+
+.notification-icon.active .badge {
+  background: var(--accent-blue);
+  color: #fff;
 }
 
 /* --- Dashboard Grid --- */
@@ -494,110 +628,70 @@ a:hover {
   margin-bottom: 1.5em;
 }
 
-/* --- Quiz Unlock Section --- */
+/* --- Quiz Styles --- */
 .quiz-unlock-section {
   background: var(--accent-yellow);
-  color: var(--bg-dark); /* Use a dark background color for text on yellow for better contrast */
-  border-radius: var(--border-radius); /* Use the defined border-radius variable */
-  padding: 1.8em 1.5em; /* Slightly more generous padding */
-  margin: 2.5em 0; /* More vertical margin for better separation */
-  box-shadow: var(--shadow-yellow); /* Use the specific shadow variable */
-  font-weight: 700; /* Make it bolder */
-  text-align: center;
-  font-size: 1.25em; /* Slightly larger font */
-  letter-spacing: 0.02em; /* Add a touch of letter spacing */
+  color: var(--bg-main);
+  border-radius: 12px;
+  padding: 1.5em 1em;
+  margin: 2em 0;
+  box-shadow: 0 2px 12px #FFD43B33;
 }
 
-/* --- MCQ Ribbon --- */
 .mcq-ribbon {
-  /* Use a subtle gradient with the accent blue */
-  background: linear-gradient(180deg, var(--accent-blue) 0%, var(--accent-blue-alt) 100%);
-  color: var(--text-main); /* Ensure consistent text color */
-  border-radius: var(--border-radius) var(--border-radius) 0 0; /* Consistent top radius */
-  padding: 0.7em 1.5em; /* More padding for a bolder look */
-  font-weight: 800; /* Extra bold for prominence */
-  font-size: 1.35em; /* Larger and more impactful */
-  letter-spacing: 0.05em; /* More distinct letter spacing */
-  box-shadow: var(--shadow-lg); /* A more pronounced shadow for depth */
-  margin-bottom: -1px; /* Keep it overlapping */
-  position: relative;
-  overflow: hidden;
-  /* Add a subtle top border for more definition */
-  border-top: 3px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Subtle texture overlay for Ribbon */
-.mcq-ribbon::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* A more subtle, almost fabric-like texture with a darker tone */
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><rect width="3" height="3" fill="%23000000" opacity="0.05"/><rect x="3" y="3" width="3" height="3" fill="%23000000" opacity="0.05"/></svg>');
-  background-size: 6px 6px;
-  opacity: 0.3;
-  mix-blend-mode: overlay;
-}
-
-/* --- MCQ Inline Block --- */
-.mcq-image-style.mcq-inline {
-  background: var(--bg-card); /* Use the card background for consistency */
-  border: 1px solid var(--border-dark); /* Use a subtle dark border */
-  border-radius: var(--border-radius); /* Consistent border-radius */
-  box-shadow: var(--shadow); /* Use a general shadow variable */
-  padding: 1.8em 2em; /* Increased padding for more breathing room */
-  margin: 2.5em 0; /* Consistent margin */
-  transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
-}
-
-.mcq-image-style.mcq-inline:hover {
-  box-shadow: var(--shadow-blue); /* Highlight with blue shadow on hover */
-  transform: translateY(-2px); /* Slight lift effect */
-}
-
-/* --- MCQ Question --- */
-.mcq-image-style.mcq-inline .mcq-question {
-  color: var(--text-light); /* Use a lighter text color for the question */
-  font-size: 1.3em; /* Larger question font */
+  background: var(--accent-blue-alt);
+  color: #fff;
+  border-radius: 8px 8px 0 0;
+  padding: 0.3em 1em;
   font-weight: 700;
-  margin-bottom: 1em; /* More space below the question */
-  line-height: 1.4; /* Improve readability */
 }
 
-/* --- MCQ Options Grid (2x2) --- */
+/* --- MCQ Inline Improvements --- */
+.mcq-image-style.mcq-inline {
+  background: var(--bg-accent);
+  border: 2px solid var(--accent-blue);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px 0 #30699822;
+  padding: 1.2em 1.5em;
+  margin: 2em 0;
+  transition: box-shadow 0.2s;
+}
+
+.mcq-image-style.mcq-inline .mcq-question {
+  color: var(--accent-yellow);
+  font-size: 1.18em;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+}
+
+/* 2x2 grid for MCQ options */
 .mcq-image-style.mcq-inline .mcq-options-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid for options */
-  gap: 1.2em 1.5em; /* Increased gap between options */
-  margin-top: 1.5em; /* More space above the options */
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9em 1.2em;
+  margin-top: 0.7em;
 }
 
-/* --- MCQ Option Button --- */
 .mcq-image-style.mcq-inline .mcq-option-btn {
-  background: var(--bg-accent); /* Use a slightly darker accent background for buttons */
-  color: var(--text-light); /* Lighter text color for readability */
-  border: 1px solid var(--border-subtle); /* Subtle border for definition */
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 2px solid var(--accent-blue-alt);
   border-radius: 10px;
   font-weight: 600;
-  font-size: 1.1em; /* Slightly larger option text */
-  padding: 0.9em 1.8em; /* More padding for a click-friendly area */
-  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-  box-shadow: var(--shadow-dark); /* A more subtle shadow for buttons */
-  cursor: pointer;
-  text-align: center; /* Center the text within the button */
+  font-size: 1.05em;
+  padding: 0.7em 1.5em;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  box-shadow: 0 1px 4px #0001;
 }
 
 .mcq-image-style.mcq-inline .mcq-option-btn:hover,
 .mcq-image-style.mcq-inline .mcq-option-btn:focus {
-  background: var(--accent-blue-alt); /* Use accent-blue-alt for hover background */
-  color: var(--text-main); /* Text becomes main white on hover */
-  border-color: var(--accent-blue-alt); /* Border matches the new background */
-  box-shadow: var(--shadow-blue); /* Add a blue glow on hover */
+  background: var(--accent-blue-alt);
+  color: var(--accent-yellow);
+  border-color: var(--accent-yellow);
   outline: none;
-  transform: translateY(-1px); /* Slight lift on hover */
 }
+
 /* --- Divider Improvements --- */
 .mcq-topic-divider {
   display: flex;
