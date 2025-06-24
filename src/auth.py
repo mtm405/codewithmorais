@@ -3,7 +3,6 @@ from flask import Blueprint, render_template, redirect, url_for, session, reques
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from firebase_admin import firestore  # Make sure this import is present
-from pyngrok import ngrok  # For local HTTPS tunnel
 import os
 
 auth_bp = Blueprint('auth', __name__)
