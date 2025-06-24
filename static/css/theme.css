@@ -71,6 +71,58 @@ body {
   height: 100vh;
 
   /* z-index: 10; (optional, if needed above content) */
+  transition: width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1), padding 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+.sidebar.collapsed {
+  width: 68px;
+  min-width: 68px;
+  padding-left: 8px;
+  padding-right: 8px;
+  transition: width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+.sidebar .sidebar-header,
+.sidebar .profile-section,
+.sidebar .user-title-block,
+.sidebar .user-points,
+.sidebar .user-points-grouped,
+.sidebar .user-points-bytes,
+.sidebar .user-points-tokens,
+.sidebar .user-points-divider,
+.sidebar .menu-label,
+.sidebar .sidebar-footer {
+  transition: opacity 0.18s cubic-bezier(0.4,0,0.2,1), max-height 0.18s cubic-bezier(0.4,0,0.2,1);
+}
+
+.sidebar.collapsed .sidebar-header,
+.sidebar.collapsed .profile-section,
+.sidebar.collapsed .user-title-block,
+.sidebar.collapsed .user-points,
+.sidebar.collapsed .user-points-grouped,
+.sidebar.collapsed .user-points-bytes,
+.sidebar.collapsed .user-points-tokens,
+.sidebar.collapsed .user-points-divider,
+.sidebar.collapsed .menu-label,
+.sidebar.collapsed .sidebar-footer {
+  opacity: 0;
+  max-height: 0;
+  pointer-events: none;
+}
+
+.sidebar:not(.collapsed) .sidebar-header,
+.sidebar:not(.collapsed) .profile-section,
+.sidebar:not(.collapsed) .user-title-block,
+.sidebar:not(.collapsed) .user-points,
+.sidebar:not(.collapsed) .user-points-grouped,
+.sidebar:not(.collapsed) .user-points-bytes,
+.sidebar:not(.collapsed) .user-points-tokens,
+.sidebar:not(.collapsed) .user-points-divider,
+.sidebar:not(.collapsed) .menu-label,
+.sidebar:not(.collapsed) .sidebar-footer {
+  opacity: 1;
+  max-height: 500px;
+  pointer-events: auto;
 }
 
 .main-content-wrapper {
@@ -837,168 +889,117 @@ a:hover {
   to   { opacity: 1; transform: translateY(0);}
 }
 
-/* --- MCQ Inline Improvements --- */
-.mcq-image-style.mcq-inline {
-  background: var(--bg-accent);
-  border: 2px solid var(--accent-blue);
-  border-radius: 14px;
-  box-shadow: 0 4px 18px 0 #30699822;
-  padding: 1.2em 1.5em;
-  margin: 2em 0;
-  transition: box-shadow 0.2s;
+/* --- Collapsible Sidebar --- */
+.sidebar.collapsed {
+  width: 68px;
+  min-width: 68px;
+  padding-left: 8px;
+  padding-right: 8px;
+  transition: width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background 0.25s cubic-bezier(0.4,0,0.2,1);
 }
 
-.mcq-image-style.mcq-inline .mcq-question {
-  color: var(--accent-yellow);
-  font-size: 1.18em;
-  font-weight: 700;
-  margin-bottom: 0.5em;
-}
-
-/* 2x2 grid for MCQ options */
-.mcq-image-style.mcq-inline .mcq-options-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.9em 1.2em;
-  margin-top: 0.7em;
-}
-
-.mcq-image-style.mcq-inline .mcq-option-btn {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border: 2px solid var(--accent-blue-alt);
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 1.05em;
-  padding: 0.7em 1.5em;
-  transition: background 0.18s, color 0.18s, border-color 0.18s;
-  box-shadow: 0 1px 4px #0001;
-}
-
-.mcq-image-style.mcq-inline .mcq-option-btn:hover,
-.mcq-image-style.mcq-inline .mcq-option-btn:focus,
-.mcq-modern-btn,
-.mcq-modern-btn:hover,
-.mcq-modern-btn:focus {
-  cursor: pointer;
-  background: var(--accent-blue-alt);
-  color: var(--accent-yellow);
-  border-color: var(--accent-yellow);
-  outline: none;
-}
-
-/* --- Divider Improvements --- */
-.mcq-topic-divider {
-  display: flex;
+.sidebar.collapsed .sidebar-header {
   justify-content: center;
-  align-items: center;
-  gap: 0.7em;
-  margin: 2.5em 0 2em;
+}
+
+.sidebar.collapsed .profile-section,
+.sidebar.collapsed .user-title-block,
+.sidebar.collapsed .user-points,
+.sidebar.collapsed .user-points-grouped,
+.sidebar.collapsed .user-points-bytes,
+.sidebar.collapsed .user-points-tokens,
+.sidebar.collapsed .user-points-divider {
+  display: none !important;
+}
+
+.sidebar.collapsed .menu-label {
+  display: none !important;
+}
+
+.sidebar.collapsed .menu-item-link {
+  justify-content: center;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  gap: 0;
+}
+
+.sidebar.collapsed .menu-item-link .material-symbols-outlined {
+  font-size: 2em;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: var(--accent-blue);
+  font-size: 2em;
+  cursor: pointer;
+  margin-bottom: 18px;
+  margin-left: -6px;
+  margin-right: -6px;
+  border-radius: 8px;
+  padding: 4px 6px;
+  transition: background 0.18s, color 0.18s;
+}
+
+/* Always show the sidebar toggle button, even when collapsed */
+.sidebar .sidebar-toggle {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  max-height: 100px !important;
+  display: block !important;
+  z-index: 100;
   position: relative;
 }
 
-.mcq-topic-divider-snake svg {
-  width: 48px;
-  height: 28px;
-  filter: drop-shadow(0 2px 6px #30699844);
-  transition: transform 0.18s;
+.sidebar.collapsed .sidebar-toggle {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  max-height: 100px !important;
+  display: block !important;
+  z-index: 100;
+  position: relative;
 }
 
-.mcq-topic-divider-snake svg:hover {
-  transform: scale(1.12) rotate(-6deg);
-  filter: drop-shadow(0 4px 12px #FFD43B88);
-}
-
-/* Optional: subtle line behind snakes */
-.mcq-topic-divider::before {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; top: 50%;
-  height: 3px;
-  background: linear-gradient(90deg, transparent 0%, var(--accent-blue-alt) 40%, var(--accent-yellow) 60%, transparent 100%);
-  z-index: 0;
-  border-radius: 2px;
-  opacity: 0.5;
-}
-
-/* --- Media Queries --- */
-@media (width <= 768px) {
-  .layout-flex {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    border-radius: 0;
-  }
-
-  .main-content-wrapper {
-    padding: 16px;
-  }
-
-  .lesson-content-wrapper {
-    padding: 24px;
-  }
-
-  .chrome-tab {
-    padding: 0.6em 1.2em;
-  }
-}
-
-/* --- Accordion Styles for step_card --- */
-.accordion {
+/* Optionally, add a background for visibility when collapsed */
+.sidebar.collapsed .sidebar-toggle {
   background: var(--bg-accent);
-  border-radius: 12px;
-  box-shadow: 0 2px 10px #30699822;
-  margin: 2em 0;
-  overflow: hidden;
-  border: 1.5px solid var(--accent-blue);
+  border: 1.5px solid var(--accent-blue-alt);
 }
 
-.accordion-item + .accordion-item {
-  border-top: 1px solid var(--border-subtle);
-}
-
-.accordion-header {
-  cursor: pointer;
-  padding: 1.1em 1.5em;
-  background: var(--bg-card);
-  color: var(--accent-yellow);
-  font-weight: 700;
-  font-size: 1.13em;
-  border: none;
-  outline: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background 0.18s;
-}
-
-.accordion-header:hover,
-.accordion-header:focus {
+.sidebar-toggle:hover {
   background: var(--accent-blue-alt);
-  color: #fff;
+  color: var(--accent-yellow);
 }
 
-.accordion-icon {
-  font-size: 1.3em;
-  margin-left: 0.7em;
-  transition: transform 0.2s;
-}
-
-.accordion-item.open .accordion-icon {
-  transform: rotate(90deg);
-}
-
-.accordion-content {
+/* Tooltips for icons when sidebar is collapsed */
+.sidebar.collapsed .menu-item-link[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
   background: var(--bg-card);
-  color: var(--text-light);
-  padding: 1.1em 1.5em;
-  border-top: 1px solid var(--border-subtle);
-  animation: accordion-fadein 0.25s;
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #23213655;
+  white-space: nowrap;
+  font-size: 1em;
+  margin-left: 10px;
+  z-index: 9999;
+  opacity: 0.98;
+  pointer-events: none;
 }
 
-@keyframes accordion-fadein {
-  from { opacity: 0; transform: translateY(-8px);}
-  to   { opacity: 1; transform: translateY(0);}
+.sidebar.collapsed .sidebar-footer {
+  display: none;
+}
+
+.sidebar {
+  transition: width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1), padding 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Hide all flicker-prone elements when body.preload is present */
+body.preload * {
+  transition: none !important;
 }
