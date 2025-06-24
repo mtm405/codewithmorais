@@ -1,6 +1,7 @@
-/* Import font if needed */
+/* Font loading optimization: Inter font with display=swap */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
+/* CSS Variables for Theming */
 :root {
   /* --- Backgrounds --- */
   --bg-main: #232136;
@@ -81,21 +82,9 @@ body {
   padding-right: 8px;
   transition: width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background 0.25s cubic-bezier(0.4,0,0.2,1);
 }
-
-.sidebar .sidebar-header,
-.sidebar .profile-section,
-.sidebar .user-title-block,
-.sidebar .user-points,
-.sidebar .user-points-grouped,
-.sidebar .user-points-bytes,
-.sidebar .user-points-tokens,
-.sidebar .user-points-divider,
-.sidebar .menu-label,
-.sidebar .sidebar-footer {
-  transition: opacity 0.18s cubic-bezier(0.4,0,0.2,1), max-height 0.18s cubic-bezier(0.4,0,0.2,1);
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
 }
-
-.sidebar.collapsed .sidebar-header,
 .sidebar.collapsed .profile-section,
 .sidebar.collapsed .user-title-block,
 .sidebar.collapsed .user-points,
@@ -105,35 +94,72 @@ body {
 .sidebar.collapsed .user-points-divider,
 .sidebar.collapsed .menu-label,
 .sidebar.collapsed .sidebar-footer {
-  opacity: 0;
-  max-height: 0;
+  display: none !important;
+}
+.sidebar.collapsed .menu-item-link {
+  justify-content: center;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  gap: 0;
+}
+.sidebar.collapsed .menu-item-link .material-symbols-outlined {
+  font-size: 2em;
+}
+.sidebar.collapsed .sidebar-toggle {
+  background: var(--bg-accent);
+  border: 1.5px solid var(--accent-blue-alt);
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  max-height: 100px !important;
+  display: block !important;
+  z-index: 100;
+  position: relative;
+}
+.sidebar.collapsed .menu-item-link[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-card);
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #23213655;
+  white-space: nowrap;
+  font-size: 1em;
+  margin-left: 10px;
+  z-index: 9999;
+  opacity: 0.98;
   pointer-events: none;
 }
 
-.sidebar:not(.collapsed) .sidebar-header,
-.sidebar:not(.collapsed) .profile-section,
-.sidebar:not(.collapsed) .user-title-block,
-.sidebar:not(.collapsed) .user-points,
-.sidebar:not(.collapsed) .user-points-grouped,
-.sidebar:not(.collapsed) .user-points-bytes,
-.sidebar:not(.collapsed) .user-points-tokens,
-.sidebar:not(.collapsed) .user-points-divider,
-.sidebar:not(.collapsed) .menu-label,
-.sidebar:not(.collapsed) .sidebar-footer {
-  opacity: 1;
-  max-height: 500px;
-  pointer-events: auto;
+/* Sidebar toggle always visible */
+.sidebar .sidebar-toggle {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  max-height: 100px !important;
+  display: block !important;
+  z-index: 100;
+  position: relative;
 }
-
-.main-content-wrapper {
-  flex: 1 1 0%;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0; /* Remove any margin between sidebar and content */
-  background: var(--bg-main);
-  color: var(--text-main);
-} 
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: var(--accent-blue);
+  font-size: 2em;
+  cursor: pointer;
+  margin-bottom: 18px;
+  margin-left: -6px;
+  margin-right: -6px;
+  border-radius: 8px;
+  padding: 4px 6px;
+  transition: background 0.18s, color 0.18s;
+}
+.sidebar-toggle:hover {
+  background: var(--accent-blue-alt);
+  color: var(--accent-yellow);
+}
 
 /* --- Sidebar Menu --- */
 .sidebar .menu-item-link {
@@ -176,7 +202,7 @@ body {
 }
 
 .sidebar .menu-item-link.active {
-  color: (--text-main);
+  color: var(--text-main);
   font-weight: 600;
   background: var(--accent-blue);
   box-shadow: 0 6px 16px rgb(0 0 0 / 20%);
@@ -188,17 +214,14 @@ body {
   opacity: 0;
 }
 
-.sidebar .menu-item-link svg {
-  flex-shrink: 0;
+/* --- Icon Handling --- */
+/* Ensure all icons use color: inherit and explicit sizing */
+.sidebar .menu-item-link svg,
+.header-bar .header-icon,
+.header-bar .material-symbols-outlined {
+  color: inherit;
   width: 1.2em;
   height: 1.2em;
-  color: inherit;
-  transition: color 0.3s;
-}
-
-.sidebar .menu-item-link:hover svg,
-.sidebar .menu-item-link.active svg {
-  color: var(--accent-yellow);
 }
 
 /* --- Header --- */
@@ -272,6 +295,16 @@ header {
   justify-content: center;
 }
 
+.header-timer .ampm {
+  font-size: 0.7em;
+  color: var(--accent-blue);
+  margin-left: 0.3em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  vertical-align: super;
+}
+
+/* --- Header Controls --- */
 .header-controls {
   display: flex;
   align-items: center;
@@ -613,8 +646,9 @@ header {
 .lesson-tabs-wrapper {
   position: relative;
   max-width: 1200px;
-  margin: 0 auto;
   padding-top: 0;
+  margin-left: 32px;
+
 }
 
 /* Tabs are absolutely positioned at the top of the wrapper */
@@ -693,6 +727,7 @@ a:hover {
   font-family: 'Fira Mono', Consolas, Menlo, Monaco, monospace;
   font-weight: 600;
   letter-spacing: 0.01em;
+
 
   /* Optional: subtle shadow for pop */
   box-shadow: 0 1px 4px 0 #0002;
@@ -900,81 +935,39 @@ a:hover {
   padding-right: 8px;
   transition: width 0.35s cubic-bezier(0.4,0,0.2,1), min-width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1), background 0.25s cubic-bezier(0.4,0,0.2,1);
 }
-
 .sidebar.collapsed .sidebar-header {
   justify-content: center;
 }
-
 .sidebar.collapsed .profile-section,
 .sidebar.collapsed .user-title-block,
 .sidebar.collapsed .user-points,
 .sidebar.collapsed .user-points-grouped,
 .sidebar.collapsed .user-points-bytes,
 .sidebar.collapsed .user-points-tokens,
-.sidebar.collapsed .user-points-divider {
+.sidebar.collapsed .user-points-divider,
+.sidebar.collapsed .menu-label,
+.sidebar.collapsed .sidebar-footer {
   display: none !important;
 }
-
-.sidebar.collapsed .menu-label {
-  display: none !important;
-}
-
 .sidebar.collapsed .menu-item-link {
   justify-content: center;
   padding-left: 0.5em;
   padding-right: 0.5em;
   gap: 0;
 }
-
 .sidebar.collapsed .menu-item-link .material-symbols-outlined {
   font-size: 2em;
 }
-
-.sidebar-toggle {
-  background: none;
-  border: none;
-  color: var(--accent-blue);
-  font-size: 2em;
-  cursor: pointer;
-  margin-bottom: 18px;
-  margin-left: -6px;
-  margin-right: -6px;
-  border-radius: 8px;
-  padding: 4px 6px;
-  transition: background 0.18s, color 0.18s;
-}
-
-/* Always show the sidebar toggle button, even when collapsed */
-.sidebar .sidebar-toggle {
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  max-height: 100px !important;
-  display: block !important;
-  z-index: 100;
-  position: relative;
-}
-
-.sidebar.collapsed .sidebar-toggle {
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  max-height: 100px !important;
-  display: block !important;
-  z-index: 100;
-  position: relative;
-}
-
-/* Optionally, add a background for visibility when collapsed */
 .sidebar.collapsed .sidebar-toggle {
   background: var(--bg-accent);
   border: 1.5px solid var(--accent-blue-alt);
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  max-height: 100px !important;
+  display: block !important;
+  z-index: 100;
+  position: relative;
 }
-
-.sidebar-toggle:hover {
-  background: var(--accent-blue-alt);
-  color: var(--accent-yellow);
-}
-
-/* Tooltips for icons when sidebar is collapsed */
 .sidebar.collapsed .menu-item-link[title]:hover::after {
   content: attr(title);
   position: absolute;
@@ -994,15 +987,56 @@ a:hover {
   pointer-events: none;
 }
 
-.sidebar.collapsed .sidebar-footer {
-  display: none;
+/* Sidebar toggle always visible */
+.sidebar .sidebar-toggle {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  max-height: 100px !important;
+  display: block !important;
+  z-index: 100;
+  position: relative;
+}
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: var(--accent-blue);
+  font-size: 2em;
+  cursor: pointer;
+  margin-bottom: 18px;
+  margin-left: -6px;
+  margin-right: -6px;
+  border-radius: 8px;
+  padding: 4px 6px;
+  transition: background 0.18s, color 0.18s;
+}
+.sidebar-toggle:hover {
+  background: var(--accent-blue-alt);
+  color: var(--accent-yellow);
 }
 
-.sidebar {
-  transition: width 0.25s cubic-bezier(0.4,0,0.2,1), min-width 0.25s cubic-bezier(0.4,0,0.2,1), padding 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s cubic-bezier(0.4,0,0.2,1);
+/* --- Accessibility: Focus States --- */
+/* Add visible outline for focusable elements if not present */
+.menu-item-link:focus {
+  outline: none;
+}
+.sidebar-toggle:focus,
+.accordion-header:focus {
+  outline: 2px solid var(--accent-yellow);
+  outline-offset: 2px;
 }
 
-/* Hide all flicker-prone elements when body.preload is present */
+/* --- Prevent Flicker on Initial Load --- */
 body.preload * {
   transition: none !important;
+}
+
+/* --- Flickering Zero Animation --- */
+.flicker-zero {
+  animation: flicker-zero 0.5s linear 2;
+}
+
+@keyframes flicker-zero {
+  0%, 100% { opacity: 1; }
+  20%, 60% { opacity: 0.2; }
+  40%, 80% { opacity: 1; }
 }
