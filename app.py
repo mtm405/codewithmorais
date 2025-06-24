@@ -446,5 +446,19 @@ def inject_firebase_config():
 def inject_google_client_id():
     return dict(google_client_id=os.environ.get("GOOGLE_CLIENT_ID"))
 
+@app.context_processor
+def inject_user_stats():
+    user_bytes = 0
+    user_currency = 0
+    user_id = session.get('user_id')
+    if user_id:
+        user_ref = db.collection('users').document(user_id)
+        user_doc = user_ref.get()
+        if user_doc.exists:
+            data = user_doc.to_dict()
+            user_bytes = data.get('total_points', 0)
+            user_currency = data.get('currency', 0)
+    return dict(user_bytes=user_bytes, user_currency=user_currency)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=PORT)
