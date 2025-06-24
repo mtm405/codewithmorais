@@ -62,7 +62,7 @@ export function initSidebar() {
   // Add tooltips to menu items when collapsed
   const menuLinks = sidebar.querySelectorAll('.menu-item-link');
   menuLinks.forEach(link => {
-    // If you want to set a title, you can use the link text
+    // Tooltip logic
     if (!link.hasAttribute('title')) {
       link.setAttribute('title', link.textContent.trim());
     }
@@ -70,6 +70,10 @@ export function initSidebar() {
     if (label) {
       link.setAttribute('title', label.textContent.trim());
     }
+    // --- FIX: Always show icon in collapsed mode, even if menu-label is missing ---
+    const icon = link.querySelector('.material-symbols-outlined');
+    if (icon) {
+      icon.style.display = '';
+    }
   });
-  toggleBtn.style.display = 'block';
 }

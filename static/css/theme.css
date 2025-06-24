@@ -105,9 +105,9 @@ body {
 .sidebar.collapsed .menu-item-link .material-symbols-outlined {
   font-size: 2em;
 }
+/* Ensure the sidebar toggle is always visible, even when collapsed */
+.sidebar .sidebar-toggle,
 .sidebar.collapsed .sidebar-toggle {
-  background: var(--bg-accent);
-  border: 1.5px solid var(--accent-blue-alt);
   opacity: 1 !important;
   pointer-events: auto !important;
   max-height: 100px !important;
@@ -134,15 +134,6 @@ body {
   pointer-events: none;
 }
 
-/* Sidebar toggle always visible */
-.sidebar .sidebar-toggle {
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  max-height: 100px !important;
-  display: block !important;
-  z-index: 100;
-  position: relative;
-}
 .sidebar-toggle {
   background: none;
   border: none;
@@ -958,9 +949,9 @@ a:hover {
 .sidebar.collapsed .menu-item-link .material-symbols-outlined {
   font-size: 2em;
 }
+/* Ensure the sidebar toggle is always visible, even when collapsed */
+.sidebar .sidebar-toggle,
 .sidebar.collapsed .sidebar-toggle {
-  background: var(--bg-accent);
-  border: 1.5px solid var(--accent-blue-alt);
   opacity: 1 !important;
   pointer-events: auto !important;
   max-height: 100px !important;
@@ -987,15 +978,6 @@ a:hover {
   pointer-events: none;
 }
 
-/* Sidebar toggle always visible */
-.sidebar .sidebar-toggle {
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  max-height: 100px !important;
-  display: block !important;
-  z-index: 100;
-  position: relative;
-}
 .sidebar-toggle {
   background: none;
   border: none;
@@ -1013,6 +995,61 @@ a:hover {
   background: var(--accent-blue-alt);
   color: var(--accent-yellow);
 }
+
+/* --- Sidebar Collapsed: Only show icons, hide text --- */
+.sidebar.collapsed .menu-item-link span:not(.material-symbols-outlined) {
+  display: none !important;
+}
+
+/* Show avatar and points in collapsed mode, but smaller */
+.sidebar.collapsed .profile-section {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.sidebar.collapsed .sidebar-avatar {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 8px;
+  border-width: 2px;
+}
+.sidebar.collapsed .user-points-grouped {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 !important;
+  margin: 0 0 8px 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+.sidebar.collapsed .user-points-bytes,
+.sidebar.collapsed .user-points-tokens {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-accent);
+  border-radius: 6px;
+  padding: 2px 6px !important;
+  font-size: 0.85em !important;
+  box-shadow: none !important;
+}
+.sidebar.collapsed .user-points-label {
+  display: none !important;
+}
+.sidebar.collapsed .user-points-value {
+  font-size: 1em !important;
+  font-weight: 700;
+}
+
+/* Hide user-title-block in collapsed mode */
+.sidebar.collapsed .user-title-block {
+  display: none !important;
+}
+
+/* Remove previous rules that hide avatar and points completely */
+/* .sidebar.collapsed .profile-section, .sidebar.collapsed .user-points, .sidebar.collapsed .user-points-grouped, .sidebar.collapsed .user-points-bytes, .sidebar.collapsed .user-points-tokens, .sidebar.collapsed .user-points-divider, .sidebar.collapsed .menu-label, .sidebar.collapsed .sidebar-footer { display: none !important; } */
 
 /* --- Accessibility: Focus States --- */
 /* Add visible outline for focusable elements if not present */
