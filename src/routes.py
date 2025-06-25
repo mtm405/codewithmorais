@@ -548,3 +548,97 @@ def get_whats_next():
 def logout():
     session.clear()
     return redirect(url_for('routes.index'))
+
+@routes_bp.route('/api/daily_challenge/activities')
+def get_daily_challenge_activities():
+    """Return all daily challenge activities from the daily_challenge collection."""
+    if db is None:
+        return jsonify({'error': 'Database not initialized'}), 500
+    try:
+        docs = db.collection('daily_challenge').stream()
+        activities = [doc.to_dict() for doc in docs]
+        return jsonify({'success': True, 'activities': activities})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e), 'trace': traceback.format_exc()}), 500
+
+@routes_bp.route('/api/daily_challenge/submit', methods=['POST'])
+def submit_daily_challenge():
+    if db is None:
+        return jsonify({'success': False, 'error': 'Database not initialized'}), 500
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'error': 'Not logged in'}), 401
+    data = request.get_json()
+    code = data.get('code', '')
+    challenge_id = data.get('challenge_id')
+    dev = data.get('dev', 0)
+    if not challenge_id:
+        return jsonify({'success': False, 'error': 'No challenge ID provided'}), 400
+    # Fetch challenge from Firestore
+    challenge_ref = db.collection('daily_challenge').document(challenge_id)
+    challenge_doc = challenge_ref.get()
+    if not challenge_doc.exists:
+        return jsonify({'success': False, 'error': 'Challenge not found'}), 404
+    challenge = challenge_doc.to_dict()
+    test_cases = challenge.get('test_cases', [])
+    points = challenge.get('points', 10)
+    tokens = challenge.get('tokens', 5)
+    from datetime import datetime, timedelta
+    import pytz
+    eastern = pytz.timezone('America/New_York')
+    now = datetime.now(eastern)
+    today_str = now.strftime('%Y-%m-%d')
+    hour = now.hour
+    if hour < 8:
+        today_str = (now - timedelta(days=1)).strftime('%Y-%m-%d')
+    user_ref = db.collection('users').document(user_id)
+    user_doc = user_ref.get()
+    daily_awards = user_doc.to_dict().get('daily_challenge_awards', {})
+    # Lock logic: only allow one try per day unless dev override
+    if not dev and daily_awards.get(today_str) == challenge_id:
+        return jsonify({'success': False, 'output': 'Already attempted today! Try again after 8 AM tomorrow.'})
+    # Run code against all test cases using Piston
+    passed = 0
+    outputs = []
+    for case in test_cases:
+        input_data = case.get('input', '')
+        expected = case.get('output', '').strip()
+        try:
+            import requests
+            runtimes = requests.get('https://emkc.org/api/v2/piston/runtimes').json()
+            python_runtime = next(rt for rt in runtimes if rt['language'] == 'python')
+            version = python_runtime['version']
+        except Exception:
+            version = "3.10.0"
+        response = requests.post(
+            'https://emkc.org/api/v2/piston/execute',
+            json={
+                "language": "python",
+                "version": version,
+                "files": [{"name": "main.py", "content": code}],
+                "stdin": input_data
+            }
+        )
+        if response.ok:
+            result = response.json()
+            output = result.get('run', {}).get('output', '').strip()
+            outputs.append({'input': input_data, 'expected': expected, 'output': output})
+            if output == expected:
+                passed += 1
+        else:
+            outputs.append({'input': input_data, 'expected': expected, 'output': 'Error'})
+    # Award logic
+    if passed == len(test_cases) and len(test_cases) > 0:
+        user_ref.update({
+            'currency': firestore.Increment(tokens),
+            'points': firestore.Increment(points),
+            'total_points': firestore.Increment(points),
+            f'daily_challenge_awards.{today_str}': challenge_id
+        })
+        return jsonify({'success': True, 'output': 'All test cases passed!', 'awarded': True, 'points': points, 'tokens': tokens})
+    else:
+        # Lock for today
+        user_ref.update({
+            f'daily_challenge_awards.{today_str}': challenge_id
+        })
+        return jsonify({'success': False, 'output': f'Passed {passed} of {len(test_cases)} test cases. Try again tomorrow.'})

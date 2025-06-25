@@ -59,18 +59,21 @@ def fetch_and_store_user_data(user_id):
         session['user_name'] = user_data.get('user_name', 'User')
         session['avatar_url'] = user_data.get('picture', url_for('static', filename='img/default_avatar.png'))
         session['user_currency'] = user_data.get('currency', 0)
-        session['user_points'] = user_data.get('points', 0)  # Always sync points
-        session['is_admin'] = user_data.get('is_admin', False)
+        session['is_admin'] = user_data.get('is_admin', False)  # Ensure admin status is in session
     else:
         session['user_title'] = 'Student'
         session['user_name'] = 'User'
         session['avatar_url'] = url_for('static', filename='img/default_avatar.png')
         session['user_currency'] = 0
-        session['user_points'] = 0
         session['is_admin'] = False
 
 @app.before_request
 def load_user_data():
+    # Debug: Print request headers and origin for troubleshooting
+    print(f"[DEBUG] Request path: {request.path}")
+    print(f"[DEBUG] Request method: {request.method}")
+    print(f"[DEBUG] Request headers: {dict(request.headers)}")
+    print(f"[DEBUG] Request origin: {request.headers.get('Origin')}")
     user_id = session.get('user_id')
     if user_id:
         fetch_and_store_user_data(user_id)
@@ -112,31 +115,55 @@ def content_page(page_name):
 
 @app.route('/run_python', methods=['POST'])
 def run_python():
-    data = request.get_json()
-    code = data.get('code', '')
-    inputs = data.get('inputs', [])
-
-    input_iter = iter(inputs)
-    def fake_input(prompt=''):
-        try:
-            return next(input_iter)
-        except StopIteration:
-            return ''
-    import builtins
-    real_input = builtins.input
-    builtins.input = fake_input
-
-    import io, contextlib
-    output = io.StringIO()
+    code = request.json.get('code', '')
+    block_id = request.json.get('block_id', '')
+    user_id = session.get('user_id')
+    # Get the latest supported python version from Piston
     try:
-        with contextlib.redirect_stdout(output):
-            exec(code, {})
+        runtimes = requests.get('https://emkc.org/api/v2/piston/runtimes').json()
+        python_runtime = next(rt for rt in runtimes if rt['language'] == 'python')
+        version = python_runtime['version']
     except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        builtins.input = real_input
+        print("Failed to fetch Piston runtimes:", e)
+        version = "3.10.0"  # fallback, may not work if not supported
 
-    return jsonify({'output': output.getvalue()})
+    response = requests.post(
+        'https://emkc.org/api/v2/piston/execute',
+        json={
+            "language": "python",
+            "version": version,
+            "files": [{"name": "main.py", "content": code}]
+        }
+    )
+    print("Piston API status:", response.status_code)
+    print("Piston API response:", response.text)
+    if response.ok:
+        result = response.json()
+        output = result.get('run', {}).get('output', '')
+    else:
+        output = "Error contacting code execution server."
+
+    # Token award logic: Only award if code matches expected and not already rewarded
+    awarded = False
+    if user_id and block_id:
+        # For demo: hardcode expected code for a block_id (replace with your logic)
+        expected_code_map = {
+            'try_hello_world': 'print("Hello, World!")',
+            # Add more block_id: expected_code pairs as needed
+        }
+        expected_code = expected_code_map.get(block_id)
+        if expected_code and code.strip() == expected_code.strip():
+            user_ref = db.collection('users').document(user_id)
+            user_doc = user_ref.get()
+            ide_rewards = user_doc.to_dict().get('ide_rewards', {})
+            if not ide_rewards.get(block_id):
+                user_ref.update({
+                    'currency': firestore.Increment(5),
+                    f'ide_rewards.{block_id}': True
+                })
+                session['user_currency'] = user_doc.to_dict().get('currency', 0) + 5
+                awarded = True
+    return jsonify({'output': output, 'awarded': awarded, 'currency': session.get('user_currency', 0)})
 
 @app.route('/api/time')
 def get_online_time():
@@ -220,6 +247,26 @@ def notifications():
         if not n.get('read', False):
             unread_count += 1
     return jsonify({'success': True, 'unread_count': unread_count, 'notifications': notifications})
+
+@app.route('/api/notifications')
+def get_notifications():
+    # For demo: always return a notification for new daily challenge
+    from datetime import datetime
+    now = datetime.now()
+    # Simulate a new challenge at 8AM every day
+    if now.hour >= 8:
+        return jsonify({
+            "notifications": [
+                {
+                    "id": f"daily-challenge-{now.strftime('%Y-%m-%d')}",
+                    "type": "daily_challenge",
+                    "message": "A new Daily Challenge is available!",
+                    "timestamp": now.isoformat()
+                }
+            ]
+        })
+    else:
+        return jsonify({"notifications": []})
 
 # --- MARK NOTIFICATION AS READ (OPTIONAL) ---
 @app.route('/api/notifications/read', methods=['POST'])
@@ -432,6 +479,23 @@ def inject_user_stats():
             user_bytes = data.get('total_points', 0)
             user_currency = data.get('currency', 0)
     return dict(user_bytes=user_bytes, user_currency=user_currency)
+
+@app.route('/api/daily_challenge/activities')
+def get_daily_challenge_activities():
+    try:
+        print('DEBUG: Fetching bell_ringer activities from Firestore...')
+        db = firestore.client()
+        docs = db.collection('bell_ringer').stream()
+        activities = []
+        for doc in docs:
+            data = doc.to_dict()
+            print(f'DEBUG: Found activity: {data}')
+            activities.append(data)
+        print(f'DEBUG: Total activities fetched: {len(activities)}')
+        return jsonify({"success": True, "activities": activities})
+    except Exception as e:
+        print(f'ERROR: Failed to fetch bell_ringer activities: {e}')
+        return jsonify({"success": False, "error": str(e), "activities": []}), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=PORT)

@@ -4,6 +4,7 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/course_dashboard.css', v=g.css_version) }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.min.css" />
 {% endblock %}
 
 {% block content %}
@@ -34,6 +35,15 @@
             <!-- JS will populate rows here -->
           </tbody>
         </table>
+      </div>
+    </div>
+    <div class="dashboard-section daily-challenge card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-yellow">bolt</span>
+        Daily Challenge
+      </div>
+      <div class="daily-challenge-content" id="daily-challenge-content">
+        <!-- Daily Challenge will be rendered here by JS -->
       </div>
     </div>
     <div class="dashboard-section streak-tracker card">
@@ -93,18 +103,6 @@
       <div class="quote-text" id="quote-text">“The only way to learn a new programming language is by writing programs in it.”</div>
       <div class="quote-author" id="quote-author">- Dennis Ritchie</div>
     </div>
-    <div class="dashboard-section daily-challenge card">
-      <div class="section-header">
-        <span class="material-symbols-outlined accent-green">bolt</span>
-        Daily Challenge
-      </div>
-      <div id="daily-challenge-block">
-        <div class="challenge-title">Solve today's Python challenge in the IDE below!</div>
-        <div id="daily-challenge-ide"></div>
-        <button class="btn-primary" id="submit-challenge-btn">Submit Solution</button>
-        <div id="challenge-feedback"></div>
-      </div>
-    </div>
     <div class="dashboard-section schedule card">
       <div class="section-header">
         <span class="material-symbols-outlined accent-yellow">calendar_month</span>
@@ -139,6 +137,8 @@
 
 {% block scripts %}
 {{ super() }}
+<!-- Load Ace Editor without integrity attribute to avoid browser blocking -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
 <script src="{{ url_for('static', filename='js/course_dashboard.js', v=g.css_version) }}"></script>
 <script type="module">
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";

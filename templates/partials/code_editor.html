@@ -5,13 +5,17 @@
   {% set default_code = block.default_code or '# Write your Python code here\n' %}
   <label for="{{ editor_id }}">{{ block.label or "Try it yourself:" }}</label>
   <div id="{{ editor_id }}" style="height: 300px; width: 100%; margin-bottom: 1em;"></div>
-  <button type="button"
-    class="run-code-btn"
-    data-editor-id="{{ editor_id|e }}"
-    data-content-id="{{ (block.content_id or editor_id)|e }}"
-    data-next-topic="{{ (block.next_topic or '')|e }}">
-    Run Code
-  </button>
+  <div class="editor-toolbar">
+    <button type="button" class="run-code-btn btn-primary" data-editor-id="{{ editor_id|e }}" data-content-id="{{ (block.content_id or editor_id)|e }}" data-next-topic="{{ (block.next_topic or '')|e }}">Run Code</button>
+    <button type="button" class="debug-btn btn-primary" data-editor-id="{{ editor_id|e }}">Debug</button>
+    <button type="button" class="hint-btn btn-primary" data-editor-id="{{ editor_id|e }}">Show Hint</button>
+    <button type="button" class="solution-btn btn-primary" data-editor-id="{{ editor_id|e }}">Show Solution</button>
+    <button type="button" class="history-btn btn-primary" data-editor-id="{{ editor_id|e }}">History</button>
+    <button type="button" class="reference-btn btn-primary" data-editor-id="{{ editor_id|e }}">Reference</button>
+    <span class="challenge-timer" id="timer-{{ editor_id }}" style="margin-left:16px;display:none;"></span>
+    <button type="button" class="share-btn btn-primary" data-editor-id="{{ editor_id|e }}">Share</button>
+  </div>
+  <div class="variable-inspector" id="var-inspector-{{ editor_id }}" style="display:none;"></div>
   <pre id="{{ editor_id }}-output" class="code-editor-output"></pre>
 </div>
 
@@ -31,7 +35,7 @@
 <script>
   if (!window.aceEditors) window.aceEditors = {};
   (function() {
-    var editorId = {{ editor_id|tojson|safe }};
+    var editorId = "{{ editor_id|e }}";
     var defaultCode = {{ default_code|tojson|safe }};
     if (!window.aceEditors[editorId]) {
       var editor = ace.edit(editorId);
