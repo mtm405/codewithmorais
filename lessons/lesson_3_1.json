@@ -19,7 +19,7 @@
     },
     {
       "type": "step_card",
-      "id": "open_write_close",
+      "id": "lesson3_1_snippet1",
       "header": "Basic File Writing Example",
       "steps": [
         "Open a file named `my_file.txt` in write (`'w'`) mode. If it doesn't exist, it will be created. If it exists, its content will be overwritten.",
@@ -35,7 +35,7 @@
     },
     {
       "type": "step_card",
-      "id": "with_statement_write",
+      "id": "lesson3_1_snippet2",
       "header": "Writing with `with` statement",
       "steps": [
         "The `with` statement opens `another_file.txt` in write mode (`'w'`). The file object is assigned to `f`.",
@@ -102,7 +102,7 @@
     },
     {
       "type": "step_card",
-      "id": "append_writelines",
+      "id": "lesson3_1_snippet3",
       "header": "Appending and `writelines` Example",
       "steps": [
         "First, create a `numbers.txt` file with some initial content using `'w'` mode.",
@@ -122,7 +122,8 @@
       "type": "code_snippet",
       "language": "python",
       "code": "import os # Import the os module\n\nfile_to_check = 'temp_file.txt'\n\n# Create a dummy file for the example\nwith open(file_to_check, 'w') as f:\n    f.write('This is a temporary file.')\n\n# Check if file exists\nif os.path.exists(file_to_check):\n    print(\"'{}.txt' exists.\".format(file_to_check))\n    \n    # Delete the file\n    os.remove(file_to_check)\n    print(\"'{}.txt' has been deleted.\".format(file_to_check))\nelse:\n    print(\"'{}.txt' does not exist.\".format(file_to_check))\n\n# Check again after deletion\nif not os.path.exists(file_to_check):\n    print(\"Confirming: '{}.txt' no longer exists.\".format(file_to_check))\n",
-      "output": "'temp_file.txt' exists.\n'temp_file.txt' has been deleted.\nConfirming: 'temp_file.txt' no longer exists.\n"
+      "output": "'temp_file.txt' exists.\n'temp_file.txt' has been deleted.\nConfirming: 'temp_file.txt' no longer exists.\n",
+      "id": "lesson3_1_snippet4"
     },
     {
       "type": "ide",
@@ -152,12 +153,18 @@
             "questions": [
               {
                 "text": "What is the primary advantage of using the `with` statement for file handling? _________. <span class='points-badge'>1 pt</span>",
-                "answers": ["Ensures automatic file closing", "Ensures automatic closing", "Automatic file closing"],
+                "answers": [
+                  "Ensures automatic file closing",
+                  "Ensures automatic closing",
+                  "Automatic file closing"
+                ],
                 "feedback": "The `with` statement guarantees that the file's `close()` method is called automatically, even if errors occur within the `with` block."
               },
               {
                 "text": "```python\n# Assume 'data.txt' contains: \n# Hello\\nWorld\n\nwith open('data.txt', 'r') as f:\n    content = f.read()\nprint(content)\n```\nOutput: _________. <span class='points-badge'>1 pt</span>",
-                "answers": ["Hello\\nWorld"],
+                "answers": [
+                  "Hello\\nWorld"
+                ],
                 "feedback": "The `read()` method reads the entire content of the file as a single string, including newline characters."
               }
             ]
@@ -169,13 +176,23 @@
             "questions": [
               {
                 "question": "Which file mode will create a new file for writing and raise an error if the file already exists? <span class='points-badge'>1 pt</span>",
-                "options": ["`'w'`", "`'a'`", "`'x'`", "`'r'`"],
+                "options": [
+                  "`'w'`",
+                  "`'a'`",
+                  "`'x'`",
+                  "`'r'`"
+                ],
                 "correct_index": 2,
                 "feedback": "The `'x'` (exclusive creation) mode is designed to create a new file and fail if it exists. `'w'` would overwrite, and `'a'` would append."
               },
               {
                 "question": "You have a list of strings `['Line1\\n', 'Line2\\n']` that you want to write to a file. Which method is best suited for this? <span class='points-badge'>1 pt</span>",
-                "options": ["`write()`", "`readline()`", "`writelines()`", "`read()`"],
+                "options": [
+                  "`write()`",
+                  "`readline()`",
+                  "`writelines()`",
+                  "`read()`"
+                ],
                 "correct_index": 2,
                 "feedback": "The `writelines()` method is specifically designed to write an iterable of strings (like a list) to a file."
               }

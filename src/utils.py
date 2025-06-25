@@ -25,12 +25,14 @@ def inject_global_data():
     user_name = session.get('user_name', 'Guest')
     user_picture = session.get('user_picture', 'https://via.placeholder.com/45/56D364/FFFFFF?text=L') # Default if no picture
     user_currency = session.get('user_currency', 0) # Added currency to session
+    user_points = session.get('user_points', 0)  # Always provide up-to-date points
 
     return dict(
         user_id=user_id, # Useful for frontend logic
         user_name=user_name,
         user_picture=user_picture,
         user_currency=user_currency, # Make currency available to templates
+        user_points=user_points,
         active_page=get_active_page()
     )
 

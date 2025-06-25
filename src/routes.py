@@ -101,7 +101,7 @@ def submit_challenge():
     if all_passed:
         user_ref = db.collection('users').document(user_id)
         user_ref.update({
-            'total_points': firestore.Increment(challenge.get('points', 10)),
+            'points': firestore.Increment(challenge.get('points', 10)),
             'currency': firestore.Increment(challenge.get('currency', 5))
         })
 
@@ -117,7 +117,7 @@ def dashboard():
     if 'user_id' not in session:
         # Redirect to auth blueprint's index (login page)
         return redirect(url_for('auth.index'))
-    return render_template('dashboard.html', active_page='dashboard')
+    return render_template('dashboard_course.html', active_page='dashboard')
 
 # --- New Dashboard2 route ---
 @routes_bp.route('/dashboard2')
@@ -213,8 +213,8 @@ def update_progress_api():
 
         user_ref = db.collection('users').document(user_id)
         user_ref.update({
-            'total_points': firestore.Increment(points_earned),
-            'currency': firestore.Increment(points_earned)
+            'currency': firestore.Increment(points_earned),
+            'points': firestore.Increment(points_earned)
         })
 
         if 'user_currency' in session:
@@ -543,3 +543,8 @@ def get_whats_next():
         'last_completed': last_completed,
         'next_topic': next_topic
     }), 200
+
+@routes_bp.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('routes.index'))

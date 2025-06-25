@@ -1,4 +1,84 @@
-<!-- partials/block_code_snippet.html: Renders a code_snippet block as a read-only code block with IDE-like line numbers and blue border -->
-<div class="python-example" aria-label="Code example">
-  {{ block.code | pygments_highlight }}
+<!-- partials/block_code_snippet.html: Always generate a unique id for each code-snippet block, regardless of block.id -->
+<style>
+/* Custom ACE editor scrollbar to match a modern dark look */
+.python-example .ace_scrollbar-v, .python-example .ace_scrollbar-h {
+  background: #181818 !important; /* scrollbar track */
+}
+.python-example .ace_scrollbar-h::-webkit-scrollbar, 
+.python-example .ace_scrollbar-v::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  background: #181818;
+}
+.python-example .ace_scrollbar-h::-webkit-scrollbar-thumb, 
+.python-example .ace_scrollbar-v::-webkit-scrollbar-thumb {
+  background: #444 !important; /* scrollbar thumb */
+  border-radius: 6px;
+}
+.python-example .ace_scrollbar-h::-webkit-scrollbar-corner {
+  background: #181818;
+}
+/* For Firefox */
+.python-example .ace_scrollbar-h, .python-example .ace_scrollbar-v {
+  scrollbar-color: #444 #181818;
+  scrollbar-width: thin;
+}
+</style>
+<div class="code-snippet-block">
+  <div class="code-snippet-title">
+    <span class="material-symbols-outlined" style="vertical-align: middle;">lightbulb</span>
+    Example
+  </div>
+  <div class="python-example" aria-label="Code example" style="padding:0;margin:0;background:none;border:none;">
+    <div class="code-snippet-container" style="width:100%;min-height:80px;height:auto;">
+      <div class="code-snippet-ace" style="width:100%;min-height:80px;height:auto;"></div>
+    </div>
+  </div>
 </div>
+<script type="text/javascript">
+(function() {
+  var code = {{ block.code|tojson|safe }};
+  var uniqueSuffix = Math.random().toString(36).substr(2, 8);
+  var editorId = 'code-snippet-' + uniqueSuffix;
+  var aceDiv = document.currentScript.previousElementSibling.querySelector('.code-snippet-ace');
+  aceDiv.id = editorId;
+  function initAceEditor() {
+    if (!window.ace) {
+      setTimeout(initAceEditor, 50);
+      return;
+    }
+    if (!window.aceEditors) window.aceEditors = {};
+    if (!window.aceEditors[editorId]) {
+      var editor = ace.edit(editorId);
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/python");
+      editor.setValue(code, -1);
+      editor.setReadOnly(true);
+      editor.setOptions({
+        highlightActiveLine: false,
+        highlightGutterLine: false,
+        showPrintMargin: false,
+        showLineNumbers: true,
+        showGutter: true,
+        displayIndentGuides: false,
+        fontSize: "1.08em",
+        maxLines: Infinity,
+        minLines: 3
+      });
+      editor.renderer.$cursorLayer.element.style.display = "none";
+      editor.renderer.setShowGutter(true);
+      editor.renderer.setScrollMargin(8,8,8,8);
+      editor.setBehavioursEnabled(false);
+      editor.container.style.background = '#000';
+      editor.container.style.border = 'none';
+      editor.container.style.boxShadow = 'none';
+      window.aceEditors[editorId] = editor;
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAceEditor);
+  } else {
+    initAceEditor();
+  }
+})();
+</script>

@@ -35,3 +35,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 600); // Duration matches the animation
   }
 });
+
+// Logout logic for both sidebar and header
+function handleLogout() {
+  // Firebase sign out (if firebase is loaded)
+  if (window.firebase && window.firebase.auth) {
+    window.firebase.auth().signOut().catch(() => {});
+  }
+  // Call backend to clear session
+  fetch('/logout', { method: 'POST', credentials: 'same-origin' })
+    .finally(() => {
+      window.location.href = '/'; // Redirect to home or login
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutSidebar = document.getElementById('logout-btn-sidebar');
+  const logoutHeader = document.getElementById('logout-btn-header');
+  if (logoutSidebar) logoutSidebar.addEventListener('click', handleLogout);
+  if (logoutHeader) logoutHeader.addEventListener('click', handleLogout);
+});

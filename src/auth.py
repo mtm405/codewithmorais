@@ -58,7 +58,7 @@ def google_signin():
                 'created_at': existing.get('created_at', firestore.SERVER_TIMESTAMP),
                 'currency': existing.get('currency', 10),
                 'user_title': existing.get('user_title', 'Newbie'),
-                'total_points': existing.get('total_points', 0),
+                'points': existing.get('points', 0),
                 'is_admin': existing.get('is_admin', False),
             })
         else:
@@ -72,7 +72,7 @@ def google_signin():
                 'last_login_online_time': login_time,
                 'currency': 10,
                 'user_title': 'Newbie',
-                'total_points': 0,
+                'points': 0,
                 'is_admin': False,
                 'picture': idinfo.get('picture', ''),
             })
