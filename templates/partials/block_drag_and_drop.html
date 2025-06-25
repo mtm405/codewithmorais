@@ -1,12 +1,14 @@
-<div class="drag-drop-question">
-  <div class="drag-drop-instructions">{{ block.instructions }}</div>
-  <div class="drag-drop-container">
-    <div class="drag-items">
+<div class="drag-drop-question{% if minimal %} block-drag-and-drop-minimal{% endif %}">
+  <div class="drag-drop-instructions font-size-1-08em color-ffd600 font-weight-700 margin-bottom-1em">
+    {{ block.instructions }}
+  </div>
+  <div class="drag-drop-container display-flex gap-2em margin-1em-0 flex-wrap">
+    <div class="drag-items display-flex flex-direction-column gap-1em min-width-180px">
       {% for pair in block.pairs %}
         <div class="drag-item" draggable="true" data-id="{{ loop.index0 }}">{{ pair.left }}</div>
       {% endfor %}
     </div>
-    <div class="drop-zones">
+    <div class="drop-zones display-flex flex-direction-column gap-1em min-width-180px">
       {% for pair in block.pairs %}
         <div class="drop-zone" data-id="{{ loop.index0 }}">
           <span class="drop-label">{{ pair.right }}</span>
@@ -15,8 +17,8 @@
       {% endfor %}
     </div>
   </div>
-  <div class="drag-drop-actions">
-    <button class="check-drag-drop-btn" type="button">Check Matches</button>
-  </div>
-  <div class="drag-drop-feedback quiz-feedback"></div>
+  <button class="check-drag-drop-btn linear-gradient-blue-purple" type="button">
+    {{ 'Check' if minimal else 'Check Matches' }}
+  </button>
+  <div class="drag-drop-feedback quiz-feedback display-none"></div>
 </div>

@@ -642,3 +642,57 @@ def submit_daily_challenge():
             f'daily_challenge_awards.{today_str}': challenge_id
         })
         return jsonify({'success': False, 'output': f'Passed {passed} of {len(test_cases)} test cases. Try again tomorrow.'})
+
+@routes_bp.route('/api/quiz/submit', methods=['POST'])
+def submit_quiz_result():
+    if db is None:
+        return jsonify({'success': False, 'error': 'Database not initialized'}), 500
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'error': 'Not logged in'}), 401
+    data = request.get_json()
+    question_id = data.get('question_id')
+    is_correct = data.get('correct', False)
+    points = int(data.get('points', 0))
+    currency = int(data.get('currency', 0))
+    answer = data.get('answer')
+    if not question_id:
+        return jsonify({'success': False, 'error': 'No question ID provided'}), 400
+    # Track per-question progress
+    progress_doc_id = f"{user_id}_{question_id}"
+    progress_ref = db.collection('user_progress').document(progress_doc_id)
+    update_data = {
+        'user_id': user_id,
+        'content_id': question_id,
+        'status': 'completed' if is_correct else 'attempted',
+        'score': 1 if is_correct else 0,
+        'last_updated': firestore.SERVER_TIMESTAMP,
+        'answer': answer
+    }
+    if is_correct:
+        update_data['completion_date'] = firestore.SERVER_TIMESTAMP
+    try:
+        progress_ref.set(update_data, merge=True)
+        user_ref = db.collection('users').document(user_id)
+        # Only award points/currency if correct
+        if is_correct:
+            user_ref.update({
+                'currency': firestore.Increment(currency),
+                'points': firestore.Increment(points),
+                'total_points': firestore.Increment(points)
+            })
+            # Update session for instant feedback
+            session['user_currency'] = session.get('user_currency', 0) + currency
+            session['user_points'] = session.get('user_points', 0) + points
+        # Fetch updated user doc for return
+        user_doc = user_ref.get()
+        user_data = user_doc.to_dict() if user_doc.exists else {}
+        return jsonify({
+            'success': True,
+            'points': user_data.get('points', 0),
+            'currency': user_data.get('currency', 0),
+            'total_points': user_data.get('total_points', 0)
+        })
+    except Exception as e:
+        current_app.logger.error(f"Error updating quiz progress for user {user_id}, question {question_id}: {e}", exc_info=True)
+        return jsonify({'success': False, 'error': str(e)}), 500
