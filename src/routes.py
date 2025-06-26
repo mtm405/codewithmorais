@@ -680,6 +680,7 @@ def submit_quiz_result():
                 'points': firestore.Increment(points),
                 'total_points': firestore.Increment(points)
             })
+<<<<<<< HEAD
             # Update session for instant feedback (legacy and new)
             user_doc = user_ref.get()
             if user_doc.exists:
@@ -689,6 +690,11 @@ def submit_quiz_result():
                 # Set both for compatibility
                 session['avatar_url'] = user_data.get('picture', url_for('static', filename='img/default_avatar.png'))
                 session['user_picture'] = user_data.get('picture', url_for('static', filename='img/default_avatar.png'))
+=======
+            # Update session for instant feedback
+            session['user_currency'] = session.get('user_currency', 0) + currency
+            session['user_points'] = session.get('user_points', 0) + points
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
         # Fetch updated user doc for return
         user_doc = user_ref.get()
         user_data = user_doc.to_dict() if user_doc.exists else {}

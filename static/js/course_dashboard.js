@@ -90,7 +90,15 @@ document.addEventListener('DOMContentLoaded', function() {
       html += `<div id="activity-ace-editor" style="height:180px;width:100%;margin-bottom:1em;"></div>`;
       html += `<button class="btn-primary" id="run-btn">Run</button>`;
       html += `<div id="activity-feedback" style="margin-top:1em;" aria-live="polite"></div>`;
+<<<<<<< HEAD
     } else if (activity.type === 'fill_in_the_blank') {
+=======
+    } else if (activity.type === 'quiz' || activity.type === 'mcq' || activity.type === 'multiple_choice_quiz') {
+      html += `<div class="quiz-question">${activity.question}</div>`;
+      html += activity.options.map((opt, i) => `<button class="btn-primary quiz-opt" data-idx="${i}" aria-pressed="false">${opt}</button>`).join('');
+      html += `<div class="quiz-feedback display-none" id="quiz-feedback" aria-live="polite"></div>`;
+    } else if (activity.type === 'fill_in_blank' || activity.type === 'fill_in_the_blank' || activity.type === 'fill_in_the_blanks') {
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
       html += `<div class="fill-blank-question">${activity.question}</div>`;
       html += `<input type="text" id="fill-blank-input" style="width:100%" aria-label="Fill in the blank" />`;
       html += `<button class="btn-primary" id="check-fill-blank">Check</button>`;
@@ -147,8 +155,13 @@ document.addEventListener('DOMContentLoaded', function() {
         };
       });
     }
+<<<<<<< HEAD
     // Only handle unified fill_in_the_blanks and drag_and_drop types
     if (activity.type === 'fill_in_the_blank') {
+=======
+    // Fill in the blank logic
+    if (activity.type === 'fill_in_blank' || activity.type === 'fill_in_the_blank' || activity.type === 'fill_in_the_blanks') {
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
       const feedbackDiv = document.getElementById('quiz-feedback');
       const checkBtn = document.getElementById('check-fill-blank');
       if (checkBtn) checkBtn.onclick = async function() {

@@ -18,12 +18,75 @@ function gradeMCQ(selectedIdx, correctIdx) {
 }
 window.gradeMCQ = gradeMCQ;
 
+<<<<<<< HEAD
 // Unified grading for fill_in_the_blank (single answer)
 function gradeFillInTheBlank(userAnswer, correctAnswers) {
   if (!Array.isArray(correctAnswers)) return false;
   return correctAnswers.some(ans => String(ans).trim().toLowerCase() === String(userAnswer).trim().toLowerCase());
 }
 window.gradeFillInTheBlank = gradeFillInTheBlank;
+=======
+function gradeFillInBlank(userInput, answers) {
+  if (!Array.isArray(answers)) answers = [answers];
+  return answers.some(ans => userInput.trim().toLowerCase() === ans.trim().toLowerCase());
+}
+window.gradeFillInBlank = gradeFillInBlank;
+
+function showFeedback(element, isCorrect, feedback = "") {
+  element.classList.remove("display-none");
+  element.textContent = isCorrect ? (feedback || "Correct!") : (feedback || "Try again.");
+  element.classList.toggle("correct", isCorrect);
+  element.classList.toggle("incorrect", !isCorrect);
+}
+window.showFeedback = showFeedback;
+
+function nextQuizStep(container, currentStep, totalSteps) {
+  // Hide current, show next
+  const steps = container.querySelectorAll('.quiz-card');
+  if (steps[currentStep]) steps[currentStep].classList.add('d-none');
+  if (steps[currentStep + 1]) steps[currentStep + 1].classList.remove('d-none');
+  // Update progress bar, etc.
+}
+window.nextQuizStep = nextQuizStep;
+
+function resetQuiz(container) {
+  // Reset all quiz state in the container
+  const steps = container.querySelectorAll('.quiz-card');
+  steps.forEach((step, idx) => {
+    step.classList.toggle('d-none', idx !== 0);
+    // Reset feedback, inputs, etc.
+    const feedback = step.querySelector('.quiz-feedback');
+    if (feedback) feedback.classList.add('display-none');
+    const inputs = step.querySelectorAll('input, button');
+    inputs.forEach(input => {
+      if (input.type === 'text') input.value = '';
+      if (input.classList.contains('selected')) input.classList.remove('selected');
+    });
+  });
+}
+window.resetQuiz = resetQuiz;
+
+// Utility: Send quiz result to backend (Flask API) for progress, points, currency
+async function submitQuizResult({ questionId, isCorrect, points = 0, currency = 0, answer = null }) {
+  try {
+    const res = await fetch('/api/quiz/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question_id: questionId,
+        correct: isCorrect,
+        points,
+        currency,
+        answer
+      })
+    });
+    return await res.json();
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+}
+window.submitQuizResult = submitQuizResult;
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
 
 // Modular grading for drag-and-drop (expects arrays of indices or ids)
 function gradeDragAndDrop(userOrder, correctOrder) {
@@ -35,7 +98,11 @@ window.gradeDragAndDrop = gradeDragAndDrop;
 
 // Modular grading for code (run code and compare output)
 function gradeCode(userOutput, expectedOutput) {
+<<<<<<< HEAD
   // Simple string comparison, can be extended to be more robust
+=======
+  // Simple string comparison, can be extended for more robust checks
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
   return String(userOutput).trim() === String(expectedOutput).trim();
 }
 window.gradeCode = gradeCode;
@@ -101,10 +168,19 @@ async function handleQuizSubmit({
   // Grading logic by type
   switch (type) {
     case 'multiple_choice':
+<<<<<<< HEAD
       isCorrect = gradeMCQ(userInput, correctAnswer);
       break;
     case 'fill_in_the_blank':
       isCorrect = gradeFillInTheBlank(userInput, correctAnswer);
+=======
+    case 'multiple_choice_quiz':
+      isCorrect = gradeMCQ(userInput, correctAnswer);
+      break;
+    case 'fill_in_the_blank':
+    case 'fill_in_the_blanks':
+      isCorrect = gradeFillInBlank(userInput, correctAnswer);
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
       break;
     case 'drag_and_drop':
       isCorrect = gradeDragAndDrop(userInput, correctAnswer);
@@ -148,6 +224,7 @@ async function handleQuizSubmit({
 }
 window.handleQuizSubmit = handleQuizSubmit;
 
+<<<<<<< HEAD
 // Show feedback for quiz blocks (MCQ, fill-in-the-blank, drag-and-drop)
 function showFeedback(feedbackDiv, isCorrect, customMsg) {
   if (!feedbackDiv) return;
@@ -177,6 +254,11 @@ function attachQuizHandlers() {
       return;
     }
     
+=======
+function attachQuizHandlers() {
+  // Inline MCQ blocks
+  document.querySelectorAll('.block-multiple-choice').forEach(block => {
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
     const optionsGrid = block.querySelector('.mcq-options-grid');
     if (!optionsGrid) return;
     const optionBtns = optionsGrid.querySelectorAll('.mcq-option-btn');
@@ -260,11 +342,14 @@ function attachQuizHandlers() {
 
   // Modal MCQ blocks (if any)
   document.querySelectorAll('.block-multiple-choice-minimal').forEach(block => {
+<<<<<<< HEAD
     // Skip if this is part of a comprehensive quiz
     if (block.hasAttribute('data-comprehensive-quiz') || block.closest('.comprehensive-quiz-container')) {
       return;
     }
     
+=======
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
     const optionsGrid = block.querySelector('.mcq-options-grid');
     if (!optionsGrid) return;
     const optionBtns = optionsGrid.querySelectorAll('.mcq-option-btn');
@@ -317,6 +402,7 @@ function attachQuizHandlers() {
       });
     });
   });
+<<<<<<< HEAD
 
 // --- Fill in the Blank Quiz Logic ---
   document.addEventListener('DOMContentLoaded', function() {
@@ -416,6 +502,8 @@ function attachQuizHandlers() {
       }
     });
   });
+=======
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
 }
 window.attachQuizHandlers = attachQuizHandlers;
 

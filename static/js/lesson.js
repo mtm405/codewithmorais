@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (window.attachQuizHandlers) {
     attachQuizHandlers();
   }
+<<<<<<< HEAD
 
   // Consolidated Drag-and-Drop UI Logic
   document.querySelectorAll('.block-drag-and-drop').forEach((block, blockIndex) => {
@@ -87,4 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   });
+=======
+>>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
 });
