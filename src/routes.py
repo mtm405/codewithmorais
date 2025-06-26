@@ -341,8 +341,12 @@ def lesson(lesson_id):
         # --- Normalization logic for Firestore/JSON lesson blocks ---
         def normalize_blocks(blocks, parent_type=None):
             if not isinstance(blocks, list):
+                current_app.logger.error(f"Lesson normalization error: blocks is not a list. Got: {type(blocks)}")
                 return
             for block in blocks:
+                if not isinstance(block, dict):
+                    current_app.logger.error(f"Lesson normalization error: block is not a dict. Got: {type(block)}")
+                    continue
                 # If block is a quiz_section, normalize its inner blocks recursively
                 if block.get('type') == 'quiz_section' and 'content' in block and 'blocks' in block['content']:
                     normalize_blocks(block['content']['blocks'], parent_type='quiz_section')
@@ -352,33 +356,39 @@ def lesson(lesson_id):
                 # --- Unified normalization for fill-in-the-blank (single only) ---
                 # Skip normalization for comprehensive_quiz blocks
                 if block.get('type') in ['fill_in_the_blank', 'fill_in_blank', 'fill_in_the_blanks'] and block.get('type') != 'comprehensive_quiz':
-                    # Always use 'fill_in_the_blank' as the type (single only)
                     block['type'] = 'fill_in_the_blank'
-                    # Convert any legacy or multi-question fields to a single question
                     if 'questions' in block and isinstance(block['questions'], list) and block['questions']:
                         q = block['questions'][0]
                         block['question'] = q.get('text') or q.get('question', '')
                         block['answers'] = q.get('answers', [])
                     elif 'question' in block and 'answers' in block:
-                        # Already single
                         pass
                     else:
                         block['question'] = ''
                         block['answers'] = []
-                    # Remove questions array if present (but not for comprehensive_quiz parents)
                     if parent_type != 'comprehensive_quiz':
                         block.pop('questions', None)
                 # --- End fill-in-the-blank normalization ---
-
                 # --- Unified normalization for drag-and-drop ---
                 if block.get('type') in ['drag_and_drop', 'dragdrop', 'drag_drop']:
                     block['type'] = 'drag_and_drop'
-                    # Ensure pairs is a list of objects with 'left' and 'right'
                     if 'pairs' in block and isinstance(block['pairs'], list):
                         block['pairs'] = [
                             {'left': p.get('left'), 'right': p.get('right')} for p in block['pairs']
                         ]
                 # --- End drag-and-drop normalization ---
+                # Check for required fields in quiz blocks
+                if block.get('type') in ['multiple_choice', 'fill_in_the_blank', 'drag_and_drop', 'comprehensive_quiz', 'quiz_section']:
+                    if 'id' not in block:
+                        current_app.logger.error(f"Quiz block missing 'id': {block}")
+                    if block.get('type') == 'multiple_choice' and 'options' not in block:
+                        current_app.logger.error(f"Multiple choice block missing 'options': {block}")
+                    if block.get('type') == 'fill_in_the_blank' and 'answers' not in block:
+                        current_app.logger.error(f"Fill in the blank block missing 'answers': {block}")
+                    if block.get('type') == 'drag_and_drop' and 'pairs' not in block:
+                        current_app.logger.error(f"Drag and drop block missing 'pairs': {block}")
+                    if block.get('type') == 'comprehensive_quiz' and 'questions' not in block:
+                        current_app.logger.error(f"Comprehensive quiz block missing 'questions': {block}")
         # Call normalization on all top-level blocks
         if lesson_data and 'blocks' in lesson_data and isinstance(lesson_data['blocks'], list):
             normalize_blocks(lesson_data['blocks'])
@@ -680,7 +690,6 @@ def submit_quiz_result():
                 'points': firestore.Increment(points),
                 'total_points': firestore.Increment(points)
             })
-<<<<<<< HEAD
             # Update session for instant feedback (legacy and new)
             user_doc = user_ref.get()
             if user_doc.exists:
@@ -690,11 +699,6 @@ def submit_quiz_result():
                 # Set both for compatibility
                 session['avatar_url'] = user_data.get('picture', url_for('static', filename='img/default_avatar.png'))
                 session['user_picture'] = user_data.get('picture', url_for('static', filename='img/default_avatar.png'))
-=======
-            # Update session for instant feedback
-            session['user_currency'] = session.get('user_currency', 0) + currency
-            session['user_points'] = session.get('user_points', 0) + points
->>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
         # Fetch updated user doc for return
         user_doc = user_ref.get()
         user_data = user_doc.to_dict() if user_doc.exists else {}

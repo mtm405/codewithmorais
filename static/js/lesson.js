@@ -5,10 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
   if (window.attachQuizHandlers) {
     attachQuizHandlers();
   }
-<<<<<<< HEAD
 
   // Consolidated Drag-and-Drop UI Logic
   document.querySelectorAll('.block-drag-and-drop').forEach((block, blockIndex) => {
+    // Skip if this is part of a comprehensive quiz
+    if (block.closest('.comprehensive-quiz-container')) {
+      return;
+    }
+
     const itemBank = block.querySelector('.drag-item-bank');
     const dropZones = block.querySelectorAll('.drop-zone');
     const resetButton = block.querySelector('.dnd-reset-button');
@@ -88,6 +92,4 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   });
-=======
->>>>>>> c8fccd7f38bd75823a0bcf9fa700f10474e6235d
 });
