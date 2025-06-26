@@ -38,11 +38,9 @@
       <div class="lesson-main">
         <h1 class="lesson-title">{{ lesson.title }}</h1>
         {% for block in lesson.blocks %}
-          {% if block.type == 'text' %}
-            {% include 'partials/block_text.html' %}
-          {% elif block.type == 'fill_in_the_blank' %}
+          {% if block.type == 'fill_in_the_blank' %}
             {% include 'partials/block_fill_in_blank.html' %}
-          {% elif block.type == 'multiple_choice' and block.mcq_inline %}
+          {% elif block.type == 'multiple_choice' or block.type == 'multiple_choice_quiz' %}
             {% include 'partials/block_multiple_choice.html' %}
           {% elif block.type == 'drag_and_drop' %}
             {% include 'partials/block_drag_and_drop.html' %}
@@ -58,6 +56,12 @@
             {% include 'partials/block_debug_challenge.html' %}
           {% elif block.type == 'divider' %}
             {% include 'partials/block_divider.html' %}
+          {% elif block.type == 'quiz_section' %}
+            {% include 'partials/block_quiz_section.html' %}
+          {% elif block.type == 'text' %}
+            {% include 'partials/block_text.html' %}
+          {% elif block.type == 'comprehensive_quiz' %}
+            {% include 'partials/block_comprehensive_quiz.html' %}
           {% else %}
             <p><em>Unknown block type: {{ block.type }}</em></p>
           {% endif %}
@@ -65,9 +69,9 @@
         <div class="quiz-unlock-section margin-3em-0-2em-0">
           <div class="text-center font-size-1-4em font-weight-700 margin-bottom-0-7em">Test your knowledge!</div>
           <div class="quiz-unlock-btns">
-            <button class="quiz-unlock-btn easy" data-quiz-id="quiz1" data-quiz-price="5">Easy <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>5</span></button>
-            <button class="quiz-unlock-btn medium" data-quiz-id="quiz2" data-quiz-price="10">Medium <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>10</span></button>
-            <button class="quiz-unlock-btn hard" data-quiz-id="quiz3" data-quiz-price="15">Hard <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>15</span></button>
+            <button class="btn quiz-unlock-btn easy" data-quiz-id="quiz1" data-quiz-price="5">Easy <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>5</span></button>
+            <button class="btn quiz-unlock-btn medium" data-quiz-id="quiz2" data-quiz-price="10">Medium <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>10</span></button>
+            <button class="btn quiz-unlock-btn hard" data-quiz-id="quiz3" data-quiz-price="15">Hard <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>15</span></button>
           </div>
         </div>
         <div class="quiz-modal-overlay" id="quiz-modal-overlay">
@@ -80,4 +84,13 @@
       </div>
     </div>
   </div>
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/comprehensive_quiz.css', v=g.css_version) }}">
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <script src="/static/js/quiz_core.js"></script>
+  <script src="/static/js/lesson.js"></script>
+  <script src="{{ url_for('static', filename='js/comprehensive_quiz.js', v=g.css_version) }}"></script>
 {% endblock %}

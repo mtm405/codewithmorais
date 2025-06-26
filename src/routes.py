@@ -38,7 +38,7 @@ def get_daily_challenge():
             'challenge_id': data.get('challenge_id'),
             'title': data.get('title'),
             'description': data.get('description'),
-            'difficulty': data.get('difficulty'),  # <-- FIXED: closed parenthesis
+            'difficulty': data.get('difficulty'),
             'test_cases': data.get('test_cases', [])
         })
     return jsonify({'error': 'No challenge for today'}), 404
@@ -325,75 +325,74 @@ def lesson(lesson_id):
     lesson_data = None
     # Try to load from local file if it exists
     local_path = os.path.join('lessons', f'{lesson_id}.json')
-    if os.path.exists(local_path):
-        with open(local_path, 'r', encoding='utf-8') as f:
-            lesson_data = json.load(f)
-    else:
-        # Fallback to Firestore if not found locally
-        if db:
-            doc = db.collection('lessons').document(lesson_id).get()
-            if doc.exists:
-                lesson_data = doc.to_dict()
-    # Ensure lesson_data has an 'id' field for template logic
-    if lesson_data is not None:
-        lesson_data['id'] = lesson_id
-    # --- Normalization logic for Firestore/JSON lesson blocks ---
-    def normalize_blocks(blocks, parent_type=None):
-        for block in blocks:
-            # If block is a quiz_section, normalize its inner blocks recursively
-            if block.get('type') == 'quiz_section' and 'content' in block and 'blocks' in block['content']:
-                normalize_blocks(block['content']['blocks'], parent_type='quiz_section')
-            # Normalize fill_in_the_blank
-            if block.get('type') == 'fill_in_the_blank':
-                if 'prompt' not in block and 'question' in block:
-                    block['prompt'] = block['question']
-                if 'answer' not in block and 'answers' in block:
-                    block['answer'] = block['answers'][0] if block['answers'] else ''
-            # Normalize multiple_choice
-            if block.get('type') == 'multiple_choice':
-                block['mcq_inline'] = True  # Always set to True
-                options = block.get('options', [])
-                correct = block.get('correct')
-                correct_index = block.get('correct_index')
-                # Support legacy 'answer' field as correct_index
-                if correct_index is None and 'answer' in block:
-                    correct_index = block['answer']
-                    block['correct_index'] = correct_index
-                # If correct_index is missing but correct is present
-                if correct_index is None and correct is not None and options:
-                    try:
-                        correct_index = options.index(correct)
-                    except ValueError:
-                        correct_index = 0
-                    block['correct_index'] = correct_index
-                # If correct_index is present, ensure it's an int and in range
-                if correct_index is not None:
-                    try:
-                        correct_index = int(correct_index)
-                    except Exception:
-                        correct_index = 0
-                    if correct_index < 0 or correct_index >= len(options):
-                        correct_index = 0
-                    block['correct_index'] = correct_index
-                # Always set correct to the option at correct_index
-                if options and (correct_index is not None):
-                    block['correct'] = options[correct_index] if correct_index < len(options) else options[0]
-                # DEBUG: Print MCQ block info
-                print(f"[MCQ DEBUG] options={options} correct_index={block.get('correct_index')} correct={block.get('correct')}")
-            # Normalize drag_and_drop
-            if block.get('type') == 'drag_and_drop':
-                if 'pairs' not in block and 'items' in block:
-                    block['pairs'] = [{ 'left': item['name'], 'right': item['match'] } for item in block['items']]
-    # Call normalization on all top-level blocks
-    if lesson_data and 'blocks' in lesson_data:
-        normalize_blocks(lesson_data['blocks'])
+    try:
+        if os.path.exists(local_path):
+            with open(local_path, 'r', encoding='utf-8') as f:
+                lesson_data = json.load(f)
+        else:
+            # Fallback to Firestore if not found locally
+            if db:
+                doc = db.collection('lessons').document(lesson_id).get()
+                if doc.exists:
+                    lesson_data = doc.to_dict()
+        # Ensure lesson_data has an 'id' field for template logic
+        if lesson_data is not None:
+            lesson_data['id'] = lesson_id
+        # --- Normalization logic for Firestore/JSON lesson blocks ---
+        def normalize_blocks(blocks, parent_type=None):
+            if not isinstance(blocks, list):
+                return
+            for block in blocks:
+                # If block is a quiz_section, normalize its inner blocks recursively
+                if block.get('type') == 'quiz_section' and 'content' in block and 'blocks' in block['content']:
+                    normalize_blocks(block['content']['blocks'], parent_type='quiz_section')
+                # If block is a comprehensive_quiz, normalize its nested questions recursively
+                elif block.get('type') == 'comprehensive_quiz' and 'questions' in block and isinstance(block['questions'], list):
+                    normalize_blocks(block['questions'], parent_type='comprehensive_quiz')
+                # --- Unified normalization for fill-in-the-blank (single only) ---
+                # Skip normalization for comprehensive_quiz blocks
+                if block.get('type') in ['fill_in_the_blank', 'fill_in_blank', 'fill_in_the_blanks'] and block.get('type') != 'comprehensive_quiz':
+                    # Always use 'fill_in_the_blank' as the type (single only)
+                    block['type'] = 'fill_in_the_blank'
+                    # Convert any legacy or multi-question fields to a single question
+                    if 'questions' in block and isinstance(block['questions'], list) and block['questions']:
+                        q = block['questions'][0]
+                        block['question'] = q.get('text') or q.get('question', '')
+                        block['answers'] = q.get('answers', [])
+                    elif 'question' in block and 'answers' in block:
+                        # Already single
+                        pass
+                    else:
+                        block['question'] = ''
+                        block['answers'] = []
+                    # Remove questions array if present (but not for comprehensive_quiz parents)
+                    if parent_type != 'comprehensive_quiz':
+                        block.pop('questions', None)
+                # --- End fill-in-the-blank normalization ---
+
+                # --- Unified normalization for drag-and-drop ---
+                if block.get('type') in ['drag_and_drop', 'dragdrop', 'drag_drop']:
+                    block['type'] = 'drag_and_drop'
+                    # Ensure pairs is a list of objects with 'left' and 'right'
+                    if 'pairs' in block and isinstance(block['pairs'], list):
+                        block['pairs'] = [
+                            {'left': p.get('left'), 'right': p.get('right')} for p in block['pairs']
+                        ]
+                # --- End drag-and-drop normalization ---
+        # Call normalization on all top-level blocks
+        if lesson_data and 'blocks' in lesson_data and isinstance(lesson_data['blocks'], list):
+            normalize_blocks(lesson_data['blocks'])
+            # Debug: Log block types
+            current_app.logger.info(f"Lesson {lesson_id} blocks: {[block.get('type', 'unknown') for block in lesson_data['blocks']]}")
+    except Exception as e:
+        current_app.logger.error(f"Error loading or normalizing lesson {lesson_id}: {e}", exc_info=True)
+        return ("Lesson could not be loaded due to an internal error.", 500)
 
     if not lesson_data:
         return ("Lesson not found", 404) if request.args.get('ajax') else render_template('lesson.html', lesson=None, active_page='lessons')
 
     # AJAX: If ?ajax=1, return only the lesson content HTML (not the full page)
     if request.args.get('ajax'):
-        # Render only the lesson content (not the full base.html)
         return render_template('partials/lesson_content.html', lesson=lesson_data)
 
     # Map lesson_id to active_page for sidebar highlighting
@@ -642,3 +641,63 @@ def submit_daily_challenge():
             f'daily_challenge_awards.{today_str}': challenge_id
         })
         return jsonify({'success': False, 'output': f'Passed {passed} of {len(test_cases)} test cases. Try again tomorrow.'})
+
+@routes_bp.route('/api/quiz/submit', methods=['POST'])
+def submit_quiz_result():
+    if db is None:
+        return jsonify({'success': False, 'error': 'Database not initialized'}), 500
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'error': 'Not logged in'}), 401
+    data = request.get_json()
+    question_id = data.get('question_id')
+    is_correct = data.get('correct', False)
+    points = int(data.get('points', 0))
+    currency = int(data.get('currency', 0))
+    answer = data.get('answer')
+    if not question_id:
+        return jsonify({'success': False, 'error': 'No question ID provided'}), 400
+    # Track per-question progress
+    progress_doc_id = f"{user_id}_{question_id}"
+    progress_ref = db.collection('user_progress').document(progress_doc_id)
+    update_data = {
+        'user_id': user_id,
+        'content_id': question_id,
+        'status': 'completed' if is_correct else 'attempted',
+        'score': 1 if is_correct else 0,
+        'last_updated': firestore.SERVER_TIMESTAMP,
+        'answer': answer
+    }
+    if is_correct:
+        update_data['completion_date'] = firestore.SERVER_TIMESTAMP
+    try:
+        progress_ref.set(update_data, merge=True)
+        user_ref = db.collection('users').document(user_id)
+        # Only award points/currency if correct
+        if is_correct:
+            user_ref.update({
+                'currency': firestore.Increment(currency),
+                'points': firestore.Increment(points),
+                'total_points': firestore.Increment(points)
+            })
+            # Update session for instant feedback (legacy and new)
+            user_doc = user_ref.get()
+            if user_doc.exists:
+                user_data = user_doc.to_dict()
+                session['user_currency'] = user_data.get('currency', 0)
+                session['user_points'] = user_data.get('points', 0)
+                # Set both for compatibility
+                session['avatar_url'] = user_data.get('picture', url_for('static', filename='img/default_avatar.png'))
+                session['user_picture'] = user_data.get('picture', url_for('static', filename='img/default_avatar.png'))
+        # Fetch updated user doc for return
+        user_doc = user_ref.get()
+        user_data = user_doc.to_dict() if user_doc.exists else {}
+        return jsonify({
+            'success': True,
+            'points': user_data.get('points', 0),
+            'currency': user_data.get('currency', 0),
+            'total_points': user_data.get('total_points', 0)
+        })
+    except Exception as e:
+        current_app.logger.error(f"Error updating quiz progress for user {user_id}, question {question_id}: {e}", exc_info=True)
+        return jsonify({'success': False, 'error': str(e)}), 500

@@ -1,12 +1,91 @@
-<div class="block-fill-in-blank">
+<div class="block-multiple-choice mcq-image-style mcq-inline p-0-5 bg-white border-1px-solid-e0d0fa rounded-7 box-shadow-mcq overflow-hidden block-fill-in-blank">
   {% if block.instructions %}
+    <div class="mcq-ribbon">
+      <span class="color-4B367C">Fill in the Blank</span>
+      <span class="mcq-badge">1 Byte</span>
+    </div>
     <div class="fill-blank-title">{{ block.instructions | markdown | safe }}</div>
   {% endif %}
-  {% if block.question %}
-    <div class="fill-blank-question">
-      {% set qtext = block.question.replace('1 pt','').replace('_________', '<input type="text" class="fill-blank-input" data-answer="' ~ block.answers|join(',') ~ '">' ) %}
-      {{ qtext | markdown | safe }}
+  {% if block.questions %}
+    {% for q in block.questions %}
+      <div class="fill-blank-question mcq-question mb-0-2 font-size-1-08em font-weight-600 color-4B367C bg-none">
+        {% set qtext = (q.text|default(q.question|default(''))) %}
+        {% if '__________' in qtext %}
+          {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (q.answers|join(',') if q.answers is defined else '') ~ '" size="10">' %}
+          {{ qtext.replace('__________', blank_input, 1)|safe }}
+        {% elif '_________' in qtext %}
+          {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (q.answers|join(',') if q.answers is defined else '') ~ '" size="9">' %}
+          {{ qtext.replace('_________', blank_input, 1)|safe }}
+        {% elif '________' in qtext %}
+          {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (q.answers|join(',') if q.answers is defined else '') ~ '" size="8">' %}
+          {{ qtext.replace('________', blank_input, 1)|safe }}
+        {% elif '_______' in qtext %}
+          {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (q.answers|join(',') if q.answers is defined else '') ~ '" size="7">' %}
+          {{ qtext.replace('_______', blank_input, 1)|safe }}
+        {% elif '______' in qtext %}
+          {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (q.answers|join(',') if q.answers is defined else '') ~ '" size="6">' %}
+          {{ qtext.replace('______', blank_input, 1)|safe }}
+        {% elif '_____' in qtext %}
+          {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (q.answers|join(',') if q.answers is defined else '') ~ '" size="5">' %}
+          {{ qtext.replace('_____', blank_input, 1)|safe }}
+        {% elif '____' in qtext %}
+          {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (q.answers|join(',') if q.answers is defined else '') ~ '" size="4">' %}
+          {{ qtext.replace('____', blank_input, 1)|safe }}
+        {% elif '___' in qtext %}
+          {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (q.answers|join(',') if q.answers is defined else '') ~ '" size="3">' %}
+          {{ qtext.replace('___', blank_input, 1)|safe }}
+        {% elif '__' in qtext %}
+          {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (q.answers|join(',') if q.answers is defined else '') ~ '" size="2">' %}
+          {{ qtext.replace('__', blank_input, 1)|safe }}
+        {% else %}
+          {{ qtext|safe }}
+        {% endif %}
+      </div>
+      <div class="fill-blank-feedback quiz-feedback display-none"></div>
+      <button class="btn btn-primary fill-blank-submit-btn margin-top-1em">Submit</button>
+    {% endfor %}
+  {% elif block.question or block.text %}
+    <div class="fill-blank-question mcq-question mb-0-2 font-size-1-08em font-weight-600 color-4B367C bg-none">
+      {% set qtext = block.question|default(block.text|default('')) %}
+      {% if '__________' in qtext %}
+        {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (block.answers|join(',') if block.answers is defined else '') ~ '" size="10">' %}
+        {{ qtext.replace('__________', blank_input, 1)|safe }}
+      {% elif '_________' in qtext %}
+        {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (block.answers|join(',') if block.answers is defined else '') ~ '" size="9">' %}
+        {{ qtext.replace('_________', blank_input, 1)|safe }}
+      {% elif '________' in qtext %}
+        {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (block.answers|join(',') if block.answers is defined else '') ~ '" size="8">' %}
+        {{ qtext.replace('________', blank_input, 1)|safe }}
+      {% elif '_______' in qtext %}
+        {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (block.answers|join(',') if block.answers is defined else '') ~ '" size="7">' %}
+        {{ qtext.replace('_______', blank_input, 1)|safe }}
+      {% elif '______' in qtext %}
+        {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (block.answers|join(',') if block.answers is defined else '') ~ '" size="6">' %}
+        {{ qtext.replace('______', blank_input, 1)|safe }}
+      {% elif '_____' in qtext %}
+        {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (block.answers|join(',') if block.answers is defined else '') ~ '" size="5">' %}
+        {{ qtext.replace('_____', blank_input, 1)|safe }}
+      {% elif '____' in qtext %}
+        {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (block.answers|join(',') if block.answers is defined else '') ~ '" size="4">' %}
+        {{ qtext.replace('____', blank_input, 1)|safe }}
+      {% elif '___' in qtext %}
+        {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (block.answers|join(',') if block.answers is defined else '') ~ '" size="3">' %}
+        {{ qtext.replace('___', blank_input, 1)|safe }}
+      {% elif '__' in qtext %}
+        {% set blank_input = '<input type="text" class="fill-blank-input" data-answer="' ~ (block.answers|join(',') if block.answers is defined else '') ~ '" size="2">' %}
+        {{ qtext.replace('__', blank_input, 1)|safe }}
+      {% else %}
+        {{ qtext|safe }}
+      {% endif %}
     </div>
+    <div class="fill-blank-feedback quiz-feedback display-none"></div>
+    <button class="btn btn-primary fill-blank-submit-btn margin-top-1em">Submit</button>
+  {% else %}
+    {# Always render block.text if present, even if not a question or blank #}
+    {% if block.text %}
+      <div class="fill-blank-question mcq-question mb-0-2 font-size-1-08em font-weight-600 color-4B367C bg-none">
+        {{ block.text|safe }}
+      </div>
+    {% endif %}
   {% endif %}
-  <div class="fill-blank-feedback quiz-feedback"></div>
 </div>

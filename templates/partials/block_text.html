@@ -1,3 +1,4 @@
 <div class="block-text">
-  {{ block.content | markdown | safe }}
+  {# Render block.content if present, else block.text. Both are passed through the markdown filter for consistency. #}
+  {{ (block.content or block.text) | markdown | safe }}
 </div>

@@ -1,22 +1,28 @@
-<div class="drag-drop-question">
-  <div class="drag-drop-instructions">{{ block.instructions }}</div>
-  <div class="drag-drop-container">
-    <div class="drag-items">
-      {% for pair in block.pairs %}
-        <div class="drag-item" draggable="true" data-id="{{ loop.index0 }}">{{ pair.left }}</div>
-      {% endfor %}
-    </div>
-    <div class="drop-zones">
-      {% for pair in block.pairs %}
-        <div class="drop-zone" data-id="{{ loop.index0 }}">
-          <span class="drop-label">{{ pair.right }}</span>
-          <span class="drop-target"></span>
-        </div>
-      {% endfor %}
-    </div>
+<div class="block-multiple-choice mcq-image-style mcq-inline p-0-5 bg-white border-1px-solid-e0d0fa rounded-7 box-shadow-mcq overflow-hidden block-drag-and-drop" data-block-id="{{ block.id }}">
+  <div class="drag-drop-instructions">
+    {{ block.instructions|default('Match the items:') }}
   </div>
-  <div class="drag-drop-actions">
-    <button class="check-drag-drop-btn" type="button">Check Matches</button>
+
+  <!-- Bank for draggable items -->
+  <div class="drag-item-bank">
+    {% for pair in block.pairs|shuffle %}
+      <div class="drag-item" draggable="true" data-id="{{ pair.left }}">{{ pair.left }}</div>
+    {% endfor %}
   </div>
-  <div class="drag-drop-feedback quiz-feedback"></div>
+
+  <!-- Matching pairs -->
+  <div class="drag-drop-matches">
+    {% for pair in block.pairs %}
+    <div class="drag-drop-match">
+      <div class="drop-zone" data-correct-id="{{ pair.left }}"></div>
+      <p class="drop-label">{{ pair.right }}</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="dnd-controls">
+      <button class="btn btn-primary check-drag-drop-btn">Check Answer</button>
+      <button class="btn dnd-reset-button" type="button">Reset</button>
+  </div>
+  <div class="drag-drop-feedback quiz-feedback" style="display: none;"></div>
 </div>

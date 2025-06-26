@@ -10,32 +10,23 @@
   <div class="quiz-questions-list">
     {% set shuffled_blocks = block.content.blocks %}
     {% for quiz_block in shuffled_blocks %}
-      <div class="quiz-card" data-step="{{ loop.index0 }} d-none">
+      <div class="quiz-card-wrapper d-none">
         <div class="quiz-header">
           <span class="quiz-progress">Question {{ loop.index }} of {{ shuffled_blocks|length }}</span>
         </div>
         <div class="quiz-question-row">
-          {% if quiz_block.type == 'multiple_choice_quiz' %}
+          {% if quiz_block.type == 'multiple_choice' %}
             {% set block = quiz_block %}
             {% include 'partials/block_multiple_choice.html' %}
-            <button class="quiz-save-exit-btn">Save and Exit</button>
-          {% elif quiz_block.type == 'fill_in_the_blanks' %}
-            <div class="block-fill-in-blank-minimal">
-              <div class="fill-blank-question">
-                {% if 'question' in quiz_block %}
-                  {{ quiz_block.question | markdown | safe }}
-                {% elif 'text' in quiz_block %}
-                  {{ quiz_block.text | markdown | safe }}
-                {% else %}
-                  [No question text found]
-                {% endif %}
-              </div>
-              <input type="text" class="fill-blank-input-minimal width-100" autocomplete="off" data-answers="{{ quiz_block.answers|join(',') if 'answers' in quiz_block else '' }}" />
-              <button class="fill-blank-next-btn mt-8">Next</button>
-            </div>
+          {% elif quiz_block.type == 'fill_in_the_blank' %}
+            {% set block = quiz_block %}
+            {% include 'partials/block_fill_in_blank.html' %}
           {% elif quiz_block.type == 'drag_and_drop' %}
             {% set block = quiz_block %}
-            {% include 'partials/block_drag_and_drop_minimal.html' %}
+            {% include 'partials/block_drag_and_drop.html' %}
+          {% elif quiz_block.type == 'debug_challenge' %}
+            {% set block = quiz_block %}
+            {% include 'partials/block_debug_challenge.html' %}
           {% else %}
             <p><em>Unknown quiz block type: {{ quiz_block.type }}</em></p>
           {% endif %}
@@ -57,7 +48,7 @@
       </thead>
       <tbody></tbody>
     </table>
-    <button class="quiz-retry-btn">Retry Quiz</button>
+    <button class="btn quiz-retry-btn">Retry Quiz</button>
   </div>
 </div>
-<script src="/static/js/quiz_minimal.js"></script>
+<script src="/static/js/quiz_summary_block.js"></script>

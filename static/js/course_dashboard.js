@@ -1,6 +1,11 @@
 // course_dashboard.js
 // JS for Course Dashboard: leaderboard confetti, fake data, and UI interactivity
 
+// Remove ES6 import, use global import for quiz_core.js
+// import { handleQuizSubmit } from './quiz_core.js';
+// Instead, ensure quiz_core.js is loaded via <script> in dashboard_course.html before course_dashboard.js
+// All quiz_core.js functions are now available globally
+
 document.addEventListener('DOMContentLoaded', function() {
   // --- Announcements (Demo, replace with real API) ---
   const announcementText = document.getElementById('dashboard-announcement-text');
@@ -69,98 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(() => {});
 
-  // --- Daily Challenge (Demo, replace with real API) ---
-  fetch('/api/daily_challenge/activities')
-    .then(res => res.json())
-    .then(challenge => {
-      const ideDiv = document.getElementById('daily-challenge-ide');
-      if (ideDiv && window.ace) {
-        const editor = ace.edit(ideDiv, {
-          mode: 'ace/mode/python',
-          theme: 'ace/theme/monokai',
-          value: challenge.starter || '# Write your solution here\n',
-          fontSize: '1.08em',
-          minLines: 6,
-          maxLines: 18
-        });
-        ideDiv.style.height = '180px';
-        editor.setOptions({
-          showLineNumbers: true,
-          showGutter: true,
-          displayIndentGuides: false
-        });
-        window.dailyChallengeEditor = editor;
-      }
-    })
-    .catch(() => {});
-
-  // --- Progress (Demo, replace with real API) ---
-  fetch('/api/progress')
-    .then(res => res.json())
-    .then(progress => {
-      const progressBar = document.getElementById('progress-bar-fill');
-      const progressLabel = document.getElementById('progress-bar-label');
-      if (progressBar && progressLabel) {
-        progressBar.style.width = progress.percent + '%';
-        progressLabel.textContent = progress.percent + '% Complete';
-      }
-      // Optionally update progress-list here
-    })
-    .catch(() => {});
-
-  // --- Schedule (Demo, replace with real API) ---
-  fetch('/api/schedule')
-    .then(res => res.json())
-    .then(schedule => {
-      const scheduleList = document.querySelector('.schedule-list');
-      if (scheduleList) {
-        scheduleList.innerHTML = '';
-        schedule.forEach(item => {
-          const li = document.createElement('li');
-          li.innerHTML = `<span class="schedule-date">${item.day}</span> <span class="schedule-topic">${item.topic}</span>`;
-          scheduleList.appendChild(li);
-        });
-      }
-    })
-    .catch(() => {});
-
-  // --- Daily Challenge IDE Placeholder ---
-  const ideDiv = document.getElementById('daily-challenge-ide');
-  if (ideDiv && window.ace) {
-    const editor = ace.edit(ideDiv, {
-      mode: 'ace/mode/python',
-      theme: 'ace/theme/monokai',
-      value: '# Write your solution here\n',
-      fontSize: '1.08em',
-      minLines: 6,
-      maxLines: 18
-    });
-    ideDiv.style.height = '180px';
-    editor.setOptions({
-      showLineNumbers: true,
-      showGutter: true,
-      displayIndentGuides: false
-    });
-    window.dailyChallengeEditor = editor;
-  }
-
-  // --- Submit Challenge Button ---
-  const submitBtn = document.getElementById('submit-challenge-btn');
-  const feedbackDiv = document.getElementById('challenge-feedback');
-  if (submitBtn && feedbackDiv) {
-    submitBtn.addEventListener('click', function() {
-      feedbackDiv.textContent = '✅ Solution submitted! (Demo)';
-      if (window.confetti) {
-        window.confetti({
-          particleCount: 80,
-          spread: 60,
-          origin: { y: 0.7 }
-        });
-      }
-    });
-  }
-
-  // --- Daily Challenge Activities (New) ---
+  // --- Daily Challenge Activities (Unified, new logic only) ---
   let dailyChallengeActivities = [];
   let currentDailyChallengeIdx = 0;
 
@@ -170,42 +84,108 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!activity || !container) return;
     let html = `<div class="challenge-title">${activity.title || ''}</div>`;
     html += `<div class="challenge-prompt">${activity.prompt || activity.question || activity.instructions || ''}</div>`;
-    // Navigation arrows + temp test button
-    html += `<div class="activity-nav"><button id="activity-prev">&#8592;</button> <span>${idx+1} / ${dailyChallengeActivities.length}</span> <button id="activity-next">&#8594;</button> <button id="test-challenge-btn">Test Next Challenge</button></div>`;
+    html += `<div class="activity-nav"><button id="activity-prev" aria-label="Previous Activity">&#8592;</button> <span>${idx+1} / ${dailyChallengeActivities.length}</span> <button id="activity-next" aria-label="Next Activity">&#8594;</button> <button id="test-challenge-btn">Test Next Challenge</button></div>`;
     // Render by type
     if (activity.type === 'code' || activity.type === 'timed' || activity.type === 'debug') {
       html += `<div id="activity-ace-editor" style="height:180px;width:100%;margin-bottom:1em;"></div>`;
       html += `<button class="btn-primary" id="run-btn">Run</button>`;
-      html += `<div id="activity-feedback" style="margin-top:1em;"></div>`;
-    } else if (activity.type === 'quiz') {
-      html += `<div class="quiz-question">${activity.question}</div>`;
-      html += activity.options.map((opt, i) => `<button class="btn-primary quiz-opt" data-idx="${i}">${opt}</button>`).join('');
-    } else if (activity.type === 'fill_in_blank') {
+      html += `<div id="activity-feedback" style="margin-top:1em;" aria-live="polite"></div>`;
+    } else if (activity.type === 'fill_in_the_blank') {
       html += `<div class="fill-blank-question">${activity.question}</div>`;
-      html += `<input type="text" id="fill-blank-input" style="width:100%" />`;
+      html += `<input type="text" id="fill-blank-input" style="width:100%" aria-label="Fill in the blank" />`;
       html += `<button class="btn-primary" id="check-fill-blank">Check</button>`;
+      html += `<div class="quiz-feedback display-none" id="quiz-feedback" aria-live="polite"></div>`;
     } else if (activity.type === 'drag_and_drop') {
       html += `<div class="drag-drop-instructions">${activity.instructions}</div>`;
       html += '<ul>' + activity.pairs.map(pair => `<li>${pair.left} &rarr; ${pair.right}</li>`).join('') + '</ul>';
+      html += `<button class="btn-primary" id="check-drag-drop">Check</button>`;
+      html += `<div class="quiz-feedback display-none" id="quiz-feedback" aria-live="polite"></div>`;
     }
     container.innerHTML = html;
     // Navigation events
-    document.getElementById('activity-prev').onclick = () => {
+    const prevBtn = document.getElementById('activity-prev');
+    const nextBtn = document.getElementById('activity-next');
+    const testBtn = document.getElementById('test-challenge-btn');
+    if (prevBtn) prevBtn.onclick = () => {
       if (dailyChallengeActivities.length > 0) {
         currentDailyChallengeIdx = (currentDailyChallengeIdx - 1 + dailyChallengeActivities.length) % dailyChallengeActivities.length;
         renderDailyChallengeActivity(currentDailyChallengeIdx);
       }
     };
-    document.getElementById('activity-next').onclick = () => {
+    if (nextBtn) nextBtn.onclick = () => {
       if (dailyChallengeActivities.length > 0) {
         currentDailyChallengeIdx = (currentDailyChallengeIdx + 1) % dailyChallengeActivities.length;
         renderDailyChallengeActivity(currentDailyChallengeIdx);
       }
     };
-    document.getElementById('test-challenge-btn').onclick = () => {
+    if (testBtn) testBtn.onclick = () => {
       currentDailyChallengeIdx = (currentDailyChallengeIdx + 1) % dailyChallengeActivities.length;
       renderDailyChallengeActivity(currentDailyChallengeIdx);
     };
+    // MCQ logic
+    if (activity.type === 'quiz' || activity.type === 'mcq' || activity.type === 'multiple_choice_quiz') {
+      const feedbackDiv = document.getElementById('quiz-feedback');
+      const quizBtns = document.querySelectorAll('.quiz-opt');
+      quizBtns.forEach(btn => {
+        btn.onclick = async function() {
+          // Deselect all, select this
+          quizBtns.forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-pressed', 'false'); });
+          btn.classList.add('selected');
+          btn.setAttribute('aria-pressed', 'true');
+          if (feedbackDiv) feedbackDiv.classList.add('display-none');
+          const selectedIdx = parseInt(btn.getAttribute('data-idx'));
+          await handleQuizSubmit({
+            questionId: activity.id,
+            type: 'multiple_choice_quiz',
+            userInput: selectedIdx,
+            correctAnswer: activity.correct_index,
+            points: activity.points || 1,
+            currency: activity.tokens || 1,
+            feedbackElement: feedbackDiv,
+            mode: 'inline'
+          });
+        };
+      });
+    }
+    // Only handle unified fill_in_the_blanks and drag_and_drop types
+    if (activity.type === 'fill_in_the_blank') {
+      const feedbackDiv = document.getElementById('quiz-feedback');
+      const checkBtn = document.getElementById('check-fill-blank');
+      if (checkBtn) checkBtn.onclick = async function() {
+        if (feedbackDiv) feedbackDiv.classList.add('display-none');
+        const userInput = document.getElementById('fill-blank-input')?.value;
+        await handleQuizSubmit({
+          questionId: activity.id,
+          type: 'fill_in_the_blank',
+          userInput,
+          correctAnswer: activity.answers,
+          points: activity.points || 1,
+          currency: activity.tokens || 1,
+          feedbackElement: feedbackDiv,
+          mode: 'inline'
+        });
+      };
+    }
+    // Drag and drop logic (placeholder, real UI needed)
+    if (activity.type === 'drag_and_drop') {
+      const feedbackDiv = document.getElementById('quiz-feedback');
+      const checkBtn = document.getElementById('check-drag-drop');
+      if (checkBtn) checkBtn.onclick = async function() {
+        if (feedbackDiv) feedbackDiv.classList.add('display-none');
+        // For demo, assume userOrder is correctOrder
+        const userOrder = activity.pairs.map((_, i) => i); // Replace with real user order
+        await handleQuizSubmit({
+          questionId: activity.id,
+          type: 'drag_and_drop',
+          userInput: userOrder,
+          correctAnswer: activity.pairs.map((_, i) => i),
+          points: activity.points || 1,
+          currency: activity.tokens || 1,
+          feedbackElement: feedbackDiv,
+          mode: 'inline'
+        });
+      };
+    }
     // Ace Editor for code/debug/timed
     if ((activity.type === 'code' || activity.type === 'timed' || activity.type === 'debug') && window.ace) {
       const aceDiv = document.getElementById('activity-ace-editor');
@@ -257,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Fetch daily challenge activities once and render
   fetch('/api/daily_challenge/activities')
     .then(res => res.json())
     .then(data => {
@@ -272,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function fetchNotifications() {
     fetch('/api/notifications')
       .then(res => res.json())
-      .then(data => {
+      .then data => {
         const notifications = data.notifications || [];
         const badge = document.getElementById('notificationBadge');
         const list = document.getElementById('notificationList');
@@ -300,94 +281,6 @@ document.addEventListener('DOMContentLoaded', function() {
       setTimeout(fetchNotifications, 300); // slight delay to simulate update
     }
   });
-
-  // --- Daily Challenge Block ---
-  fetch('/api/daily_challenge/activities')
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById('daily-challenge-content');
-      if (!container) return;
-      container.innerHTML = '';
-      if (!data.success || !data.activities || data.activities.length === 0) {
-        container.innerHTML = '<div class="accent-red">No daily challenge available.</div>';
-        return;
-      }
-      // For demo, just use the first code challenge
-      const challenge = data.activities.find(a => a.type === 'code') || data.activities[0];
-      if (!challenge) {
-        container.innerHTML = '<div class="accent-red">No code challenge found.</div>';
-        return;
-      }
-      // Render challenge
-      let html = `<div class="daily-challenge-title">${challenge.title}</div>`;
-      html += `<div class="daily-challenge-prompt">${challenge.prompt || challenge.question || ''}</div>`;
-      if (challenge.type === 'code') {
-        html += `
-          <div id="daily-ace-editor" style="height:200px;width:100%;margin-bottom:1em;"></div>
-          <button id="run-daily-challenge" class="btn-primary">Run</button>
-          <div id="daily-challenge-feedback" style="margin-top:1em;"></div>
-        `;
-      }
-      container.innerHTML = html;
-      if (challenge.type === 'code') {
-        // Wait for Ace to be loaded and the DOM to be ready
-        function initAceEditor() {
-          if (window.ace && document.getElementById('daily-ace-editor')) {
-            const editor = ace.edit('daily-ace-editor');
-            editor.setTheme('ace/theme/monokai');
-            editor.session.setMode('ace/mode/python');
-            editor.setValue(challenge.starter_code || '# Write your code here\n', -1);
-            // Lock logic
-            let locked = false;
-            let devOverride = window.location.search.includes('dev=1');
-            const lockKey = `daily_challenge_locked_${challenge.id}`;
-            if (!devOverride && localStorage.getItem(lockKey) === 'locked') {
-              locked = true;
-            }
-            const runBtn = document.getElementById('run-daily-challenge');
-            const feedbackDiv = document.getElementById('daily-challenge-feedback');
-            if (locked) {
-              runBtn.disabled = true;
-              feedbackDiv.innerHTML = '<span class="accent-red">You have already attempted today. Try again after 8 AM tomorrow.</span>';
-            }
-            runBtn.addEventListener('click', function() {
-              if (locked) return;
-              runBtn.disabled = true;
-              feedbackDiv.innerHTML = 'Running...';
-              fetch('/api/daily_challenge/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  code: editor.getValue(),
-                  challenge_id: challenge.id,
-                  dev: devOverride ? 1 : 0
-                })
-              })
-              .then(res => res.json())
-              .then(result => {
-                if (result.success) {
-                  feedbackDiv.innerHTML = `<span class="accent-green">${result.output || 'Correct!'}<br>+${result.points || 0} points, +${result.tokens || 0} tokens</span>`;
-                  if (!devOverride) localStorage.setItem(lockKey, 'locked');
-                  locked = true;
-                } else {
-                  feedbackDiv.innerHTML = `<span class="accent-red">${result.output || 'Incorrect.'}</span>`;
-                  if (!devOverride) localStorage.setItem(lockKey, 'locked');
-                  locked = true;
-                }
-                runBtn.disabled = true;
-              })
-              .catch(() => {
-                feedbackDiv.innerHTML = '<span class="accent-red">Error running code.</span>';
-                runBtn.disabled = false;
-              });
-            });
-          } else {
-            setTimeout(initAceEditor, 100); // Wait and try again
-          }
-        }
-        initAceEditor();
-      }
-    });
 
   // --- Debug Info (Dev only) ---
   if (window.location.search.includes('debug')) {

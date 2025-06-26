@@ -1,33 +1,25 @@
-<div class="block-multiple-choice mcq-image-style mcq-inline p-0-5 bg-white border-1px-solid-e0d0fa rounded-7 box-shadow-mcq overflow-hidden" data-block-id="{{ block.id }}" data-topic-id="{{ block.topic_id or block.topic|default('unknown_topic') }}">
-  <!-- College-style ribbon with subtle look -->
-  <div class="mcq-ribbon">
-    <span class="color-4B367C">Question 1 of 1</span>
-    <span class="mcq-badge">1 Byte</span>
-  </div>
-  <div class="flex justify-content-flex-end mb-1">
-    <button class="mcq-refresh-btn btn-refresh">Refresh Quiz</button>
-  </div>
-  {% if block.question %}
+{% set q = (block.questions[0] if block.questions and block.questions|length > 0 else block if (block.question is defined or block.options is defined) else None) %}
+{% if q %}
+  <div class="block-multiple-choice{% if minimal %}-minimal{% endif %} mcq-image-style mcq-inline p-0-5 bg-white border-1px-solid-e0d0fa rounded-7 box-shadow-mcq overflow-hidden" data-block-id="{{ block.id }}" data-topic-id="{{ block.topic_id or block.topic|default('unknown_topic') }}">
+    <div class="mcq-ribbon">
+      <span class="color-4B367C">Question 1 of 1</span>
+      <span class="mcq-badge">1 Byte</span>
+    </div>
+    <div class="flex justify-content-flex-end mb-1">
+      <button class="btn btn-refresh mcq-refresh-btn">Refresh Quiz</button>
+    </div>
     <div class="mcq-question-row mb-0-2">
-      <div class="mcq-question mb-0-2 font-size-1-08em font-weight-600 color-4B367C bg-none">{{ block.question | replace('1 pt','') | replace('.', '') | markdown | safe }}</div>
-      <div class="mcq-options-grid" data-correct-idx="{{ block.correct_index|int }}">
-        {% for opt in block.options %}
-          <button type="button" class="mcq-option-btn mcq-modern-btn">{{ opt | markdown | safe }}</button>
+      <div class="mcq-question mb-0-2 font-size-1-08em font-weight-600 color-4B367C bg-none">{{ q.question|default('No question')|replace('1 pt','')|replace('.', '')|markdown|safe }}</div>
+      <div class="mcq-options-grid grid-2-cols gap-16 mb-8" data-correct-idx="{{ q.correct_index|default(0) }}">
+        {% for opt in q.options|default([]) %}
+          <button type="button" class="btn mcq-option-btn{% if minimal %}-minimal{% endif %}{% if loop.index0 == q.correct_index %} correct-answer{% endif %}" data-option-idx="{{ loop.index0 }}">{{ opt|markdown|safe }}</button>
+        {% else %}
+          <span class="color-red">No options provided.</span>
         {% endfor %}
       </div>
     </div>
-  {% elif block.questions %}
-    {% set q = block.questions[0] %}
-    <div class="mcq-question-row mb-0-2">
-      <div class="mcq-question mb-0-2 font-size-1-08em font-weight-600 color-4B367C bg-none">{{ q.question | replace('1 pt','') | replace('.', '') | markdown | safe }}</div>
-      <div class="mcq-options-grid" data-correct-idx="{{ q.correct_index|int }}">
-        {% for opt in q.options %}
-          <button type="button" class="mcq-option-btn mcq-modern-btn">{{ opt | markdown | safe }}</button>
-        {% endfor %}
-      </div>
-    </div>
-  {% else %}
-    <div class="mcq-question-row mb-0-2 accent-red">No question data found for this block</div>
-  {% endif %}
-  <div class="mcq-feedback feedback mt-0-3 d-none"></div>
-</div>
+    <div class="mcq-feedback d-none"></div>
+  </div>
+{% else %}
+  <div class="block-multiple-choice" style="color:#ff4e6a;">ERROR: No question data found for this block. block.questions = {{ block.questions }}</div>
+{% endif %}
