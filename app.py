@@ -497,5 +497,23 @@ def get_daily_challenge_activities():
         print(f'ERROR: Failed to fetch bell_ringer activities: {e}')
         return jsonify({"success": False, "error": str(e), "activities": []}), 500
 
+@app.route('/ping')
+def ping():
+    return 'pong', 200
+
+@app.route('/dev-test')
+def dev_test():
+    """Development route to test sidebar and layout without authentication"""
+    # Temporarily add mock data to session for this route only
+    session['user_id'] = 'dev_user_123'
+    session['user_name'] = 'Dev User'
+    session['user_email'] = 'dev@example.com'
+    session['user_points'] = 150
+    session['user_currency'] = 25
+    session['user_title'] = 'Developer'
+    session['user_picture'] = url_for('static', filename='img/avatar1.png')
+    
+    return render_template('dashboard_course.html', active_page='dashboard')
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=PORT)

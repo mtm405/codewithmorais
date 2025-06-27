@@ -13,8 +13,18 @@ export function initHeaderClock() {
     const ampm = h >= 12 ? "PM" : "AM";
     h = h % 12;
     h = h ? h : 12; // the hour '0' should be '12'
-    // Use a span for AM/PM for CSS styling
-    clockEl.innerHTML = `${h}:${m}:${s} <span class="ampm">${ampm}</span>`;
+    
+    // Safer DOM manipulation
+    clockEl.textContent = `${h}:${m}:${s} `;
+    
+    // Create or update AM/PM span
+    let ampmSpan = clockEl.querySelector('.ampm');
+    if (!ampmSpan) {
+      ampmSpan = document.createElement('span');
+      ampmSpan.className = 'ampm';
+      clockEl.appendChild(ampmSpan);
+    }
+    ampmSpan.textContent = ampm;
   }
 
   updateClock();

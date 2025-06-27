@@ -1,0 +1,327 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Quiz Block Schema",
+  "description": "Standardized schema for all quiz types in the Python learning platform",
+  "type": "object",
+  "required": ["id", "type"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the quiz block",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["multiple_choice", "fill_in_the_blank", "drag_and_drop", "comprehensive_quiz", "quiz_section", "code", "debug"],
+      "description": "Type of quiz block"
+    },
+    "title": {
+      "type": "string",
+      "description": "Display title for the quiz"
+    },
+    "instructions": {
+      "type": "string",
+      "description": "Instructions for the student"
+    },
+    "points": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 1,
+      "description": "Points awarded for correct answer"
+    },
+    "hint": {
+      "type": "string",
+      "description": "Optional hint text"
+    },
+    "hint_cost": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Cost in coins to unlock hint"
+    },
+    "explanation": {
+      "type": "string",
+      "description": "Explanation shown after answering"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "type": { "const": "multiple_choice" } }
+      },
+      "then": {
+        "required": ["question", "options", "correct_index"],
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "The question text (supports markdown)"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "maxItems": 6,
+            "description": "Answer options (supports markdown)"
+          },
+          "correct_index": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Index of correct answer (0-based)"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "fill_in_the_blank" } }
+      },
+      "then": {
+        "required": ["question", "answers"],
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "Question with blank marked as _____ or <em>_</em> (supports markdown)"
+          },
+          "answers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Acceptable answers (case-insensitive matching)"
+          },
+          "case_sensitive": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether answers should be case-sensitive"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "drag_and_drop" } }
+      },
+      "then": {
+        "required": ["stems", "options", "correct_mapping"],
+        "properties": {
+          "stems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Items to be dragged (left side)"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Drop zones/categories (right side)"
+          },
+          "correct_mapping": {
+            "type": "object",
+            "patternProperties": {
+              ".*": {
+                "type": "string"
+              }
+            },
+            "description": "Mapping of stems to correct options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "comprehensive_quiz" } }
+      },
+      "then": {
+        "required": ["questions"],
+        "properties": {
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#"
+            },
+            "minItems": 1,
+            "description": "Array of quiz questions"
+          },
+          "time_limit": {
+            "type": "integer",
+            "minimum": 60,
+            "description": "Time limit in seconds"
+          },
+          "passing_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Percentage required to pass"
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "description": "Maximum number of attempts allowed"
+          },
+          "show_detailed_results": {
+            "type": "boolean",
+            "default": false,
+            "description": "Show breakdown of each question result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "quiz_section" } }
+      },
+      "then": {
+        "required": ["questions"],
+        "properties": {
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#"
+            },
+            "minItems": 1,
+            "description": "Array of quiz questions in this section"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "code" } }
+      },
+      "then": {
+        "required": ["question", "starter_code", "expected_output"],
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "Coding challenge description"
+          },
+          "starter_code": {
+            "type": "string",
+            "description": "Initial code provided to student"
+          },
+          "expected_output": {
+            "type": "string",
+            "description": "Expected program output"
+          },
+          "test_cases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "input": { "type": "string" },
+                "expected": { "type": "string" }
+              }
+            },
+            "description": "Test cases for validation"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "debug" } }
+      },
+      "then": {
+        "required": ["question", "buggy_code", "expected_output"],
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "Debug challenge description"
+          },
+          "buggy_code": {
+            "type": "string",
+            "description": "Code with bugs that student must fix"
+          },
+          "expected_output": {
+            "type": "string",
+            "description": "Expected output after fixing bugs"
+          },
+          "bug_locations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "line": { "type": "integer" },
+                "description": { "type": "string" }
+              }
+            },
+            "description": "Hints about bug locations (optional)"
+          }
+        }
+      }
+    }
+  ],
+  
+  "examples": [
+    {
+      "id": "mcq_python_basics_1",
+      "type": "multiple_choice",
+      "title": "Python Variable Types",
+      "instructions": "Choose the correct answer.",
+      "question": "Which of the following is a valid variable name in Python?",
+      "options": ["2variable", "_my_var", "my-var", "class"],
+      "correct_index": 1,
+      "points": 1,
+      "hint": "Variable names cannot start with numbers or use hyphens",
+      "hint_cost": 5,
+      "explanation": "`_my_var` is valid because it starts with an underscore and contains only letters, numbers, and underscores."
+    },
+    {
+      "id": "fitb_python_function",
+      "type": "fill_in_the_blank",
+      "title": "Python Function Definition",
+      "question": "To define a function in Python, you use the **___** keyword.",
+      "answers": ["def", "define"],
+      "points": 1,
+      "explanation": "The `def` keyword is used to define functions in Python."
+    },
+    {
+      "id": "dnd_data_types",
+      "type": "drag_and_drop",
+      "title": "Python Data Types",
+      "instructions": "Match each value to its correct data type.",
+      "stems": ["42", "'hello'", "True", "[1, 2, 3]"],
+      "options": ["int", "str", "bool", "list"],
+      "correct_mapping": {
+        "42": "int",
+        "'hello'": "str", 
+        "True": "bool",
+        "[1, 2, 3]": "list"
+      },
+      "points": 2
+    },
+    {
+      "id": "comprehensive_python_basics",
+      "type": "comprehensive_quiz",
+      "title": "Python Basics Assessment",
+      "instructions": "Complete this quiz to test your Python knowledge.",
+      "time_limit": 600,
+      "passing_score": 70,
+      "max_attempts": 2,
+      "show_detailed_results": true,
+      "questions": [
+        {
+          "id": "mcq_1",
+          "type": "multiple_choice",
+          "question": "What is the output of `print(2 + 3 * 4)`?",
+          "options": ["14", "20", "9", "24"],
+          "correct_index": 0,
+          "points": 1
+        },
+        {
+          "id": "fitb_1", 
+          "type": "fill_in_the_blank",
+          "question": "Python is a **___** typed language.",
+          "answers": ["dynamically", "dynamic"],
+          "points": 1
+        }
+      ]
+    }
+  ]
+}

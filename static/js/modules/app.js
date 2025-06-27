@@ -1,8 +1,8 @@
 // modules/app.js
 // Main entry point for all modules
 
-import { initHeaderClock } from './header/clock.js';
-import initHeaderInteractions from './header/interactions.js';
+import { initHeaderClock } from "./header/clock.js";
+import initHeaderInteractions from "./header/interactions.js";
 
 // List of all module initializers
 const initializers = [
@@ -23,15 +23,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Flickering zero effect for counter (e.g., points or timer)
-document.addEventListener('DOMContentLoaded', () => {
-  const counter = document.getElementById('counter'); // Change to your element's ID if needed
+document.addEventListener("DOMContentLoaded", () => {
+  const counter = document.getElementById("counter"); // Change to your element's ID if needed
   if (counter) {
-    const actualValue = counter.getAttribute('data-value') || counter.textContent;
-    counter.textContent = '0';
-    counter.classList.add('flicker-zero');
+    const actualValue = counter.getAttribute("data-value") || counter.textContent;
+    counter.textContent = "0";
+    counter.classList.add("flicker-zero");
     setTimeout(() => {
       counter.textContent = actualValue;
-      counter.classList.remove('flicker-zero');
+      counter.classList.remove("flicker-zero");
     }, 600); // Duration matches the animation
   }
 });
@@ -43,15 +43,15 @@ function handleLogout() {
     window.firebase.auth().signOut().catch(() => {});
   }
   // Call backend to clear session
-  fetch('/logout', { method: 'POST', credentials: 'same-origin' })
+  fetch("/logout", { method: "POST", credentials: "same-origin" })
     .finally(() => {
-      window.location.href = '/'; // Redirect to home or login
+      window.location.href = "/"; // Redirect to home or login
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const logoutSidebar = document.getElementById('logout-btn-sidebar');
-  const logoutHeader = document.getElementById('logout-btn-header');
-  if (logoutSidebar) logoutSidebar.addEventListener('click', handleLogout);
-  if (logoutHeader) logoutHeader.addEventListener('click', handleLogout);
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutSidebar = document.getElementById("logout-btn-sidebar");
+  const logoutHeader = document.getElementById("logout-btn-header");
+  if (logoutSidebar) logoutSidebar.addEventListener("click", handleLogout);
+  if (logoutHeader) logoutHeader.addEventListener("click", handleLogout);
 });

@@ -1,27 +1,87 @@
+{# Multiple Choice Quiz Block: Robust, accessible, and Firebase-ready #}
 {% set q = (block.questions[0] if block.questions and block.questions|length > 0 else block if (block.question is defined or block.options is defined) else None) %}
-{% if q %}
-  <div class="block-multiple-choice{% if minimal %}-minimal{% endif %} mcq-image-style mcq-inline p-0-5 bg-white border-1px-solid-e0d0fa rounded-7 box-shadow-mcq overflow-hidden" data-block-id="{{ block.id }}" data-topic-id="{{ block.topic_id or block.topic|default('unknown_topic') }}">
+{% if q and q.options is defined and q.options|length > 0 %}
+  <div class="quiz-block block-multiple-choice question-wrapper mcq-image-style mcq-inline" 
+       data-block-id="{{ block.id }}" 
+       data-question-type="multiple_choice" 
+       data-correct-index="{{ q.correct_index }}" 
+       data-points="{{ q.points | default(1) }}"
+       role="group" 
+       aria-labelledby="mcq-question-{{ block.id }}">
+    
     <div class="mcq-ribbon">
-      <span class="color-4B367C">Question 1 of 1</span>
-      <span class="mcq-badge">1 Byte</span>
+      Quiz
     </div>
-    <div class="flex justify-content-flex-end mb-1">
-      <button class="btn btn-refresh mcq-refresh-btn">Refresh Quiz</button>
+    
+    <div class="mcq-header">
+      {% if q.instructions %}
+        <p class="mcq-instructions">{{ q.instructions }}</p>
+      {% endif %}
+      <h4 id="mcq-question-{{ block.id }}" class="mcq-question">
+        {{ q.question|default('No question')|markdown|safe }}
+      </h4>
     </div>
-    <div class="mcq-question-row mb-0-2">
-      <div class="mcq-question mb-0-2 font-size-1-08em font-weight-600 color-4B367C bg-none">{{ q.question|default('No question')|replace('1 pt','')|replace('.', '')|markdown|safe }}</div>
-      <div class="mcq-options-grid grid-2-cols gap-16 mb-8" data-correct-idx="{{ q.correct_index|default(0) }}">
-        {% if q.options is defined and q.options|length > 0 %}
-          {% for opt in q.options %}
-            <button type="button" class="btn mcq-option-btn{% if minimal %}-minimal{% endif %}{% if loop.index0 == q.correct_index %} correct-answer{% endif %}" data-option-idx="{{ loop.index0 }}">{{ opt|markdown|safe }}</button>
-          {% endfor %}
-        {% else %}
-          <span class="color-red">No options provided.</span>
+    
+    <fieldset class="mcq-options-fieldset" aria-labelledby="mcq-question-{{ block.id }}">
+      <legend class="visually-hidden">Select your answer</legend>
+      <div class="mcq-options-grid" data-correct-idx="{{ q.correct_index }}">
+        {% for opt in q.options %}
+          <button type="button" 
+                  class="mcq-option-btn" 
+                  data-option-idx="{{ loop.index0 }}"
+                  aria-pressed="false"
+                  aria-describedby="mcq-feedback-{{ block.id }}">
+            <span class="option-letter">{{ ['A', 'B', 'C', 'D', 'E', 'F'][loop.index0] }}.</span>
+            <span class="option-text">{{ opt|markdown|safe }}</span>
+          </button>
+        {% endfor %}
+      </div>
+    </fieldset>
+    
+    <div class="mcq-footer">
+      <div id="mcq-feedback-{{ block.id }}" class="quiz-feedback mcq-feedback display-none" aria-live="polite" role="status"></div>
+      
+      {% if q.explanation %}
+        <div class="mcq-explanation display-none" id="mcq-explanation-{{ block.id }}">
+          <h5>Explanation:</h5>
+          <p>{{ q.explanation|markdown|safe }}</p>
+        </div>
+      {% endif %}
+      
+      {% if q.hint and q.hint_cost is defined %}
+        <div class="hint-section">
+          <button class="btn btn-hint" 
+                  data-block-id="{{ block.id }}" 
+                  data-hint-cost="{{ q.hint_cost }}"
+                  aria-describedby="hint-description-{{ block.id }}">
+            <span class="material-symbols-outlined">lightbulb</span>
+            Show Hint ({{ q.hint_cost }} <span class="material-symbols-outlined coin-icon">token</span>)
+          </button>
+          <div id="hint-description-{{ block.id }}" class="visually-hidden">
+            Purchase a hint for this question using {{ q.hint_cost }} coins
+          </div>
+          <div class="hint-content display-none" id="hint-{{ block.id }}" role="region" aria-label="Question hint"></div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% else %}
+  <div class="quiz-block block-multiple-choice question-wrapper quiz-error" 
+       data-block-id="{{ block.id }}" 
+       data-question-type="multiple_choice"
+       role="alert">
+    <div class="error-content">
+      <span class="material-symbols-outlined error-icon">error</span>
+      <div class="error-text">
+        <h4>Quiz Configuration Error</h4>
+        <p>This multiple choice question is missing valid options.</p>
+        {% if config.DEBUG %}
+          <details class="debug-info">
+            <summary>Debug Information</summary>
+            <pre>block.questions = {{ block.questions|tojson(indent=2) }}</pre>
+          </details>
         {% endif %}
       </div>
     </div>
-    <div class="mcq-feedback d-none"></div>
   </div>
-{% else %}
-  <div class="block-multiple-choice" style="color:#ff4e6a;">ERROR: No question data found for this block. block.questions = {{ block.questions }}</div>
 {% endif %}

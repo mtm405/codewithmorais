@@ -2,78 +2,64 @@
 // Handles toggle, class switching, and localStorage persistence
 
 export function initSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('sidebar-toggle');
-  console.debug('[Sidebar Debug] sidebar:', sidebar);
-  console.debug('[Sidebar Debug] toggleBtn:', toggleBtn);
+  const sidebar = document.getElementById("sidebar");
+  const toggleBtn = document.getElementById("sidebar-toggle"); // Match base.html ID
+  
   if (!sidebar || !toggleBtn) {
-    console.error('[Sidebar Debug] Sidebar or toggle button not found!');
     return;
   }
 
-  // Restore state from localStorage
-  const collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
-  console.debug('[Sidebar Debug] collapsed from localStorage:', collapsed);
-  if (collapsed) {
-    sidebar.classList.add('collapsed');
-    toggleBtn.title = 'Expand sidebar';
-    if (toggleBtn.querySelector('span')) {
-      toggleBtn.querySelector('span').textContent = 'menu';
+  // Clean up preload classes to enable transitions
+  document.documentElement.classList.remove('sidebar-collapsed-preload');
+  document.body.classList.remove('preload');
+  
+  // Restore state from localStorage using consistent key
+  const isCollapsed = localStorage.getItem("sidebar-collapsed") === "true";
+  
+  if (isCollapsed) {
+    sidebar.classList.add("collapsed");
+    toggleBtn.title = "Expand sidebar";
+    if (toggleBtn.querySelector("span")) {
+      toggleBtn.querySelector("span").textContent = "chevron_right";
     }
   } else {
-    sidebar.classList.remove('collapsed');
-    toggleBtn.title = 'Collapse sidebar';
-    if (toggleBtn.querySelector('span')) {
-      toggleBtn.querySelector('span').textContent = 'menu_open';
+    sidebar.classList.remove("collapsed");
+    toggleBtn.title = "Collapse sidebar";
+    if (toggleBtn.querySelector("span")) {
+      toggleBtn.querySelector("span").textContent = "chevron_left";
     }
   }
 
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
-    const isCollapsed = sidebar.classList.contains('collapsed');
-    localStorage.setItem('sidebar-collapsed', isCollapsed);
-    console.debug('[Sidebar Debug] Toggle clicked. isCollapsed:', isCollapsed);
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("collapsed");
+    const isCollapsed = sidebar.classList.contains("collapsed");
+    localStorage.setItem("sidebar-collapsed", isCollapsed);
+    
     // Change icon and tooltip
     if (isCollapsed) {
-      toggleBtn.title = 'Expand sidebar';
-      if (toggleBtn.querySelector('span')) {
-        toggleBtn.querySelector('span').textContent = 'menu';
+      toggleBtn.title = "Expand sidebar";
+      if (toggleBtn.querySelector("span")) {
+        toggleBtn.querySelector("span").textContent = "chevron_right";
       }
     } else {
-      toggleBtn.title = 'Collapse sidebar';
-      if (toggleBtn.querySelector('span')) {
-        toggleBtn.querySelector('span').textContent = 'menu_open';
+      toggleBtn.title = "Collapse sidebar";
+      if (toggleBtn.querySelector("span")) {
+        toggleBtn.querySelector("span").textContent = "chevron_left";
       }
     }
 
-    // Add debug check for collapsed state
+    // Debug check after toggle
     setTimeout(() => {
-      const isCollapsed = sidebar.classList.contains('collapsed');
-      const menuTextVisible = Array.from(sidebar.querySelectorAll('.menu-label')).some(el => el.offsetParent !== null);
-      const avatarVisible = !!sidebar.querySelector('.sidebar-avatar') && sidebar.querySelector('.sidebar-avatar').offsetParent !== null;
-      const pointsVisible = !!sidebar.querySelector('.user-points-bytes') && sidebar.querySelector('.user-points-bytes').offsetParent !== null;
-      console.debug('[Sidebar Debug] After toggle: isCollapsed:', isCollapsed, 'menuTextVisible:', menuTextVisible, 'avatarVisible:', avatarVisible, 'pointsVisible:', pointsVisible);
-    }, 200);
+      const isCollapsed = sidebar.classList.contains("collapsed");
+    }, 100);
   });
 
-  // Always show the toggle button, even when collapsed
-  toggleBtn.style.display = 'block';
-
   // Add tooltips to menu items when collapsed
-  const menuLinks = sidebar.querySelectorAll('.menu-item-link');
+  const menuLinks = sidebar.querySelectorAll(".menu-item-link");
   menuLinks.forEach(link => {
-    // Tooltip logic
-    if (!link.hasAttribute('title')) {
-      link.setAttribute('title', link.textContent.trim());
-    }
-    const label = link.querySelector('.menu-label');
-    if (label) {
-      link.setAttribute('title', label.textContent.trim());
-    }
-    // --- FIX: Always show icon in collapsed mode, even if menu-label is missing ---
-    const icon = link.querySelector('.material-symbols-outlined');
-    if (icon) {
-      icon.style.display = '';
+    const textSpan = link.querySelector("span:not(.material-symbols-outlined)");
+    if (textSpan) {
+      link.setAttribute("title", textSpan.textContent.trim());
     }
   });
 }

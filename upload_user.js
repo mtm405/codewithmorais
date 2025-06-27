@@ -1,11 +1,12 @@
 // upload_user.js
 // Script to upload user.json to Firestore using Firebase Admin SDK
 
-const admin = require('firebase-admin');
-const fs = require('fs');
+import admin from "firebase-admin";
+import { readFileSync } from "fs";
 
-// Path to your Firebase service account key
-const serviceAccount = require('./serviceAccountKey.json');
+// Load JSON files
+const serviceAccount = JSON.parse(readFileSync("./serviceAccountKey.json", "utf8"));
+const userData = JSON.parse(readFileSync("./user.json", "utf8"));
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -13,16 +14,15 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-// Load user data from user.json
-const userData = require('./user.json');
-const userId = 'REPLACE_WITH_USER_UID'; // <-- Replace with the actual Firebase Auth UID
+// Replace with the actual Firebase Auth UID
+const userId = "REPLACE_WITH_USER_UID";
 
-db.collection('users').doc(userId).set(userData)
+db.collection("users").doc(userId).set(userData)
   .then(() => {
-    console.log('User uploaded!');
+    console.log("User uploaded!");
     process.exit(0);
   })
   .catch(err => {
-    console.error('Error uploading user:', err);
+    console.error("Error uploading user:", err);
     process.exit(1);
   });

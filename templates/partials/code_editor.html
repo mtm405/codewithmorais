@@ -4,7 +4,7 @@
   {% set editor_id = block.id|string %}
   {% set default_code = block.default_code or '# Write your Python code here\n' %}
   <label for="{{ editor_id }}">{{ block.label or "Try it yourself:" }}</label>
-  <div id="{{ editor_id }}" style="height: 300px; width: 100%; margin-bottom: 1em;"></div>
+  <div id="{{ editor_id }}" class="code-editor-ace"></div>
   <div class="editor-toolbar">
     <button type="button" class="run-code-btn btn-primary" data-editor-id="{{ editor_id|e }}" data-content-id="{{ (block.content_id or editor_id)|e }}" data-next-topic="{{ (block.next_topic or '')|e }}">Run Code</button>
     <button type="button" class="debug-btn btn-primary" data-editor-id="{{ editor_id|e }}">Debug</button>
@@ -12,21 +12,21 @@
     <button type="button" class="solution-btn btn-primary" data-editor-id="{{ editor_id|e }}">Show Solution</button>
     <button type="button" class="history-btn btn-primary" data-editor-id="{{ editor_id|e }}">History</button>
     <button type="button" class="reference-btn btn-primary" data-editor-id="{{ editor_id|e }}">Reference</button>
-    <span class="challenge-timer" id="timer-{{ editor_id }}" style="margin-left:16px;display:none;"></span>
+    <span class="challenge-timer" id="timer-{{ editor_id }}"></span>
     <button type="button" class="share-btn btn-primary" data-editor-id="{{ editor_id|e }}">Share</button>
   </div>
-  <div class="variable-inspector" id="var-inspector-{{ editor_id }}" style="display:none;"></div>
+  <div class="variable-inspector" id="var-inspector-{{ editor_id }}"></div>
   <pre id="{{ editor_id }}-output" class="code-editor-output"></pre>
 </div>
 
 <!-- Custom Modal for input() prompts -->
-<div id="custom-input-modal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(30,30,40,0.7); align-items:center; justify-content:center;">
-  <div style="background:#232136; color:#fff; border-radius:12px; box-shadow:0 4px 24px #0008; padding:2em 2em 1.5em 2em; min-width:320px; max-width:90vw;">
-    <div id="custom-input-prompt" style="margin-bottom:1em; font-size:1.1em;"></div>
-    <input id="custom-input-field" type="text" style="width:100%; padding:0.5em; border-radius:6px; border:1.5px solid #4A4D63; background:#2E2B41; color:#fff; font-size:1em; margin-bottom:1em;" autofocus />
-    <div style="text-align:right;">
-      <button id="custom-input-ok" style="background:var(--accent-yellow,#FFD43B); color:#232136; border:none; border-radius:6px; padding:0.5em 1.2em; font-weight:600; cursor:pointer;">OK</button>
-      <button id="custom-input-cancel" style="background:transparent; color:#fff; border:none; border-radius:6px; padding:0.5em 1.2em; font-weight:600; cursor:pointer;">Cancel</button>
+<div id="custom-input-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div id="custom-input-prompt" class="modal-prompt"></div>
+    <input id="custom-input-field" type="text" class="modal-input" autofocus />
+    <div class="modal-actions">
+      <button id="custom-input-ok" class="modal-btn modal-btn-primary">OK</button>
+      <button id="custom-input-cancel" class="modal-btn modal-btn-secondary">Cancel</button>
     </div>
   </div>
 </div>
