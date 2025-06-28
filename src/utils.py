@@ -65,3 +65,41 @@ def pygments_highlight(code):
     if highlighted.startswith('<div'):
         highlighted = highlighted.split('>', 1)[1].rsplit('</div>', 1)[0]
     return Markup(highlighted)
+
+# IDE Command Center Enhancements
+def format_code_for_ide(code, language='python'):
+    """
+    Format code with IDE-style syntax highlighting for terminal display
+    Returns HTML with terminal-friendly styling
+    """
+    if language == 'python':
+        formatter = HtmlFormatter(
+            noclasses=True, 
+            style="monokai", 
+            linenos=False, 
+            nowrap=True,
+            cssclass="ide-code-snippet"
+        )
+        highlighted = highlight(code, PythonLexer(), formatter)
+        return Markup(highlighted)
+    return Markup(f'<span class="ide-code-snippet">{code}</span>')
+
+def create_terminal_prompt(command, user='python', host='codelab'):
+    """
+    Create a terminal-style prompt for the IDE interface
+    """
+    return Markup(f'<span class="ide-prompt">{user}@{host}:~$ {command}</span>')
+
+def format_terminal_output(text, output_type='info'):
+    """
+    Format text as terminal output with appropriate styling
+    """
+    color_classes = {
+        'info': 'terminal-text',
+        'success': 'terminal-success', 
+        'error': 'terminal-error',
+        'warning': 'terminal-warning'
+    }
+    
+    color_class = color_classes.get(output_type, 'terminal-text')
+    return Markup(f'<span class="ide-terminal-output {color_class}">{text}</span>')

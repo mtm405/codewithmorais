@@ -1,0 +1,400 @@
+/**
+ * 🖥️ PYTHON IDE COMMAND CENTER - PHASE 1
+ * Terminal Foundation & IDE Color Scheme
+ * ========================================
+ * 
+ * Transforms the dashboard into a modern Python IDE environment while
+ * preserving all gamification features and functionality.
+ */
+
+/* =====================================
+   🖥️ IDE THEME VARIABLES
+   ===================================== */
+
+:root {
+    /* IDE Color Palette - VS Code Dark Theme Inspired */
+    --ide-bg-primary: #1e1e1e;           /* Main editor background */
+    --ide-bg-secondary: #252526;         /* Sidebar/panel background */
+    --ide-bg-tertiary: #2d2d30;          /* Tab/toolbar background */
+    --ide-bg-accent: #37373d;            /* Hover states */
+    --ide-bg-input: #3c3c3c;             /* Input fields */
+    
+    /* Terminal Colors */
+    --terminal-bg: #0c0c0c;              /* Terminal background */
+    --terminal-border: #404040;          /* Terminal borders */
+    --terminal-text: #cccccc;            /* Terminal text */
+    --terminal-prompt: #569cd6;          /* Terminal prompt */
+    --terminal-success: #4ec9b0;         /* Success output */
+    --terminal-error: #f44747;           /* Error output */
+    --terminal-warning: #ffcc02;         /* Warning output */
+    
+    /* Python Syntax Colors */
+    --python-keyword: #569cd6;           /* def, class, if, etc. */
+    --python-string: #ce9178;            /* Strings */
+    --python-comment: #6a9955;          /* Comments */
+    --python-number: #b5cea8;           /* Numbers */
+    --python-function: #dcdcaa;         /* Function names */
+    --python-variable: #9cdcfe;         /* Variables */
+    --python-operator: #d4d4d4;         /* Operators */
+    
+    /* IDE UI Elements */
+    --ide-text-primary: #cccccc;         /* Primary text */
+    --ide-text-secondary: #969696;       /* Secondary text */
+    --ide-text-muted: #6a6a6a;          /* Muted text */
+    --ide-accent-blue: #007acc;          /* Blue accents */
+    --ide-accent-orange: #ff8c00;        /* Orange accents */
+    --ide-accent-green: #00a86b;         /* Green accents */
+    --ide-accent-yellow: #ffd700;        /* Yellow accents */
+    
+    /* Shadows & Effects */
+    --ide-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6);
+    --ide-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+    --ide-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --ide-glow-blue: 0 0 20px rgba(0, 122, 204, 0.3);
+    --ide-glow-green: 0 0 20px rgba(0, 168, 107, 0.3);
+    
+    /* Typography */
+    --ide-font-mono: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    --ide-font-ui: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* =====================================
+   🖥️ TERMINAL WINDOW FOUNDATION
+   ===================================== */
+
+/* Transform dashboard cards into terminal windows */
+.ide-terminal-window {
+    background: var(--terminal-bg);
+    border: 1px solid var(--terminal-border);
+    border-radius: 8px;
+    box-shadow: var(--ide-shadow-md);
+    overflow: hidden;
+    font-family: var(--ide-font-mono);
+    margin-bottom: 20px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.ide-terminal-window:hover {
+    box-shadow: var(--ide-shadow-lg);
+    transform: translateY(-2px);
+}
+
+/* Terminal window header (title bar) */
+.ide-terminal-header {
+    background: var(--ide-bg-tertiary);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--terminal-border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+/* Terminal window controls (traffic lights) */
+.ide-terminal-controls {
+    display: flex;
+    gap: 6px;
+    margin-right: 10px;
+}
+
+.ide-terminal-control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.ide-terminal-control.close { background: #ff5f57; }
+.ide-terminal-control.minimize { background: #ffbd2e; }
+.ide-terminal-control.maximize { background: #28ca42; }
+
+/* Terminal title with prompt styling */
+.ide-terminal-title {
+    color: var(--ide-text-primary);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--ide-font-ui);
+    flex: 1;
+}
+
+/* Terminal content area */
+.ide-terminal-content {
+    background: var(--terminal-bg);
+    padding: 16px;
+    min-height: 120px;
+    color: var(--terminal-text);
+    font-family: var(--ide-font-mono);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Console prompt styling */
+.ide-prompt {
+    color: var(--terminal-prompt);
+    font-weight: 600;
+}
+
+.ide-prompt::before {
+    content: "python@codelab:~$ ";
+    color: var(--terminal-prompt);
+}
+
+/* =====================================
+   🎯 DASHBOARD LAYOUT TRANSFORMATION
+   ===================================== */
+
+/* Main dashboard container with IDE styling */
+.ide-dashboard-main {
+    background: var(--ide-bg-primary);
+    min-height: 100vh;
+    font-family: var(--ide-font-ui);
+    color: var(--ide-text-primary);
+}
+
+/* Enhanced grid layout for terminal windows */
+.ide-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Large terminal windows (for main features) */
+.ide-terminal-large {
+    grid-column: span 2;
+    min-height: 300px;
+}
+
+/* Medium terminal windows */
+.ide-terminal-medium {
+    min-height: 200px;
+}
+
+/* Small terminal windows */
+.ide-terminal-small {
+    min-height: 150px;
+}
+
+/* =====================================
+   🖥️ ENHANCED HEADER BAR (IDE STYLE)
+   ===================================== */
+
+.header-bar.ide-enhanced {
+    background: var(--ide-bg-secondary);
+    border-bottom: 1px solid var(--terminal-border);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--ide-font-ui);
+    box-shadow: var(--ide-shadow-sm);
+}
+
+/* IDE breadcrumb style for greeting */
+.header-greeting.ide-breadcrumb {
+    color: var(--ide-text-primary);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-greeting.ide-breadcrumb::before {
+    content: "📁";
+    font-size: 16px;
+}
+
+.header-greeting.ide-breadcrumb #user-name-display {
+    color: var(--ide-accent-blue);
+    font-weight: 600;
+}
+
+/* Terminal-style clock */
+#live-clock.ide-terminal-clock {
+    background: var(--terminal-bg);
+    color: var(--terminal-text);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: var(--ide-font-mono);
+    font-size: 12px;
+    border: 1px solid var(--terminal-border);
+}
+
+/* =====================================
+   🎨 SYNTAX HIGHLIGHTING ENHANCEMENTS
+   ===================================== */
+
+/* Code snippets and examples */
+.ide-code-snippet {
+    background: var(--ide-bg-input);
+    border: 1px solid var(--terminal-border);
+    border-radius: 4px;
+    padding: 12px;
+    font-family: var(--ide-font-mono);
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+/* Python syntax highlighting classes */
+.python-keyword { color: var(--python-keyword); font-weight: 600; }
+.python-string { color: var(--python-string); }
+.python-comment { color: var(--python-comment); font-style: italic; }
+.python-number { color: var(--python-number); }
+.python-function { color: var(--python-function); }
+.python-variable { color: var(--python-variable); }
+.python-operator { color: var(--python-operator); }
+
+/* =====================================
+   🎮 GAMIFICATION ENHANCEMENTS
+   ===================================== */
+
+/* Leaderboard as terminal output */
+.ide-leaderboard {
+    background: var(--terminal-bg);
+    color: var(--terminal-text);
+    font-family: var(--ide-font-mono);
+}
+
+.ide-leaderboard-header {
+    color: var(--terminal-prompt);
+    margin-bottom: 10px;
+}
+
+.ide-leaderboard-header::before {
+    content: ">>> ";
+    color: var(--terminal-prompt);
+}
+
+/* Progress bars as terminal progress indicators */
+.ide-progress-bar {
+    background: var(--ide-bg-input);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.ide-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--terminal-success), var(--ide-accent-green));
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.ide-progress-fill::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2));
+    animation: shimmer 2s infinite;
+}
+
+/* =====================================
+   🎪 ANIMATIONS & EFFECTS
+   ===================================== */
+
+@keyframes shimmer {
+    0% { transform: translateX(-20px); }
+    100% { transform: translateX(20px); }
+}
+
+@keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Terminal cursor animation */
+.ide-cursor::after {
+    content: "▌";
+    color: var(--terminal-prompt);
+    animation: blink 1s infinite;
+}
+
+/* Terminal typing effect */
+.ide-typing {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typewriter 2s steps(20) 1;
+}
+
+/* =====================================
+   🎯 RESPONSIVE DESIGN
+   ===================================== */
+
+@media (max-width: 768px) {
+    .ide-dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .ide-terminal-large {
+        grid-column: span 1;
+    }
+    
+    .ide-terminal-content {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .header-bar.ide-enhanced {
+        padding: 6px 12px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ide-terminal-content {
+        padding: 10px;
+        font-size: 12px;
+    }
+    
+    .ide-terminal-header {
+        padding: 6px 10px;
+    }
+    
+    .ide-terminal-title {
+        font-size: 12px;
+    }
+}
+
+/* =====================================
+   🎨 THEME TRANSITIONS
+   ===================================== */
+
+.ide-terminal-window,
+.ide-terminal-header,
+.ide-terminal-content,
+.header-bar.ide-enhanced {
+    transition: all 0.3s ease;
+}
+
+/* Hover effects for interactivity */
+.ide-terminal-window:hover .ide-terminal-header {
+    background: var(--ide-bg-accent);
+}
+
+.ide-terminal-control:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+/* Focus states for accessibility */
+.ide-terminal-window:focus-within {
+    outline: 2px solid var(--ide-accent-blue);
+    outline-offset: 2px;
+}
