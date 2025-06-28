@@ -1,0 +1,144 @@
+<!-- DEBUG: Code snippet template with extensive logging -->
+<div class="code-snippet-block" data-code="{{ block.code|tojson|safe }}">
+  <div class="code-snippet-title">
+    <span class="material-symbols-outlined" style="vertical-align: middle;">lightbulb</span>
+    Example (DEBUG MODE)
+  </div>
+  <div class="python-example" aria-label="Code example">
+    <div class="code-snippet-container">
+      <div class="code-snippet-ace ace-editor-pending" style="border: 2px solid red; min-height: 150px;"></div>
+    </div>
+  </div>
+  
+  <!-- DEBUG: Show raw data -->
+  <div style="background: #1a1a1a; color: #00ff00; padding: 10px; margin-top: 10px; font-family: monospace; font-size: 12px;">
+    <strong>DEBUG INFO:</strong><br>
+    Raw block.code: {{ block.code|e }}<br>
+    JSON block.code: {{ block.code|tojson|safe }}<br>
+    Block type: {{ block.type }}<br>
+    Block ID: {{ block.id }}<br>
+  </div>
+</div>
+<script>
+// DEBUG: Enhanced logging version
+(function() {
+  console.log("🔍 DEBUG: Starting code snippet initialization");
+  
+  const codeSnippetBlock = document.currentScript.previousElementSibling;
+  const aceContainer = codeSnippetBlock.querySelector('.code-snippet-ace');
+  
+  console.log("🔍 DEBUG: Code snippet block:", codeSnippetBlock);
+  console.log("🔍 DEBUG: ACE container:", aceContainer);
+  console.log("🔍 DEBUG: Raw dataset.code:", codeSnippetBlock.dataset.code);
+  
+  let code;
+  try {
+    code = JSON.parse(codeSnippetBlock.dataset.code || '""');
+    console.log("🔍 DEBUG: Parsed code:", code);
+    console.log("🔍 DEBUG: Code type:", typeof code);
+    console.log("🔍 DEBUG: Code length:", code.length);
+  } catch (e) {
+    console.error("❌ DEBUG: Failed to parse code:", e);
+    code = "# Error parsing code";
+  }
+  
+  // Generate unique ID for this ACE editor
+  const uniqueId = 'ace-debug-' + Math.random().toString(36).substr(2, 8);
+  aceContainer.id = uniqueId;
+  console.log("🔍 DEBUG: Assigned ID:", uniqueId);
+  
+  function initializeAceEditor() {
+    console.log("🔍 DEBUG: Attempting to initialize ACE editor");
+    console.log("🔍 DEBUG: typeof ace:", typeof ace);
+    
+    if (typeof ace === 'undefined') {
+      console.log("⏳ DEBUG: ACE not ready, waiting...");
+      setTimeout(initializeAceEditor, 100);
+      return;
+    }
+    
+    console.log("✅ DEBUG: ACE is available, proceeding with initialization");
+    
+    try {
+      // Remove pending class
+      aceContainer.classList.remove('ace-editor-pending');
+      aceContainer.style.border = "2px solid green"; // Visual confirmation
+      
+      console.log("🔍 DEBUG: About to call ace.edit with ID:", uniqueId);
+      
+      // Initialize ACE Editor
+      const editor = ace.edit(uniqueId);
+      console.log("✅ DEBUG: ACE editor created:", editor);
+      
+      editor.setTheme("ace/theme/monokai");
+      console.log("✅ DEBUG: Theme set to monokai");
+      
+      editor.session.setMode("ace/mode/python");
+      console.log("✅ DEBUG: Mode set to python");
+      
+      console.log("🔍 DEBUG: About to set value:", code);
+      editor.setValue(code, -1);
+      console.log("✅ DEBUG: Value set successfully");
+      
+      editor.setReadOnly(true);
+      console.log("✅ DEBUG: Set to read-only");
+      
+      // Configure editor options for read-only display
+      editor.setOptions({
+        highlightActiveLine: false,
+        highlightGutterLine: false,
+        showPrintMargin: false,
+        showLineNumbers: true,
+        showGutter: true,
+        displayIndentGuides: false,
+        fontSize: "1.08em",
+        maxLines: Infinity,
+        minLines: 3,
+        wrap: true
+      });
+      console.log("✅ DEBUG: Options configured");
+      
+      // Hide cursor and make it look like example code
+      editor.renderer.$cursorLayer.element.style.display = "none";
+      editor.renderer.setShowGutter(true);
+      editor.renderer.setScrollMargin(8,8,8,8);
+      editor.setBehavioursEnabled(false);
+      
+      // Style the container
+      editor.container.style.background = '#2F3129';
+      editor.container.style.border = '1px solid #00ff00';
+      editor.container.style.boxShadow = 'none';
+      
+      // Store reference for potential cleanup
+      if (!window.aceEditors) window.aceEditors = {};
+      window.aceEditors[uniqueId] = editor;
+      
+      console.log(`🎉 DEBUG: Successfully initialized ACE editor: ${uniqueId}`);
+      console.log("🔍 DEBUG: Editor content:", editor.getValue());
+      
+    } catch (error) {
+      console.error('❌ DEBUG: Failed to initialize ACE editor:', error);
+      console.error('❌ DEBUG: Error stack:', error.stack);
+      
+      // Enhanced fallback with more debug info
+      aceContainer.innerHTML = `
+        <pre style="background: #1a1a1a; color: #ff6b6b; padding: 12px; margin: 0; border-radius: 4px; font-family: monospace; overflow-x: auto;">
+          <strong>❌ ACE EDITOR FAILED</strong>
+          Error: ${error.message}
+          
+          <strong>📝 FALLBACK CODE:</strong>
+          ${code}
+        </pre>`;
+    }
+  }
+  
+  // Initialize when DOM is ready or immediately if already ready
+  if (document.readyState === 'loading') {
+    console.log("📅 DEBUG: DOM still loading, waiting for DOMContentLoaded");
+    document.addEventListener('DOMContentLoaded', initializeAceEditor);
+  } else {
+    console.log("📅 DEBUG: DOM ready, initializing immediately");
+    initializeAceEditor();
+  }
+})();
+</script>

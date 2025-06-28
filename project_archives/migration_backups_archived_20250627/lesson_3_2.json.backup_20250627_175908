@@ -1,0 +1,197 @@
+{
+  "objective": "Understand and apply Python functions for console input and output, including displaying information and accepting user input, with proper string formatting.",
+  "blocks": [
+    {
+      "type": "text",
+      "content": "# Lesson 3.2: Console Input and Output Operations\n\n### Objective:\nUnderstand and apply Python functions for console input and output, including displaying information and accepting user input, with proper string formatting."
+    },
+    {
+      "type": "text",
+      "content": "While file I/O is crucial for persistent data, programs frequently need to interact directly with the user through the console. This lesson focuses on two fundamental built-in functions for this purpose: `print()` for outputting information and `input()` for receiving user input."
+    },
+    {
+      "type": "text",
+      "content": "## 3.2 Construct and Analyze Code Segments that Perform Console I/O\n"
+    },
+    {
+      "type": "text",
+      "content": "### The `print()` Function\n\nThe `print()` function is used to display output to the console. It can take zero or more arguments, separated by commas, and prints them to the standard output device (usually your screen)."
+    },
+    {
+      "type": "step_card",
+      "id": "lesson3_2_snippet1",
+      "header": "Basic `print()` Usage",
+      "steps": [
+        "Prints a simple string.",
+        "Prints multiple values (strings and numbers) separated by spaces by default.",
+        "Shows how `print()` adds a newline by default after each call."
+      ],
+      "code": "print('Hello, Console!')\n\nname = 'Alice'\nage = 30\nprint('Name:', name, 'Age:', age)\nprint('Another line.')",
+      "output": "Hello, Console!\nName: Alice Age: 30\nAnother line.\n"
+    },
+    {
+      "type": "text",
+      "content": "#### Controlling `print()` Output: `sep` and `end`\n\n`print()` has optional parameters to control how items are separated (`sep`) and what character(s) are printed at the end (`end`).\n\n* **`sep` (separator):** Specifies the string to insert between values, default is a space `(' ')`.\n* **`end` (end character):** Specifies what to print at the end of the output, default is a newline character `('\\n')`."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "print('apple', 'banana', 'cherry', sep='-')\nprint('Loading', end='...')\nprint('Done!')\n\n# Combine for a continuous output\nfor i in range(3):\n    print(i, end=' ')\nprint('Count finished.')",
+      "output": "apple-banana-cherry\nLoading...Done!\n0 1 2 Count finished.\n",
+      "id": "lesson3_2_snippet2"
+    },
+    {
+      "type": "text",
+      "content": "#### Formatting String Output with `.format()`\n\nThe `str.format()` method provides a powerful way to format strings. It allows you to embed expressions inside string literals by using curly braces `{}` as placeholders.\n\n**Syntax:**\n\n```python\n'String with {} placeholders {}'.format(value1, value2)\n```"
+    },
+    {
+      "type": "accordion",
+      "id": "string_format_examples",
+      "header": "Examples of String Formatting with `.format()`",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "- **Positional Arguments:** Values are inserted based on their order."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "item = 'book'\nprice = 19.99\nquantity = 2\n\nmessage = 'You bought {} {}(s) for ${}.'.format(quantity, item, price)\nprint(message)\n",
+          "output": "You bought 2 book(s) for $19.99.\n"
+        },
+        {
+          "type": "text",
+          "content": "- **Named Arguments:** Use keywords in placeholders for better readability and order flexibility."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "template = 'The product is {product_name} and its ID is {product_id}.'\nformatted_string = template.format(product_id='ABC123', product_name='Widget')\nprint(formatted_string)\n",
+          "output": "The product is Widget and its ID is ABC123.\n"
+        },
+        {
+          "type": "text",
+          "content": "- **Format Specifiers:** Control appearance (e.g., number of decimal places, alignment)."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "pi_value = 3.14159265\npercent = 0.75\n\nprint('Pi to two decimal places: {:.2f}'.format(pi_value)) # .2f for 2 decimal float\nprint('Percentage: {:.0%}'.format(percent)) # .0% for percentage with 0 decimal places\nprint('Padded number: {:>5}'.format(123)) # >5 for right-align in 5 spaces\n",
+          "output": "Pi to two decimal places: 3.14\nPercentage: 75%\nPadded number:   123\n"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "### The `input()` Function\n\nThe `input()` function is used to accept user input from the console. It pauses program execution, displays an optional prompt message, and waits for the user to type something and press Enter."
+    },
+    {
+      "type": "step_card",
+      "id": "lesson3_2_snippet3",
+      "header": "Basic `input()` Usage",
+      "steps": [
+        "The string `'Enter your name: '` is displayed as a prompt.",
+        "The program waits for the user to type and press Enter.",
+        "The typed text (excluding the newline) is assigned to the `user_name` variable.",
+        "The program then prints a greeting."
+      ],
+      "code": "user_name = input('Enter your name: ')\nprint('Hello, {}!'.format(user_name))\n",
+      "output": "Enter your name: [User types 'World']\nHello, World!\n"
+    },
+    {
+      "type": "text",
+      "content": "#### Important: `input()` Always Returns a String\n\nEven if the user types numbers, `input()` will return them as a string. If you need to perform numerical operations, you must explicitly convert the input to an integer (`int()`) or a float (`float()`)."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Accepting and converting numeric input\n\nage_str = input('Enter your age: ')\n# At this point, age_str is a string, e.g., '25'\n\nage_int = int(age_str) # Convert string to integer\n\nprint('In 5 years, you will be {} years old.'.format(age_int + 5))\n\n# Shorter common way:\n# height = float(input('Enter your height in meters: '))\n# print('Your height is {}m.'.format(height))\n",
+      "output": "Enter your age: [User types '25']\nIn 5 years, you will be 30 years old.\n",
+      "id": "lesson3_2_snippet4"
+    },
+    {
+      "type": "ide",
+      "id": "try_console_io",
+      "label": "Try it yourself: Practice Console I/O!",
+      "editable": true,
+      "default_code": "# 1. Ask the user for their favorite color and print a personalized message.\n# 2. Ask for two numbers, add them, and print the result using .format().\n# 3. Experiment with the 'sep' and 'end' parameters in print().\n\n# Example 1:\ncolor = input('What is your favorite color? ')\nprint('Your favorite color is {}. That\\'s a great choice!'.format(color))\n\n# Example 2:\nnum1_str = input('Enter the first number: ')\nnum1 = int(num1_str)\n\nnum2_str = input('Enter the second number: ')\nnum2 = int(num2_str)\n\nsum_result = num1 + num2\nprint('The sum of {} and {} is {}.'.format(num1, num2, sum_result))\n"
+    },
+    {
+      "type": "text",
+      "content": "## Recap:\n\nThis lesson focused on user interaction via the console:\n\n-   **`print()`:** Outputs information to the console. Can take multiple arguments and supports `sep` (separator) and `end` (ending character) parameters.\n-   **`str.format()`:** A versatile method for embedding and formatting values within strings using `{}` placeholders, supporting positional, named, and format specifiers.\n-   **`input()`:** Accepts text input from the user. It always returns a string, requiring explicit type conversion (e.g., `int()`, `float()`) if numerical operations are needed."
+    },
+    {
+      "type": "quiz_section",
+      "id": "lesson_3_2_quiz",
+      "content": {
+        "progress": {
+          "total": 4,
+          "completed": 0
+        },
+        "header": "Test your knowledge of Console I/O!",
+        "blocks": [
+          {
+            "type": "fill_in_the_blanks",
+            "id": "quiz_console_output",
+            "instructions": "Part 1: Predict the output or fill in the blank.",
+            "questions": [
+              {
+                "text": "```python\nprint('Python', 'is', 'fun', sep='_')\n```\nOutput: _________. <span class='points-badge'>1 pt</span>",
+                "answers": [
+                  "Python_is_fun"
+                ],
+                "feedback": "The `sep` argument specifies what string to use between the arguments printed by `print()`."
+              },
+              {
+                "text": "```python\nvalue = 123.456\nmessage = 'The value is {:.1f}'.format(value)\nprint(message)\n```\nOutput: _________. <span class='points-badge'>1 pt</span>",
+                "answers": [
+                  "The value is 123.5"
+                ],
+                "feedback": "The `:.1f` format specifier rounds the float to one decimal place."
+              }
+            ]
+          },
+          {
+            "type": "multiple_choice_quiz",
+            "id": "quiz_input_concepts",
+            "instructions": "Part 2: Multiple Choice - Console I/O Concepts",
+            "questions": [
+              {
+                "question": "What is the data type of the variable `age` after the following line of code, assuming the user types `20`?\n`age = input('Enter your age: ')` <span class='points-badge'>1 pt</span>",
+                "options": [
+                  "`int`",
+                  "`float`",
+                  "`str`",
+                  "`bool`"
+                ],
+                "correct_index": 2,
+                "feedback": "The `input()` function always returns a string, regardless of what the user types. You need to explicitly convert it to `int` or `float` if numerical operations are required."
+              },
+              {
+                "question": "Which code snippet correctly formats a message to display a user's name and age, ensuring the age is treated as a number?\nAssume `user_name` is 'Bob' and `user_age_str` is '25'. <span class='points-badge'>1 pt</span>",
+                "options": [
+                  "`print('Name: ' + user_name + ', Age: ' + user_age_str + 5)`",
+                  "`print('Name: {}, Age: {}.'.format(user_name, int(user_age_str)))`",
+                  "`print('Name: {}, Age: {}.'.format(user_name, user_age_str + 5))`",
+                  "`print(f'Name: {user_name}, Age: {int(user_age_str) + 5}')`"
+                ],
+                "correct_index": 1,
+                "feedback": "Option 1 attempts to add 5 to a string, causing an error. Option 3 also attempts string + number. Option 4 uses an f-string, which is not the `.format()` method. Option 2 correctly uses `.format()` and converts `user_age_str` to an `int` before formatting."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "debug_challenge",
+      "id": "fix_input_type_error",
+      "label": "**Fix the bug!**",
+      "buggy_code": "# Scenario: Calculate the area of a rectangle based on user input.\n\nlength = input('Enter the length: ')\nwidth = input('Enter the width: ')\n\n# Buggy part: This will cause a TypeError because length and width are strings.\narea = length * width \n\nprint('The area is: {}'.format(area))",
+      "solution": {
+        "explanation": "The `input()` function always returns a string. When you try to perform multiplication (`*`) on two strings, Python raises a `TypeError` (unless one is an integer to repeat the string, but that's not the intent here). To fix this, you must convert the `length` and `width` variables from strings to numbers (integers or floats) before performing arithmetic operations.",
+        "correct_code": "# Scenario: Calculate the area of a rectangle based on user input.\n\nlength_str = input('Enter the length: ')\nlength = float(length_str) # Corrected: Convert to float\n\nwidth_str = input('Enter the width: ')\nwidth = float(width_str) # Corrected: Convert to float\n\narea = length * width \n\nprint('The area is: {}'.format(area))"
+      }
+    }
+  ]
+}

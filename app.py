@@ -9,6 +9,7 @@ import io
 import contextlib
 import requests
 import markdown
+from datetime import datetime  # 🎪 For dazzling timestamps
 
 
 # Import configuration and blueprints from src
@@ -22,6 +23,8 @@ from src.config import (
 from src.auth import auth_bp, init_db as init_auth_db
 from src.routes import routes_bp, init_db as init_routes_db
 from src.utils import set_css_version, inject_global_data, highlight_keywords, shuffle_filter, pygments_highlight
+from src.dashboard_controller import dashboard_controller  # 🎪 DAZZLING DASHBOARD
+from dev_data_loader import dev_data_loader  # 🎪 DEVELOPMENT DATA LOADER
 
 import json
 
@@ -80,13 +83,18 @@ def load_user_data():
 
 @app.route('/')
 def index():
+    # Check if user is already logged in, redirect to dashboard
+    user_id = session.get('user_id')
+    if user_id:
+        return redirect(url_for('dashboard'))
+    
     google_client_id = os.environ.get("GOOGLE_CLIENT_ID")
     print(f"[DEBUG] GOOGLE_CLIENT_ID: {google_client_id}")
     print(f"[DEBUG] All environment variables containing 'GOOGLE':")
     for k, v in os.environ.items():
         if 'GOOGLE' in k:
             print(f"    {k} = {v}")
-    return render_template('index.html', google_client_id=google_client_id, firebase_config=FIREBASE_CONFIG)
+    return render_template('pages/index.html', google_client_id=google_client_id, firebase_config=FIREBASE_CONFIG)
 
 @app.route('/content/<page_name>')
 def content_page(page_name):
@@ -496,6 +504,361 @@ def get_daily_challenge_activities():
     except Exception as e:
         print(f'ERROR: Failed to fetch bell_ringer activities: {e}')
         return jsonify({"success": False, "error": str(e), "activities": []}), 500
+
+@app.route('/ping')
+def ping():
+    return 'pong', 200
+
+@app.route('/debug/code_snippet')
+def debug_code_snippet():
+    """Debug route to test code snippet rendering"""
+    test_block = {
+        'type': 'code_snippet',
+        'id': 'debug_test',
+        'code': 'print("Hello from debug!")\nx = 42\nprint(f"The answer is {x}")'
+    }
+    return render_template('blocks/code_snippet.html', block=test_block)
+
+@app.route('/debug/lesson_simple')
+def debug_lesson_simple():
+    """Debug route to test simple lesson with code snippet"""
+    lesson_data = {
+        'id': 'debug_lesson',
+        'title': 'Debug Lesson: Code Snippet Test',
+        'blocks': [
+            {
+                'type': 'text',
+                'content': '# Debug Test\n\nThis is a simple test of code snippet rendering:'
+            },
+            {
+                'type': 'code_snippet',
+                'id': 'debug_snippet_1', 
+                'code': 'print("Hello, World!")\n\n# Variables\nname = "Python"\nprint(f"Welcome to {name}!")'
+            }
+        ]
+    }
+    return render_template('pages/lesson.html', lesson=lesson_data, active_page='lessons')
+
+@app.route('/dashboard')
+def dashboard():
+    """🎪 DAZZLING DASHBOARD - The ultimate interactive learning experience"""
+    # Check if user is authenticated
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('auth_bp.login'))
+    
+    # Fetch user data and populate session if needed
+    fetch_and_store_user_data(user_id)
+    
+    return render_template('pages/dashboard_course.html', active_page='dashboard')
+
+@app.route('/dev-test')
+def dev_test():
+    """Development route to test sidebar and layout without authentication"""
+    # Temporarily add mock data to session for this route only
+    session['user_id'] = 'dev_user_123'
+    session['user_name'] = 'Dev User'
+    session['user_email'] = 'dev@example.com'
+    session['user_points'] = 150
+    session['user_currency'] = 25
+    session['user_title'] = 'Developer'
+    session['user_picture'] = url_for('static', filename='img/avatar1.png')
+    
+    return render_template('pages/dashboard_course.html', active_page='dashboard')
+
+@app.route('/dev-dashboard')
+def dev_dashboard():
+    """🎪 DEVELOPMENT DASHBOARD - Shows real sample data for testing"""
+    # Add mock session data for development
+    session['user_id'] = 'dev_user_123'
+    session['user_name'] = 'Dev Tester'
+    session['user_email'] = 'dev@example.com'
+    session['user_points'] = 1150
+    session['user_currency'] = 425
+    session['user_title'] = 'Python Explorer'
+    session['user_picture'] = url_for('static', filename='img/avatar5.png')
+    
+    return render_template('pages/dev_dashboard.html', active_page='dashboard')
+
+# 🎪 DAZZLING DASHBOARD API ENDPOINTS - The most interactive learning experience ever!
+# ==================================================================================
+
+@app.route('/api/dashboard/leaderboard')
+def api_dashboard_leaderboard():
+    """Get real-time leaderboard data with rankings and badges"""
+    try:
+        period = request.args.get('period', 'weekly')  # daily, weekly, monthly, all_time
+        limit = int(request.args.get('limit', 10))
+        
+        leaderboard_data = dashboard_controller.get_leaderboard(period=period, limit=limit)
+        return jsonify({
+            'success': True,
+            'data': leaderboard_data,
+            'period': period,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/dashboard/daily_challenge')
+def api_dashboard_daily_challenge():
+    """Get today's daily challenge with progress tracking"""
+    try:
+        user_id = session.get('user_id')
+        challenge_data = dashboard_controller.get_daily_challenge(user_id=user_id)
+        return jsonify({
+            'success': True,
+            'data': challenge_data,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/dashboard/daily_challenge/complete', methods=['POST'])
+def api_dashboard_complete_challenge():
+    """Mark daily challenge as completed and award rewards"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'success': False, 'error': 'Authentication required'}), 401
+            
+        data = request.get_json()
+        challenge_id = data.get('challenge_id')
+        points_earned = data.get('points_earned', 0)
+        
+        result = dashboard_controller.complete_daily_challenge(
+            user_id=user_id,
+            challenge_id=challenge_id,
+            points_earned=points_earned
+        )
+        return jsonify({
+            'success': True,
+            'data': result,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/dashboard/notifications')
+def api_dashboard_notifications():
+    """Get user notifications with smart filtering"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'success': False, 'error': 'Authentication required'}), 401
+            
+        unread_only = request.args.get('unread_only', 'false').lower() == 'true'
+        limit = int(request.args.get('limit', 20))
+        
+        notifications = dashboard_controller.get_user_notifications(
+            user_id=user_id,
+            unread_only=unread_only,
+            limit=limit
+        )
+        return jsonify({
+            'success': True,
+            'data': notifications,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/dashboard/notifications/mark_read', methods=['POST'])
+def api_dashboard_mark_notifications_read():
+    """Mark notifications as read"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'success': False, 'error': 'Authentication required'}), 401
+            
+        data = request.get_json()
+        notification_ids = data.get('notification_ids', [])
+        
+        result = dashboard_controller.mark_notifications_read(user_id=user_id, notification_ids=notification_ids)
+        return jsonify({
+            'success': True,
+            'data': result,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/dashboard/activity_feed')
+def api_dashboard_activity_feed():
+    """Get personalized activity feed"""
+    try:
+        user_id = session.get('user_id')
+        limit = int(request.args.get('limit', 15))
+        
+        activity_data = dashboard_controller.get_activity_feed(user_id=user_id, limit=limit)
+        return jsonify({
+            'success': True,
+            'data': activity_data,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/dashboard/user_stats')
+def api_dashboard_user_stats():
+    """Get comprehensive user statistics and analytics"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'success': False, 'error': 'Authentication required'}), 401
+            
+        stats = dashboard_controller.get_user_statistics(user_id=user_id)
+        return jsonify({
+            'success': True,
+            'data': stats,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/dashboard/gamification')
+def api_dashboard_gamification():
+    """Get user badges, achievements, and level progression"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'success': False, 'error': 'Authentication required'}), 401
+            
+        gamification_data = dashboard_controller.get_user_gamification(user_id=user_id)
+        return jsonify({
+            'success': True,
+            'data': gamification_data,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/dashboard/add_activity', methods=['POST'])
+def api_dashboard_add_activity():
+    """Add new activity to user's feed"""
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'success': False, 'error': 'Authentication required'}), 401
+            
+        data = request.get_json()
+        activity_type = data.get('activity_type')
+        details = data.get('details', {})
+        
+        result = dashboard_controller.add_user_activity(
+            user_id=user_id,
+            activity_type=activity_type,
+            details=details
+        )
+        return jsonify({
+            'success': True,
+            'data': result,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# ==================================================================================
+# End of Dazzling Dashboard API Endpoints 🎪
+
+# 🎪 DEVELOPMENT API ENDPOINTS - Sample Data for Testing
+# ====================================================
+
+@app.route('/api/dev/dashboard/leaderboard')
+def api_dev_leaderboard():
+    """Development endpoint - Get sample leaderboard data"""
+    try:
+        limit = int(request.args.get('limit', 10))
+        leaderboard_data = dev_data_loader.get_dev_leaderboard(limit=limit)
+        return jsonify({
+            'success': True,
+            'data': leaderboard_data,
+            'dev_mode': True,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e), 'dev_mode': True}), 500
+
+@app.route('/api/dev/dashboard/daily_challenge')
+def api_dev_daily_challenge():
+    """Development endpoint - Get sample daily challenge"""
+    try:
+        challenge_data = dev_data_loader.get_dev_daily_challenge()
+        return jsonify({
+            'success': True,
+            'data': challenge_data,
+            'dev_mode': True,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e), 'dev_mode': True}), 500
+
+@app.route('/api/dev/dashboard/notifications')
+def api_dev_notifications():
+    """Development endpoint - Get sample notifications"""
+    try:
+        limit = int(request.args.get('limit', 5))
+        notifications_data = dev_data_loader.get_dev_notifications(limit=limit)
+        return jsonify({
+            'success': True,
+            'data': notifications_data,
+            'dev_mode': True,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e), 'dev_mode': True}), 500
+
+@app.route('/api/dev/dashboard/activity_feed')
+def api_dev_activity_feed():
+    """Development endpoint - Get sample activity feed"""
+    try:
+        limit = int(request.args.get('limit', 10))
+        activity_data = dev_data_loader.get_dev_activity_feed(limit=limit)
+        return jsonify({
+            'success': True,
+            'data': activity_data,
+            'dev_mode': True,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e), 'dev_mode': True}), 500
+
+@app.route('/api/dev/dashboard/user_stats')
+def api_dev_user_stats():
+    """Development endpoint - Get sample user statistics"""
+    try:
+        user_id = request.args.get('user_id', 'user_005')
+        stats_data = dev_data_loader.get_dev_user_stats(user_id=user_id)
+        return jsonify({
+            'success': True,
+            'data': stats_data,
+            'dev_mode': True,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e), 'dev_mode': True}), 500
+
+@app.route('/api/dev/dashboard/all')
+def api_dev_dashboard_all():
+    """Get all development dashboard data in one call"""
+    try:
+        data = {
+            'leaderboard': dev_data_loader.get_dev_leaderboard(10),
+            'dailyChallenge': dev_data_loader.get_dev_daily_challenge(),
+            'notifications': dev_data_loader.get_dev_notifications(5),
+            'activityFeed': dev_data_loader.get_dev_activity_feed(8),
+            'userStats': dev_data_loader.get_dev_user_stats(),
+            'timestamp': datetime.now().isoformat(),
+            'dataSource': 'development_mode'
+        }
+        return jsonify({
+            'success': True,
+            'data': data,
+            'timestamp': datetime.now().isoformat(),
+            'mode': 'development'
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=PORT)

@@ -1,0 +1,182 @@
+{
+  "objective": "Learn best practices for documenting Python code using indentation, whitespace, comments, and docstrings, and understand the role of pydoc.",
+  "blocks": [
+    {
+      "type": "text",
+      "content": "# Lesson 4.1: Documenting Code Segments\n\n### Objective:\nLearn best practices for documenting Python code using indentation, whitespace, comments, and docstrings, and understand the role of pydoc."
+    },
+    {
+      "type": "text",
+      "content": "Well-documented code is crucial for readability, maintainability, and collaboration. It helps you and others understand what the code does, how it works, and why certain decisions were made. Python emphasizes readability, and its syntax naturally encourages good documentation practices."
+    },
+    {
+      "type": "text",
+      "content": "## 4.1 Document Code Segments\n"
+    },
+    {
+      "type": "text",
+      "content": "### Indentation\n\nUnlike many other programming languages, Python uses **indentation** to define code blocks (e.g., inside `if` statements, loops, functions, and classes). Consistent and correct indentation is not just a style choice; it is **syntactically required**."
+    },
+    {
+      "type": "step_card",
+      "id": "lesson4_1_snippet1",
+      "header": "Importance of Indentation",
+      "steps": [
+        "The `if` block is correctly indented by 4 spaces.",
+        "The `else` block is also correctly indented by 4 spaces.",
+        "Inconsistent or incorrect indentation will lead to `IndentationError`."
+      ],
+      "code": "x = 10\nif x > 5:\n    print('x is greater than 5') # 4 spaces indentation\nelse:\n    print('x is 5 or less')    # 4 spaces indentation\n\n# Example of incorrect indentation (would cause an error):\n#   print('This line is incorrectly indented') # Leads to IndentationError\n",
+      "output": "x is greater than 5\n"
+    },
+    {
+      "type": "text",
+      "content": "### White Space\n\n**White space** (spaces, tabs, blank lines) beyond indentation is used to improve code readability. It helps separate logical blocks of code and make individual lines less cluttered."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Good use of white space\n\ndef calculate_area(length, width):\n    area = length * width\n    return area\n\n# Blank lines for visual separation\nside1 = 10\nside2 = 5\n\n# Spaces around operators and after commas\ntotal_area = calculate_area(side1, side2) + 20\n\nprint('Total area: {}'.format(total_area))",
+      "output": "Total area: 70\n",
+      "id": "lesson4_1_snippet2"
+    },
+    {
+      "type": "text",
+      "content": "### Comments\n\n**Comments** are explanatory notes within your code that the Python interpreter ignores. They are solely for human readers to understand the code better. Use comments to explain *why* something is done, rather than just *what* it does (which should be clear from the code itself).\n\n* **Single-line comments:** Start with a hash symbol (`#`).\n* **Multi-line comments:** While Python doesn't have a specific multi-line comment syntax, triple-quoted strings (`'''...'''` or `\"\"\"...\"\"\"`) are often used for this purpose, especially if they are not assigned to a variable."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# This is a single-line comment explaining the next line.\nmax_items = 100 # Inline comment: Defines the maximum number of items allowed.\n\n'''\nThis is a multi-line comment.\nIt can span across several lines.\nIt's often used for larger explanations or temporarily disabling code.\n'''\n\ndef process_data(data):\n    # TODO: Implement complex data processing logic here later.\n    pass\n\nprint('Comments help make code understandable.')",
+      "output": "Comments help make code understandable.\n",
+      "id": "lesson4_1_snippet3"
+    },
+    {
+      "type": "text",
+      "content": "### Docstrings\n\n**Docstrings** (documentation strings) are string literals that occur as the first statement in a module, function, class, or method definition. They are used to document what the code block does, its arguments, and what it returns. Unlike regular comments, docstrings are stored as part of the object and can be accessed programmatically."
+    },
+    {
+      "type": "accordion",
+      "id": "docstring_examples",
+      "header": "Examples of Docstrings",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "- **Function Docstring (single-line):** Brief summary for simple functions."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "def add_numbers(a, b):\n    \"\"\"Return the sum of two numbers.\"\"\"\n    return a + b\n\nprint(add_numbers.__doc__)\n",
+          "output": "Return the sum of two numbers.\n"
+        },
+        {
+          "type": "text",
+          "content": "- **Function Docstring (multi-line):** For more complex functions, detailing purpose, arguments, and return values."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "def greeting(name, hour):\n    \"\"\" \n    Generate a personalized greeting based on time of day.\n\n    Args:\n        name (str): The name of the person to greet.\n        hour (int): The current hour (0-23).\n\n    Returns:\n        str: A greeting message (e.g., 'Good morning, Alice!').\n    \"\"\"\n    if hour < 12:\n        return 'Good morning, {}.'.format(name)\n    elif hour < 18:\n        return 'Good afternoon, {}.'.format(name)\n    else:\n        return 'Good evening, {}.'.format(name)\n\nprint(greeting.__doc__)\nprint(greeting('Bob', 14))\n",
+          "output": " \n    Generate a personalized greeting based on time of day.\n\n    Args:\n        name (str): The name of the person to greet.\n        hour (int): The current hour (0-23).\n\n    Returns:\n        str: A greeting message (e.g., 'Good morning, Alice!').\n    \nGood afternoon, Bob.\n"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "### Generating Documentation using `pydoc`\n\n`pydoc` is a built-in Python module that automatically generates documentation from Python modules, classes, functions, and methods based on their docstrings. It's a convenient way to quickly view documentation without needing to parse the source code directly.\n\nTo use `pydoc`, you typically run it from your command line (terminal) like this:\n\n```bash\npython -m pydoc your_module_name\n```\n\nIf you had a Python file named `my_module.py` containing the `greeting` function with its docstring from above, running `python -m pydoc my_module` in your terminal would display something similar to this:\n\n```\nNAME\n    my_module\n\nFUNCTIONS\n    greeting(name, hour)\n        Generate a personalized greeting based on time of day.\n\n        Args:\n            name (str): The name of the person to greet.\n            hour (int): The current hour (0-23).\n\n        Returns:\n            str: A greeting message (e.g., 'Good morning, Alice!').\n\nFILE\n    /path/to/your/my_module.py\n```\n\nThis demonstrates how `pydoc` extracts and formats the information directly from your docstrings."
+    },
+    {
+      "type": "ide",
+      "id": "try_documentation",
+      "label": "Try it yourself: Document Your Code!",
+      "editable": true,
+      "default_code": "# Use comments to explain parts of the code.\n# Use docstrings for the function to describe its purpose, arguments, and return.\n# Ensure proper indentation and use of whitespace for readability.\n\n# This function calculates the factorial of a given non-negative integer.\n\ndef factorial(n):\n    \"\"\"\n    Calculate the factorial of a non-negative integer.\n\n    The factorial of a number is the product of all positive integers\n    less than or equal to that number.\n\n    Args:\n        n (int): The non-negative integer.\n\n    Returns:\n        int: The factorial of n.\n    \"\"\"\n    # Handle base case for factorial\n    if n == 0:\n        return 1\n    # Calculate factorial iteratively\n    result = 1\n    for i in range(1, n + 1):\n        result *= i # Multiply result by current number\n    return result\n\n# --- End of function definition ---\n\n# Test the function with some values\nnum1 = 5\nfact1 = factorial(num1)\nprint('The factorial of {} is {}.'.format(num1, fact1))\n\nnum2 = 0\nfact2 = factorial(num2)\nprint('The factorial of {} is {}.'.format(num2, fact2))\n"
+    },
+    {
+      "type": "text",
+      "content": "## Recap:\n\nEffective code documentation is vital for writing maintainable and understandable Python programs:\n\n-   **Indentation:** Python's structural element for code blocks (typically 4 spaces).\n-   **White Space:** Used to improve readability and separate logical sections of code.\n-   **Comments (`#`, `'''...'''`):** Explanatory notes ignored by the interpreter, used to clarify complex logic or provide context.\n-   **Docstrings (`\"\"\"...\"\"\"` or `'''...'''` at start of definition):** Formal documentation for modules, functions, classes, and methods, accessible via `__doc__` or tools like `pydoc`.\n-   **`pydoc`:** A utility for viewing documentation generated from docstrings directly from the command line."
+    },
+    {
+      "type": "quiz_section",
+      "id": "lesson_4_1_quiz",
+      "content": {
+        "progress": {
+          "total": 4,
+          "completed": 0
+        },
+        "header": "Test your knowledge of Code Documentation!",
+        "blocks": [
+          {
+            "type": "multiple_choice_quiz",
+            "id": "quiz_documentation_concepts",
+            "instructions": "Select the best answer for each question.",
+            "questions": [
+              {
+                "question": "Which of the following is *syntactically required* for Python code blocks? <span class='points-badge'>1 pt</span>",
+                "options": [
+                  "Comments",
+                  "Docstrings",
+                  "Indentation",
+                  "Whitespace around operators"
+                ],
+                "correct_index": 2,
+                "feedback": "Unlike comments or extra whitespace, correct indentation is mandatory in Python to define code blocks; incorrect indentation leads to an `IndentationError`."
+              },
+              {
+                "question": "What is the primary difference between a regular comment (`#`) and a docstring (`\"\"\"...\"\"\"`)? <span class='points-badge'>1 pt</span>",
+                "options": [
+                  "Comments can be multi-line, but docstrings cannot.",
+                  "Docstrings are ignored by the interpreter, while comments are processed.",
+                  "Docstrings are accessible at runtime via `__doc__`, comments are not.",
+                  "Comments are only for developers, docstrings are for end-users."
+                ],
+                "correct_index": 2,
+                "feedback": "Docstrings are special string literals that are stored as part of the object's metadata and can be accessed programmatically (e.g., using `help()` or `.__doc__`), whereas comments are completely discarded by the interpreter."
+              }
+            ]
+          },
+          {
+            "type": "fill_in_the_blanks",
+            "id": "quiz_documentation_apply",
+            "instructions": "Predict the output or fill in the blank.",
+            "questions": [
+              {
+                "text": "```python\ndef calculate_sum(a, b):\n    \"\"\"Adds two numbers and returns the result.\"\"\"\n    return a + b\n\nprint(calculate_sum.__doc__)\n```\nOutput: _________. <span class='points-badge'>1 pt</span>",
+                "answers": [
+                  "Adds two numbers and returns the result."
+                ],
+                "feedback": "The `__doc__` attribute of a function provides its docstring."
+              },
+              {
+                "text": "To view documentation for a Python module named `my_module.py` from the command line, you would use: `python -m __________ my_module`. <span class='points-badge'>1 pt</span>",
+                "answers": [
+                  "pydoc"
+                ],
+                "feedback": "The `pydoc` module is used to generate and view documentation from docstrings."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "debug_challenge",
+      "id": "fix_indentation",
+      "label": "**Fix the bug!**",
+      "buggy_code": "# This code has an indentation error.\n\ndef greet(name):\nprint('Hello, {}!'.format(name))\n    print('Welcome.')\n\ngreet('Charlie')",
+      "solution": {
+        "explanation": "In Python, the code inside a function (or any block like `if`, `for`, `while`) must be indented at the same level. The lines `print('Hello, {}!'.format(name))` and `print('Welcome.')` are not consistently indented relative to the `def` statement, and also not consistently with each other, causing an `IndentationError`.",
+        "correct_code": "# This code has an indentation error.\n\ndef greet(name):\n    print('Hello, {}!'.format(name))\n    print('Welcome.')\n\ngreet('Charlie')"
+      }
+    }
+  ],
+  "migration_info": {
+    "quiz_master_3_migration": {
+      "migrated_on": "2025-06-27T17:59:08.924978",
+      "original_backup": "lesson_4_1.json.backup_20250627_175908",
+      "blocks_processed": 16,
+      "blocks_after_migration": 16
+    }
+  }
+}

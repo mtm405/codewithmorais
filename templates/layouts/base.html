@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Optimized Base Template - Quiz Master 3.0 -->
+{% include 'layouts/head.html' %}
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Navigation cached component -->
+    {% cache 300, 'navigation', user.id if user else 'anonymous' %}
+    {% include 'components/navigation.html' %}
+    {% endcache %}
+    
+    <main class="main-content" role="main">
+        {% block content %}{% endblock %}
+    </main>
+    
+    {% block sidebar %}
+        <!-- Sidebar cached component -->
+        {% cache 300, 'sidebar', user.id if user else 'anonymous' %}
+        {% include 'components/sidebar.html' %}
+        {% endcache %}
+    {% endblock %}
+    
+    <!-- Footer cached component -->
+    {% cache 600, 'footer' %}
+    {% include 'components/footer.html' %}
+    {% endcache %}
+    
+    <!-- Scripts loaded at end for performance -->
+    {% block scripts %}
+    <script>
+        // Preload critical resources
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize critical components
+            if (window.initializeApp) {
+                window.initializeApp();
+            }
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

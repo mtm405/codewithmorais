@@ -1,0 +1,87 @@
+<!-- Optimized code snippet block with performance enhancements -->
+<div class="code-snippet-block" data-code="{{ block.code|tojson|safe }}">
+  <div class="code-snippet-title">
+    <span class="material-symbols-outlined" style="vertical-align: middle;">lightbulb</span>
+    Example
+  </div>
+  <div class="python-example" aria-label="Code example">
+    <div class="code-snippet-container">
+      <div class="code-snippet-ace ace-editor-pending"></div>
+    </div>
+  </div>
+</div>
+<script>
+// Optimized code snippet initialization with immediate fix
+(function() {
+  const codeSnippetBlock = document.currentScript.previousElementSibling;
+  const aceContainer = codeSnippetBlock.querySelector('.code-snippet-ace');
+  const code = JSON.parse(codeSnippetBlock.dataset.code || '""');
+  
+  // Generate unique ID for this ACE editor
+  const uniqueId = 'ace-snippet-' + Math.random().toString(36).substr(2, 8);
+  aceContainer.id = uniqueId;
+  
+  function initializeAceEditor() {
+    if (typeof ace === 'undefined') {
+      // ACE not loaded yet, wait
+      setTimeout(initializeAceEditor, 100);
+      return;
+    }
+    
+    try {
+      // Remove pending class
+      aceContainer.classList.remove('ace-editor-pending');
+      
+      // Initialize ACE Editor
+      const editor = ace.edit(uniqueId);
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/python");
+      editor.setValue(code, -1);
+      editor.setReadOnly(true);
+      
+      // Configure editor options for read-only display
+      editor.setOptions({
+        highlightActiveLine: false,
+        highlightGutterLine: false,
+        showPrintMargin: false,
+        showLineNumbers: true,
+        showGutter: true,
+        displayIndentGuides: false,
+        fontSize: "1.08em",
+        maxLines: Infinity,
+        minLines: 3,
+        wrap: true
+      });
+      
+      // Hide cursor and make it look like example code
+      editor.renderer.$cursorLayer.element.style.display = "none";
+      editor.renderer.setShowGutter(true);
+      editor.renderer.setScrollMargin(8,8,8,8);
+      editor.setBehavioursEnabled(false);
+      
+      // Style the container
+      editor.container.style.background = '#000';
+      editor.container.style.border = 'none';
+      editor.container.style.boxShadow = 'none';
+      
+      // Store reference for potential cleanup
+      if (!window.aceEditors) window.aceEditors = {};
+      window.aceEditors[uniqueId] = editor;
+      
+      console.log(`✅ Initialized code snippet ACE editor: ${uniqueId}`);
+      
+    } catch (error) {
+      console.error('❌ Failed to initialize ACE editor:', error);
+      // Fallback: show code as plain text
+      aceContainer.innerHTML = `<pre style="background: var(--bg-accent); color: var(--text-main); padding: 12px; margin: 0; border-radius: 4px; font-family: monospace; overflow-x: auto;"><code>${code}</code></pre>`;
+    }
+  }
+  
+  // Initialize when DOM is ready or immediately if already ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAceEditor);
+  } else {
+    initializeAceEditor();
+  }
+})();
+</script>

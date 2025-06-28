@@ -1,0 +1,445 @@
+{
+  "🎪_DAZZLING_DASHBOARD_SCHEMA": "Firebase Collections for Ultimate Interactive Learning Experience",
+  
+  "users": {
+    "description": "Complete user profiles with real-time learning analytics",
+    "collection_path": "users/{userId}",
+    "structure": {
+      "profile": {
+        "name": "string - Display name",
+        "email": "string - User email",
+        "avatar_url": "string - Profile picture URL",
+        "join_date": "timestamp - Account creation",
+        "last_active": "timestamp - Last dashboard visit", 
+        "timezone": "string - User timezone",
+        "class_id": "string - Classroom identifier",
+        "student_id": "string - School student ID"
+      },
+      "stats": {
+        "total_points": "number - Lifetime points earned",
+        "current_streak": "number - Days in a row studied",
+        "max_streak": "number - Longest streak achieved",
+        "lessons_completed": "number - Total lessons finished",
+        "quizzes_taken": "number - Total quiz attempts",
+        "average_score": "number - Overall quiz performance %",
+        "time_studied_minutes": "number - Total study time",
+        "level": "number - Current user level (1-10)",
+        "current_xp": "number - XP in current level",
+        "total_xp": "number - Lifetime XP earned",
+        "pycoins": "number - Virtual currency balance",
+        "global_rank": "number - Position in global leaderboard",
+        "class_rank": "number - Position in class leaderboard"
+      },
+      "progress": {
+        "current_lesson": "string - Currently studying lesson",
+        "completed_lessons": "array - List of completed lesson IDs",
+        "mastery_levels": {
+          "variables": "number 0-100 - Topic mastery percentage",
+          "loops": "number 0-100 - Topic mastery percentage",
+          "functions": "number 0-100 - Topic mastery percentage", 
+          "data_structures": "number 0-100 - Topic mastery percentage",
+          "error_handling": "number 0-100 - Topic mastery percentage"
+        },
+        "weak_topics": "array - Topics needing improvement",
+        "strong_topics": "array - Topics with high mastery",
+        "recommended_lessons": "array - AI-suggested next lessons",
+        "learning_velocity": "number - Lessons per week average",
+        "consistency_score": "number 0-100 - Regular study habit score"
+      },
+      "preferences": {
+        "notifications_enabled": "boolean - Allow notifications",
+        "daily_challenge_reminder": "boolean - Remind about daily challenges",
+        "competitive_mode": "boolean - Show in leaderboards",
+        "dashboard_layout": "string - preferred|compact|detailed",
+        "theme": "string - dark|light|auto",
+        "study_goal_minutes": "number - Daily study time goal",
+        "difficulty_preference": "string - easy|medium|hard|adaptive"
+      },
+      "achievements": {
+        "badges_earned": "array - List of unlocked badge IDs",
+        "recent_unlocks": "array - Recently earned achievements",
+        "progress_towards": "object - Progress to next badges",
+        "showcase_badges": "array - Badges displayed on profile",
+        "total_badges": "number - Count of earned badges"
+      }
+    },
+    "indexes_needed": [
+      "stats.total_points (desc) - for leaderboard",
+      "stats.current_streak (desc) - for streak rankings", 
+      "progress.mastery_levels (composite) - for analytics",
+      "class_id, stats.total_points (desc) - for class leaderboard"
+    ]
+  },
+
+  "leaderboard": {
+    "description": "Real-time competitive rankings with live updates",
+    "collection_path": "leaderboard/{period}/{date}",
+    "structure": {
+      "global_daily": {
+        "document_id": "YYYY_MM_DD",
+        "rankings": {
+          "{userId}": {
+            "points": "number - Points earned today",
+            "rank": "number - Current position (1-based)",
+            "display_name": "string - User display name",
+            "avatar_url": "string - Profile picture",
+            "change_from_yesterday": "number - Rank change (+/-)",
+            "streak": "number - Current study streak",
+            "lessons_today": "number - Lessons completed today",
+            "last_updated": "timestamp - Last activity time",
+            "class_id": "string - For class-specific boards"
+          }
+        },
+        "metadata": {
+          "total_participants": "number - Active users today",
+          "average_points": "number - Class average",
+          "top_performer": "object - Best performer details",
+          "generated_at": "timestamp - Leaderboard creation time"
+        }
+      },
+      "global_weekly": "Similar structure for weekly rankings",
+      "global_monthly": "Similar structure for monthly rankings",
+      "class_specific": "Class-only leaderboards"
+    },
+    "real_time_features": [
+      "Live rank updates every 30 seconds",
+      "Animated position changes", 
+      "Push notifications for rank changes",
+      "Social comparison features"
+    ]
+  },
+
+  "daily_challenges": {
+    "description": "Personalized daily learning challenges with AI targeting",
+    "collection_path": "daily_challenges/{date}",
+    "structure": {
+      "2024_06_27": {
+        "global_challenge": {
+          "id": "daily_2024_06_27",
+          "type": "mcq|fill_blank|code_debug|drag_drop",
+          "topic": "string - loops, functions, etc.",
+          "difficulty": "easy|medium|hard",
+          "question": "string - Challenge question text",
+          "options": "array - Multiple choice options",
+          "correct_answer": "string - Correct answer",
+          "explanation": "string - Detailed explanation",
+          "code_snippet": "string - Code example if applicable",
+          "hints": "array - Progressive hint system",
+          "time_limit_seconds": "number - Optional time limit"
+        },
+        "personalized_variants": {
+          "{userId}": {
+            "adapted_difficulty": "string - AI-adjusted difficulty",
+            "target_weakness": "string - User's weak area focus",
+            "custom_explanation": "string - Personalized feedback",
+            "bonus_context": "string - Extra learning context"
+          }
+        },
+        "rewards": {
+          "base_points": "number - Standard reward",
+          "base_pycoins": "number - Standard currency reward",
+          "base_xp": "number - Standard experience points",
+          "streak_multiplier": "number - Bonus for streaks",
+          "perfect_score_bonus": "number - Extra for 100%",
+          "speed_bonus": "number - Extra for fast completion"
+        },
+        "metadata": {
+          "created_by": "auto|teacher_id - Challenge source",
+          "target_class_weaknesses": "array - Class-wide weak areas",
+          "estimated_time_minutes": "number - Expected completion time",
+          "success_criteria": "number - Target success rate %",
+          "curriculum_alignment": "string - Which lesson this supports"
+        },
+        "participants": {
+          "{userId}": {
+            "attempted": "boolean - Has user tried",
+            "answer": "string - User's submitted answer",
+            "is_correct": "boolean - Answer correctness",
+            "attempt_time": "timestamp - When attempted",
+            "time_taken_seconds": "number - Actual time spent",
+            "hints_used": "number - Number of hints accessed",
+            "points_earned": "number - Total points awarded",
+            "pycoins_earned": "number - Currency earned",
+            "feedback_rating": "number 1-5 - User challenge rating"
+          }
+        },
+        "live_stats": {
+          "total_attempts": "number - Total participants",
+          "correct_attempts": "number - Successful completions",
+          "success_rate": "number - Percentage successful",
+          "average_time_seconds": "number - Average completion time",
+          "most_common_mistake": "string - Common wrong answer",
+          "class_averages": "object - Per-class performance"
+        }
+      }
+    },
+    "automation_features": [
+      "AI-generated challenges based on class weak areas",
+      "Personalized difficulty adjustment",
+      "Automatic reward calculation",
+      "Progress tracking integration"
+    ]
+  },
+
+  "quiz_results": {
+    "description": "Comprehensive quiz analytics for dashboard insights",
+    "collection_path": "quiz_results/{userId}/{lessonId}",
+    "structure": {
+      "lesson_1_1": {
+        "{quizId}": {
+          "basic_results": {
+            "score": "number - Points earned",
+            "max_score": "number - Maximum possible points",
+            "percentage": "number - Score as percentage",
+            "time_taken_seconds": "number - Total time spent",
+            "timestamp": "timestamp - When quiz was taken",
+            "attempt_number": "number - 1st, 2nd, 3rd attempt"
+          },
+          "detailed_answers": [
+            {
+              "question_id": "string - Unique question identifier",
+              "question_text": "string - The actual question",
+              "user_answer": "string - What user selected/typed",
+              "correct_answer": "string - The right answer",
+              "is_correct": "boolean - Answer correctness",
+              "points_earned": "number - Points for this question",
+              "time_taken_seconds": "number - Time on this question",
+              "topic": "string - Which topic this tests",
+              "difficulty": "string - Question difficulty level",
+              "question_type": "string - mcq, fill_blank, drag_drop"
+            }
+          ],
+          "performance_analysis": {
+            "strengths_demonstrated": "array - Topics user did well on",
+            "weaknesses_identified": "array - Topics needing work",
+            "improvement_suggestions": "array - Specific recommendations",
+            "time_efficiency": "string - fast|normal|slow completion",
+            "consistency_score": "number - How consistent answers were",
+            "mastery_indication": "number 0-100 - Topic mastery level"
+          },
+          "dashboard_insights": {
+            "contribution_to_streak": "boolean - Did this maintain streak",
+            "points_impact": "number - How much this boosted total points",
+            "rank_change": "number - Effect on leaderboard position",
+            "next_recommended": "string - What to study next",
+            "celebration_trigger": "boolean - Should trigger achievement popup"
+          }
+        }
+      },
+      "aggregated_analytics": {
+        "topic_mastery": {
+          "variables": {
+            "total_attempts": "number - Questions attempted",
+            "correct_answers": "number - Correct responses",
+            "success_rate": "number - Percentage correct",
+            "average_time": "number - Seconds per question",
+            "improvement_trend": "string - improving|stable|declining",
+            "last_updated": "timestamp - Most recent quiz"
+          }
+        },
+        "learning_patterns": {
+          "best_study_time": "string - When user performs best",
+          "optimal_session_length": "number - Best study duration",
+          "difficulty_preference": "string - User's comfort zone",
+          "learning_velocity": "number - Concepts per week",
+          "consistency_rating": "number 0-100 - Regular study habits"
+        },
+        "dashboard_metrics": {
+          "total_quiz_time": "number - Lifetime quiz minutes",
+          "average_score_trend": "array - Score history for charts",
+          "streak_contributors": "array - Quizzes that built streaks",
+          "milestone_progress": "object - Progress toward next level/badge"
+        }
+      }
+    }
+  },
+
+  "notifications": {
+    "description": "Intelligent notification system for engagement",
+    "collection_path": "notifications/{userId}",
+    "structure": {
+      "pending": [
+        {
+          "id": "string - Unique notification ID",
+          "type": "achievement|reminder|social|system|celebration",
+          "priority": "low|medium|high|urgent",
+          "title": "string - Notification headline",
+          "message": "string - Full notification text",
+          "action_url": "string - Where to go when clicked",
+          "action_text": "string - Button text (Take Quiz, View Achievement)",
+          "icon": "string - Emoji or icon identifier",
+          "created_at": "timestamp - When notification was created",
+          "expires_at": "timestamp - When notification becomes invalid",
+          "read": "boolean - Has user seen this",
+          "dismissed": "boolean - Has user dismissed this",
+          "interaction_data": {
+            "clicked": "boolean - Did user click action",
+            "time_to_read": "number - Seconds until user read",
+            "effectiveness_score": "number - Did this drive action"
+          }
+        }
+      ],
+      "preferences": {
+        "push_enabled": "boolean - Allow push notifications",
+        "email_enabled": "boolean - Allow email notifications", 
+        "types_enabled": "array - Which notification types to receive",
+        "quiet_hours": {
+          "start": "string - No notifications after (22:00)",
+          "end": "string - No notifications before (08:00)"
+        },
+        "frequency_limits": {
+          "max_per_day": "number - Maximum notifications per day",
+          "spacing_minutes": "number - Minimum time between notifications"
+        }
+      },
+      "analytics": {
+        "total_sent": "number - Lifetime notifications sent",
+        "total_read": "number - Notifications user actually read",
+        "total_acted": "number - Notifications that drove action",
+        "effectiveness_rate": "number - Percentage that drove action",
+        "preferred_types": "array - Most effective notification types"
+      }
+    },
+    "smart_triggers": [
+      "Streak about to break (no activity today)",
+      "Rank changes (moved up/down in leaderboard)", 
+      "Achievement unlocks (new badge earned)",
+      "Social activity (friend passed you, study buddy online)",
+      "Learning recommendations (perfect time to review)",
+      "Daily challenge available",
+      "Goal reminders (weekly target progress)"
+    ]
+  },
+
+  "real_time_activity": {
+    "description": "Live activity feed and presence system",
+    "collection_path": "real_time_activity",
+    "structure": {
+      "live_feed": [
+        {
+          "id": "string - Unique activity ID",
+          "userId": "string - Who performed the action",
+          "user_name": "string - Display name",
+          "user_avatar": "string - Profile picture URL",
+          "action_type": "quiz_completed|achievement_unlocked|streak_milestone|level_up",
+          "action_description": "string - Sarah completed Python Basics Quiz with 95%!",
+          "points_earned": "number - Points from this action",
+          "timestamp": "timestamp - When action occurred",
+          "visibility": "public|friends|class|private",
+          "celebration_level": "normal|exciting|epic - How big to display",
+          "context": {
+            "lesson_name": "string - Which lesson if applicable",
+            "achievement_name": "string - Which badge if applicable",
+            "score_details": "object - Quiz performance details"
+          }
+        }
+      ],
+      "current_online": {
+        "{userId}": {
+          "last_seen": "timestamp - Last activity time",
+          "status": "online|studying|quiz_taking|away",
+          "current_activity": "string - What they're doing now",
+          "current_lesson": "string - Which lesson they're on",
+          "study_session_start": "timestamp - When current session began",
+          "visible_to": "array - Who can see their status"
+        }
+      },
+      "study_sessions": {
+        "{userId}": {
+          "session_id": "string - Unique session identifier",
+          "start_time": "timestamp - Session begin time",
+          "current_lesson": "string - What they're studying",
+          "actions_count": "number - Quiz attempts, page views, etc.",
+          "focus_score": "number 0-100 - How engaged they seem",
+          "breaks_taken": "number - Times they stepped away",
+          "session_goals": "array - What they planned to accomplish"
+        }
+      }
+    },
+    "real_time_features": [
+      "Live activity updates every 10 seconds",
+      "Friend/classmate online status",
+      "Study buddy matching",
+      "Group study session coordination"
+    ]
+  },
+
+  "gamification": {
+    "description": "Achievement, badge, and reward system",
+    "collection_path": "gamification",
+    "structure": {
+      "badges": {
+        "quiz_master": {
+          "name": "Quiz Master",
+          "description": "Complete 10 quizzes with 90%+ scores",
+          "icon": "🏆",
+          "rarity": "rare",
+          "category": "academic_excellence",
+          "criteria": {
+            "type": "quiz_performance",
+            "requirement": {
+              "min_quizzes": 10,
+              "min_score": 90,
+              "time_frame": "all_time"
+            }
+          },
+          "rewards": {
+            "points": 500,
+            "pycoins": 250,
+            "xp": 300,
+            "special_privileges": ["priority_help", "mentor_status"]
+          },
+          "visual_effects": {
+            "unlock_animation": "confetti_gold",
+            "display_style": "glowing_border",
+            "celebration_sound": "achievement_fanfare"
+          }
+        }
+      },
+      "levels": {
+        "1": {
+          "title": "Python Explorer",
+          "xp_required": 0,
+          "xp_to_next": 1000,
+          "unlocks": ["basic_lessons", "daily_challenges"],
+          "badge": "explorer_badge",
+          "perks": ["standard_hints", "basic_dashboard"]
+        },
+        "2": {
+          "title": "Code Apprentice", 
+          "xp_required": 1000,
+          "xp_to_next": 2500,
+          "unlocks": ["intermediate_lessons", "study_groups"],
+          "badge": "apprentice_badge",
+          "perks": ["enhanced_hints", "progress_analytics"]
+        }
+      },
+      "economy": {
+        "pycoin_rates": {
+          "quiz_completion": 10,
+          "daily_challenge": 25,
+          "perfect_score": 50,
+          "streak_milestone": 100,
+          "help_classmate": 20,
+          "attend_study_group": 15
+        },
+        "shop_items": {
+          "extra_hint": {
+            "name": "Extra Hint",
+            "description": "Get an additional hint on difficult questions",
+            "cost": 50,
+            "type": "consumable",
+            "icon": "💡"
+          },
+          "theme_unlock": {
+            "name": "Premium Theme",
+            "description": "Unlock exclusive dashboard themes",
+            "cost": 500,
+            "type": "permanent",
+            "icon": "🎨"
+          }
+        }
+      }
+    }
+  }
+}

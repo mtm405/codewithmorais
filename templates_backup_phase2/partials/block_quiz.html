@@ -1,0 +1,245 @@
+{# Quiz Master 3.0: Unified Quiz Block Template #}
+{# Handles all quiz types (MCQ, FITB, D&D) in a single template with dynamic rendering #}
+<div class="quiz-container unified-quiz mcq-image-style mcq-inline" 
+     data-block-id="{{ block.id }}"
+     data-quiz-type="unified"
+     data-quiz-config='{{ block | tojson | safe }}'
+     role="application"
+     aria-label="Interactive Quiz: {{ block.title or 'Quiz' }}">
+  
+  <!-- Quiz Header -->
+  <div class="quiz-header">
+    <div class="mcq-ribbon">
+      {% if block.questions and block.questions|length > 1 %}
+        Quiz Section
+      {% else %}
+        Quiz
+      {% endif %}
+    </div>
+    
+    <h3 class="quiz-title mcq-question">
+      {{ block.title or "Complete the following quiz" }}
+    </h3>
+    
+    {% if block.instructions %}
+    <div class="quiz-instructions">
+      <p>{{ block.instructions }}</p>
+    </div>
+    {% endif %}
+    
+    <!-- Progress indicator for multi-question quizzes -->
+    {% if block.questions and block.questions|length > 1 %}
+    <div class="quiz-progress">
+      <div class="progress-text">
+        Question <span class="current-question">1</span> 
+        of <span class="total-questions">{{ block.questions|length }}</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 0%"></div>
+      </div>
+      {% if block.passing_score %}
+      <div class="passing-score-info">
+        <small>Passing Score: {{ block.passing_score }}%</small>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Quiz Body -->
+  <div class="quiz-body">
+    <!-- Dynamic question container -->
+    <div class="question-container" 
+         data-question-index="0"
+         data-total-questions="{{ block.questions|length if block.questions else 1 }}">
+      <!-- Questions will be dynamically rendered here by quiz_master.js -->
+      <div class="question-placeholder">
+        <div class="loading-spinner">
+          <span class="material-symbols-outlined">hourglass_empty</span>
+          <span>Loading quiz...</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Inline summary (hidden initially) -->
+    <div class="quiz-summary d-none" role="region" aria-label="Quiz Results">
+      <div class="summary-header">
+        <h4 class="summary-title">
+          <span class="material-symbols-outlined">assessment</span>
+          Quiz Complete!
+        </h4>
+      </div>
+      
+      <div class="summary-content">
+        <!-- Summary will be dynamically generated -->
+        <div class="summary-placeholder">
+          Calculating results...
+        </div>
+      </div>
+      
+      <div class="summary-actions">
+        <!-- Retake and continue buttons will be added here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Footer -->
+  <div class="quiz-footer">
+    <div class="quiz-metadata" aria-label="Quiz Information">
+      {% if block.total_points %}
+      <span class="total-points">
+        <span class="material-symbols-outlined">star</span>
+        Total Points: {{ block.total_points }}
+      </span>
+      {% endif %}
+      
+      {% if block.retake_cost %}
+      <span class="retake-cost">
+        <span class="material-symbols-outlined">coin</span>
+        Retake: {{ block.retake_cost }} PyCoins
+      </span>
+      {% endif %}
+    </div>
+    
+    <!-- Development tools (only in debug mode) -->
+    {% if config.DEBUG %}
+    <div class="dev-tools">
+      <button class="btn btn-sm btn-secondary quiz-reload-btn" 
+              title="Reload quiz state (Development only)">
+        <span class="material-symbols-outlined">refresh</span>
+        Reload Quiz (Dev)
+      </button>
+      <button class="btn btn-sm btn-outline-secondary quiz-debug-btn"
+              title="Show quiz debug info">
+        <span class="material-symbols-outlined">bug_report</span>
+        Debug Info
+      </button>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Quiz Master 3.0 Unified Styles -->
+<style>
+.unified-quiz {
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.quiz-progress {
+  margin: 1rem 0;
+}
+
+.quiz-progress .progress-text {
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-accent);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.question-container {
+  min-height: 200px;
+  position: relative;
+}
+
+.question-placeholder,
+.summary-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  color: var(--text-medium);
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quiz-summary {
+  background: var(--bg-accent);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-top: 1rem;
+}
+
+.summary-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.summary-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.quiz-metadata {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-accent);
+  border-top: 1px solid var(--border-light);
+}
+
+.quiz-metadata span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-medium);
+}
+
+.dev-tools {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.passing-score-info {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.passing-score-info small {
+  color: var(--text-medium);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .quiz-metadata {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .dev-tools {
+    justify-content: center;
+  }
+}
+</style>

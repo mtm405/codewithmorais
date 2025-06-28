@@ -1,0 +1,223 @@
+{
+  "objective": "Understand and apply fundamental Python operations for file input and output, including opening, reading, writing, appending, and safely handling files.",
+  "blocks": [
+    {
+      "type": "text",
+      "content": "# Lesson 3.1: File Input and Output Operations\n\n### Objective:\nUnderstand and apply fundamental Python operations for file input and output, including opening, reading, writing, appending, and safely handling files."
+    },
+    {
+      "type": "text",
+      "content": "So far, our programs have mostly interacted with the console for input and output. While useful, real-world applications often need to store and retrieve data persistently. This is where **file input/output (I/O)** comes in. Python provides straightforward ways to interact with files on your computer, allowing your programs to read from and write to text files."
+    },
+    {
+      "type": "text",
+      "content": "## 3.1 Construct and Analyze Code Segments that Perform File I/O\n\nWorking with files typically involves a few steps: opening the file, performing operations (reading/writing), and closing the file."
+    },
+    {
+      "type": "text",
+      "content": "### Opening and Closing Files: The `open()` Function\n\nTo interact with a file, you first need to 'open' it using the built-in `open()` function. This function returns a file object, which you'll use to perform read/write operations.\n\n**Syntax:**\n\n```python\nfile_object = open('filename.txt', 'mode')\n```\n\n**Common File Modes:**\n* `'r'` (read mode): Default. Opens a file for reading. Error if the file does not exist.\n* `'w'` (write mode): Opens a file for writing. Creates the file if it does not exist. **Overwrites the file if it already exists.**\n* `'a'` (append mode): Opens a file for appending. Creates the file if it does not exist. Adds new content to the end of the file without overwriting existing content.\n* `'x'` (exclusive creation mode): Creates a new file for writing. Errors if the file already exists.\n\nAfter you're done with a file, it's crucial to `close()` it to free up system resources and ensure all changes are saved."
+    },
+    {
+      "type": "step_card",
+      "id": "lesson3_1_snippet1",
+      "header": "Basic File Writing Example",
+      "steps": [
+        "Open a file named `my_file.txt` in write (`'w'`) mode. If it doesn't exist, it will be created. If it exists, its content will be overwritten.",
+        "Write a line of text to the file using the `write()` method. Note that `\\n` is used to add a newline character.",
+        "Close the file using `close()` to save changes and release the file."
+      ],
+      "code": "# Writing to a file\nfile = open('my_file.txt', 'w')\nfile.write('Hello, Python File I/O!\\n')\nfile.write('This is a second line.\\n')\nfile.close()\nprint('Content written to my_file.txt')\n",
+      "output": "Content written to my_file.txt\n"
+    },
+    {
+      "type": "text",
+      "content": "### The `with` Statement (Recommended for File Handling)\n\nManually calling `close()` can be error-prone (e.g., if an error occurs before `close()` is called). Python's `with` statement ensures that a file is properly closed after its block finishes, even if errors occur.\n\n**Syntax:**\n\n```python\nwith open('filename.txt', 'mode') as file_object:\n    # Perform file operations here\n# File is automatically closed after this block\n```"
+    },
+    {
+      "type": "step_card",
+      "id": "lesson3_1_snippet2",
+      "header": "Writing with `with` statement",
+      "steps": [
+        "The `with` statement opens `another_file.txt` in write mode (`'w'`). The file object is assigned to `f`.",
+        "Content is written to the file.",
+        "When the indented block ends (or an error occurs), Python automatically closes the file `f`."
+      ],
+      "code": "# Writing to a file using 'with'\nwith open('another_file.txt', 'w') as f:\n    f.write('This line is written with the \"with\" statement.\\n')\n    f.write('It ensures the file is automatically closed.\\n')\nprint('Content written to another_file.txt (using with).')\n",
+      "output": "Content written to another_file.txt (using with).\n"
+    },
+    {
+      "type": "text",
+      "content": "### Reading from Files\n\nOnce a file is open in read mode (`'r'`), you can use several methods to read its content."
+    },
+    {
+      "type": "accordion",
+      "id": "file_reading_methods",
+      "header": "File Reading Methods (`read`, `readline`, `readlines`, and iteration)",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "- **`read()`:** Reads the entire content of the file as a single string."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# Example for read()\n# First, ensure there's content to read\nwith open('example_read.txt', 'w') as f:\n    f.write('Line 1 content.\\n')\n    f.write('Line 2 content.\\n')\n\nwith open('example_read.txt', 'r') as f:\n    content = f.read()\n    print(\"Full content:\\n{}\".format(content))\n",
+          "output": "Full content:\nLine 1 content.\nLine 2 content.\n"
+        },
+        {
+          "type": "text",
+          "content": "- **`readline()`:** Reads a single line from the file. Each subsequent call reads the next line."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# Example for readline()\nwith open('example_read.txt', 'r') as f:\n    line1 = f.readline()\n    line2 = f.readline()\n    print(\"First line:\", line1, end='') # end='' to prevent extra newline\n    print(\"Second line:\", line2, end='')\n",
+          "output": "First line: Line 1 content.\nSecond line: Line 2 content.\n"
+        },
+        {
+          "type": "text",
+          "content": "- **`readlines()`:** Reads all lines from the file and returns them as a list of strings, where each string is one line (including the newline character)."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# Example for readlines()\nwith open('example_read.txt', 'r') as f:\n    lines = f.readlines()\n    print(\"All lines as a list:\", lines)\n",
+          "output": "All lines as a list: ['Line 1 content.\\n', 'Line 2 content.\\n']\n"
+        },
+        {
+          "type": "text",
+          "content": "- **Iterating directly over the file object:** This is often the most memory-efficient and Pythonic way to read a file line by line, especially for large files."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# Example for iterating over file object\nwith open('example_read.txt', 'r') as f:\n    print(\"Reading line by line:\")\n    for line in f:\n        print(line, end='') # end='' to prevent extra newline\n",
+          "output": "Reading line by line:\nLine 1 content.\nLine 2 content.\n"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "### Appending to Files (`'a'` mode and `writelines()`)\n\nTo add content to an existing file without deleting its current contents, use the append mode (`'a'`). The `writelines()` method can be used to write a list of strings to a file."
+    },
+    {
+      "type": "step_card",
+      "id": "lesson3_1_snippet3",
+      "header": "Appending and `writelines` Example",
+      "steps": [
+        "First, create a `numbers.txt` file with some initial content using `'w'` mode.",
+        "Then, open `numbers.txt` in append (`'a'`) mode. This ensures new data is added to the end.",
+        "Create a list of strings.",
+        "Use `writelines()` to write all strings from the list to the file. Remember to include newline characters if you want each string on a new line.",
+        "Finally, read the entire file content to verify appending."
+      ],
+      "code": "# Appending to a file and using writelines()\n# Create an initial file\nwith open('numbers.txt', 'w') as f:\n    f.write('One\\n')\n    f.write('Two\\n')\n\n# Now append to it\nwith open('numbers.txt', 'a') as f:\n    new_lines = ['Three\\n', 'Four\\n', 'Five\\n']\n    f.writelines(new_lines)\nprint('Content appended to numbers.txt')\n\n# Verify content\nwith open('numbers.txt', 'r') as f:\n    print('\\nUpdated numbers.txt content:')\n    print(f.read())\n",
+      "output": "Content appended to numbers.txt\n\nUpdated numbers.txt content:\nOne\nTwo\nThree\nFour\nFive\n"
+    },
+    {
+      "type": "text",
+      "content": "### Checking File Existence and Deletion (using `os` module)\n\nFor more robust file handling, you often need to check if a file exists before trying to read or delete it. You can also programmatically remove files. These operations are typically done using functions from the built-in `os` module.\n\n* **`os.path.exists(path)`:** Returns `True` if `path` refers to an existing path or an open file descriptor, `False` otherwise.\n* **`os.remove(path)`:** Removes (deletes) the file specified by `path`.\n\n*(Note: The `os` module provides many functions for interacting with the operating system. We will explore modules in more detail in a later lesson, but these functions are essential for common file operations.)*"
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "import os # Import the os module\n\nfile_to_check = 'temp_file.txt'\n\n# Create a dummy file for the example\nwith open(file_to_check, 'w') as f:\n    f.write('This is a temporary file.')\n\n# Check if file exists\nif os.path.exists(file_to_check):\n    print(\"'{}.txt' exists.\".format(file_to_check))\n    \n    # Delete the file\n    os.remove(file_to_check)\n    print(\"'{}.txt' has been deleted.\".format(file_to_check))\nelse:\n    print(\"'{}.txt' does not exist.\".format(file_to_check))\n\n# Check again after deletion\nif not os.path.exists(file_to_check):\n    print(\"Confirming: '{}.txt' no longer exists.\".format(file_to_check))\n",
+      "output": "'temp_file.txt' exists.\n'temp_file.txt' has been deleted.\nConfirming: 'temp_file.txt' no longer exists.\n",
+      "id": "lesson3_1_snippet4"
+    },
+    {
+      "type": "ide",
+      "id": "try_file_io",
+      "label": "Try it yourself: Experiment with File I/O!",
+      "editable": true,
+      "default_code": "# 1. Write some content to 'my_new_file.txt' using the 'w' mode.\n# 2. Append new content to 'my_new_file.txt' using the 'a' mode.\n# 3. Read and print the entire content of 'my_new_file.txt'.\n# 4. Check if 'my_new_file.txt' exists, then delete it.\n\n# Step 1: Write to file\nprint(\"Writing initial content...\")\nwith open('my_new_file.txt', 'w') as f:\n    f.write(\"First line.\\n\")\n    f.write(\"Second line.\\n\")\n\n# Step 2: Append to file\nprint(\"Appending new content...\")\nwith open('my_new_file.txt', 'a') as f:\n    f.write(\"Third line (appended).\\n\")\n\n# Step 3: Read and print\nprint(\"\\nReading file content:\")\nwith open('my_new_file.txt', 'r') as f:\n    content = f.read()\n    print(content)\n\n# Step 4: Check existence and delete\nimport os\nif os.path.exists('my_new_file.txt'):\n    print(\"'my_new_file.txt' exists. Deleting...\")\n    os.remove('my_new_file.txt')\n    print(\"'my_new_file.txt' deleted.\")\nelse:\n    print(\"'my_new_file.txt' does not exist.\")\n"
+    },
+    {
+      "type": "text",
+      "content": "## Recap:\n\nThis lesson covered the essentials of file input and output in Python:\n\n-   **`open()`:** Used to get a file object for interaction, requiring a filename and a mode (`'r'`, `'w'`, `'a'`, `'x'`).\n-   **File Modes:** Control how the file is opened (`'r'` for read, `'w'` for write/overwrite, `'a'` for append, `'x'` for exclusive create).\n-   **`close()`:** Explicitly closes a file, though it's best handled by `with`.\n-   **`with` statement:** The preferred and safest way to handle files, ensuring they are automatically closed even if errors occur.\n-   **Reading Methods:**\n    * `read()`: Reads entire content as a string.\n    * `readline()`: Reads one line at a time.\n    * `readlines()`: Reads all lines into a list of strings.\n    * Iterating directly over the file object: Efficient for line-by-line processing.\n-   **Writing Methods:**\n    * `write()`: Writes a string to the file.\n    * `writelines()`: Writes a list of strings to the file.\n-   **`os.path.exists()`:** Checks if a file or path exists.\n-   **`os.remove()`:** Deletes a specified file."
+    },
+    {
+      "type": "quiz_section",
+      "id": "lesson_3_1_quiz",
+      "content": {
+        "progress": {
+          "total": 4,
+          "completed": 0
+        },
+        "header": "Test your knowledge of File I/O!",
+        "blocks": [
+          {
+            "type": "fill_in_the_blanks",
+            "id": "quiz_file_modes_output",
+            "instructions": "Part 1: Predict the output or fill in the blank.",
+            "questions": [
+              {
+                "text": "What is the primary advantage of using the `with` statement for file handling? _________. <span class='points-badge'>1 pt</span>",
+                "answers": [
+                  "Ensures automatic file closing",
+                  "Ensures automatic closing",
+                  "Automatic file closing"
+                ],
+                "feedback": "The `with` statement guarantees that the file's `close()` method is called automatically, even if errors occur within the `with` block."
+              },
+              {
+                "text": "```python\n# Assume 'data.txt' contains: \n# Hello\\nWorld\n\nwith open('data.txt', 'r') as f:\n    content = f.read()\nprint(content)\n```\nOutput: _________. <span class='points-badge'>1 pt</span>",
+                "answers": [
+                  "Hello\\nWorld"
+                ],
+                "feedback": "The `read()` method reads the entire content of the file as a single string, including newline characters."
+              }
+            ]
+          },
+          {
+            "type": "multiple_choice_quiz",
+            "id": "quiz_file_concepts",
+            "instructions": "Part 2: Multiple Choice - File I/O Concepts",
+            "questions": [
+              {
+                "question": "Which file mode will create a new file for writing and raise an error if the file already exists? <span class='points-badge'>1 pt</span>",
+                "options": [
+                  "`'w'`",
+                  "`'a'`",
+                  "`'x'`",
+                  "`'r'`"
+                ],
+                "correct_index": 2,
+                "feedback": "The `'x'` (exclusive creation) mode is designed to create a new file and fail if it exists. `'w'` would overwrite, and `'a'` would append."
+              },
+              {
+                "question": "You have a list of strings `['Line1\\n', 'Line2\\n']` that you want to write to a file. Which method is best suited for this? <span class='points-badge'>1 pt</span>",
+                "options": [
+                  "`write()`",
+                  "`readline()`",
+                  "`writelines()`",
+                  "`read()`"
+                ],
+                "correct_index": 2,
+                "feedback": "The `writelines()` method is specifically designed to write an iterable of strings (like a list) to a file."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "debug_challenge",
+      "id": "fix_file_overwrite_or_read_error",
+      "label": "**Fix the bug!**",
+      "buggy_code": "# Scenario: You want to add a new line to an existing file without deleting its content.\n# The file 'log.txt' already exists with some content.\n\n# Create a dummy log.txt for demonstration\nwith open('log.txt', 'w') as f:\n    f.write('Initial log entry\\n')\n\n# Buggy part:\nfile_obj = open('log.txt', 'w') # Incorrect mode for appending!\nfile_obj.write('New log entry\\n')\nfile_obj.close()\n\n# Let's try to read it to see the issue\nwith open('log.txt', 'r') as f:\n    print(f.read())\n",
+      "solution": {
+        "explanation": "The bug is in the line `file_obj = open('log.txt', 'w')`. Opening a file in `'w'` (write) mode **truncates (empties) the file** if it already exists, effectively deleting its original content before writing new data. To append to an existing file without overwriting, you must use the `'a'` (append) mode.",
+        "correct_code": "# Scenario: You want to add a new line to an existing file without deleting its content.\n# The file 'log.txt' already exists with some content.\n\n# Create a dummy log.txt for demonstration\nwith open('log.txt', 'w') as f:\n    f.write('Initial log entry\\n')\n\n# Corrected part:\nwith open('log.txt', 'a') as file_obj: # Corrected mode to 'a' for appending\n    file_obj.write('New log entry\\n')\n\n# Let's try to read it to see the issue\nwith open('log.txt', 'r') as f:\n    print(f.read())"
+      }
+    }
+  ],
+  "migration_info": {
+    "quiz_master_3_migration": {
+      "migrated_on": "2025-06-27T17:59:08.909647",
+      "original_backup": "lesson_3_1.json.backup_20250627_175908",
+      "blocks_processed": 17,
+      "blocks_after_migration": 17
+    }
+  }
+}

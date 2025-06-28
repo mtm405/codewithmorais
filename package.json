@@ -1,9 +1,18 @@
 {
-  "type": "module",
-  "dependencies": {
-    "firebase-admin": "^13.4.0"
+  "name": "quiz-master-3.0",
+  "version": "1.0.0",
+  "description": "Quiz Master 3.0 Asset Build Pipeline",
+  "scripts": {
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "cleancss static/css/*.css -o static/dist/styles.min.css",
+    "build:js": "terser static/js/*.js --compress --mangle -o static/dist/app.min.js",
+    "watch": "npm run build && npm run watch:css & npm run watch:js",
+    "watch:css": "chokidar \"static/css/*.css\" -c \"npm run build:css\"",
+    "watch:js": "chokidar \"static/js/*.js\" -c \"npm run build:js\""
   },
   "devDependencies": {
-    "eslint": "^9.29.0"
+    "clean-css-cli": "^5.6.2",
+    "terser": "^5.19.4",
+    "chokidar-cli": "^3.0.0"
   }
 }

@@ -1,0 +1,137 @@
+<!-- templates/partials/code_editor.html -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/code_editor.css') }}">
+<div class="code-editor-block">
+  {% set editor_id = block.id|string %}
+  {% set default_code = block.default_code or '# Write your Python code here\n' %}
+  <label for="{{ editor_id }}">{{ block.label or "Try it yourself:" }}</label>
+  <div id="{{ editor_id }}" class="code-editor-ace"></div>
+  <div class="editor-toolbar">
+    <button type="button" class="run-code-btn btn-primary" data-editor-id="{{ editor_id|e }}" data-content-id="{{ (block.content_id or editor_id)|e }}" data-next-topic="{{ (block.next_topic or '')|e }}">Run Code</button>
+    <button type="button" class="debug-btn btn-primary" data-editor-id="{{ editor_id|e }}">Debug</button>
+    <button type="button" class="hint-btn btn-primary" data-editor-id="{{ editor_id|e }}">Show Hint</button>
+    <button type="button" class="solution-btn btn-primary" data-editor-id="{{ editor_id|e }}">Show Solution</button>
+    <button type="button" class="history-btn btn-primary" data-editor-id="{{ editor_id|e }}">History</button>
+    <button type="button" class="reference-btn btn-primary" data-editor-id="{{ editor_id|e }}">Reference</button>
+    <span class="challenge-timer" id="timer-{{ editor_id }}"></span>
+    <button type="button" class="share-btn btn-primary" data-editor-id="{{ editor_id|e }}">Share</button>
+  </div>
+  <div class="variable-inspector" id="var-inspector-{{ editor_id }}"></div>
+  <pre id="{{ editor_id }}-output" class="code-editor-output"></pre>
+</div>
+
+<!-- Custom Modal for input() prompts -->
+<div id="custom-input-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div id="custom-input-prompt" class="modal-prompt"></div>
+    <input id="custom-input-field" type="text" class="modal-input" autofocus />
+    <div class="modal-actions">
+      <button id="custom-input-ok" class="modal-btn modal-btn-primary">OK</button>
+      <button id="custom-input-cancel" class="modal-btn modal-btn-secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3/ace.js" crossorigin="anonymous"></script>
+<script>
+  if (!window.aceEditors) window.aceEditors = {};
+  (function() {
+    var editorId = "{{ editor_id|e }}";
+    var defaultCode = {{ default_code|tojson|safe }};
+    if (!window.aceEditors[editorId]) {
+      var editor = ace.edit(editorId);
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/python");
+      editor.setValue(defaultCode, -1);
+      window.aceEditors[editorId] = editor;
+    }
+  })();
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.run-code-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const editorId = btn.getAttribute('data-editor-id');
+        const contentId = btn.getAttribute('data-content-id');
+        const nextTopic = btn.getAttribute('data-next-topic');
+        runStudentCodeWithProgress(editorId, contentId, nextTopic);
+      });
+    });
+  });
+
+  function showCustomInputModal(promptMsg) {
+    return new Promise((resolve) => {
+      const modal = document.getElementById('custom-input-modal');
+      const promptDiv = document.getElementById('custom-input-prompt');
+      const inputField = document.getElementById('custom-input-field');
+      const okBtn = document.getElementById('custom-input-ok');
+      const cancelBtn = document.getElementById('custom-input-cancel');
+      promptDiv.textContent = promptMsg;
+      inputField.value = '';
+      modal.style.display = 'flex';
+      inputField.focus();
+      function cleanup(val) {
+        modal.style.display = 'none';
+        okBtn.removeEventListener('click', okHandler);
+        cancelBtn.removeEventListener('click', cancelHandler);
+        inputField.removeEventListener('keydown', keyHandler);
+        resolve(val);
+      }
+      function okHandler() { cleanup(inputField.value); }
+      function cancelHandler() { cleanup(''); }
+      function keyHandler(e) {
+        if (e.key === 'Enter') okHandler();
+        if (e.key === 'Escape') cancelHandler();
+      }
+      okBtn.addEventListener('click', okHandler);
+      cancelBtn.addEventListener('click', cancelHandler);
+      inputField.addEventListener('keydown', keyHandler);
+    });
+  }
+
+  async function runStudentCodeWithProgress(editorId, contentId, nextTopic) {
+    var code = window.aceEditors[editorId].getValue();
+    // Detect input() calls and extract prompt strings
+    var inputRegex = /input\s*\((['\"])(.*?)\1?\)/g;
+    let match;
+    let prompts = [];
+    while ((match = inputRegex.exec(code)) !== null) {
+      prompts.push(match[2] || null);
+    }
+    var inputCount = prompts.length;
+    let inputs = [];
+    if (inputCount > 0) {
+      for (let i = 0; i < inputCount; i++) {
+        let promptMsg = prompts[i] || `Enter value for input #${i + 1}:`;
+        let userInput = await showCustomInputModal(promptMsg);
+        inputs.push(userInput);
+      }
+    }
+    fetch('/run_python', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({code: code, inputs: inputs})
+    })
+    .then(res => res.json())
+    .then(data => {
+      let output = data.output || 'No output.';
+      document.getElementById(editorId + '-output').textContent = output;
+      // Mark as complete in user progress
+      fetch('/api/update_progress', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          content_id: contentId,
+          status: 'completed',
+          type: 'lesson',
+          timestamp: Date.now()
+        })
+      });
+      // Mention next topic if provided
+      if (nextTopic) {
+        document.getElementById(editorId + '-output').textContent += `\n\nNext topic: ${nextTopic}`;
+      }
+    })
+    .catch(() => {
+      document.getElementById(editorId + '-output').textContent = 'Error running code.';
+    });
+  }
+</script>
