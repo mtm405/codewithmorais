@@ -24,11 +24,17 @@
     <!-- Optimized font loading: combine requests and use display=swap -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
     
-    <!-- Nuclear Production CSS - Unified Bundle -->
+    <!-- Nuclear Production CSS - Unified Bundle (load first) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles.min.css', v=g.css_version) }}">
     
-    <!-- Block for additional styles -->
+    <!-- Block for page-specific styles (dashboard.css, etc.) -->
     {% block styles %}{% endblock %}
+    
+    <!-- IDE Command Center CSS (load last to override everything) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ide_command_center.css', v=g.css_version) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ide_file_explorer.css', v=g.css_version) }}">
+    
+    <!-- Additional head content -->
     {% block head_extra %}{% endblock %}
     
     <!-- Nuclear Production JavaScript - Ultimate Simplification -->
@@ -37,6 +43,12 @@
     {% if active_page == 'dashboard_course' %}
     <script src="{{ url_for('static', filename='dist/dashboard.min.js', v=g.css_version) }}" defer></script>
     {% endif %}
+    
+    <!-- IDE Command Center JavaScript modules -->
+    <script src="{{ url_for('static', filename='js/ide_command_center.js', v=g.css_version) }}" defer></script>
+    <script src="{{ url_for('static', filename='js/ide_file_explorer.js', v=g.css_version) }}" defer></script>
+    <script src="{{ url_for('static', filename='js/ide_ace_editor.js', v=g.css_version) }}" defer></script>
+    <script src="{{ url_for('static', filename='js/ide_ace_editor.js', v=g.css_version) }}" defer></script>
     
     <!-- Critical CSS for theme and sidebar -->
     <script>
@@ -66,6 +78,35 @@
         // Pass config as a JS object for Firebase modular SDK
         window.firebaseConfig = {{ firebase_config | tojson | safe }};
     </script>
+    
+    <!-- ACE Editor integration styles -->
+    <style>
+        .ace_editor {
+            font-family: var(--ide-font-mono) !important;
+        }
+        
+        .ace_gutter {
+            background: var(--ide-bg-tertiary) !important;
+            color: var(--ide-text-muted) !important;
+        }
+        
+        .ace_content {
+            background: var(--ide-bg-input) !important;
+        }
+        
+        .ace_cursor {
+            color: var(--ide-text-primary) !important;
+        }
+        
+        .ace_selection {
+            background: var(--ide-accent-blue) !important;
+            opacity: 0.3;
+        }
+        
+        .ace_marker-layer .ace_active-line {
+            background: var(--ide-bg-accent) !important;
+        }
+    </style>
 </head>
 
 <body class="toggle-minimal preload"{% if lesson and lesson.id %} data-lesson-id="{{ lesson.id }}"{% endif %}>

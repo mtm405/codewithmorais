@@ -4,160 +4,624 @@
 {% block title %}Your Dashboard - CodeLab{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css', v=g.css_version) }}">
+<!-- Remove dashboard.css to avoid conflicts -->
+<!-- <link rel="stylesheet" href="{{ url_fo{% block content %}
+{% include 'components/header_bar.html' %}
+
+<script>
+// Add IDE body class for maximum specificity
+document.body.classList.add('ide-dashboard-page');
+document.body.classList.remove('toggle-minimal', 'preload');
+</script>
+
+<main role="main" aria-labelledby="dashboard-title" class="ide-dashboard-main">tatic', filename='css/dashboard.css', v=g.css_version) }}"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ide_command_center.css', v=g.css_version) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ide_file_explorer.css', v=g.css_version) }}">
+<style>
+/* 🔧 NUCLEAR IDE STYLES - MAXIMUM OVERRIDE */
+/* Override ALL dashboard styles with maximum specificity */
+body.dashboard-page main.ide-dashboard-main,
+body main.ide-dashboard-main,
+main.ide-dashboard-main,
+.ide-dashboard-main {
+    background: #1e1e1e !important;
+    color: #cccccc !important;
+    min-height: 100vh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.ide-dashboard-main * {
+    box-sizing: border-box !important;
+}
+
+/* Terminal window base styles with maximum specificity */
+body .ide-dashboard-main .ide-terminal-window,
+.ide-dashboard-main .ide-terminal-window,
+div.ide-terminal-window,
+.ide-terminal-window {
+    background: #1e1e1e !important;
+    border: 1px solid #404040 !important;
+    border-radius: 8px !important;
+    margin: 10px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+    max-width: none !important;
+    width: auto !important;
+    display: block !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Terminal header styles with maximum specificity */
+body .ide-dashboard-main .ide-terminal-header,
+.ide-dashboard-main .ide-terminal-header,
+div.ide-terminal-header,
+.ide-terminal-header {
+    background: #2d2d30 !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #404040 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    color: #cccccc !important;
+    font-family: 'Segoe UI', monospace !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    border-radius: 8px 8px 0 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+.ide-terminal-controls,
+div[class*="ide-terminal-controls"] {
+    display: flex !important;
+    gap: 6px !important;
+    order: -1 !important;
+}
+
+.ide-terminal-control,
+div[class*="ide-terminal-control"] {
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    transition: opacity 0.2s ease !important;
+}
+
+.ide-terminal-control:hover { opacity: 0.8 !important; }
+.ide-terminal-control.close { background: #ff5f57 !important; }
+.ide-terminal-control.minimize { background: #ffbd2e !important; }
+.ide-terminal-control.maximize { background: #28ca42 !important; }
+
+.ide-terminal-title,
+div[class*="ide-terminal-title"] {
+    flex: 1 !important;
+    text-align: center !important;
+    font-weight: 600 !important;
+    color: #cccccc !important;
+}
+
+/* Terminal content styles with maximum specificity */
+body .ide-dashboard-main .ide-terminal-content,
+.ide-dashboard-main .ide-terminal-content,
+div.ide-terminal-content,
+.ide-terminal-content {
+    padding: 15px !important;
+    background: #0c0c0c !important;
+    color: #cccccc !important;
+    font-family: 'Consolas', 'Monaco', monospace !important;
+    font-size: 13px !important;
+    min-height: 100px !important;
+    border-radius: 0 0 8px 8px !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.ide-prompt {
+    color: #569cd6 !important;
+    font-weight: 600 !important;
+    margin-bottom: 8px !important;
+}
+
+.ide-dashboard-main {
+    background: #1e1e1e !important;
+    min-height: 100vh !important;
+    padding: 0 !important;
+}
+
+/* Dashboard grid override */
+body .ide-dashboard-main .ide-dashboard-grid,
+.ide-dashboard-main .ide-dashboard-grid,
+.ide-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+    gap: 0 !important;
+    padding: 0 20px !important;
+    max-width: none !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+
+/* FORCE HIDE all legacy dashboard elements */
+body .course-dashboard,
+body .dashboard-grid,
+body .dashboard-card,
+body .metric-card,
+body .card:not(.ide-terminal-window),
+body .block:not(.ide-terminal-window),
+body .dashboard-section:not(.ide-terminal-window),
+body .dashboard-main-grid,
+body .dashboard-announcement:not(#dashboard-announcement-block),
+.course-dashboard,
+.dashboard-grid,
+.dashboard-card,
+.metric-card,
+.card:not(.ide-terminal-window),
+.block:not(.ide-terminal-window),
+.dashboard-section:not(.ide-terminal-window),
+.dashboard-main-grid,
+.dashboard-announcement:not(#dashboard-announcement-block) {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Show only IDE terminal windows */
+.ide-terminal-window {
+    display: block !important;
+}
+
+/* Status Bar */
+.ide-status-bar {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 24px !important;
+    background: #007acc !important;
+    color: #fff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 12px !important;
+    font-size: 11px !important;
+    font-family: monospace !important;
+    z-index: 1000 !important;
+}
+
+/* Force terminal window sizes */
+.ide-terminal-large {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+}
+
+.ide-terminal-medium {
+    min-height: 250px !important;
+}
+
+.ide-terminal-small {
+    min-height: 200px !important;
+}
+
+/* Code editor specific styling */
+#bellringer-ide {
+    background: #1e1e1e !important;
+    border: 1px solid #404040 !important;
+    color: #cccccc !important;
+    font-family: 'Consolas', 'Monaco', monospace !important;
+}
+
+/* Ensure text is visible */
+.ide-terminal-content * {
+    color: inherit !important;
+}
+
+/* Python syntax highlighting */
+.python-string { color: #ce9178 !important; }
+.python-keyword { color: #569cd6 !important; }
+.python-comment { color: #6a9955 !important; }
+.python-function { color: #dcdcaa !important; }
+
+/* FINAL OVERRIDE - Show IDE terminal windows */
+body main.ide-dashboard-main .ide-terminal-window,
+main.ide-dashboard-main .ide-terminal-window,
+.ide-dashboard-main .ide-terminal-window,
+div.ide-terminal-window,
+#dashboard-announcement-block {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 100 !important;
+}
+
+/* Debug: Add a red border to see if elements are rendered */
+/* .ide-terminal-window {
+    border: 2px solid #ff0000 !important;
+} */
+</style>
 {% endblock %}
 
 {% block content %}
 {% include 'components/header_bar.html' %}
 
-<main role="main" aria-labelledby="dashboard-title">
-  <h1 id="dashboard-title" class="visually-hidden">Student Dashboard</h1>
+<main role="main" aria-labelledby="dashboard-title" class="ide-dashboard-main">
+  <h1 id="dashboard-title" class="visually-hidden">Python IDE Command Center</h1>
   
-<div id="dashboard-announcement-block" class="dashboard-announcement-block card accent-yellow p-18-22 mb-24 shadow font-size-1-13em position-relative max-width-none ml-32 card-bg-main" >
-  <div class="flex-align-center gap-10">
-    <span class="material-symbols-outlined accent-yellow font-size-1-5em">campaign</span>
-    <span id="announcement-text">Loading announcement...</span>
-    <button id="edit-announcement-btn" class="ml-auto display-none background-none border-none btn btn-primary">Edit</button>
+  <!-- System Announcements Terminal -->
+  <div id="dashboard-announcement-block" class="ide-terminal-window ide-terminal-large" style="margin: 20px;">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">📢 system_announcements.py - Python IDE Command Center</div>
+    </div>
+    <div class="ide-terminal-content">
+      <div class="ide-prompt ide-typing">print("Latest System Announcement:")</div>
+      <div style="margin: 10px 0; color: var(--terminal-text);">
+        <span style="color: var(--python-string);">"</span><span id="announcement-text">Loading announcement...</span><span style="color: var(--python-string);">"</span>
+      </div>
+      <button id="edit-announcement-btn" class="display-none" style="background: var(--ide-bg-input); border: 1px solid var(--terminal-border); color: var(--ide-text-primary); padding: 6px 12px; border-radius: 4px; font-family: var(--ide-font-mono); font-size: 12px;">Edit</button>
+      <textarea id="announcement-edit-area" class="width-100 mt-10 d-none" style="background: var(--ide-bg-input); border: 1px solid var(--terminal-border); color: var(--ide-text-primary); padding: 8px; border-radius: 4px; font-family: var(--ide-font-mono); resize: vertical;"></textarea>
+      <div class="mt-10 gap-10 flex d-none" id="announcement-edit-actions">
+        <button id="save-announcement-btn" style="background: var(--terminal-success); border: none; color: #000; padding: 6px 18px; border-radius: 4px; font-family: var(--ide-font-mono); font-size: 12px;">Save</button>
+        <button id="cancel-announcement-btn" style="background: var(--terminal-error); border: none; color: #fff; padding: 6px 18px; border-radius: 4px; font-family: var(--ide-font-mono); font-size: 12px;">Cancel</button>
+      </div>
+    </div>
   </div>
-  <textarea id="announcement-edit-area" class="width-100 mt-10 font-size-1em p-8 rounded border-light bg-accent accent-yellow d-none"></textarea>
-  <div class="mt-10 gap-10 flex d-none" id="announcement-edit-actions">
-    <button id="save-announcement-btn" class="btn btn-primary p-6-18">Save</button>
-    <button id="cancel-announcement-btn" class="btn btn-primary p-6-18">Cancel</button>
+<div class="ide-dashboard-grid">
+  <!-- Leaderboard Terminal -->
+  <div class="ide-terminal-window ide-terminal-medium">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">🏆 leaderboard.py</div>
+    </div>
+    <div class="ide-terminal-content ide-leaderboard">
+      <canvas id="confetti-canvas" class="position-absolute width-100 height-100 pointer-events-none z-index-10"></canvas>
+      <div class="ide-leaderboard-header">get_top_students()</div>
+      <div style="font-family: var(--ide-font-mono); font-size: 13px;">
+        <table style="width: 100%; border-collapse: collapse; color: var(--terminal-text);">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--terminal-border);">
+              <th style="text-align: left; padding: 8px 4px; color: var(--python-keyword);">#</th>
+              <th style="text-align: left; padding: 8px 4px; color: var(--python-keyword);">Student</th>
+              <th style="text-align: right; padding: 8px 4px; color: var(--python-keyword);">Points</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <!-- JS will populate leaderboard rows here -->
+          </tbody>
+        </table>
+      </div>
+      <div id="leaderboard-message" style="margin-top: 10px; color: var(--terminal-success); font-weight: 600;"></div>
+    </div>
+  </div>
+
+  <!-- Streak Tracker Terminal -->
+  <div class="ide-terminal-window ide-terminal-small">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">🔥 streak_tracker.py</div>
+    </div>
+    <div class="ide-terminal-content">
+      <div class="ide-prompt">check_current_streak()</div>
+      <div id="streak-content" style="margin-top: 10px; color: var(--terminal-text);">
+        <div>Loading your streak...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Terminal -->
+  <div class="ide-terminal-window ide-terminal-medium">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">📈 activity_monitor.py</div>
+    </div>
+    <div class="ide-terminal-content">
+      <div class="ide-prompt">get_recent_activity(user_id)</div>
+      <div id="recent-activity-content" style="margin-top: 10px; color: var(--terminal-text);">
+        <div>Loading your recent progress...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upcoming Assignments Terminal -->
+  <div class="ide-terminal-window ide-terminal-small">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">📅 assignments.py</div>
+    </div>
+    <div class="ide-terminal-content">
+      <div class="ide-prompt">get_upcoming_deadlines()</div>
+      <div id="upcoming-content" style="margin-top: 10px; color: var(--terminal-text);">
+        <div>Loading upcoming assignments...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Study Tips Terminal -->
+  <div class="ide-terminal-window ide-terminal-small">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">💡 study_tips.py</div>
+    </div>
+    <div class="ide-terminal-content">
+      <div class="ide-prompt">get_daily_tip()</div>
+      <div id="study-tips-content" style="margin-top: 10px; color: var(--terminal-text);">
+        <div>Loading study tip...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resume Last Lesson Terminal -->
+  <div class="ide-terminal-window ide-terminal-small">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">▶️ session_manager.py</div>
+    </div>
+    <div class="ide-terminal-content">
+      <div class="ide-prompt">resume_last_session()</div>
+      <div id="resume-content" style="margin-top: 10px; color: var(--terminal-text);">
+        <div>Loading last lesson...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Badges & Achievements Terminal -->
+  <div class="ide-terminal-window ide-terminal-small">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">🏅 achievements.py</div>
+    </div>
+    <div class="ide-terminal-content">
+      <div class="ide-prompt">get_user_badges()</div>
+      <div id="badges-content" style="margin-top: 10px; color: var(--terminal-text);">
+        <div>Loading your badges...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Motivational Quote Terminal -->
+  <div class="ide-terminal-window ide-terminal-small">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">💬 motivation.py</div>
+    </div>
+    <div class="ide-terminal-content">
+      <div class="ide-prompt">get_daily_motivation()</div>
+      <div id="motivation-content" style="margin-top: 10px; color: var(--terminal-text);">
+        <div>Loading motivation...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bell Ringer (Daily Challenge) IDE Terminal -->
+  <div class="ide-terminal-window ide-terminal-large">
+    <div class="ide-terminal-header">
+      <div class="ide-terminal-controls">
+        <div class="ide-terminal-control close"></div>
+        <div class="ide-terminal-control minimize"></div>
+        <div class="ide-terminal-control maximize"></div>
+      </div>
+      <div class="ide-terminal-title">🚀 daily_challenge.py - Interactive Python Console</div>
+    </div>
+    <div class="ide-terminal-content">
+      <div class="ide-prompt">execute_daily_challenge()</div>
+      <div id="bellringer-title" style="color: var(--python-function); font-weight: 600; margin: 10px 0;"></div>
+      <div id="bellringer-desc" style="color: var(--terminal-text); margin-bottom: 15px; line-height: 1.5;"></div>
+      
+      <!-- Code Editor Area -->
+      <div style="background: var(--ide-bg-input); border: 1px solid var(--terminal-border); border-radius: 4px; margin: 10px 0;">
+        <!-- Editor Toolbar -->
+        <div class="ide-editor-toolbar">
+          <div class="ide-toolbar-group">
+            <button class="ide-toolbar-button" onclick="window.IDEAceEditor?.runCurrentCode('bellringer-ide')" title="Run Code (Ctrl+Enter)">
+              ▶️ Run
+            </button>
+            <button class="ide-toolbar-button" onclick="window.IDEAceEditor?.saveCode('bellringer-ide')" title="Save (Ctrl+S)">
+              💾 Save
+            </button>
+            <button class="ide-toolbar-button" onclick="window.IDEAceEditor?.formatCode('bellringer-ide')" title="Format (Shift+Alt+F)">
+              🎨 Format
+            </button>
+          </div>
+          
+          <div class="ide-toolbar-separator"></div>
+          
+          <div class="ide-toolbar-group">
+            <select class="ide-toolbar-select" onchange="window.IDEAceEditor?.changeTheme(this.value)" title="Editor Theme">
+              <option value="monokai">Monokai</option>
+              <option value="github">GitHub</option>
+              <option value="tomorrow_night">Tomorrow Night</option>
+              <option value="solarized_dark">Solarized Dark</option>
+            </select>
+          </div>
+          
+          <div class="ide-toolbar-separator"></div>
+          
+          <div class="ide-toolbar-group">
+            <span style="color: var(--ide-text-secondary); font-size: 11px;">📝 editor.py</span>
+          </div>
+        </div>
+        
+        <div id="bellringer-ide" style="height: 180px; width: 100%; background: var(--ide-bg-input);"></div>
+      </div>
+      
+      <!-- Terminal Controls -->
+      <div style="margin: 10px 0; display: flex; gap: 10px; align-items: center;">
+        <button id="bellringer-run" style="background: var(--terminal-success); border: none; color: #000; padding: 8px 18px; border-radius: 4px; font-family: var(--ide-font-mono); font-size: 13px; cursor: pointer; font-weight: 600;">
+          ▶️ Run Code
+        </button>
+        <span style="color: var(--ide-text-muted); font-size: 12px;">Ctrl+Enter</span>
+      </div>
+      
+      <!-- Terminal Output -->
+      <div style="background: var(--terminal-bg); border: 1px solid var(--terminal-border); border-radius: 4px; margin: 10px 0;">
+        <div style="background: var(--ide-bg-tertiary); padding: 6px 12px; border-bottom: 1px solid var(--terminal-border); font-size: 12px; color: var(--ide-text-secondary);">
+          📋 output.log
+        </div>
+        <pre id="bellringer-output" style="background: var(--terminal-bg); color: var(--terminal-text); padding: 12px; margin: 0; font-family: var(--ide-font-mono); font-size: 13px; min-height: 50px; overflow-x: auto;">Ready to run...</pre>
+      </div>
+      
+      <div id="bellringer-award" style="margin-top: 10px; color: var(--terminal-success); font-weight: 600; font-family: var(--ide-font-mono);"></div>
+    </div>
   </div>
 </div>
-<div class="flex flex-wrap gap-24 align-items-flex-start mt-32 ml-32">
-  <!-- Leaderboard Block -->
-  <div class="leaderboard-block modern-leaderboard card card-shadow card-radius-18 card-overflow-hidden card-position-relative card-bg-main card-color-main mr-12 align-self-flex-start min-width-280 max-width-360">
-    <h3 class="section-title accent-yellow flex-align-center gap-8 font-size-1-3em m-0 p-18-0-10-18 card-bg-main accent-yellow border-bottom border-dark">
-      <span class="material-symbols-outlined accent-yellow font-size-1-5em">emoji_events</span>
-      Leaderboard
-    </h3>
-    <canvas id="confetti-canvas" class="position-absolute width-100 height-100 pointer-events-none z-index-10"></canvas>
-    <div class="leaderboard-content p-0-18-18-18 card-bg-main">
-      <table class="leaderboard-table width-100 border-collapse">
-        <thead>
-          <tr class="background-none border-none">
-            <th class="text-left font-weight-600 accent-yellow font-size-0-95em">#</th>
-            <th class="text-left font-weight-600 accent-yellow font-size-0-95em">Name</th>
-            <th class="text-right font-weight-600 accent-yellow font-size-0-95em">Points</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-body">
-          <!-- JS will populate leaderboard rows here -->
-        </tbody>
-      </table>
-    </div>
-    <div id="leaderboard-message" class="leaderboard-message text-left font-size-1-1em accent-green font-weight-600 p-12-0-12-18"></div>
-  </div>
 
-  <!-- Streak Tracker Block -->
-  <div class="streak-block card card-shadow card-radius-18 card-overflow-hidden card-bg-main card-color-main min-width-220 max-width-340 p-0-0-10-0 position-relative">
-    <h3 class="flex-align-center gap-8 font-size-1-1em m-0 p-14-0-8-14 card-bg-main accent-yellow border-bottom border-dark">
-      <span class="material-symbols-outlined accent-yellow font-size-1-3em">local_fire_department</span>
-      Streak
-    </h3>
-    <div id="streak-content" class="p-10-14-0-14 min-height-60">
-      <div class="text-medium font-size-0-98em">Loading your streak...</div>
+<!-- What's Next Terminal -->
+<div class="ide-terminal-window ide-terminal-medium" style="margin: 20px;">
+  <div class="ide-terminal-header">
+    <div class="ide-terminal-controls">
+      <div class="ide-terminal-control close"></div>
+      <div class="ide-terminal-control minimize"></div>
+      <div class="ide-terminal-control maximize"></div>
     </div>
+    <div class="ide-terminal-title">🗺️ path_navigator.py</div>
   </div>
-
-  <!-- Recent Activity Block -->
-  <div class="recent-activity-block card card-shadow card-radius-18 card-overflow-hidden card-bg-main card-color-main card-border-accent-blue min-width-220 max-width-340 p-0-0-10-0 position-relative">
-    <h3 class="flex-align-center gap-8 font-size-1-1em m-0 p-14-0-8-14 card-bg-main accent-green border-bottom border-dark">
-      <span class="material-symbols-outlined accent-green font-size-1-3em">trending_up</span>
-      Recent Activity
-    </h3>
-    <div id="recent-activity-content" class="p-10-14-0-14 min-height-120">
-      <div class="text-medium font-size-0-98em">Loading your recent progress...</div>
-    </div>
-  </div>
-
-  <!-- Upcoming Assignments/Deadlines Block -->
-  <div class="upcoming-block card card-shadow card-radius-18 card-overflow-hidden card-bg-main card-color-main card-border-accent-green min-width-220 max-width-340 p-0-0-10-0 position-relative mt-18">
-    <h3 class="flex-align-center gap-8 font-size-1-1em m-0 p-14-0-8-14 card-bg-main accent-green border-bottom border-dark">
-      <span class="material-symbols-outlined accent-green font-size-1-3em">event</span>
-      Upcoming Assignments
-    </h3>
-    <div id="upcoming-content" class="p-10-14-0-14 min-height-60">
-      <div class="text-medium font-size-0-98em">Loading upcoming assignments...</div>
-    </div>
-  </div>
-
-  <!-- Study Tips Block -->
-  <div class="study-tips-block card card-shadow card-radius-18 card-overflow-hidden card-bg-main card-color-main card-border-accent-cyan min-width-220 max-width-340 p-0-0-10-0 position-relative mt-18">
-    <h3 class="flex-align-center gap-8 font-size-1-1em m-0 p-14-0-8-14 card-bg-main accent-cyan border-bottom border-dark">
-      <span class="material-symbols-outlined accent-cyan font-size-1-3em">lightbulb</span>
-      Study Tip
-    </h3>
-    <div id="study-tips-content" class="p-10-14-0-14 min-height-60">
-      <div class="text-medium font-size-0-98em">Loading study tip...</div>
-    </div>
-  </div>
-
-  <!-- Resume Last Lesson Block -->
-  <div class="resume-block card card-shadow card-radius-18 card-overflow-hidden card-bg-main card-color-main card-border-accent-blue min-width-220 max-width-340 p-0-0-10-0 position-relative mt-18">
-    <h3 class="flex-align-center gap-8 font-size-1-1em m-0 p-14-0-8-14 card-bg-main accent-blue border-bottom border-dark">
-      <span class="material-symbols-outlined accent-blue font-size-1-3em">play_arrow</span>
-      Resume Learning
-    </h3>
-    <div id="resume-content" class="p-10-14-0-14 min-height-60">
-      <div class="text-medium font-size-0-98em">Loading last lesson...</div>
-    </div>
-  </div>
-
-  <!-- Badges & Achievements Block -->
-  <div class="badges-block card card-shadow card-radius-18 card-overflow-hidden card-bg-main card-color-main card-border-accent-yellow min-width-220 max-width-340 p-0-0-10-0 position-relative mt-18">
-    <h3 class="flex-align-center gap-8 font-size-1-1em m-0 p-14-0-8-14 card-bg-main accent-yellow border-bottom border-dark">
-      <span class="material-symbols-outlined accent-yellow font-size-1-3em">military_tech</span>
-      Badges & Achievements
-    </h3>
-    <div id="badges-content" class="p-10-14-0-14 min-height-60">
-      <div class="text-medium font-size-0-98em">Loading your badges...</div>
-    </div>
-  </div>
-
-  <!-- Motivational Quote Block -->
-  <div class="motivation-block card card-shadow card-radius-18 card-overflow-hidden card-bg-main card-color-main card-border-accent-green min-width-220 max-width-340 p-0-0-10-0 position-relative mt-18">
-    <h3 class="flex-align-center gap-8 font-size-1-1em m-0 p-14-0-8-14 card-bg-main accent-green border-bottom border-dark">
-      <span class="material-symbols-outlined accent-green font-size-1-3em">format_quote</span>
-      Motivation
-    </h3>
-    <div id="motivation-content" class="p-10-14-0-14 min-height-60">
-      <div class="text-medium font-size-0-98em">Loading motivation...</div>
-    </div>
-  </div>
-
-  <!-- Bell Ringer (Daily Challenge) Block -->
-  <div class="bellringer-block card card-shadow card-radius-18 card-overflow-hidden card-bg-main card-color-main mr-12 min-width-420 max-width-900 p-0-0-18-0 position-relative">
-    <h3 class="flex-align-center gap-8 font-size-1-2em m-0 p-18-0-10-18 card-bg-main accent-cyan border-bottom border-dark">
-      <span class="material-symbols-outlined accent-cyan font-size-1-5em">flag</span>
-      Bell Ringer (Daily Challenge)
-    </h3>
-    <div id="bellringer-content" class="p-18">
-      <div id="bellringer-title" class="font-weight-600 font-size-1-1em mb-6"></div>
-      <div id="bellringer-desc" class="font-size-1em mb-12 line-height-1-5"></div>
-      <div id="bellringer-ide" class="height-180 width-100 mb-10"></div>
-      <button id="bellringer-run" class="btn-primary p-8-18">Run Code</button>
-      <pre id="bellringer-output" class="bg-accent accent-yellow p-10-12 rounded mt-10 min-height-32"></pre>
-      <div id="bellringer-award" class="mt-8 font-size-1-1em font-weight-600 accent-yellow"></div>
+  <div class="ide-terminal-content">
+    <div class="ide-prompt">get_next_learning_path()</div>
+    <div id="whats-next-content" style="margin-top: 10px; color: var(--terminal-text);">
+      <!-- JS will populate what's next content here -->
     </div>
   </div>
 </div>
-
-<div class="whats-next-block card card-shadow card-radius-18 card-overflow-hidden card-bg-main card-color-main min-width-280 max-width-360 p-18 mt-32 ml-32">
-  <h3 class="flex-align-center gap-8 font-size-1-2em m-0 p-0-0-18-0 card-bg-main accent-cyan border-bottom border-dark">
-    <span class="material-symbols-outlined accent-cyan font-size-1-5em">arrow_forward</span>
-    What's Next?
-  </h3>
-  <div id="whats-next-content" class="pt-10 font-size-1em">
-    <!-- JS will populate what's next content here -->
-  </div>  </div>
 </main>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="{{ url_for('static', filename='js/ide_command_center.js', v=g.css_version) }}"></script>
+<script src="{{ url_for('static', filename='js/ide_file_explorer.js', v=g.css_version) }}"></script>
+<script src="{{ url_for('static', filename='js/ide_ace_editor.js', v=g.css_version) }}"></script>
+<script>
+// Initialize IDE systems when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Dashboard DOMContentLoaded - Initializing IDE Command Center Phase 2...');
+    
+    // Debug: Check if our objects exist
+    console.log('IDEFileExplorer available:', !!window.IDEFileExplorer);
+    console.log('IDEAceEditor available:', !!window.IDEAceEditor);
+    
+    // Initialize file explorer
+    if (window.IDEFileExplorer) {
+        window.IDEFileExplorer.init();
+    } else {
+        console.warn('❌ IDEFileExplorer not available');
+    }
+    
+    // Initialize ACE editor with delay to ensure DOM is ready
+    setTimeout(() => {
+        if (window.IDEAceEditor) {
+            window.IDEAceEditor.init();
+        } else {
+            console.warn('❌ IDEAceEditor not available');
+        }
+    }, 100);
+    
+    // Initialize status bar
+    initIDEStatusBar();
+    
+    console.log('✅ IDE Command Center Phase 2 initialization completed');
+});
+
+function initIDEStatusBar() {
+    // Create status bar
+    const statusBar = document.createElement('div');
+    statusBar.className = 'ide-status-bar';
+    
+    const statusLeft = document.createElement('div');
+    statusLeft.className = 'ide-status-left';
+    
+    const statusRight = document.createElement('div');
+    statusRight.className = 'ide-status-right';
+    
+    // Add status items
+    statusLeft.innerHTML = `
+        <div class="ide-status-item" title="Current Branch">
+            <span class="material-symbols-outlined" style="font-size: 14px;">source</span>
+            main
+        </div>
+        <div class="ide-status-item" title="Sync Status">
+            <span class="material-symbols-outlined" style="font-size: 14px;">sync</span>
+            0↓ 0↑
+        </div>
+        <div class="ide-status-item ide-editor-info">
+            Python IDE Ready
+        </div>
+    `;
+    
+    statusRight.innerHTML = `
+        <div class="ide-status-item" title="Line Ending">
+            LF
+        </div>
+        <div class="ide-status-item" title="Encoding">
+            UTF-8
+        </div>
+        <div class="ide-status-item" title="Language Mode">
+            Python
+        </div>
+        <div class="ide-status-item" title="Spaces">
+            Spaces: 4
+        </div>
+    `;
+    
+    statusBar.appendChild(statusLeft);
+    statusBar.appendChild(statusRight);
+    
+    // Add to body
+    document.body.appendChild(statusBar);
+    
+    // Add bottom margin to main content to account for status bar
+    const mainContent = document.querySelector('main') || document.querySelector('.dashboard-grid');
+    if (mainContent) {
+        mainContent.style.marginBottom = '30px';
+    }
+    
+    console.log('📊 IDE Status bar initialized');
+}
+</script>
 {% endblock %}
 </body>
 </html>

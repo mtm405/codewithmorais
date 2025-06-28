@@ -580,6 +580,11 @@ def dev_dashboard():
     
     return render_template('pages/dev_dashboard.html', active_page='dashboard')
 
+# Route for dashboard test page
+@app.route('/dashboard_test')
+def dashboard_test():
+    return render_template('pages/dashboard_test.html')
+
 # 🎪 DAZZLING DASHBOARD API ENDPOINTS - The most interactive learning experience ever!
 # ==================================================================================
 
@@ -859,6 +864,12 @@ def api_dev_dashboard_all():
         })
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
+# Test route for IDE features
+@app.route('/test-ide')
+def test_ide():
+    """Test page for IDE Command Center features"""
+    return render_template('test_ide.html')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=PORT)
