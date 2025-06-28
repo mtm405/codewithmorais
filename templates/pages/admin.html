@@ -6,6 +6,8 @@
         <h1 class="blog-title">Admin Panel</h1>
         <div class="greeting"><strong>Welcome, {{ session.get('user_name', 'Admin') }}</strong></div>
     </div>
+    <!-- IDE Example Block -->
+    <div id="admin-ide-example" style="min-height:220px; margin:24px 0; border:1px solid #eee; border-radius:6px;"></div>
     <div class="admin-sections">
         <!-- Students Section -->
         <div class="admin-section" id="admin-students">
@@ -37,5 +39,31 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/ide_ace_editor.js"></script>
+    <link rel="stylesheet" href="/static/css/ide_file_explorer.css">
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Example code to display in the IDE
+        var exampleCode = `# Example Python code\nprint("Hello, Admin!")`;
+        if (window.IDEAceEditor && document.getElementById('admin-ide-example')) {
+          window.IDEAceEditor.createEditor('admin-ide-example', {
+            value: exampleCode,
+            readOnly: true,
+            theme: "ace/theme/monokai",
+            mode: "ace/mode/python",
+            showPrintMargin: false,
+            highlightActiveLine: false,
+            highlightGutterLine: false,
+            fontSize: "1.08em",
+            maxLines: 10,
+            minLines: 3,
+            wrap: true
+          });
+        }
+      });
+    </script>
 {% endblock %}
 </html>
