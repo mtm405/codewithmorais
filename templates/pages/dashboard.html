@@ -6,6 +6,7 @@
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css', v=g.css_version) }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/ide_command_center.css', v=g.css_version) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ide_file_explorer.css', v=g.css_version) }}">
 {% endblock %}
 
 {% block content %}
@@ -212,9 +213,38 @@
       
       <!-- Code Editor Area -->
       <div style="background: var(--ide-bg-input); border: 1px solid var(--terminal-border); border-radius: 4px; margin: 10px 0;">
-        <div style="background: var(--ide-bg-tertiary); padding: 6px 12px; border-bottom: 1px solid var(--terminal-border); font-size: 12px; color: var(--ide-text-secondary);">
-          📝 editor.py
+        <!-- Editor Toolbar -->
+        <div class="ide-editor-toolbar">
+          <div class="ide-toolbar-group">
+            <button class="ide-toolbar-button" onclick="window.IDEAceEditor?.runCurrentCode('bellringer-ide')" title="Run Code (Ctrl+Enter)">
+              ▶️ Run
+            </button>
+            <button class="ide-toolbar-button" onclick="window.IDEAceEditor?.saveCode('bellringer-ide')" title="Save (Ctrl+S)">
+              💾 Save
+            </button>
+            <button class="ide-toolbar-button" onclick="window.IDEAceEditor?.formatCode('bellringer-ide')" title="Format (Shift+Alt+F)">
+              🎨 Format
+            </button>
+          </div>
+          
+          <div class="ide-toolbar-separator"></div>
+          
+          <div class="ide-toolbar-group">
+            <select class="ide-toolbar-select" onchange="window.IDEAceEditor?.changeTheme(this.value)" title="Editor Theme">
+              <option value="monokai">Monokai</option>
+              <option value="github">GitHub</option>
+              <option value="tomorrow_night">Tomorrow Night</option>
+              <option value="solarized_dark">Solarized Dark</option>
+            </select>
+          </div>
+          
+          <div class="ide-toolbar-separator"></div>
+          
+          <div class="ide-toolbar-group">
+            <span style="color: var(--ide-text-secondary); font-size: 11px;">📝 editor.py</span>
+          </div>
         </div>
+        
         <div id="bellringer-ide" style="height: 180px; width: 100%; background: var(--ide-bg-input);"></div>
       </div>
       
@@ -263,6 +293,87 @@
 {{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="{{ url_for('static', filename='js/ide_command_center.js', v=g.css_version) }}"></script>
+<script src="{{ url_for('static', filename='js/ide_file_explorer.js', v=g.css_version) }}"></script>
+<script src="{{ url_for('static', filename='js/ide_ace_editor.js', v=g.css_version) }}"></script>
+<script>
+// Initialize IDE systems when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Initializing IDE Command Center Phase 2...');
+    
+    // Initialize file explorer
+    if (window.IDEFileExplorer) {
+        window.IDEFileExplorer.init();
+    }
+    
+    // Initialize ACE editor with delay to ensure DOM is ready
+    setTimeout(() => {
+        if (window.IDEAceEditor) {
+            window.IDEAceEditor.init();
+        }
+    }, 100);
+    
+    // Initialize status bar
+    initIDEStatusBar();
+    
+    console.log('✅ IDE Command Center Phase 2 fully initialized');
+});
+
+function initIDEStatusBar() {
+    // Create status bar
+    const statusBar = document.createElement('div');
+    statusBar.className = 'ide-status-bar';
+    
+    const statusLeft = document.createElement('div');
+    statusLeft.className = 'ide-status-left';
+    
+    const statusRight = document.createElement('div');
+    statusRight.className = 'ide-status-right';
+    
+    // Add status items
+    statusLeft.innerHTML = `
+        <div class="ide-status-item" title="Current Branch">
+            <span class="material-symbols-outlined" style="font-size: 14px;">source</span>
+            main
+        </div>
+        <div class="ide-status-item" title="Sync Status">
+            <span class="material-symbols-outlined" style="font-size: 14px;">sync</span>
+            0↓ 0↑
+        </div>
+        <div class="ide-status-item ide-editor-info">
+            Python IDE Ready
+        </div>
+    `;
+    
+    statusRight.innerHTML = `
+        <div class="ide-status-item" title="Line Ending">
+            LF
+        </div>
+        <div class="ide-status-item" title="Encoding">
+            UTF-8
+        </div>
+        <div class="ide-status-item" title="Language Mode">
+            Python
+        </div>
+        <div class="ide-status-item" title="Spaces">
+            Spaces: 4
+        </div>
+    `;
+    
+    statusBar.appendChild(statusLeft);
+    statusBar.appendChild(statusRight);
+    
+    // Add to body
+    document.body.appendChild(statusBar);
+    
+    // Add bottom margin to main content to account for status bar
+    const mainContent = document.querySelector('main') || document.querySelector('.dashboard-grid');
+    if (mainContent) {
+        mainContent.style.marginBottom = '30px';
+    }
+    
+    console.log('📊 IDE Status bar initialized');
+}
+</script>
 {% endblock %}
 </body>
 </html>

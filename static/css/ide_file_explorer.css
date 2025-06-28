@@ -1,0 +1,790 @@
+/**
+ * 🗂️ IDE COMMAND CENTER - PHASE 2: FILE EXPLORER SIDEBAR
+ * Transform sidebar into VS Code-style file explorer
+ * =====================================================
+ */
+
+/* =====================================
+   🗂️ FILE EXPLORER FOUNDATION
+   ===================================== */
+
+/* Transform sidebar into file explorer */
+.sidebar.ide-file-explorer {
+    background: var(--ide-bg-secondary);
+    border-right: 1px solid var(--terminal-border);
+    width: 280px;
+    transition: width 0.3s ease;
+    font-family: var(--ide-font-ui);
+    color: var(--ide-text-primary);
+}
+
+.sidebar.ide-file-explorer.collapsed {
+    width: 50px;
+}
+
+/* File Explorer Header */
+.sidebar-header.ide-explorer-header {
+    background: var(--ide-bg-tertiary);
+    border-bottom: 1px solid var(--terminal-border);
+    padding: 8px 12px;
+    position: relative;
+}
+
+/* Explorer Title Bar */
+.ide-explorer-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--ide-text-secondary);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding: 0 12px;
+}
+
+.ide-explorer-title::before {
+    content: "📁";
+    font-size: 14px;
+}
+
+/* User Profile as Project Root */
+.profile-section.ide-project-root {
+    background: var(--ide-bg-input);
+    border: 1px solid var(--terminal-border);
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.profile-section.ide-project-root:hover {
+    background: var(--ide-bg-accent);
+}
+
+.sidebar-avatar.ide-project-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    border: 1px solid var(--terminal-border);
+}
+
+.user-title-block.ide-project-info {
+    flex: 1;
+}
+
+.user-name.ide-project-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ide-text-primary);
+    display: block;
+}
+
+.user-title.ide-project-type {
+    font-size: 11px;
+    color: var(--ide-text-muted);
+    display: block;
+}
+
+/* User Stats as Project Info */
+.user-points.ide-project-stats {
+    background: var(--terminal-bg);
+    border: 1px solid var(--terminal-border);
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin-bottom: 8px;
+    font-family: var(--ide-font-mono);
+    font-size: 11px;
+}
+
+.user-points-bytes.ide-stat-line,
+.user-points-tokens.ide-stat-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2px 0;
+    color: var(--terminal-text);
+}
+
+.user-points-icon-bytes,
+.pycoin-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.user-points-value {
+    color: var(--python-number);
+    font-weight: 600;
+}
+
+.user-points-label {
+    color: var(--ide-text-muted);
+    font-size: 10px;
+}
+
+/* =====================================
+   🗂️ FILE TREE NAVIGATION
+   ===================================== */
+
+/* Transform navigation into file tree */
+.components.ide-file-tree {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+    background: transparent;
+}
+
+/* File tree folders */
+.ide-folder {
+    margin: 0;
+    border: none;
+    background: transparent;
+}
+
+.ide-folder-header {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+    font-size: 13px;
+    color: var(--ide-text-primary);
+}
+
+.ide-folder-header:hover {
+    background: var(--ide-bg-hover);
+}
+
+.ide-folder-arrow {
+    font-size: 16px !important;
+    margin-right: 4px;
+    color: var(--ide-text-secondary);
+    transition: transform 0.15s ease;
+}
+
+.ide-folder-icon {
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.ide-folder-name {
+    color: var(--ide-text-primary);
+    font-weight: 500;
+}
+
+.ide-folder-content {
+    margin-left: 20px;
+    border-left: 1px solid var(--terminal-border);
+    padding-left: 8px;
+}
+
+/* File tree items */
+.ide-file-list {
+    margin-left: 20px;
+    border-left: 1px solid var(--terminal-border);
+    display: none;
+}
+
+.ide-folder.expanded .ide-file-list {
+    display: block;
+}
+
+.menu-item-link.ide-file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px 4px 16px;
+    margin: 0;
+    color: var(--ide-text-primary);
+    text-decoration: none;
+    font-size: 13px;
+    border: none;
+    background: transparent;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.menu-item-link.ide-file::before {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 50%;
+    width: 12px;
+    height: 1px;
+    background: var(--terminal-border);
+    transform: translateY(-50%);
+}
+
+.menu-item-link.ide-file:hover {
+    background: var(--ide-bg-accent);
+    color: var(--ide-text-primary);
+}
+
+.menu-item-link.ide-file.active {
+    background: var(--ide-accent-blue);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.menu-item-link.ide-file.active::before {
+    background: #ffffff;
+}
+
+/* File icons */
+.ide-file-icon {
+    margin-right: 8px;
+    font-size: 14px;
+    color: var(--ide-text-secondary);
+}
+
+.ide-file-icon.python {
+    color: var(--python-keyword);
+}
+
+.ide-file-icon.dashboard {
+    color: var(--ide-accent-blue);
+}
+
+/* Menu labels */
+.menu-label.ide-filename {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =====================================
+   🎮 ENHANCED SIDEBAR CONTROLS
+   ===================================== */
+
+/* IDE-style sidebar toggle */
+.sidebar-toggle.ide-toggle {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: var(--ide-bg-input);
+    border: 1px solid var(--terminal-border);
+    border-radius: 4px;
+    color: var(--ide-text-secondary);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-toggle.ide-toggle:hover {
+    background: var(--ide-bg-accent);
+    color: var(--ide-text-primary);
+}
+
+/* Collapsed state */
+.sidebar.ide-file-explorer.collapsed .sidebar-header.ide-explorer-header {
+    padding: 8px 4px;
+}
+
+.sidebar.ide-file-explorer.collapsed .ide-explorer-title,
+.sidebar.ide-file-explorer.collapsed .profile-section.ide-project-root,
+.sidebar.ide-file-explorer.collapsed .user-points.ide-project-stats,
+.sidebar.ide-file-explorer.collapsed .menu-label.ide-filename {
+    display: none;
+}
+
+.sidebar.ide-file-explorer.collapsed .ide-folder-header {
+    justify-content: center;
+    padding: 4px;
+}
+
+.sidebar.ide-file-explorer.collapsed .ide-folder-name {
+    display: none;
+}
+
+.sidebar.ide-file-explorer.collapsed .menu-item-link.ide-file {
+    justify-content: center;
+    padding: 4px;
+}
+
+.sidebar.ide-file-explorer.collapsed .ide-file-list {
+    display: none !important;
+}
+
+/* ===== VIEW TOGGLE ===== */
+.ide-view-toggle {
+    background: var(--ide-bg-tertiary);
+    border-radius: 4px;
+    padding: 2px;
+    border: 1px solid var(--terminal-border);
+}
+
+.ide-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--ide-text-secondary);
+    padding: 6px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: var(--ide-font-primary);
+    transition: all 0.15s ease;
+    flex: 1;
+}
+
+.ide-toggle-btn:hover {
+    background: var(--ide-bg-hover);
+    color: var(--ide-text-primary);
+}
+
+.ide-toggle-btn.active {
+    background: var(--ide-accent-blue);
+    color: #fff;
+}
+
+/* =====================================
+   🔍 SEARCH AND ACTIONS
+   ===================================== */
+
+/* File explorer search */
+.ide-search-container {
+    margin: 8px 0;
+    position: relative;
+}
+
+.ide-search-input {
+    width: 100%;
+    background: var(--ide-bg-input);
+    border: 1px solid var(--terminal-border);
+    border-radius: 4px;
+    padding: 6px 8px 6px 28px;
+    font-size: 12px;
+    color: var(--ide-text-primary);
+    font-family: var(--ide-font-ui);
+}
+
+.ide-search-input::placeholder {
+    color: var(--ide-text-muted);
+}
+
+.ide-search-icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--ide-text-muted);
+}
+
+/* Action buttons */
+.ide-actions {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.ide-action-btn {
+    background: var(--ide-bg-input);
+    border: 1px solid var(--terminal-border);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: var(--ide-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    text-align: center;
+}
+
+.ide-action-btn:hover {
+    background: var(--ide-bg-accent);
+    color: var(--ide-text-primary);
+}
+
+/* ===== CONTEXT MENU ===== */
+.ide-context-menu {
+    position: fixed;
+    background: var(--ide-bg-secondary);
+    border: 1px solid var(--terminal-border);
+    border-radius: 6px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 10000;
+    padding: 4px 0;
+    min-width: 180px;
+    font-family: var(--ide-font-primary);
+    font-size: 13px;
+}
+
+.ide-context-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    color: var(--ide-text-primary);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.ide-context-item:hover {
+    background: var(--ide-bg-hover);
+}
+
+.ide-context-item .material-symbols-outlined {
+    font-size: 16px;
+    color: var(--ide-text-secondary);
+}
+
+.ide-context-divider {
+    height: 1px;
+    background: var(--terminal-border);
+    margin: 4px 0;
+}
+
+/* ===== DRAG AND DROP ===== */
+.ide-file-item[draggable="true"] {
+    cursor: grab;
+}
+
+.ide-file-item[draggable="true"]:hover {
+    background: var(--ide-bg-hover);
+}
+
+.ide-file-item.drag-over {
+    background: var(--ide-accent-blue) !important;
+    color: #fff;
+}
+
+.ide-file-item.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
+/* ===== FILE OPERATIONS ===== */
+.ide-file-operations {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.ide-file-item:hover .ide-file-operations {
+    opacity: 1;
+}
+
+.ide-file-op-btn {
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: var(--ide-bg-tertiary);
+    color: var(--ide-text-secondary);
+    border-radius: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.15s ease;
+}
+
+.ide-file-op-btn:hover {
+    background: var(--ide-accent-blue);
+    color: #fff;
+}
+
+/* ===== SEARCH ENHANCEMENTS ===== */
+.ide-search-container {
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.ide-search-input {
+    width: 100%;
+    background: var(--ide-bg-input);
+    border: 1px solid var(--terminal-border);
+    border-radius: 4px;
+    padding: 6px 12px;
+    color: var(--ide-text-primary);
+    font-family: var(--ide-font-primary);
+    font-size: 12px;
+    transition: border-color 0.2s ease;
+}
+
+.ide-search-input:focus {
+    outline: none;
+    border-color: var(--ide-accent-blue);
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+.ide-search-input::placeholder {
+    color: var(--ide-text-muted);
+}
+
+.ide-search-results {
+    background: var(--ide-bg-secondary);
+    border: 1px solid var(--terminal-border);
+    border-radius: 4px;
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.ide-search-result {
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--ide-text-primary);
+    border-bottom: 1px solid var(--terminal-border);
+}
+
+.ide-search-result:last-child {
+    border-bottom: none;
+}
+
+.ide-search-result:hover {
+    background: var(--ide-bg-hover);
+}
+
+.ide-search-result .match {
+    background: var(--terminal-warning);
+    color: #000;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+/* ===== NOTIFICATIONS ===== */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.ide-notification {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* ===== EDITOR TOOLBAR ===== */
+.ide-editor-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ide-bg-tertiary);
+    border-bottom: 1px solid var(--terminal-border);
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.ide-toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ide-toolbar-separator {
+    width: 1px;
+    height: 16px;
+    background: var(--terminal-border);
+    margin: 0 4px;
+}
+
+.ide-toolbar-button {
+    background: none;
+    border: none;
+    color: var(--ide-text-secondary);
+    padding: 4px 8px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.15s ease;
+}
+
+.ide-toolbar-button:hover {
+    background: var(--ide-bg-hover);
+    color: var(--ide-text-primary);
+}
+
+.ide-toolbar-select {
+    background: var(--ide-bg-input);
+    border: 1px solid var(--terminal-border);
+    color: var(--ide-text-primary);
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+/* ===== STATUS BAR ===== */
+.ide-status-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 24px;
+    background: var(--ide-accent-blue);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    font-size: 11px;
+    font-family: var(--ide-font-mono);
+    z-index: 1000;
+}
+
+.ide-status-left,
+.ide-status-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ide-status-item {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.ide-status-item:hover {
+    opacity: 0.8;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .sidebar.ide-file-explorer {
+        width: 260px;
+    }
+    
+    .sidebar.ide-file-explorer.collapsed {
+        width: 45px;
+    }
+    
+    .ide-folder-header,
+    .menu-item-link.ide-file {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    .ide-search-input {
+        font-size: 11px;
+        padding: 5px 6px 5px 24px;
+    }
+    
+    .ide-context-menu {
+        min-width: 160px;
+    }
+    
+    .ide-file-operations {
+        opacity: 1;
+    }
+    
+    .ide-toolbar-button {
+        padding: 2px 4px;
+    }
+    
+    .ide-status-bar {
+        font-size: 10px;
+        padding: 0 8px;
+    }
+}
+
+/* =====================================
+   🎯 ACCESSIBILITY ENHANCEMENTS
+   ===================================== */
+
+/* Focus states */
+.ide-folder-header:focus,
+.menu-item-link.ide-file:focus {
+    outline: 2px solid var(--ide-accent-blue);
+    outline-offset: -2px;
+}
+
+.ide-search-input:focus {
+    outline: 2px solid var(--ide-accent-blue);
+    outline-offset: 0;
+}
+
+/* Screen reader support */
+.ide-folder[aria-expanded="true"] .ide-folder-icon::after {
+    content: " (expanded)";
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* =====================================
+   🎬 ANIMATIONS
+   ===================================== */
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ide-file-list {
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.menu-item-link.ide-file {
+    animation: fadeInLeft 0.2s ease-out;
+}
+
+/* Stagger animation for multiple files */
+.ide-file-list .menu-item-link.ide-file:nth-child(1) { animation-delay: 0ms; }
+.ide-file-list .menu-item-link.ide-file:nth-child(2) { animation-delay: 50ms; }
+.ide-file-list .menu-item-link.ide-file:nth-child(3) { animation-delay: 100ms; }
+.ide-file-list .menu-item-link.ide-file:nth-child(4) { animation-delay: 150ms; }
+.ide-file-list .menu-item-link.ide-file:nth-child(5) { animation-delay: 200ms; }
+
+/* ===== DARK MODE ENHANCEMENTS ===== */
+@media (prefers-color-scheme: dark) {
+    .ide-toggle-btn.active {
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+    
+    .ide-file-item.active {
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+}

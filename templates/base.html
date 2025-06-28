@@ -27,6 +27,9 @@
     <!-- Nuclear Production CSS - Unified Bundle -->
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles.min.css', v=g.css_version) }}">
     
+    <!-- IDE File Explorer CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ide_file_explorer.css', v=g.css_version) }}">
+    
     <!-- Block for additional styles -->
     {% block styles %}{% endblock %}
     {% block head_extra %}{% endblock %}
@@ -37,6 +40,10 @@
     {% if active_page == 'dashboard_course' %}
     <script src="{{ url_for('static', filename='dist/dashboard.min.js', v=g.css_version) }}" defer></script>
     {% endif %}
+    
+    <!-- IDE Command Center JavaScript modules -->
+    <script src="{{ url_for('static', filename='js/ide_file_explorer.js', v=g.css_version) }}" defer></script>
+    <script src="{{ url_for('static', filename='js/ide_ace_editor.js', v=g.css_version) }}" defer></script>
     
     <!-- Critical CSS for theme and sidebar -->
     <script>
@@ -66,6 +73,35 @@
         // Pass config as a JS object for Firebase modular SDK
         window.firebaseConfig = {{ firebase_config | tojson | safe }};
     </script>
+    
+    <!-- ACE Editor integration styles -->
+    <style>
+        .ace_editor {
+            font-family: var(--ide-font-mono) !important;
+        }
+        
+        .ace_gutter {
+            background: var(--ide-bg-tertiary) !important;
+            color: var(--ide-text-muted) !important;
+        }
+        
+        .ace_content {
+            background: var(--ide-bg-input) !important;
+        }
+        
+        .ace_cursor {
+            color: var(--ide-text-primary) !important;
+        }
+        
+        .ace_selection {
+            background: var(--ide-accent-blue) !important;
+            opacity: 0.3;
+        }
+        
+        .ace_marker-layer .ace_active-line {
+            background: var(--ide-bg-accent) !important;
+        }
+    </style>
 </head>
 
 <body class="toggle-minimal preload"{% if lesson and lesson.id %} data-lesson-id="{{ lesson.id }}"{% endif %}>

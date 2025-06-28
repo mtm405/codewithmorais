@@ -103,3 +103,107 @@ def format_terminal_output(text, output_type='info'):
     
     color_class = color_classes.get(output_type, 'terminal-text')
     return Markup(f'<span class="ide-terminal-output {color_class}">{text}</span>')
+
+# Phase 2: Enhanced Python IDE Features
+def get_code_completion_suggestions(code_snippet, cursor_position=None):
+    """
+    Generate autocomplete suggestions for Python code
+    Returns list of completion items with metadata
+    """
+    import keyword
+    
+    suggestions = []
+    
+    # Add Python keywords
+    for kw in keyword.kwlist:
+        suggestions.append({
+            'text': kw,
+            'type': 'keyword',
+            'description': f'Python keyword: {kw}'
+        })
+    
+    # Add common built-in functions
+    builtins = ['print', 'len', 'range', 'str', 'int', 'float', 'list', 'dict', 'set', 'tuple']
+    for builtin in builtins:
+        suggestions.append({
+            'text': builtin,
+            'type': 'function',
+            'description': f'Built-in function: {builtin}()'
+        })
+    
+    return suggestions
+
+def validate_python_syntax(code):
+    """
+    Validate Python code syntax and return error information
+    """
+    import ast
+    
+    try:
+        ast.parse(code)
+        return {
+            'valid': True,
+            'errors': []
+        }
+    except SyntaxError as e:
+        return {
+            'valid': False,
+            'errors': [{
+                'line': e.lineno,
+                'column': e.offset,
+                'message': e.msg,
+                'type': 'SyntaxError'
+            }]
+        }
+    except Exception as e:
+        return {
+            'valid': False,
+            'errors': [{
+                'line': 0,
+                'column': 0,
+                'message': str(e),
+                'type': type(e).__name__
+            }]
+        }
+
+def get_python_help(topic):
+    """
+    Get help information for Python topics
+    """
+    help_topics = {
+        'print': {
+            'signature': 'print(*values, sep=" ", end="\\n", file=sys.stdout, flush=False)',
+            'description': 'Print values to a text stream, or to sys.stdout by default.',
+            'example': 'print("Hello, World!")'
+        },
+        'range': {
+            'signature': 'range(start, stop[, step])',
+            'description': 'Create an arithmetic progression of integers.',
+            'example': 'for i in range(5):\\n    print(i)'
+        },
+        'len': {
+            'signature': 'len(obj)',
+            'description': 'Return the length of an object.',
+            'example': 'len([1, 2, 3])  # Returns 3'
+        }
+    }
+    
+    return help_topics.get(topic.lower(), {
+        'signature': f'{topic}(...)',
+        'description': f'Help for {topic} is not available.',
+        'example': f'# Example usage of {topic}'
+    })
+
+def format_ide_breadcrumb(current_page, lesson_data=None):
+    """
+    Create IDE-style breadcrumb navigation
+    """
+    breadcrumbs = ['📁 Python Project']
+    
+    if current_page == 'dashboard':
+        breadcrumbs.append('📊 dashboard.py')
+    elif lesson_data:
+        breadcrumbs.append(f'📁 {lesson_data.get("chapter", "lessons")}')
+        breadcrumbs.append(f'🐍 {lesson_data.get("id", "lesson")}.py')
+    
+    return ' / '.join(breadcrumbs)
