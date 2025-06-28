@@ -146,7 +146,7 @@ def dashboard():
     if 'user_id' not in session:
         # Redirect to auth blueprint's index (login page)
         return redirect(url_for('auth.index'))
-    return render_template('dashboard_course.html', active_page='dashboard')
+    return render_template('pages/dashboard_course.html', active_page='dashboard')
 
 # --- New Dashboard2 route ---
 @routes_bp.route('/dashboard2')
@@ -331,7 +331,7 @@ def get_leaderboard():
 @routes_bp.route('/store')
 def store():
     user_currency = session.get('user_currency', 0)
-    return render_template('store.html', user_currency=user_currency)
+    return render_template('pages/store.html', user_currency=user_currency)
 
 @routes_bp.route('/data-types')
 def data_types():
@@ -349,14 +349,14 @@ def lesson(lesson_id):
 
     lesson_file_path = os.path.join(current_app.root_path, 'lessons', f'{lesson_id}.json')
     if not os.path.exists(lesson_file_path):
-        return render_template('lesson.html', lesson=None, active_page='lessons')
+        return render_template('pages/lesson.html', lesson=None, active_page='lessons')
 
     try:
         with open(lesson_file_path, 'r', encoding='utf-8') as f:
             lesson_data = json.load(f)
     except Exception as e:
         current_app.logger.error(f"Error loading lesson {lesson_id}: {e}")
-        return render_template('lesson.html', lesson=None, active_page='lessons')
+        return render_template('pages/lesson.html', lesson=None, active_page='lessons')
 
     # Store the lesson ID in the session for later use (e.g., hint purchases)
     session['current_lesson_id'] = lesson_id
@@ -432,7 +432,7 @@ def lesson(lesson_id):
     # Inject the lesson ID into the lesson data for reference
     lesson_data['id'] = lesson_id
 
-    return render_template('lesson.html', lesson=lesson_data, active_page='lessons')
+    return render_template('pages/lesson.html', lesson=lesson_data, active_page='lessons')
 
 from datetime import datetime
 from firebase_admin import firestore
@@ -779,4 +779,9 @@ def profile():
         return redirect(url_for('auth.index'))
     user_id = session.get('user_id')
     user = db.collection('users').document(user_id).get().to_dict() if db else {}
-    return render_template('profile.html', user=user)
+    return render_template('pages/profile.html', user=user)
+
+@routes_bp.route('/quiz-21-test')
+def quiz_21_test():
+    """Test page for Quiz 2.1 enhanced functionality"""
+    return render_template('quiz_21_test.html')

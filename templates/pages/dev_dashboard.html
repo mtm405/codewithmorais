@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block title %}🎪 Development Dashboard - Real Sample Data{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css', v=g.css_version) }}">
+<style>
+  /* Development mode indicator */
+  .dev-banner {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .dev-info {
+    background: #ede9fe;
+    border: 1px solid #c4b5fd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    color: #5b21b6;
+  }
+  
+  .dev-info h4 {
+    margin: 0 0 8px 0;
+    color: #5b21b6;
+    font-size: 16px;
+  }
+  
+  .dev-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  
+  .dev-stat {
+    background: white;
+    border: 1px solid #c4b5fd;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .dev-stat strong {
+    color: #5b21b6;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dev-banner">
+  🎪 DEVELOPMENT MODE - Displaying Real Sample Data from Firebase JSON
+</div>
+
+{% include 'components/header_bar.html' %}
+
+<div class="course-dashboard">
+  <div class="dev-info">
+    <h4>🎪 Development Dashboard - What You Should See</h4>
+    <p>This dashboard loads <strong>real sample data</strong> from your Firebase JSON file. You should see:</p>
+    <div class="dev-stats">
+      <div class="dev-stat"><strong>Leaderboard:</strong> 10 realistic users with rankings</div>
+      <div class="dev-stat"><strong>Daily Challenge:</strong> "Master Python List Comprehensions"</div>
+      <div class="dev-stat"><strong>Notifications:</strong> Achievement alerts and updates</div>
+      <div class="dev-stat"><strong>Activity Feed:</strong> Recent user actions and progress</div>
+      <div class="dev-stat"><strong>User Stats:</strong> Your current progress and points</div>
+      <div class="dev-stat"><strong>Animations:</strong> Smooth fade-ins and hover effects</div>
+    </div>
+  </div>
+
+  <div class="dashboard-header">
+    <div class="dashboard-announcement card">
+      <span class="material-symbols-outlined accent-yellow">campaign</span>
+      <span id="dashboard-announcement-text">🎪 Welcome to the Development Dashboard! This shows real sample data for testing.</span>
+    </div>
+  </div>
+
+  <div class="dashboard-main-grid">
+    <!-- Leaderboard Section -->
+    <div class="dashboard-section leaderboard card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-cyan">emoji_events</span>
+        Leaderboard
+        <span class="dev-badge">LIVE DATA</span>
+      </div>
+      <div class="leaderboard-content">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Name</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-list">
+            <!-- Development dashboard JS will populate this -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Daily Challenge Section -->
+    <div class="dashboard-section daily-challenge card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-yellow">bolt</span>
+        Daily Challenge
+        <span class="dev-badge">LIVE DATA</span>
+      </div>
+      <div class="daily-challenge-content" id="daily-challenge-content">
+        <!-- Development dashboard JS will populate this -->
+      </div>
+    </div>
+
+    <!-- User Statistics Grid -->
+    <div class="dashboard-section user-stats card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-purple">analytics</span>
+        Your Statistics
+        <span class="dev-badge">LIVE DATA</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="total-points">0</div>
+          <div class="stat-label">Total Points</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="current-streak">0</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="lessons-completed">0</div>
+          <div class="stat-label">Lessons Done</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="weekly-rank">#--</div>
+          <div class="stat-label">Weekly Rank</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="average-score">0%</div>
+          <div class="stat-label">Avg Score</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="pycoins">0</div>
+          <div class="stat-label">PyCoins</div>
+        </div>
+      </div>
+
+      <!-- Level Progress -->
+      <div class="level-progress">
+        <div class="level-display">
+          <div class="level-number">1</div>
+          <div class="level-title">Python Explorer</div>
+        </div>
+        <div class="xp-progress">
+          <div class="xp-bar">
+            <div class="xp-fill" style="width: 0%"></div>
+          </div>
+          <div class="xp-text">0 / 500 XP to next level</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Smart Notifications -->
+    <div class="dashboard-section notifications card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-red">notifications</span>
+        Notifications
+        <span class="dev-badge">LIVE DATA</span>
+      </div>
+      <div class="notification-list" id="notification-list">
+        <!-- Development dashboard JS will populate this -->
+      </div>
+    </div>
+
+    <!-- Recent Activity Feed -->
+    <div class="dashboard-section activity-feed card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-green">timeline</span>
+        Recent Activity
+        <span class="dev-badge">LIVE DATA</span>
+      </div>
+      <div class="activity-feed" id="activity-feed-list">
+        <!-- Development dashboard JS will populate this -->
+      </div>
+    </div>
+
+    <!-- Gamification Section -->
+    <div class="dashboard-section gamification card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-orange">military_tech</span>
+        Achievements
+        <span class="dev-badge">COMING SOON</span>
+      </div>
+      <div class="badge-showcase">
+        <div class="badge-item common">
+          <div class="badge-icon">🎯</div>
+          <div class="badge-name">First Steps</div>
+          <div class="badge-date">Earned today</div>
+        </div>
+        <div class="badge-item rare">
+          <div class="badge-icon">🔥</div>
+          <div class="badge-name">Streak Master</div>
+          <div class="badge-date">3 days ago</div>
+        </div>
+        <div class="badge-item epic">
+          <div class="badge-icon">⚡</div>
+          <div class="badge-name">Speed Demon</div>
+          <div class="badge-date">1 week ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .dev-badge {
+    background: #10b981;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    font-weight: 600;
+  }
+  
+  .dashboard-main-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-main-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 16px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<!-- 🎪 DEVELOPMENT DASHBOARD - Real Sample Data -->
+<script src="{{ url_for('static', filename='js/development_dashboard.js', v=g.css_version) }}"></script>
+{% endblock %}

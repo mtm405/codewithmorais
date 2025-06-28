@@ -1,0 +1,305 @@
+{
+  "objective": "Master iteration statements (`for`, `while`) and loop control mechanisms (`break`, `continue`, `pass`, `else` clause on loops, nested loops) for repetitive tasks.",
+  "blocks": [
+    {
+      "type": "text",
+      "content": "# Lesson 2.2: Flow Control with Loops\n\n### Objective:\nMaster iteration statements (`for`, `while`) and loop control mechanisms (`break`, `continue`, `pass`, `else` clause on loops, nested loops) for repetitive tasks."
+    },
+    {
+      "type": "text",
+      "content": "Building on decision-making, **loops** are another fundamental concept in flow control. They allow you to execute a block of code repeatedly, either a fixed number of times or until a certain condition is met. Loops are essential for processing collections of data, performing repeated calculations, and automating tasks."
+    },
+    {
+      "type": "text",
+      "content": "## 2.2 Construct and Analyze Code Segments that Use Iteration Statements\n\nPython provides two primary types of loops: `for` loops and `while` loops. Each is suited for different scenarios."
+    },
+    {
+      "type": "text",
+      "content": "### The `for` Loop\n\nThe `for` loop is used for iterating over a sequence (like a list, tuple, string, or range) or other iterable objects. It executes a block of code once for each item in the sequence.\n\n**Syntax:**\n\n```python\nfor item in iterable:\n    # Code to execute for each item\n```"
+    },
+    {
+      "type": "step_card",
+      "id": "lesson2_2_snippet1",
+      "header": "Iterating over a List",
+      "steps": [
+        "The loop iterates through each `fruit` in the `fruits` list.",
+        "In each iteration, the current `fruit` is printed."
+      ],
+      "code": "fruits = ['apple', 'banana', 'cherry']\nfor fruit in fruits:\n    print(fruit)",
+      "output": "apple\nbanana\ncherry"
+    },
+    {
+      "type": "accordion",
+      "id": "for_loop_range_accordion",
+      "header": "Detailed: Using `range()` with `for` loops",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "`range()` is a built-in function that generates a sequence of numbers. It's often used with `for` loops for controlled iteration."
+        },
+        {
+          "type": "text",
+          "content": "**`range(stop)`:** Generates numbers from 0 up to (but not including) `stop`."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "print('Counting to 5:')\nfor i in range(5):\n    print(i)",
+          "output": "Counting to 5:\n0\n1\n2\n3\n4"
+        },
+        {
+          "type": "text",
+          "content": "**`range(start, stop)`:** Generates numbers from `start` up to (but not including) `stop`."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "print('\\nCounting from 2 to 6:')\nfor j in range(2, 7):\n    print(j)",
+          "output": "Counting from 2 to 6:\n2\n3\n4\n5\n6"
+        },
+        {
+          "type": "text",
+          "content": "**`range(start, stop, step)`:** Generates numbers from `start` up to (but not including) `stop`, incrementing (or decrementing) by `step`."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "print('\\nCounting down by 2:')\nfor k in range(10, 0, -2):\n    print(k)",
+          "output": "Counting down by 2:\n10\n8\n6\n4\n2"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "### The `while` Loop\n\nThe `while` loop repeatedly executes a block of code as long as a specified condition is true. It's best used when you don't know in advance how many times the loop needs to run.\n\n**Syntax:**\n\n```python\nwhile condition:\n    # Code to execute as long as the condition is true\n    # (Ensure the condition eventually becomes false to avoid infinite loops)\n```"
+    },
+    {
+      "type": "step_card",
+      "id": "lesson2_2_snippet2",
+      "header": "Simple `while` Loop",
+      "steps": [
+        "The `count` variable starts at 0.",
+        "The loop continues as long as `count` is less than 3.",
+        "Inside the loop, `count` is printed, and then incremented (`count += 1`).",
+        "This ensures the condition eventually becomes false, stopping the loop."
+      ],
+      "code": "count = 0\nwhile count < 3:\n    print('Count is:', count)\n    count += 1\nprint('Loop finished.')",
+      "output": "Count is: 0\nCount is: 1\nCount is: 2\nLoop finished."
+    },
+    {
+      "type": "text",
+      "content": "### Loop Control Statements: `break`, `continue`, `pass`\n\nThese statements allow you to modify the normal execution flow within a loop."
+    },
+    {
+      "type": "text",
+      "content": "- **`break`:** Terminates the loop entirely. The program execution jumps to the statement immediately following the loop."
+    },
+    {
+      "type": "accordion",
+      "id": "break_examples",
+      "header": "Examples using `break`",
+      "blocks": [
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# Using 'break' in a for loop\nfor num in range(1, 6):\n    if num == 3:\n        print(\"Breaking at 3\")\n        break # Exit the loop\n    print(num)\nprint(\"Loop over.\")",
+          "output": "1\n2\nBreaking at 3\nLoop over."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# Using 'break' in a while loop (user input example)\nsecret_number = 7\n# while True creates an infinite loop that needs a 'break'\nwhile True:\n    try:\n        guess_str = input(\"Guess the number (1-10): \")\n        guess = int(guess_str)\n        if guess == secret_number:\n            print(\"Congratulations! You guessed it.\")\n            break # Exit the loop\n        else:\n            print(\"Try again!\")\n    except ValueError:\n        print(\"Invalid input. Please enter a number.\")\n"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "- **`continue`:** Skips the rest of the current iteration and moves to the next iteration of the loop."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Using 'continue'\nfor i in range(1, 6):\n    if i % 2 == 0: # If 'i' is even\n        continue   # Skip this print statement and go to the next iteration\n    print(\"{} is odd\".format(i))\n",
+      "output": "1 is odd\n3 is odd\n5 is odd",
+      "id": "lesson2_2_snippet3"
+    },
+    {
+      "type": "text",
+      "content": "- **`pass`:** A null operation. It does nothing. It's used as a placeholder when a statement is syntactically required but you don't want any code to execute (e.g., in an empty loop, function, or class definition to avoid syntax errors)."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Using 'pass' in a loop\nnumbers = [1, 2, 3, 4, 5]\nfor num in numbers:\n    if num == 3:\n        pass # Do nothing when num is 3\n    else:\n        print(num)\n\n# Or, for an empty loop (e.g., during development)\n# while True:\n#     pass # This loop would run indefinitely doing nothing\n",
+      "output": "1\n2\n4\n5",
+      "id": "lesson2_2_snippet4"
+    },
+    {
+      "type": "text",
+      "content": "### `else` Clause on Loops\n\nBoth `for` and `while` loops can optionally have an `else` clause. The code in the `else` block is executed if the loop completes **without encountering a `break` statement**.\n\nThis is useful for situations where you want to perform an action only if a search or process within the loop was successful (found an item and `break` was used) or unsuccessful (loop completed without finding the item and thus no `break`)."
+    },
+    {
+      "type": "accordion",
+      "id": "else_loop_examples",
+      "header": "Examples using `else` with loops",
+      "blocks": [
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# 'else' with a for loop (no break)\nfor i in range(3):\n    print(\"Processing {}\".format(i))\nelse:\n    print(\"Loop completed all iterations successfully.\")",
+          "output": "Processing 0\nProcessing 1\nProcessing 2\nLoop completed all iterations successfully."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# 'else' with a for loop (with break)\nsearch_list = [10, 20, 30, 40, 50]\ntarget = 35\n\nfor item in search_list:\n    if item == target:\n        print(\"Found {} in the list.\".format(target))\n        break # Loop terminates here\nelse:\n    print(\"{} not found in the list.\".format(target))",
+          "output": "35 not found in the list."
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# 'else' with a while loop\ncounter = 0\nmax_attempts = 3\nwhile counter < max_attempts:\n    print(\"Attempt {}\".format(counter + 1))\n    if counter == 5: # This condition will never be met, so no break\n        break\n    counter += 1\nelse:\n    print(\"While loop finished all attempts naturally.\")",
+          "output": "Attempt 1\nAttempt 2\nAttempt 3\nWhile loop finished all attempts naturally."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "### Nested Loops\n\nJust like conditional statements, loops can be nested within other loops. This is common when working with multi-dimensional data (like tables or grids) or when you need to perform an operation for every combination of items from two or more sequences."
+    },
+    {
+      "type": "accordion",
+      "id": "nested_loop_examples",
+      "header": "Examples of Nested Loops",
+      "blocks": [
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# Nested for loops\nfor i in range(1, 4): # Outer loop runs 3 times (for i = 1, 2, 3)\n    for j in range(1, 3): # Inner loop runs 2 times for each outer loop iteration (for j = 1, 2)\n        print(\"({}, {})\".format(i, j))",
+          "output": "(1, 1)\n(1, 2)\n(2, 1)\n(2, 2)\n(3, 1)\n(3, 2)"
+        },
+        {
+          "type": "code_snippet",
+          "language": "python",
+          "code": "# Nested loops for a simple multiplication table\nfor row in range(1, 4):\n    for col in range(1, 4):\n        # '{:2}'.format(row * col) formats the number to take 2 spaces\n        print('{:2}'.format(row * col), end=\" \") # end=\" \" to stay on same line\n    print() # Newline after each row",
+          "output": " 1  2  3 \n 2  4  6 \n 3  6  9 "
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "### Loops with Compound Conditional Expressions (Implicitly within `if` statements)\n\nWhile loops control execution based on a condition, and `if` statements inside loops allow for branching based on additional conditions. These internal `if` statements often use compound conditional expressions (`and`, `or`, `not`) to make more complex decisions within each iteration of the loop. This powerful combination allows for very specific logic during repetitive tasks."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Example: Finding numbers within a specific range in a list\nnumbers = [10, 25, 5, 40, 15, 30, 22, 18]\nprint(\"Numbers between 20 and 30 (inclusive):\")\n\nfor num in numbers:\n    # Using a compound conditional (and) within an if statement inside the loop\n    if num >= 20 and num <= 30:\n        print(num)\n\nprint(\"\\nSearching for 'apple' or 'banana' in a fruit list:\")\nfruits = ['orange', 'apple', 'grape', 'banana', 'kiwi']\nfor fruit in fruits:\n    # Using a compound conditional (or) within an if statement inside the loop\n    if fruit == 'apple' or fruit == 'banana':\n        print(\"Found favorite fruit: {}\".format(fruit))\n",
+      "output": "Numbers between 20 and 30 (inclusive):\n25\n30\n22\n\nSearching for 'apple' or 'banana' in a fruit list:\nFound favorite fruit: apple\nFound favorite fruit: banana",
+      "id": "lesson2_2_snippet5"
+    },
+    {
+      "type": "ide",
+      "id": "try_loops",
+      "label": "Try it yourself: Practice with Loops and Control Statements!",
+      "editable": true,
+      "default_code": "# 1. Use a for loop to print numbers from 1 to 10.\n# 2. Use a while loop to count down from 5 to 1.\n# 3. Modify one of your loops to use 'break' or 'continue'.\n# 4. Add an 'if' statement with a compound condition inside one of your loops.\n\n# Example 1: For loop\nprint(\"Counting 1 to 10:\")\nfor num in range(1, 11):\n    print(num)\n\n# Example 2: While loop\nprint(\"\\nCounting down from 5:\")\ncountdown = 5\nwhile countdown >= 1:\n    print(countdown)\n    countdown -= 1\n\n# Example 4: Loop with compound conditional\nprint(\"\\nEven numbers between 10 and 20:\")\nfor i in range(10, 21):\n    if i % 2 == 0 and i > 12:\n        print(i)\n"
+    },
+    {
+      "type": "text",
+      "content": "## Recap:\n\nThis lesson armed you with the power of iteration, enabling your programs to perform repetitive tasks efficiently:\n\n- **`for` loops:** Ideal for iterating over sequences (lists, strings, ranges, etc.) where the number of iterations is often known or determined by the sequence length.\n- **`while` loops:** Perfect for situations where the loop continues as long as a condition remains true, and the number of iterations isn't fixed beforehand.\n- **`break`:** Exits the loop immediately.\n- **`continue`:** Skips the rest of the current iteration and proceeds to the next.\n- **`pass`:** A placeholder that does nothing, useful for syntactically required empty blocks.\n- **`else` clause:** Executes when a loop completes normally (i.e., without hitting a `break`).\n- **Nested Loops:** Used for iterating over combinations of items or multi-dimensional data.\n- **Loops with Compound Conditionals:** Combining loops with `if` statements that use `and`, `or`, `not` for fine-grained control within iterations."
+    },
+    {
+      "type": "quiz_section",
+      "id": "lesson_2_2_quiz",
+      "content": {
+        "progress": {
+          "total": 5,
+          "completed": 0
+        },
+        "header": "Test your knowledge of Iteration Statements!",
+        "blocks": [
+          {
+            "type": "fill_in_the_blanks",
+            "id": "quiz_loop_output",
+            "instructions": "Part 1: Predict the output of the following code snippets.",
+            "questions": [
+              {
+                "text": "```python\nfor i in range(4):\n    print(i, end=' ')\n```\nOutput: _________. <span class='points-badge'>1 pt</span>",
+                "answers": [
+                  "0 1 2 3 "
+                ]
+              },
+              {
+                "text": "```python\ncount = 0\nwhile count < 4:\n    count += 1\n    if count == 2:\n        continue\n    print(count)\n```\nOutput: _________. <span class='points-badge'>1 pt</span>",
+                "answers": [
+                  "1\\n3\\n4"
+                ]
+              },
+              {
+                "text": "```python\nfor x in ['a', 'b', 'c']:\n    if x == 'b':\n        break\n    print(x)\nelse:\n    print('Done')\n```\nOutput: _________. <span class='points-badge'>1 pt</span>",
+                "answers": [
+                  "a"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "multiple_choice_quiz",
+            "id": "quiz_loop_concepts",
+            "instructions": "Part 2: Multiple Choice - Loop Concepts",
+            "questions": [
+              {
+                "question": "Which statement is used to immediately exit a loop? <span class='points-badge'>1 pt</span>",
+                "options": [
+                  "`continue`",
+                  "`pass`",
+                  "`break`",
+                  "`return`"
+                ],
+                "correct_index": 2
+              },
+              {
+                "question": "When does the `else` block of a `for` loop execute? <span class='points-badge'>1 pt</span>",
+                "options": [
+                  "Always",
+                  "If an error occurs",
+                  "If the loop finishes without a `break`",
+                  "If the loop never runs"
+                ],
+                "correct_index": 2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "debug_challenge",
+      "id": "fix_infinite_loop",
+      "label": "**Fix the bug!**",
+      "buggy_code": "num = 1\nwhile num <= 5:\n    print(num)\n    # Missing increment or way to stop the loop!",
+      "solution": {
+        "explanation": "This `while` loop is an infinite loop because the value of `num` never changes, so the condition `num <= 5` always remains `True`. To fix it, you need to increment `num` inside the loop so that it eventually becomes greater than 5.",
+        "correct_code": "num = 1\nwhile num <= 5:\n    print(num)\n    num += 1 # Corrected: Increment num to avoid infinite loop"
+      }
+    },
+    {
+      "type": "debug_challenge",
+      "id": "fix_nested_loop_logic",
+      "label": "**Another bug to fix!**",
+      "buggy_code": "# This code intends to print pairs where the first number is less than the second.\nfor i in range(3):\n    for j in range(3):\n        if i == j:\n            pass # Intentionally do nothing if numbers are same\n        print(\"({}, {})\".format(i, j)) # This prints even if i is not less than j",
+      "solution": {
+        "explanation": "The `pass` statement does nothing, so the `print` statement executes regardless of `i == j`. To achieve the intended logic (print only when `i < j`), the `print` statement should be conditional, or the `pass` should be replaced by a `continue` when `i >= j`.",
+        "correct_code": "# Option 1: Explicitly check for i < j\nfor i in range(3):\n    for j in range(3):\n        if i < j:\n            print(\"({}, {})\".format(i, j))\n\n# Option 2: Use continue to skip unwanted pairs\n# for i in range(3):\n#     for j in range(3):\n#         if i >= j: # Skip if i is not less than j\n#             continue\n#         print(\"({}, {})\".format(i, j))"
+      }
+    }
+  ],
+  "migration_info": {
+    "quiz_master_3_migration": {
+      "migrated_on": "2025-06-27T17:59:08.903104",
+      "original_backup": "lesson_2_2.json.backup_20250627_175908",
+      "blocks_processed": 26,
+      "blocks_after_migration": 26
+    }
+  }
+}

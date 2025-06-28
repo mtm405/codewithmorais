@@ -137,69 +137,53 @@
       "content": "## Recap:\n\nThis lesson covered the essentials of file input and output in Python:\n\n-   **`open()`:** Used to get a file object for interaction, requiring a filename and a mode (`'r'`, `'w'`, `'a'`, `'x'`).\n-   **File Modes:** Control how the file is opened (`'r'` for read, `'w'` for write/overwrite, `'a'` for append, `'x'` for exclusive create).\n-   **`close()`:** Explicitly closes a file, though it's best handled by `with`.\n-   **`with` statement:** The preferred and safest way to handle files, ensuring they are automatically closed even if errors occur.\n-   **Reading Methods:**\n    * `read()`: Reads entire content as a string.\n    * `readline()`: Reads one line at a time.\n    * `readlines()`: Reads all lines into a list of strings.\n    * Iterating directly over the file object: Efficient for line-by-line processing.\n-   **Writing Methods:**\n    * `write()`: Writes a string to the file.\n    * `writelines()`: Writes a list of strings to the file.\n-   **`os.path.exists()`:** Checks if a file or path exists.\n-   **`os.remove()`:** Deletes a specified file."
     },
     {
-      "type": "quiz_section",
+      "type": "quiz",
       "id": "lesson_3_1_quiz",
-      "content": {
-        "progress": {
-          "total": 4,
-          "completed": 0
+      "title": "Test your knowledge of File I/O!",
+      "instructions": "Complete all questions in this section.",
+      "passing_score": 70,
+      "retake_cost": 10,
+      "show_progress": true,
+      "questions": [
+        {
+          "type": "fill_in_the_blank",
+          "id": "quiz_file_modes_output",
+          "question": "",
+          "answers": [],
+          "points": 1,
+          "case_sensitive": false,
+          "explanation": ""
         },
-        "header": "Test your knowledge of File I/O!",
-        "blocks": [
-          {
-            "type": "fill_in_the_blanks",
-            "id": "quiz_file_modes_output",
-            "instructions": "Part 1: Predict the output or fill in the blank.",
-            "questions": [
-              {
-                "text": "What is the primary advantage of using the `with` statement for file handling? _________. <span class='points-badge'>1 pt</span>",
-                "answers": [
-                  "Ensures automatic file closing",
-                  "Ensures automatic closing",
-                  "Automatic file closing"
-                ],
-                "feedback": "The `with` statement guarantees that the file's `close()` method is called automatically, even if errors occur within the `with` block."
-              },
-              {
-                "text": "```python\n# Assume 'data.txt' contains: \n# Hello\\nWorld\n\nwith open('data.txt', 'r') as f:\n    content = f.read()\nprint(content)\n```\nOutput: _________. <span class='points-badge'>1 pt</span>",
-                "answers": [
-                  "Hello\\nWorld"
-                ],
-                "feedback": "The `read()` method reads the entire content of the file as a single string, including newline characters."
-              }
-            ]
-          },
-          {
-            "type": "multiple_choice_quiz",
-            "id": "quiz_file_concepts",
-            "instructions": "Part 2: Multiple Choice - File I/O Concepts",
-            "questions": [
-              {
-                "question": "Which file mode will create a new file for writing and raise an error if the file already exists? <span class='points-badge'>1 pt</span>",
-                "options": [
-                  "`'w'`",
-                  "`'a'`",
-                  "`'x'`",
-                  "`'r'`"
-                ],
-                "correct_index": 2,
-                "feedback": "The `'x'` (exclusive creation) mode is designed to create a new file and fail if it exists. `'w'` would overwrite, and `'a'` would append."
-              },
-              {
-                "question": "You have a list of strings `['Line1\\n', 'Line2\\n']` that you want to write to a file. Which method is best suited for this? <span class='points-badge'>1 pt</span>",
-                "options": [
-                  "`write()`",
-                  "`readline()`",
-                  "`writelines()`",
-                  "`read()`"
-                ],
-                "correct_index": 2,
-                "feedback": "The `writelines()` method is specifically designed to write an iterable of strings (like a list) to a file."
-              }
-            ]
-          }
-        ]
-      }
+        {
+          "type": "multiple_choice",
+          "id": "mcq_quiz_file_concepts_0",
+          "question": "Which file mode will create a new file for writing and raise an error if the file already exists? <span class='points-badge'>1 pt</span>",
+          "options": [
+            "`'w'`",
+            "`'a'`",
+            "`'x'`",
+            "`'r'`"
+          ],
+          "correct_index": 2,
+          "points": 1,
+          "explanation": ""
+        },
+        {
+          "type": "multiple_choice",
+          "id": "mcq_quiz_file_concepts_1",
+          "question": "You have a list of strings `['Line1\\n', 'Line2\\n']` that you want to write to a file. Which method is best suited for this? <span class='points-badge'>1 pt</span>",
+          "options": [
+            "`write()`",
+            "`readline()`",
+            "`writelines()`",
+            "`read()`"
+          ],
+          "correct_index": 2,
+          "points": 1,
+          "explanation": ""
+        }
+      ],
+      "total_points": 3
     },
     {
       "type": "debug_challenge",
@@ -211,5 +195,13 @@
         "correct_code": "# Scenario: You want to add a new line to an existing file without deleting its content.\n# The file 'log.txt' already exists with some content.\n\n# Create a dummy log.txt for demonstration\nwith open('log.txt', 'w') as f:\n    f.write('Initial log entry\\n')\n\n# Corrected part:\nwith open('log.txt', 'a') as file_obj: # Corrected mode to 'a' for appending\n    file_obj.write('New log entry\\n')\n\n# Let's try to read it to see the issue\nwith open('log.txt', 'r') as f:\n    print(f.read())"
       }
     }
-  ]
+  ],
+  "migration_info": {
+    "quiz_master_3_migration": {
+      "migrated_on": "2025-06-27T18:00:24.032315",
+      "original_backup": "lesson_3_1.json.backup_20250627_180024",
+      "blocks_processed": 17,
+      "blocks_after_migration": 17
+    }
+  }
 }

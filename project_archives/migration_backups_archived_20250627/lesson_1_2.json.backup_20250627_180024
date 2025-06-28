@@ -1,0 +1,157 @@
+{
+  "objective": "Learn to perform essential operations on data, including type conversion, accessing parts of sequences (indexing and slicing), constructing basic data structures like lists, and manipulating lists effectively.",
+  "blocks": [
+    {
+      "type": "text",
+      "content": "# Python Basics: Data Operations & Structures\n\n### Objective:\nLearn to perform essential operations on data, including type conversion, accessing parts of sequences (indexing and slicing), constructing basic data structures like lists, and manipulating lists effectively."
+    },
+    {
+      "type": "text",
+      "content": "## Introduction: Data in Action!\nIn the previous section, we learned about different data types like `str`, `int`, `float`, and `bool`. Knowing what these types are is the first step. The next crucial step is learning how to work with them. This involves transforming data from one type to another, extracting specific pieces of information, and organizing data into useful structures.\n\nThink of it like this: you know what ingredients are (data types). Now, you're going to learn how to prepare them (operations), how to pick out just the right amount (indexing/slicing), and how to combine them into a meal (data structures like lists)."
+    },
+    {
+      "type": "text",
+      "content": "## 1. Data Type Conversion (Type Casting)\n**Concept:**\nSometimes, you'll have data in one format, but you need it in another to perform a specific operation. For instance, you can't directly add a number to a string. Python provides built-in functions to convert data types. This process is often called type casting.\n\n**Key Conversion Functions:**\n\n- **`str(value)`**: Converts value to a string.\n- **`int(value)`**: Converts value to an integer (if possible; discards decimal for floats).\n- **`float(value)`**: Converts value to a floating-point number.\n- **`bool(value)`**: Converts value to a boolean (`False` for 0, empty strings/lists, `None`; `True` otherwise)."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Converting between data types\n\n# int to float\nnum_int = 10\nprint(num_int)         # Output: 10\nprint(float(num_int))  # Output: 10.0\n\n# float to int\nnum_float = 15.7\nprint(num_float)       # Output: 15.7\nprint(int(num_float))  # Output: 15\n\n# str to int/float\nstr_num = '123'\nprint(int(str_num))    # Output: 123\nstr_num2 = '45.67'\nprint(float(str_num2)) # Output: 45.67\n\n# int/float to str\nage = 30\nprint('I am ' + str(age) + ' years old.') # Output: I am 30 years old.\n\n# Any type to bool\nprint(bool(0))         # Output: False\nprint(bool(5))         # Output: True\nprint(bool(''))        # Output: False\nprint(bool('Hello'))   # Output: True",
+      "id": "lesson1_2_snippet1"
+    },
+    {
+      "type": "ide",
+      "id": "try_type_conversion",
+      "label": "Try it yourself: Experiment with type conversions!",
+      "editable": true,
+      "default_code": "# Try converting different values between types!\n# Example: print(int(\"99\"))\n# Example: print(str(3.14 * 2))\n"
+    },
+    {
+      "type": "text",
+      "content": "## 2. Indexing and Slicing (Accessing Parts of Sequences)\n**Concept:**\nWhen you have a sequence of items (like characters in a string or items in a list), you often need to access individual items or specific subsets of items. This is where indexing and slicing come in handy.\n\n- **Indexing:** Used to access a single element using its position (index). Python uses zero-based indexing, meaning the first element is at index 0, the second at 1, and so on. You can also use negative indices, where -1 refers to the last element, -2 to the second to last, and so forth.\n- **Slicing:** Used to extract a sub-sequence (a portion) from a sequence.\n\n**Indexing Example Table:**\n\n<div style=\"display: flex; flex-direction: column; align-items: center; margin: 24px 0;\">\n  <div style=\"display: flex; flex-direction: row; align-items: flex-end; margin-bottom: 8px;\">\n    <div style=\"color: var(--gold, #FFD700); font-weight: bold; font-size: 1.1em; margin-right: 8px;\">length = 6</div>\n    <div style=\"border-top: 2px solid var(--gold, #FFD700); width: 180px; margin-left: 8px;\"></div>\n  </div>\n  <div style=\"display: flex; flex-direction: row;\">\n    <div style=\"background: var(--dark, #23272e); color: var(--gold, #FFD700); font-size: 1.5em; font-family: monospace; border-radius: 8px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin: 0 4px;\">P</div>\n    <div style=\"background: var(--dark, #23272e); color: var(--gold, #FFD700); font-size: 1.5em; font-family: monospace; border-radius: 8px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin: 0 4px;\">y</div>\n    <div style=\"background: var(--dark, #23272e); color: var(--gold, #FFD700); font-size: 1.5em; font-family: monospace; border-radius: 8px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin: 0 4px;\">t</div>\n    <div style=\"background: var(--dark, #23272e); color: var(--gold, #FFD700); font-size: 1.5em; font-family: monospace; border-radius: 8px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin: 0 4px;\">h</div>\n    <div style=\"background: var(--dark, #23272e); color: var(--gold, #FFD700); font-size: 1.5em; font-family: monospace; border-radius: 8px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin: 0 4px;\">o</div>\n    <div style=\"background: var(--dark, #23272e); color: var(--gold, #FFD700); font-size: 1.5em; font-family: monospace; border-radius: 8px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin: 0 4px;\">n</div>\n  </div>\n  <div style=\"display: flex; flex-direction: row; margin-top: 8px;\">\n    <div style=\"color: var(--gold, #FFD700); font-weight: bold; width: 48px; text-align: center; margin: 0 4px;\">0</div>\n    <div style=\"color: var(--gold, #FFD700); font-weight: bold; width: 48px; text-align: center; margin: 0 4px;\">1</div>\n    <div style=\"color: var(--gold, #FFD700); font-weight: bold; width: 48px; text-align: center; margin: 0 4px;\">2</div>\n    <div style=\"color: var(--gold, #FFD700); font-weight: bold; width: 48px; text-align: center; margin: 0 4px;\">3</div>\n    <div style=\"color: var(--gold, #FFD700); font-weight: bold; width: 48px; text-align: center; margin: 0 4px;\">4</div>\n    <div style=\"color: var(--gold, #FFD700); font-weight: bold; width: 48px; text-align: center; margin: 0 4px;\">5</div>\n  </div>\n  <div style=\"color: var(--gold, #FFD700); font-size: 1em; margin-top: 8px; font-weight: bold;\">index</div>\n</div>\n\nAbove: The string \"Python\" with its character indices below. For example, `my_string[0]` is `'P'`, `my_string[5]` is `'n'`."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "my_string = 'Python'\nmy_list = [10, 20, 30, 40, 50, 60]\n\n# --- Indexing ---\nprint(my_string[0])    # Output: P\nprint(my_list[2])      # Output: 30\nprint(my_string[-1])   # Output: n\nprint(my_list[-2])     # Output: 50\n\n# --- Slicing ---\nprint(my_string[0:3])  # Output: Pyt\nprint(my_list[0:3])    # Output: [10, 20, 30]\nprint(my_string[2:])   # Output: thon\nprint(my_list[2:])     # Output: [30, 40, 50, 60]\nprint(my_string[:4])   # Output: Pyth\nprint(my_list[:4])     # Output: [10, 20, 30, 40]\nprint(my_string[::2])  # Output: Pto\nprint(my_list[::2])    # Output: [10, 30, 50]\nprint(my_string[::-1]) # Output: nohtyP\nprint(my_list[::-1])   # Output: [60, 50, 40, 30, 20, 10]",
+      "id": "lesson1_2_snippet2"
+    },
+    {
+      "type": "ide",
+      "id": "try_indexing_slicing",
+      "label": "Try it yourself: Practice indexing and slicing different strings and lists.",
+      "editable": true,
+      "default_code": "# Create a string and a list, then try to get different parts!\n# Example: my_word = \"Developer\"\n# Example: my_numbers = [1, 2, 3, 4, 5, 6, 7]\n# print(my_word[1])\n# print(my_numbers[::3])\n"
+    },
+    {
+      "type": "text",
+      "content": "## 3. Constructing Data Structures: Lists\n**Concept:**\nWhile strings store sequences of characters, lists are one of Python's most versatile and widely used data structures. A list is an ordered, mutable collection of items.\n\n- **Ordered:** The items have a defined order, and that order will not change unless explicitly modified.\n- **Mutable:** You can change, add, or remove items after the list has been created.\n- **Collection:** A list can hold items of different data types (integers, strings, floats, even other lists!).\n\n**Syntax:**\nLists are defined by enclosing comma-separated items within square brackets []."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Creating lists\nfruits = ['apple', 'banana', 'cherry']\nnumbers = [1, 5, 10, 15]\nmixed = ['hello', 123, 3.14, True]\nprint(fruits)          # Output: ['apple', 'banana', 'cherry']\nprint(numbers)         # Output: [1, 5, 10, 15]\nprint(mixed)           # Output: ['hello', 123, 3.14, True]\n\n# Accessing elements\nprint(fruits[0])       # Output: apple\nprint(numbers[-1])     # Output: 15",
+      "id": "lesson1_2_snippet3"
+    },
+    {
+      "type": "ide",
+      "id": "try_create_list",
+      "label": "Try it yourself: Create a list of your favorite things.",
+      "editable": true,
+      "default_code": "# Create a list of your own, perhaps your top 3 hobbies or movies!\n# Example: my_hobbies = [\"reading\", \"hiking\", \"cooking\"]\n# print(my_hobbies)\n"
+    },
+    {
+      "type": "text",
+      "content": "## 4. List Operations\n**Concept:**\nThe mutability of lists means you can perform a wide range of operations to modify, analyze, and combine them. Mastering these operations is key to managing collections of data in Python.\n\n**Common List Operations:**"
+    },
+    {
+      "type": "text",
+      "content": "### 4.1 Modifying Elements\nAssigning new values: Change an item at a specific index."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Modifying elements\nmy_list = ['a', 'b', 'c']\nmy_list[1] = 'x'\nprint(my_list)         # Output: ['a', 'x', 'c']",
+      "id": "lesson1_2_snippet4"
+    },
+    {
+      "type": "text",
+      "content": "### 4.2 Adding Elements\n- `append(item)`: Adds item to the end of the list.\n- `insert(index, item)`: Inserts item at a specific index.\n- `extend(iterable)`: Adds all items from another iterable (like another list) to the end of the current list."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Adding elements\nfruits = ['apple', 'banana']\nfruits.append('orange')\nprint(fruits)          # Output: ['apple', 'banana', 'orange']\nfruits.insert(1, 'grape')\nprint(fruits)          # Output: ['apple', 'grape', 'banana', 'orange']\nlist1 = [1, 2]\nlist2 = [3, 4]\nlist1.extend(list2)\nprint(list1)           # Output: [1, 2, 3, 4]",
+      "id": "lesson1_2_snippet5"
+    },
+    {
+      "type": "text",
+      "content": "### 4.3 Removing Elements\n- `remove(value)`: Removes the first occurrence of a specified value. Raises a ValueError if the value is not found.\n- `pop(index)`: Removes and returns the item at the given index. If no index is specified, it removes and returns the last item.\n- `del list[index]` or `del list[start:end]`: Deletes items by index or slice.\n- `clear()`: Removes all items from the list, making it empty."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Removing elements\ncolors = ['red', 'blue', 'green', 'blue']\ncolors.remove('blue')\nprint(colors)          # Output: ['red', 'green', 'blue']\nnumbers = [10, 20, 30, 40]\nnumbers.pop(1)         # Removes 20\nprint(numbers)         # Output: [10, 30, 40]\nnumbers.pop()          # Removes 40\nprint(numbers)         # Output: [10, 30]\nmy_stuff = ['car', 'bike', 'plane']\ndel my_stuff[0]\nprint(my_stuff)        # Output: ['bike', 'plane']\nmore_numbers = [1, 2, 3, 4, 5]\ndel more_numbers[1:4]\nprint(more_numbers)    # Output: [1, 5]\nitems = ['a', 'b', 'c']\nitems.clear()\nprint(items)           # Output: []",
+      "id": "lesson1_2_snippet6"
+    },
+    {
+      "type": "text",
+      "content": "### 4.4 Merging Lists\n- Concatenation (`+` operator): Creates a new list by joining two or more lists."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Merging lists\nlist_a = [1, 2]\nlist_b = [3, 4]\ncombined = list_a + list_b\nprint(combined)        # Output: [1, 2, 3, 4]",
+      "id": "lesson1_2_snippet7"
+    },
+    {
+      "type": "text",
+      "content": "### 4.5 Sorting Lists\n- `list.sort()`: Sorts the list in-place (modifies the original list). By default, it sorts in ascending order.\n- `sorted(iterable)`: Returns a new sorted list from the items in the iterable (does not modify the original)."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Sorting lists\nnumbers = [3, 1, 4, 1, 5, 9, 2]\nnumbers.sort()\nprint(numbers)         # Output: [1, 1, 2, 3, 4, 5, 9]\nletters = ['c', 'a', 'b']\nletters.sort(reverse=True)\nprint(letters)         # Output: ['c', 'b', 'a']\nunsorted = [3, 1, 4, 1, 5]\nnew_sorted = sorted(unsorted)\nprint(unsorted)        # Output: [3, 1, 4, 1, 5]\nprint(new_sorted)      # Output: [1, 1, 3, 4, 5]",
+      "id": "lesson1_2_snippet8"
+    },
+    {
+      "type": "text",
+      "content": "### 4.6 Finding Maximum and Minimum\n- `max(list)`: Returns the largest item in the list.\n- `min(list)`: Returns the smallest item in the list."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Finding max and min\nscores = [85, 92, 78, 95, 88]\nprint(max(scores))     # Output: 95\nprint(min(scores))     # Output: 78",
+      "id": "lesson1_2_snippet9"
+    },
+    {
+      "type": "text",
+      "content": "### 4.7 Reversing Lists\n- `list.reverse()`: Reverses the order of elements in-place (modifies the original list).\n- Using Slicing `[::-1]`: Creates a new reversed list (as seen in the slicing section)."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Reversing lists\nitems = [1, 2, 3, 4, 5]\nitems.reverse()\nprint(items)           # Output: [5, 4, 3, 2, 1]\noriginal = ['A', 'B', 'C']\nreversed_copy = original[::-1]\nprint(original)        # Output: ['A', 'B', 'C']\nprint(reversed_copy)   # Output: ['C', 'B', 'A']",
+      "id": "lesson1_2_snippet10"
+    },
+    {
+      "type": "ide",
+      "id": "try_list_ops",
+      "label": "Try it yourself: Perform various operations on a list!",
+      "editable": true,
+      "default_code": "my_task_list = [\"Buy groceries\", \"Do laundry\", \"Call mom\", \"Pay bills\"]\n\n# Add a new task\n# Remove a task\n# Sort the list alphabetically\n# Find the task that would come last alphabetically (max)\n\nprint(my_task_list) # Print the final state of your list\n"
+    },
+    {
+      "type": "text",
+      "content": "## Recap:\nYou've now learned how to actively work with data in Python!\n\n- **Type Conversion:** Change data types using `str()`, `int()`, `float()`, `bool()`.\n- **Indexing & Slicing:** Precisely access elements or sub-sequences within strings and lists.\n- **Lists:** Understand and create this fundamental, mutable data structure.\n- **List Operations:** Master adding (`append()`, `insert()`, `extend()`), removing (`remove()`, `pop()`, `del`, `clear()`), combining (`+`), sorting (`sort()`, `sorted()`), finding min/max, and reversing (`reverse()`, `[::-1]`) list data.\n\nThis operational knowledge is essential for manipulating data effectively in your Python programs!"
+    }
+  ],
+  "migration_info": {
+    "quiz_master_3_migration": {
+      "migrated_on": "2025-06-27T17:59:08.880491",
+      "original_backup": "lesson_1_2.json.backup_20250627_175908",
+      "blocks_processed": 28,
+      "blocks_after_migration": 28
+    }
+  }
+}

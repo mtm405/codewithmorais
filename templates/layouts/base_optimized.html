@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Optimized Base Template - Quiz Master 3.0 Production -->
+{% include 'layouts/head_optimized.html' %}
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Navigation (cached for performance) -->
+    {% include 'components/navigation.html' %}
+    
+    <!-- Main content area -->
+    <main class="main-content" role="main" id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Sidebar (conditional) -->
+    {% block sidebar %}
+        {% include 'components/sidebar.html' %}
+    {% endblock %}
+    
+    <!-- Footer -->
+    {% include 'components/footer.html' %}
+    
+    <!-- Optimized JavaScript Bundle - Loaded at end for performance -->
+    <script src="{{ url_for('static', filename='dist/app.min.js') }}" defer></script>
+    
+    <!-- Page-specific scripts -->
+    {% block scripts %}{% endblock %}
+    
+    <!-- Performance monitoring (optional) -->
+    <script>
+        // Initialize app when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Performance mark for LCP
+            if ('PerformanceLongTaskTiming' in window) {
+                new PerformanceObserver((list) => {
+                    console.log('Long task detected:', list.getEntries());
+                }).observe({entryTypes: ['longtask']});
+            }
+            
+            // Initialize critical components
+            if (window.initializeApp) {
+                window.initializeApp();
+            }
+        });
+    </script>
+</body>
+</html>

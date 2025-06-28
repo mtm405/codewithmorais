@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% include 'partials/header_bar.html' %}
+  
+  <main role="main" aria-labelledby="lesson-title">
+    <h1 id="lesson-title" class="visually-hidden">{{ lesson.title or 'Python Lesson' }}</h1>
+    
+  <div class="lesson-tabs-wrapper">
+    <div class="chrome-tabs">
+      {% if lesson.id.startswith('lesson_1_') %}
+        {% set menu_tabs = [
+          {'label': 'Data Types', 'lesson': 'lesson_1_1'},
+          {'label': 'Data Operations', 'lesson': 'lesson_1_2'},
+          {'label': 'Data Manipulation', 'lesson': 'lesson_1_3'},
+          {'label': 'Operator Selection', 'lesson': 'lesson_1_4'}
+        ] %}
+      {% elif lesson.id.startswith('lesson_2_') %}
+        {% set menu_tabs = [
+          {'label': 'Branching Statements', 'lesson': 'lesson_2_1'},
+          {'label': 'Loop Iteration', 'lesson': 'lesson_2_2'}
+        ] %}
+      {% elif lesson.id.startswith('lesson_3_') %}
+        {% set menu_tabs = [
+          {'label': 'File Operations', 'lesson': 'lesson_3_1'},
+          {'label': 'Console IO', 'lesson': 'lesson_3_2'}
+        ] %}
+      {% elif lesson.id.startswith('lesson_4_') %}
+        {% set menu_tabs = [
+          {'label': 'Code Documentation', 'lesson': 'lesson_4_1'}
+        ] %}
+      {% elif lesson.id.startswith('lesson_5_') %}
+        {% set menu_tabs = [
+          {'label': 'Debugging Errors', 'lesson': 'lesson_5_1'},
+          {'label': 'Exception Handling', 'lesson': 'lesson_5_2'},
+          {'label': 'Unit Testing', 'lesson': 'lesson_5_3'}
+        ] %}
+      {% elif lesson.id.startswith('lesson_6_') %}
+        {% set menu_tabs = [
+          {'label': 'System Modules', 'lesson': 'lesson_6_1'},
+          {'label': 'Built-in Modules', 'lesson': 'lesson_6_2'}
+        ] %}
+      {% else %}
+        {% set menu_tabs = [] %}
+      {% endif %}
+      {% for tab in menu_tabs %}
+        <a href="{{ url_for('routes.lesson', lesson_id=tab.lesson) }}" class="chrome-tab{% if lesson.id == tab.lesson %} active{% endif %}">{{ tab.label }}</a>
+      {% endfor %}
+    </div>
+    <div class="lesson-content-wrapper">
+      <div class="lesson-main">
+        <h1 class="lesson-title">{{ lesson.title }}</h1>
+        {% if not lesson %}
+          <div class="error-message error-lesson-not-found">
+            ERROR: Lesson data could not be loaded. Please check the lesson ID and backend logs.<br>
+            (Expected file: lessons/{{ request.view_args['lesson_id'] }}.json)
+          </div>
+        {% else %}
+          <div class="debug-message debug-lesson-info">
+            <strong>DEBUG:</strong> lesson.id = {{ lesson.id }}<br>
+            lesson.blocks count = {{ lesson.blocks|length if lesson.blocks is defined else 'N/A' }}
+          </div>
+        {% endif %}
+        {% for block in lesson.blocks %}
+          {% if block.type == 'quiz' %}
+            {% include 'partials/block_quiz.html' %}
+          {% elif block.type in ['multiple_choice', 'fill_in_the_blank', 'drag_and_drop', 'quiz_section', 'comprehensive_quiz'] %}
+            {% include 'partials/core_quiz.html' %}
+          {% elif block.type == 'ide' %}
+            {% include 'partials/code_editor.html' %}
+          {% elif block.type == 'key_takeaway' %}
+            {% include 'partials/block_key_takeaway.html' %}
+          {% elif block.type == 'image' %}
+            {% include 'partials/block_image.html' %}
+          {% elif block.type == 'code_snippet' %}
+            {% include 'partials/block_code_snippet.html' %}
+          {% elif block.type == 'debug_challenge' %}
+            {% include 'partials/block_debug_challenge.html' %}
+          {% elif block.type == 'text' %}
+            {% include 'partials/block_text.html' %}
+          {% else %}
+            <p><em>Unknown block type: {{ block.type }}</em></p>
+          {% endif %}
+        {% endfor %}
+        <div class="quiz-unlock-section margin-3em-0-2em-0">
+          <div class="text-center font-size-1-4em font-weight-700 margin-bottom-0-7em">Test your knowledge!</div>
+          <div class="quiz-unlock-btns">
+            <button class="btn quiz-unlock-btn easy" data-quiz-id="quiz1" data-quiz-price="5">Easy <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>5</span></button>
+            <button class="btn quiz-unlock-btn medium" data-quiz-id="quiz2" data-quiz-price="10">Medium <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>10</span></button>
+            <button class="btn quiz-unlock-btn hard" data-quiz-id="quiz3" data-quiz-price="15">Hard <span class="quiz-token-pill"><span class="material-symbols-outlined coin-icon">token</span>15</span></button>
+          </div>
+        </div>
+        <div class="quiz-modal-overlay" id="quiz-modal-overlay">
+          <div class="quiz-modal" id="quiz-modal">
+            <div id="quiz-modal-content">
+              <!-- Quiz content will be loaded here by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+{% block styles %}
+    <!-- Quiz styles are now included in base.html via unified_quiz_styles.css -->
+{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  <!-- Quiz scripts are now included in base.html via consolidated_quiz_core.js -->
+{% endblock %}

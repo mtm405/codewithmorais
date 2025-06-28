@@ -1,0 +1,162 @@
+{# Drag and Drop Quiz Block: Accessible, robust, and keyboard-friendly #}
+{% if block.stems is defined and block.options is defined %}
+<div class="quiz-block block-drag-and-drop dnd-container" 
+     data-block-id="{{ block.id }}" 
+     data-question-type="drag_and_drop"
+     data-points="{{ block.points | default(1) }}"
+     role="application" 
+     aria-label="Drag and drop quiz: {{ block.instructions|default('Match items to their correct categories')|striptags }}">
+  
+  <div class="mcq-ribbon">
+    Quiz
+  </div>
+  
+  <div class="dnd-header">
+    <h4 id="dnd-title-{{ block.id }}" class="dnd-title">
+      {{ block.title|default('Drag and Drop') }}
+    </h4>
+    <div class="dnd-instructions">
+      {{ block.instructions|default('Drag and drop the items into the correct places.')|markdown|safe }}
+    </div>
+    
+    <div id="dnd-instructions-{{ block.id }}" class="dnd-accessibility-help">
+      <details>
+        <summary>Keyboard Instructions</summary>
+        <ul>
+          <li>Use <kbd>Tab</kbd> to navigate between items and drop zones</li>
+          <li>Use <kbd>Space</kbd> or <kbd>Enter</kbd> to pick up/drop items</li>
+          <li>Use arrow keys to move selected items between zones</li>
+          <li>Use <kbd>Escape</kbd> to cancel current drag operation</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+
+  <div class="dnd-content">
+    <div class="dnd-bank-section">
+      <h5 id="dnd-bank-label-{{ block.id }}">Available Items</h5>
+      <div class="drag-item-bank" 
+           role="group" 
+           aria-labelledby="dnd-bank-label-{{ block.id }}"
+           aria-describedby="dnd-instructions-{{ block.id }}">
+        {% for item in block.options %}
+          <div class="drag-item" 
+               draggable="true" 
+               id="drag-item-{{ block.id }}-{{ loop.index0 }}"
+               data-item-id="{{ loop.index0 }}"
+               data-item-text="{{ item }}"
+               role="button"
+               tabindex="0"
+               aria-grabbable="true"
+               aria-describedby="dnd-instructions-{{ block.id }}"
+               aria-label="Draggable item: {{ item }}">
+            <span class="material-symbols-outlined drag-handle" aria-hidden="true">drag_indicator</span>
+            <span class="drag-item-text">{{ item }}</span>
+            <span class="drag-item-status visually-hidden" aria-live="polite"></span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="dnd-zones-section">
+      <h5 id="dnd-zones-label-{{ block.id }}">Drop Zones</h5>
+      <div class="drop-zones-container" 
+           role="group" 
+           aria-labelledby="dnd-zones-label-{{ block.id }}">
+        {% for stem in block.stems %}
+          <div class="drop-zone-wrapper">
+            <label class="drop-zone-label" for="drop-zone-{{ block.id }}-{{ loop.index0 }}">
+              {{ stem }}
+            </label>
+            <div class="drop-zone" 
+                 id="drop-zone-{{ block.id }}-{{ loop.index0 }}"
+                 data-zone-idx="{{ loop.index0 }}"
+                 data-zone-label="{{ stem }}"
+                 data-correct-item="{{ block.correct_mapping[stem] if block.correct_mapping else '' }}"
+                 role="button"
+                 tabindex="0"
+                 aria-dropeffect="move"
+                 aria-label="Drop zone for: {{ stem }}"
+                 aria-describedby="dnd-instructions-{{ block.id }}">
+              <div class="drop-zone-placeholder">
+                <span class="material-symbols-outlined">add_circle</span>
+                <span>Drop item here</span>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="dnd-footer">
+    <div class="dnd-actions">
+      <button type="button" 
+              class="btn btn-secondary dnd-reset-button"
+              aria-describedby="dnd-reset-help-{{ block.id }}">
+        <span class="material-symbols-outlined">refresh</span>
+        Reset All
+      </button>
+      <div id="dnd-reset-help-{{ block.id }}" class="visually-hidden">
+        Reset all items back to the available items area
+      </div>
+      
+      <button type="button" 
+              class="btn btn-primary dnd-check-button"
+              aria-describedby="dnd-feedback-{{ block.id }}">
+        <span class="material-symbols-outlined">check_circle</span>
+        Check Answers
+      </button>
+    </div>
+    
+    <div id="dnd-feedback-{{ block.id }}" 
+         class="quiz-feedback dnd-feedback display-none" 
+         aria-live="polite" 
+         role="status"></div>
+    
+    {% if block.explanation %}
+      <div class="dnd-explanation display-none" id="dnd-explanation-{{ block.id }}">
+        <h5>Explanation:</h5>
+        <div>{{ block.explanation|markdown|safe }}</div>
+      </div>
+    {% endif %}
+    
+    {% if block.hint and block.hint_cost is defined %}
+      <div class="hint-section">
+        <button class="btn btn-hint" 
+                data-block-id="{{ block.id }}" 
+                data-hint-cost="{{ block.hint_cost }}"
+                aria-describedby="dnd-hint-description-{{ block.id }}">
+          <span class="material-symbols-outlined">lightbulb</span>
+          Show Hint ({{ block.hint_cost }} <img src="{{ url_for('static', filename='img/pycoin-icon.svg') }}" class="pycoin-icon coin-icon" alt="PyCoins">)
+        </button>
+        <div id="dnd-hint-description-{{ block.id }}" class="visually-hidden">
+          Purchase a hint for this question using {{ block.hint_cost }} PyCoins
+        </div>
+        <div class="hint-content display-none" id="hint-{{ block.id }}" role="region" aria-label="Question hint"></div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% else %}
+<div class="quiz-block block-drag-and-drop question-wrapper quiz-error" 
+     data-block-id="{{ block.id }}" 
+     data-question-type="drag_and_drop"
+     role="alert">
+  <div class="error-content">
+    <span class="material-symbols-outlined error-icon">error</span>
+    <div class="error-text">
+      <h4>Quiz Configuration Error</h4>
+      <p>This drag and drop question is missing stems (categories) or options (items to drag).</p>
+      {% if config.DEBUG %}
+        <details class="debug-info">
+          <summary>Debug Information</summary>
+          <pre>stems = {{ block.stems if block.stems is defined else 'N/A' }}
+options = {{ block.options if block.options is defined else 'N/A' }}
+correct_mapping = {{ block.correct_mapping if block.correct_mapping is defined else 'N/A' }}</pre>
+        </details>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}

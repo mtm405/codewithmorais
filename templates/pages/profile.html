@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Profile - CodeLab{% endblock %}
+{% block content %}
+{% include 'components/header_bar.html' %}
+<div class="profile-wrapper">
+    <div class="profile-header">
+        <div class="avatar-section">
+            <img src="{{ user.avatar_url or url_for('static', filename='img/default_avatar.png') }}" alt="Avatar" class="profile-avatar" id="avatar-img">
+            <button class="btn btn-primary change-avatar-btn" onclick="document.getElementById('avatar-upload').click()">Change Avatar</button>
+            <input type="file" id="avatar-upload" class="d-none" accept="image/*">
+        </div>
+        <div class="profile-info">
+            <h2>{{ user.name or 'User' }}</h2>
+            <div class="profile-title">{{ user.title or 'Learner' }}</div>
+            <div class="profile-score">
+                <span class="material-symbols-outlined accent-yellow">star</span>
+                <span>{{ user.points or 0 }}</span> Points
+            </div>
+            <div class="profile-currency">
+                <span class="material-symbols-outlined accent-green">monetization_on</span>
+                <span>{{ user.currency or 0 }}</span> PyCoins
+            </div>
+        </div>
+    </div>
+    <div class="profile-actions">
+        <button class="btn btn-primary edit-title-btn">Edit Title</button>
+        <button class="btn btn-primary view-history-btn">View History</button>
+    </div>
+    <div class="profile-history d-none">
+        <h3>Challenge & Quiz History</h3>
+        <div id="history-list">Loading...</div>
+    </div>
+</div>
+{% endblock %}
+</body>
+</html>
