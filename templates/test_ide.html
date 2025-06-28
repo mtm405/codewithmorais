@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDE Test</title>
+    <link rel="stylesheet" href="/static/css/ide_command_center.css">
+    <link rel="stylesheet" href="/static/css/ide_file_explorer.css">
+    <style>
+        body {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 IDE Command Center Test Page</h1>
+        
+        <div class="test-section">
+            <h2>📝 ACE Editor Test</h2>
+            <div id="test-editor" style="height: 200px; border: 1px solid #555;"></div>
+            <button onclick="testAceEditor()" style="margin-top: 10px; padding: 10px 20px; background: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Initialize ACE Editor
+            </button>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Status Test</h2>
+            <div id="status-output" style="background: #252526; padding: 10px; border-radius: 4px; font-family: monospace;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🗂️ File Explorer Test</h2>
+            <div id="test-sidebar" style="width: 300px; height: 400px; background: #252526; border: 1px solid #555;">
+                <div class="sidebar-header">
+                    <div class="profile-section">
+                        <img src="/static/img/avatar1.png" class="sidebar-avatar" alt="Test Avatar">
+                        <div class="user-title-block">
+                            <span class="user-name">Test User</span>
+                            <span class="user-title">Developer</span>
+                        </div>
+                    </div>
+                </div>
+                <nav class="components" id="test-sidebar-menu">
+                    <a class="menu-item-link active" href="/dashboard" data-menu="dashboard">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span class="menu-label">Dashboard</span>
+                    </a>
+                    <a class="menu-item-link" href="/lesson1" data-menu="python-basics">
+                        <span class="material-symbols-outlined">data_object</span>
+                        <span class="menu-label">Python Basics</span>
+                    </a>
+                </nav>
+            </div>
+            <button onclick="testFileExplorer()" style="margin-top: 10px; padding: 10px 20px; background: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Initialize File Explorer
+            </button>
+        </div>
+    </div>
+
+    <script src="/static/js/ide_command_center.js"></script>
+    <script src="/static/js/ide_file_explorer.js"></script>
+    <script src="/static/js/ide_ace_editor.js"></script>
+    
+    <script>
+        function updateStatus(message) {
+            const output = document.getElementById('status-output');
+            output.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+        }
+        
+        function testAceEditor() {
+            updateStatus('Testing ACE Editor...');
+            if (window.IDEAceEditor) {
+                updateStatus('✅ IDEAceEditor object found');
+                window.IDEAceEditor.init();
+                updateStatus('✅ IDEAceEditor.init() called');
+            } else {
+                updateStatus('❌ IDEAceEditor object not found');
+            }
+        }
+        
+        function testFileExplorer() {
+            updateStatus('Testing File Explorer...');
+            if (window.IDEFileExplorer) {
+                updateStatus('✅ IDEFileExplorer object found');
+                window.IDEFileExplorer.init();
+                updateStatus('✅ IDEFileExplorer.init() called');
+            } else {
+                updateStatus('❌ IDEFileExplorer object not found');
+            }
+        }
+        
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus('🚀 Test page loaded');
+            updateStatus('IDEFileExplorer available: ' + !!window.IDEFileExplorer);
+            updateStatus('IDEAceEditor available: ' + !!window.IDEAceEditor);
+        });
+    </script>
+</body>
+</html>

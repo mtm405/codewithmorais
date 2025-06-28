@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Test - IDE Command Center{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ide_command_center.css', v=g.css_version) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ide_file_explorer.css', v=g.css_version) }}">
+{% endblock %}
+
+{% block content %}
+{% include 'components/header_bar.html' %}
+<div style="display: flex; min-height: 100vh;">
+  {% block sidebar %}{{ super() }}{% endblock %}
+  <main role="main" aria-labelledby="dashboard-title" class="ide-dashboard-main" style="flex: 1;">
+    <h1 id="dashboard-title" class="visually-hidden">Python IDE Command Center (Test)</h1>
+    <div class="ide-dashboard-grid">
+      <!-- Example Terminal Window -->
+      <div class="ide-terminal-window ide-terminal-large" style="margin: 20px;">
+        <div class="ide-terminal-header">
+          <div class="ide-terminal-controls">
+            <div class="ide-terminal-control close"></div>
+            <div class="ide-terminal-control minimize"></div>
+            <div class="ide-terminal-control maximize"></div>
+          </div>
+          <div class="ide-terminal-title">📢 system_announcements.py - Python IDE Command Center</div>
+        </div>
+        <div class="ide-terminal-content">
+          <div class="ide-prompt ide-typing">print("Latest System Announcement:")</div>
+          <div style="margin: 10px 0; color: var(--terminal-text);">
+            <span style="color: var(--python-string);">"</span><span id="announcement-text">Welcome to the IDE Dashboard Test!</span><span style="color: var(--python-string);">"</span>
+          </div>
+        </div>
+      </div>
+      <!-- Add more terminal windows as needed for testing -->
+      <div class="ide-terminal-window ide-terminal-medium">
+        <div class="ide-terminal-header">
+          <div class="ide-terminal-controls">
+            <div class="ide-terminal-control close"></div>
+            <div class="ide-terminal-control minimize"></div>
+            <div class="ide-terminal-control maximize"></div>
+          </div>
+          <div class="ide-terminal-title">🏆 leaderboard.py</div>
+        </div>
+        <div class="ide-terminal-content">
+          <div class="ide-prompt">get_leaderboard()</div>
+          <div>Leaderboard will appear here.</div>
+        </div>
+      </div>
+      <div class="ide-terminal-window ide-terminal-medium">
+        <div class="ide-terminal-header">
+          <div class="ide-terminal-controls">
+            <div class="ide-terminal-control close"></div>
+            <div class="ide-terminal-control minimize"></div>
+            <div class="ide-terminal-control maximize"></div>
+          </div>
+          <div class="ide-terminal-title">💡 study_tips.py</div>
+        </div>
+        <div class="ide-terminal-content">
+          <div class="ide-prompt">get_daily_tip()</div>
+          <div>Study tip will appear here.</div>
+        </div>
+      </div>
+      <div class="ide-terminal-window ide-terminal-large">
+        <div class="ide-terminal-header">
+          <div class="ide-terminal-controls">
+            <div class="ide-terminal-control close"></div>
+            <div class="ide-terminal-control minimize"></div>
+            <div class="ide-terminal-control maximize"></div>
+          </div>
+          <div class="ide-terminal-title">📝 editor.py - Code Editor</div>
+        </div>
+        <div class="ide-terminal-content">
+          <div class="ide-prompt"># Write Python code below</div>
+          <div id="test-ide-editor" style="height: 180px; width: 100%; background: var(--ide-bg-input);"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.IDEAceEditor) {
+    setTimeout(() => {
+      window.IDEAceEditor.createEditor('test-ide-editor', 'Test Editor');
+    }, 300);
+  }
+});
+</script>
+{% endblock %}
