@@ -1,3 +1,11 @@
+FROM python:3.13-slim
+WORKDIR /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+ENV PORT 8080
+EXPOSE 8080
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
 # Use an official Python runtime as a parent image
 FROM python:3.10-slim-buster
 
