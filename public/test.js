@@ -1411,10 +1411,8 @@ function navigateToQuestion(questionIndex) {
     }
     
     // Navigate to new question
-    currentQuestionIndex = questionIndex;
-    displayQuestion();
-    updateProgress();
-    updateNavigationStatus();
+    loadQuestion(questionIndex);
+    updateProgressDisplay();
     
     // Auto-save progress
     saveTestProgress();
