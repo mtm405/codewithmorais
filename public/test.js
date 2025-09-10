@@ -455,11 +455,61 @@ function simulatePythonExecution(code) {
                 const value = evaluateExpression(expression, environment);
                 environment.set(varName, value);
             }
-            // Handle print statements
+            // Handle print statements (support multiple arguments)
             else if (line.startsWith('print(') && line.endsWith(')')) {
-                const expression = line.slice(6, -1).trim();
-                const result = evaluateExpression(expression, environment);
-                output += formatOutput(result) + '\n';
+                const content = line.slice(6, -1).trim();
+                
+                if (!content) {
+                    // Empty print statement
+                    output += '\n';
+                } else if (content.includes(',')) {
+                    // Multiple arguments - split by comma and evaluate each
+                    const args = [];
+                    let currentArg = '';
+                    let parenCount = 0;
+                    let inQuotes = false;
+                    let quoteChar = '';
+                    
+                    for (let i = 0; i < content.length; i++) {
+                        const char = content[i];
+                        
+                        if ((char === '"' || char === "'") && !inQuotes) {
+                            inQuotes = true;
+                            quoteChar = char;
+                            currentArg += char;
+                        } else if (char === quoteChar && inQuotes) {
+                            inQuotes = false;
+                            quoteChar = '';
+                            currentArg += char;
+                        } else if (char === '(' && !inQuotes) {
+                            parenCount++;
+                            currentArg += char;
+                        } else if (char === ')' && !inQuotes) {
+                            parenCount--;
+                            currentArg += char;
+                        } else if (char === ',' && !inQuotes && parenCount === 0) {
+                            args.push(currentArg.trim());
+                            currentArg = '';
+                        } else {
+                            currentArg += char;
+                        }
+                    }
+                    
+                    if (currentArg.trim()) {
+                        args.push(currentArg.trim());
+                    }
+                    
+                    // Evaluate each argument and join with spaces
+                    const results = args.map(arg => {
+                        const value = evaluateExpression(arg, environment);
+                        return formatOutput(value);
+                    });
+                    output += results.join(' ') + '\n';
+                } else {
+                    // Single argument
+                    const result = evaluateExpression(content, environment);
+                    output += formatOutput(result) + '\n';
+                }
             }
             // Handle list method calls (append, insert, remove, reverse)
             else if (line.includes('.append(') || line.includes('.insert(') || 
@@ -524,9 +574,12 @@ function evaluateExpression(expression, environment) {
         return expression.slice(1, -1);
     }
     
-    // Handle numbers (int and float)
-    if (/^-?\d+(\.\d+)?$/.test(expression)) {
-        return parseFloat(expression);
+    // Handle numbers (preserve int vs float distinction)
+    if (/^-?\d+$/.test(expression)) {
+        return parseInt(expression); // Keep integers as integers
+    }
+    if (/^-?\d+\.\d+$/.test(expression)) {
+        return parseFloat(expression); // Keep floats as floats
     }
     
     // Handle boolean literals
@@ -548,26 +601,44 @@ function evaluateExpression(expression, environment) {
         return getType(value);
     }
     
-    // Handle conversion functions
+    // Handle conversion functions (Python-like behavior)
     if (expression.startsWith('str(') && expression.endsWith(')')) {
         const innerExpr = expression.slice(4, -1).trim();
         const value = evaluateExpression(innerExpr, environment);
+        if (value === true) return 'True';
+        if (value === false) return 'False';
+        if (value === null) return 'None';
         return String(value);
     }
     if (expression.startsWith('int(') && expression.endsWith(')')) {
         const innerExpr = expression.slice(4, -1).trim();
         const value = evaluateExpression(innerExpr, environment);
-        return Math.floor(parseFloat(value));
+        if (typeof value === 'string') {
+            const num = parseFloat(value);
+            if (isNaN(num)) throw new Error(`invalid literal for int() with base 10: '${value}'`);
+            return Math.trunc(num); // Use trunc instead of floor for proper int conversion
+        }
+        if (typeof value === 'boolean') return value ? 1 : 0;
+        return Math.trunc(Number(value));
     }
     if (expression.startsWith('float(') && expression.endsWith(')')) {
         const innerExpr = expression.slice(6, -1).trim();
         const value = evaluateExpression(innerExpr, environment);
-        return parseFloat(value);
+        if (typeof value === 'string') {
+            const num = parseFloat(value);
+            if (isNaN(num)) throw new Error(`could not convert string to float: '${value}'`);
+            return num;
+        }
+        if (typeof value === 'boolean') return value ? 1.0 : 0.0;
+        return Number(value);
     }
     if (expression.startsWith('bool(') && expression.endsWith(')')) {
         const innerExpr = expression.slice(5, -1).trim();
         const value = evaluateExpression(innerExpr, environment);
-        return Boolean(value);
+        if (value === null || value === 0 || value === '' || (Array.isArray(value) && value.length === 0)) {
+            return false;
+        }
+        return true;
     }
     
     // Handle len() function
@@ -611,36 +682,90 @@ function evaluateExpression(expression, environment) {
         return environment.get(expression);
     }
     
-    // Handle string operations
+    // Handle string operations (Python-like concatenation and repetition)
     if (expression.includes(' + ')) {
-        const parts = expression.split(' + ').map(part => evaluateExpression(part.trim(), environment));
-        return parts.join('');
+        const parts = expression.split(' + ');
+        if (parts.length === 2) {
+            const left = evaluateExpression(parts[0].trim(), environment);
+            const right = evaluateExpression(parts[1].trim(), environment);
+            
+            // String concatenation
+            if (typeof left === 'string' || typeof right === 'string') {
+                return String(left) + String(right);
+            }
+            // Numeric addition
+            return left + right;
+        }
+        // Handle multiple additions
+        return parts.reduce((acc, part) => {
+            const val = evaluateExpression(part.trim(), environment);
+            if (typeof acc === 'string' || typeof val === 'string') {
+                return String(acc) + String(val);
+            }
+            return acc + val;
+        });
     }
     
-    // Handle arithmetic operations
+    // Handle arithmetic operations (preserve int/float types)
     if (expression.includes(' * ')) {
         const [left, right] = expression.split(' * ').map(part => evaluateExpression(part.trim(), environment));
-        return parseFloat(left) * parseFloat(right);
+        
+        // String repetition
+        if (typeof left === 'string' && Number.isInteger(right)) {
+            return left.repeat(right);
+        }
+        if (typeof right === 'string' && Number.isInteger(left)) {
+            return right.repeat(left);
+        }
+        
+        // Numeric multiplication - preserve type
+        const result = left * right;
+        if (Number.isInteger(left) && Number.isInteger(right)) {
+            return Math.trunc(result);
+        }
+        return result;
     }
+    
     if (expression.includes(' / ') && !expression.includes(' // ')) {
         const [left, right] = expression.split(' / ').map(part => evaluateExpression(part.trim(), environment));
-        return parseFloat(left) / parseFloat(right);
+        if (right === 0) throw new Error('division by zero');
+        return left / right; // Always returns float in Python 3
     }
+    
     if (expression.includes(' // ')) {
         const [left, right] = expression.split(' // ').map(part => evaluateExpression(part.trim(), environment));
-        return Math.floor(parseFloat(left) / parseFloat(right));
+        if (right === 0) throw new Error('integer division or modulo by zero');
+        return Math.floor(left / right);
     }
+    
     if (expression.includes(' % ')) {
         const [left, right] = expression.split(' % ').map(part => evaluateExpression(part.trim(), environment));
-        return parseFloat(left) % parseFloat(right);
+        if (right === 0) throw new Error('integer division or modulo by zero');
+        const result = left % right;
+        // Python modulo behavior for negative numbers
+        if (result < 0 && right > 0) return result + right;
+        if (result > 0 && right < 0) return result + right;
+        return result;
     }
+    
     if (expression.includes(' ** ')) {
         const [left, right] = expression.split(' ** ').map(part => evaluateExpression(part.trim(), environment));
-        return Math.pow(parseFloat(left), parseFloat(right));
+        const result = Math.pow(left, right);
+        // Preserve integer type when possible
+        if (Number.isInteger(left) && Number.isInteger(right) && right >= 0) {
+            return Math.trunc(result);
+        }
+        return result;
     }
+    
     if (expression.includes(' - ')) {
         const [left, right] = expression.split(' - ').map(part => evaluateExpression(part.trim(), environment));
-        return parseFloat(left) - parseFloat(right);
+        const result = left - right;
+        // Preserve integer type when possible
+        if (Number.isInteger(left) && Number.isInteger(right)) {
+            return Math.trunc(result);
+        }
+        return result;
     }
     
     // Handle membership operators
@@ -657,7 +782,7 @@ function evaluateExpression(expression, environment) {
         return false;
     }
     
-    // Handle string method calls
+    // Handle string method calls (comprehensive)
     if (expression.includes('.upper()')) {
         const base = expression.replace('.upper()', '');
         const value = evaluateExpression(base, environment);
@@ -668,7 +793,85 @@ function evaluateExpression(expression, environment) {
         const value = evaluateExpression(base, environment);
         return String(value).toLowerCase();
     }
+    if (expression.includes('.title()')) {
+        const base = expression.replace('.title()', '');
+        const value = evaluateExpression(base, environment);
+        return String(value).split(' ').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        ).join(' ');
+    }
+    if (expression.includes('.strip()')) {
+        const base = expression.replace('.strip()', '');
+        const value = evaluateExpression(base, environment);
+        return String(value).trim();
+    }
+    if (expression.includes('.split()')) {
+        const base = expression.replace('.split()', '');
+        const value = evaluateExpression(base, environment);
+        return String(value).split(/\s+/).filter(word => word.length > 0);
+    }
     
+    // Handle string method calls with parameters
+    if (expression.includes('.split(')) {
+        const match = expression.match(/(.+)\.split\((.+)\)/);
+        if (match) {
+            const base = match[1];
+            const separator = evaluateExpression(match[2], environment);
+            const value = evaluateExpression(base, environment);
+            return String(value).split(separator);
+        }
+    }
+    if (expression.includes('.replace(')) {
+        const match = expression.match(/(.+)\.replace\((.+),\s*(.+)\)/);
+        if (match) {
+            const base = match[1];
+            const oldStr = evaluateExpression(match[2], environment);
+            const newStr = evaluateExpression(match[3], environment);
+            const value = evaluateExpression(base, environment);
+            return String(value).replace(new RegExp(oldStr, 'g'), newStr);
+        }
+    }
+    
+    // Handle list method calls (for variables already in environment)
+    if (expression.includes('.count(')) {
+        const match = expression.match(/(.+)\.count\((.+)\)/);
+        if (match) {
+            const base = match[1];
+            const item = evaluateExpression(match[2], environment);
+            const value = evaluateExpression(base, environment);
+            if (Array.isArray(value)) {
+                return value.filter(x => x === item).length;
+            }
+            if (typeof value === 'string') {
+                return (value.match(new RegExp(item, 'g')) || []).length;
+            }
+        }
+    }
+    if (expression.includes('.index(')) {
+        const match = expression.match(/(.+)\.index\((.+)\)/);
+        if (match) {
+            const base = match[1];
+            const item = evaluateExpression(match[2], environment);
+            const value = evaluateExpression(base, environment);
+            if (Array.isArray(value)) {
+                const index = value.indexOf(item);
+                if (index === -1) throw new Error(`${item} is not in list`);
+                return index;
+            }
+            if (typeof value === 'string') {
+                const index = value.indexOf(item);
+                if (index === -1) throw new Error(`substring not found`);
+                return index;
+            }
+        }
+    }
+    
+    // Handle variables
+    if (environment.has(expression)) {
+        return environment.get(expression);
+    }
+    
+    // Final fallback - return as string if nothing else matches
     return expression;
 }
 
@@ -687,11 +890,17 @@ function getType(value) {
 // Format output for display
 function formatOutput(value) {
     if (typeof value === 'string') return value;
-    if (typeof value === 'number') return value.toString();
+    if (typeof value === 'number') {
+        // Display integers without decimal point
+        if (Number.isInteger(value)) return value.toString();
+        return value.toString();
+    }
     if (typeof value === 'boolean') return value ? 'True' : 'False';
     if (Array.isArray(value)) {
         const formattedItems = value.map(item => {
             if (typeof item === 'string') return `'${item}'`;
+            if (typeof item === 'boolean') return item ? 'True' : 'False';
+            if (typeof item === 'number' && Number.isInteger(item)) return item.toString();
             return formatOutput(item);
         });
         return `[${formattedItems.join(', ')}]`;
