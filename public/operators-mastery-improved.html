@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Operators Mastery — Code with Morais</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .operators-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .lesson-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .progress-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .operator-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .category-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .category-card.unlocked {
+            border-color: #4CAF50;
+        }
+        
+        .category-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .category-card.completed {
+            border-color: #FFD700;
+            background: linear-gradient(135deg, #fff9c4, #f0f0f0);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: white;
+        }
+        
+        .arithmetic { background: linear-gradient(135deg, #FF6B6B, #FF8E8E); }
+        .assignment { background: linear-gradient(135deg, #4ECDC4, #44A08D); }
+        .comparison { background: linear-gradient(135deg, #45B7D1, #96C93D); }
+        .logical { background: linear-gradient(135deg, #F093FB, #F5576C); }
+        .identity { background: linear-gradient(135deg, #4CB8C4, #3CD3AD); }
+        .membership { background: linear-gradient(135deg, #FFECD2, #FCB69F); }
+        .bitwise { background: linear-gradient(135deg, #A8EDEA, #FED6E3); }
+        
+        .category-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .powerup-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        
+        .powerups {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .powerup {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .powerup:hover {
+            transform: scale(1.1);
+        }
+        
+        .powerup.streak { background: linear-gradient(135deg, #FF6B6B, #FF8E8E); }
+        .powerup.perfect { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .powerup.speed { background: linear-gradient(135deg, #00C9FF, #92FE9D); }
+        .powerup.combo { background: linear-gradient(135deg, #FC466B, #3F5EFB); }
+        
+        .powerup-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #333;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .powerup-info {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            display: none;
+            z-index: 1001;
+        }
+        
+        .activity-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .activity-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+        
+        .activity-counter {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .close-activity {
+            background: #ff4757;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .activity-question {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #667eea;
+        }
+        
+        .code-area {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            margin: 1rem 0;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.5;
+            border: 1px solid #4a5568;
+        }
+        
+        .code-area::before {
+            content: '>>> Python Console';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #2d3748;
+            color: #a0aec0;
+            padding: 0 10px;
+            font-size: 12px;
+        }
+        
+        .code-input {
+            background: #2d3748;
+            color: #e2e8f0;
+            border: 2px solid #4a5568;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .code-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .answer-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .answer-option {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        
+        .answer-option:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+        
+        .answer-option.correct {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+            animation: correctPulse 0.6s ease;
+        }
+        
+        .answer-option.incorrect {
+            border-color: #f44336;
+            background: #ffeaea;
+            animation: incorrectShake 0.6s ease;
+        }
+        
+        .activity-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .feedback-correct {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            color: #2e7d32;
+        }
+        
+        .feedback-incorrect {
+            background: #ffeaea;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+        
+        .next-activity-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .check-answer-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        
+        .powerup-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3000;
+            font-size: 3rem;
+            animation: powerupPop 1s ease;
+            pointer-events: none;
+        }
+        
+        .streak-indicator {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            display: none;
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes powerupPop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+        
+        .question-type-indicator {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .debug-highlight {
+            background: #ffeb3b;
+            color: #333;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="operators-container">
+        <!-- Header -->
+        <div class="lesson-header">
+            <h1><i class="fas fa-calculator"></i> Python Operators Mastery</h1>
+            <p>Master all 7 types of Python operators through 350 interactive challenges!</p>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Overall Progress</h3>
+                <div class="activity-counter">
+                    <span id="completed-activities">0</span> / <span id="total-activities">350</span> Activities
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="overall-progress"></div>
+            </div>
+        </div>
+
+        <!-- Powerups Display -->
+        <div class="powerup-display">
+            <h4 style="margin: 0 0 1rem 0; color: #333;">Powerups</h4>
+            <div class="powerups">
+                <div class="powerup streak" title="Streak Fire: 5 correct answers in a row" onmouseover="showPowerupInfo('🔥 Streak Fire: Earn 1 for every 5 correct answers in a row')" onmouseout="hidePowerupInfo()">
+                    <i class="fas fa-fire"></i>
+                    <div class="powerup-count" id="streak-count">0</div>
+                </div>
+                <div class="powerup perfect" title="Perfect Star: 10 consecutive correct answers" onmouseover="showPowerupInfo('⭐ Perfect Star: Earn 1 for 10 consecutive correct answers')" onmouseout="hidePowerupInfo()">
+                    <i class="fas fa-star"></i>
+                    <div class="powerup-count" id="perfect-count">0</div>
+                </div>
+                <div class="powerup speed" title="Speed Lightning: Answer in under 5 seconds" onmouseover="showPowerupInfo('⚡ Speed Lightning: Earn 1 for answering correctly in under 5 seconds')" onmouseout="hidePowerupInfo()">
+                    <i class="fas fa-bolt"></i>
+                    <div class="powerup-count" id="speed-count">0</div>
+                </div>
+                <div class="powerup combo" title="Combo Master: Fast answer + 3+ streak" onmouseover="showPowerupInfo('🏆 Combo Master: Earn 1 for answering fast while on a 3+ streak')" onmouseout="hidePowerupInfo()">
+                    <i class="fas fa-trophy"></i>
+                    <div class="powerup-count" id="combo-count">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Powerup Info Tooltip -->
+        <div class="powerup-info" id="powerup-info"></div>
+
+        <!-- Streak Indicator -->
+        <div class="streak-indicator" id="streak-indicator">
+            🔥 <span id="current-streak">0</span> Streak!
+        </div>
+
+        <!-- Operator Categories -->
+        <div class="operator-categories">
+            <!-- Arithmetic Operators -->
+            <div class="category-card unlocked" data-category="arithmetic">
+                <div class="category-header">
+                    <div class="category-icon arithmetic">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div>
+                        <h3>Arithmetic Operators</h3>
+                        <p>+, -, *, /, //, %, **</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="arithmetic-completed">0</span>/50 Activities</span>
+                    <span id="arithmetic-status">🔓 Unlocked</span>
+                </div>
+            </div>
+
+            <!-- Assignment Operators -->
+            <div class="category-card locked" data-category="assignment">
+                <div class="category-header">
+                    <div class="category-icon assignment">
+                        <i class="fas fa-equals"></i>
+                    </div>
+                    <div>
+                        <h3>Assignment Operators</h3>
+                        <p>=, +=, -=, *=, /=, //=, %=, **=</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="assignment-completed">0</span>/50 Activities</span>
+                    <span id="assignment-status">🔒 Locked</span>
+                </div>
+            </div>
+
+            <!-- Comparison Operators -->
+            <div class="category-card locked" data-category="comparison">
+                <div class="category-header">
+                    <div class="category-icon comparison">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div>
+                        <h3>Comparison Operators</h3>
+                        <p>==, !=, <, >, <=, >=</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="comparison-completed">0</span>/50 Activities</span>
+                    <span id="comparison-status">🔒 Locked</span>
+                </div>
+            </div>
+
+            <!-- Logical Operators -->
+            <div class="category-card locked" data-category="logical">
+                <div class="category-header">
+                    <div class="category-icon logical">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div>
+                        <h3>Logical Operators</h3>
+                        <p>and, or, not</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="logical-completed">0</span>/50 Activities</span>
+                    <span id="logical-status">🔒 Locked</span>
+                </div>
+            </div>
+
+            <!-- Identity Operators -->
+            <div class="category-card locked" data-category="identity">
+                <div class="category-header">
+                    <div class="category-icon identity">
+                        <i class="fas fa-fingerprint"></i>
+                    </div>
+                    <div>
+                        <h3>Identity Operators</h3>
+                        <p>is, is not</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="identity-completed">0</span>/50 Activities</span>
+                    <span id="identity-status">🔒 Locked</span>
+                </div>
+            </div>
+
+            <!-- Membership Operators -->
+            <div class="category-card locked" data-category="membership">
+                <div class="category-header">
+                    <div class="category-icon membership">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h3>Membership Operators</h3>
+                        <p>in, not in</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="membership-completed">0</span>/50 Activities</span>
+                    <span id="membership-status">🔒 Locked</span>
+                </div>
+            </div>
+
+            <!-- Bitwise Operators -->
+            <div class="category-card locked" data-category="bitwise">
+                <div class="category-header">
+                    <div class="category-icon bitwise">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <div>
+                        <h3>Bitwise Operators</h3>
+                        <p>&, |, ^, ~, <<, >></p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="bitwise-completed">0</span>/50 Activities</span>
+                    <span id="bitwise-status">🔒 Locked</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="window.location.href='/dashboard.html'" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Activity Modal -->
+    <div class="activity-modal" id="activity-modal">
+        <div class="activity-content">
+            <div class="activity-header">
+                <div class="activity-counter" id="activity-progress">
+                    Activity <span id="current-activity">1</span> of <span id="category-total">50</span>
+                </div>
+                <button class="close-activity" onclick="closeActivity()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="activity-question-container">
+                <!-- Question content will be loaded here -->
+            </div>
+            
+            <div class="activity-feedback" id="activity-feedback">
+                <!-- Feedback will be shown here -->
+            </div>
+            
+            <button class="next-activity-btn" id="next-activity-btn" onclick="nextActivity()">
+                Next Activity <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Import Firebase and App.js -->
+    <script type="module" src="/app.js"></script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+        let firebaseConfig, app, auth, currentUser;
+        let currentCategory = null;
+        let currentActivityIndex = 0;
+        let categoryProgress = {
+            arithmetic: { completed: 0, unlocked: true },
+            assignment: { completed: 0, unlocked: false },
+            comparison: { completed: 0, unlocked: false },
+            logical: { completed: 0, unlocked: false },
+            identity: { completed: 0, unlocked: false },
+            membership: { completed: 0, unlocked: false },
+            bitwise: { completed: 0, unlocked: false }
+        };
+        let powerups = {
+            streak: 0,
+            perfect: 0,
+            speed: 0,
+            combo: 0
+        };
+        let currentStreak = 0;
+        let consecutiveCorrect = 0;
+        let activityStartTime = 0;
+
+        // Initialize Firebase
+        async function initFirebase() {
+            try {
+                const cfg = await import('./firebase-config.js');
+                firebaseConfig = cfg.firebaseConfig;
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                
+                return new Promise((resolve, reject) => {
+                    onAuthStateChanged(auth, async (user) => {
+                        if (user) {
+                            currentUser = user;
+                            console.log('User authenticated:', user.email);
+                            await loadOperatorsProgress();
+                            resolve(user);
+                        } else {
+                            console.log('No user authenticated, redirecting to login');
+                            window.location.href = '/';
+                            reject(new Error('No user authenticated'));
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Firebase initialization failed:', error);
+                throw error;
+            }
+        }
+
+        // Load operators mastery progress
+        async function loadOperatorsProgress() {
+            try {
+                if (window.ProgressTracker && currentUser) {
+                    const progress = await window.ProgressTracker.getOperatorsMasteryProgress(currentUser.uid);
+                    
+                    // Update local state
+                    categoryProgress = progress.categories || categoryProgress;
+                    powerups = progress.powerups || powerups;
+                    
+                    console.log('Operators progress loaded:', progress);
+                    updateProgress();
+                    updatePowerupDisplay();
+                    unlockCategories();
+                } else {
+                    console.log('ProgressTracker not available, using local storage fallback');
+                    loadFromLocalStorage();
+                }
+            } catch (error) {
+                console.error('Error loading operators progress:', error);
+                loadFromLocalStorage();
+            }
+        }
+
+        // Fallback to localStorage
+        function loadFromLocalStorage() {
+            const savedProgress = localStorage.getItem('operatorsMasteryProgress');
+            const savedPowerups = localStorage.getItem('operatorsMasteryPowerups');
+            
+            if (savedProgress) {
+                categoryProgress = JSON.parse(savedProgress);
+            }
+            if (savedPowerups) {
+                powerups = JSON.parse(savedPowerups);
+            }
+            
+            updateProgress();
+            updatePowerupDisplay();
+            unlockCategories();
+        }
+
+        // Save operators mastery progress
+        async function saveOperatorsProgress() {
+            try {
+                // Save to Firebase if available
+                if (window.ProgressTracker && currentUser) {
+                    await window.ProgressTracker.saveOperatorsMasteryProgress(
+                        currentUser.uid,
+                        categoryProgress,
+                        powerups
+                    );
+                    console.log('Operators progress saved to Firebase');
+                }
+            } catch (error) {
+                console.error('Error saving to Firebase:', error);
+            }
+            
+            // Always save to localStorage as backup
+            localStorage.setItem('operatorsMasteryProgress', JSON.stringify(categoryProgress));
+            localStorage.setItem('operatorsMasteryPowerups', JSON.stringify(powerups));
+            console.log('Operators progress saved to localStorage');
+        }
+
+        // Enhanced activity database with multiple question types
+        const activities = {
+            arithmetic: [
+                {
+                    type: 'multiple-choice',
+                    question: "What will this code output?",
+                    code: "result = 15 + 8\nprint(result)",
+                    options: ["23", "24", "22", "25"],
+                    correct: 0,
+                    explanation: "15 + 8 = 23. The + operator performs addition."
+                },
+                {
+                    type: 'code-completion',
+                    question: "Complete the code to calculate 20 - 7:",
+                    code: "result = 20 __ 7\nprint(result)",
+                    placeholder: "Fill in the operator",
+                    correct: "-",
+                    explanation: "The - operator performs subtraction. 20 - 7 = 13."
+                },
+                {
+                    type: 'debug',
+                    question: "Fix the bug in this code:",
+                    code: "result = 6 * 4\nprint(resilt)",
+                    buggyLine: 1,
+                    correct: "print(result)",
+                    explanation: "The variable name was misspelled as 'resilt' instead of 'result'."
+                },
+                {
+                    type: 'predict-output',
+                    question: "What will this code print?",
+                    code: "x = 15\ny = 3\nresult = x / y\nprint(result)",
+                    correct: "5.0",
+                    explanation: "15 / 3 = 5.0. The / operator performs division and returns a float."
+                },
+                {
+                    type: 'multiple-choice',
+                    question: "What will this code output?",
+                    code: "result = 17 // 5\nprint(result)",
+                    options: ["3", "3.4", "4", "2"],
+                    correct: 0,
+                    explanation: "17 // 5 = 3. The // operator performs floor division (integer division)."
+                },
+                {
+                    type: 'code-completion',
+                    question: "Complete the code to find the remainder of 17 divided by 5:",
+                    code: "result = 17 __ 5\nprint(result)",
+                    correct: "%",
+                    explanation: "The % operator finds the remainder. 17 % 5 = 2."
+                },
+                {
+                    type: 'debug',
+                    question: "Fix the syntax error in this code:",
+                    code: "result = 2 ** 3\nprint(result",
+                    correct: "print(result)",
+                    explanation: "Missing closing parenthesis in the print statement."
+                },
+                {
+                    type: 'predict-output',
+                    question: "What will this code print?",
+                    code: "base = 2\nexponent = 3\nresult = base ** exponent\nprint(result)",
+                    correct: "8",
+                    explanation: "2 ** 3 = 8. The ** operator performs exponentiation."
+                }
+                // Generate more activities programmatically below...
+            ],
+            assignment: [
+                {
+                    type: 'multiple-choice',
+                    question: "What will be the value of x after this code runs?",
+                    code: "x = 10\nx += 5\nprint(x)",
+                    options: ["15", "10", "5", "20"],
+                    correct: 0,
+                    explanation: "x += 5 is equivalent to x = x + 5. So 10 + 5 = 15."
+                },
+                {
+                    type: 'code-completion',
+                    question: "Complete the code to multiply x by 3:",
+                    code: "x = 4\nx __ 3\nprint(x)",
+                    correct: "*=",
+                    explanation: "The *= operator multiplies the variable by the given value. x *= 3 means x = x * 3."
+                },
+                {
+                    type: 'debug',
+                    question: "Fix the assignment operator error:",
+                    code: "x = 10\nx =+ 5\nprint(x)",
+                    correct: "x += 5",
+                    explanation: "=+ is not a valid operator. The correct operator is += for addition assignment."
+                },
+                {
+                    type: 'predict-output',
+                    question: "What will this code print?",
+                    code: "x = 20\nx //= 3\nprint(x)",
+                    correct: "6",
+                    explanation: "x //= 3 means x = x // 3. So 20 // 3 = 6 (floor division)."
+                }
+                // More assignment activities...
+            ]
+            // More categories will be generated...
+        };
+
+        // Generate remaining activities programmatically
+        function generateActivities() {
+            // Generate more arithmetic activities
+            const arithmeticTypes = [
+                { op: '+', name: 'addition', examples: [[12, 8], [25, 15], [7, 13]] },
+                { op: '-', name: 'subtraction', examples: [[20, 5], [30, 12], [15, 8]] },
+                { op: '*', name: 'multiplication', examples: [[6, 7], [8, 4], [9, 3]] },
+                { op: '/', name: 'division', examples: [[24, 6], [35, 5], [18, 3]] },
+                { op: '//', name: 'floor division', examples: [[22, 7], [17, 4], [29, 8]] },
+                { op: '%', name: 'modulus', examples: [[17, 5], [23, 6], [19, 4]] },
+                { op: '**', name: 'exponentiation', examples: [[2, 4], [3, 3], [5, 2]] }
+            ];
+
+            while (activities.arithmetic.length < 50) {
+                const typeInfo = arithmeticTypes[Math.floor(Math.random() * arithmeticTypes.length)];
+                const [a, b] = typeInfo.examples[Math.floor(Math.random() * typeInfo.examples.length)];
+                
+                let result;
+                switch(typeInfo.op) {
+                    case '+': result = a + b; break;
+                    case '-': result = a - b; break;
+                    case '*': result = a * b; break;
+                    case '/': result = (a / b).toString(); break;
+                    case '//': result = Math.floor(a / b); break;
+                    case '%': result = a % b; break;
+                    case '**': result = Math.pow(a, b); break;
+                }
+
+                const questionTypes = ['multiple-choice', 'predict-output', 'code-completion'];
+                const qType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+
+                if (qType === 'multiple-choice') {
+                    const wrongAnswers = [
+                        result + 1,
+                        result - 1,
+                        result + Math.floor(Math.random() * 5) + 1
+                    ].filter(ans => ans !== result).slice(0, 3);
+                    
+                    const options = [result, ...wrongAnswers].map(String);
+                    shuffleArray(options);
+                    const correctIndex = options.indexOf(String(result));
+                    
+                    activities.arithmetic.push({
+                        type: 'multiple-choice',
+                        question: "What will this code output?",
+                        code: `result = ${a} ${typeInfo.op} ${b}\nprint(result)`,
+                        options: options,
+                        correct: correctIndex,
+                        explanation: `${a} ${typeInfo.op} ${b} = ${result}. The ${typeInfo.op} operator performs ${typeInfo.name}.`
+                    });
+                } else if (qType === 'predict-output') {
+                    activities.arithmetic.push({
+                        type: 'predict-output',
+                        question: "What will this code print?",
+                        code: `x = ${a}\ny = ${b}\nresult = x ${typeInfo.op} y\nprint(result)`,
+                        correct: String(result),
+                        explanation: `${a} ${typeInfo.op} ${b} = ${result}. The ${typeInfo.op} operator performs ${typeInfo.name}.`
+                    });
+                } else {
+                    activities.arithmetic.push({
+                        type: 'code-completion',
+                        question: `Complete the code to perform ${typeInfo.name}:`,
+                        code: `result = ${a} __ ${b}\nprint(result)`,
+                        correct: typeInfo.op,
+                        explanation: `The ${typeInfo.op} operator performs ${typeInfo.name}. ${a} ${typeInfo.op} ${b} = ${result}.`
+                    });
+                }
+            }
+
+            // Generate assignment activities
+            if (!activities.assignment || activities.assignment.length < 50) {
+                generateAssignmentActivities();
+            }
+            if (!activities.comparison) {
+                generateComparisonActivities();
+            }
+            if (!activities.logical) {
+                generateLogicalActivities();
+            }
+            if (!activities.identity) {
+                generateIdentityActivities();
+            }
+            if (!activities.membership) {
+                generateMembershipActivities();
+            }
+            if (!activities.bitwise) {
+                generateBitwiseActivities();
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateAssignmentActivities() {
+            const ops = [
+                { op: '+=', symbol: '+', name: 'addition assignment' },
+                { op: '-=', symbol: '-', name: 'subtraction assignment' },
+                { op: '*=', symbol: '*', name: 'multiplication assignment' },
+                { op: '/=', symbol: '/', name: 'division assignment' },
+                { op: '//=', symbol: '//', name: 'floor division assignment' },
+                { op: '%=', symbol: '%', name: 'modulus assignment' },
+                { op: '**=', symbol: '**', name: 'exponentiation assignment' }
+            ];
+            
+            while (activities.assignment.length < 50) {
+                const opInfo = ops[activities.assignment.length % ops.length];
+                const initial = Math.floor(Math.random() * 20) + 5;
+                const operand = Math.floor(Math.random() * 5) + 2;
+                
+                let result = initial;
+                switch(opInfo.op) {
+                    case '+=': result += operand; break;
+                    case '-=': result -= operand; break;
+                    case '*=': result *= operand; break;
+                    case '/=': result = (result / operand).toString(); break;
+                    case '//=': result = Math.floor(result / operand); break;
+                    case '%=': result %= operand; break;
+                    case '**=': result = Math.pow(result, Math.min(operand, 3)); break;
+                }
+
+                const questionTypes = ['multiple-choice', 'predict-output', 'code-completion', 'debug'];
+                const qType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+
+                if (qType === 'debug') {
+                    activities.assignment.push({
+                        type: 'debug',
+                        question: "Fix the assignment operator error:",
+                        code: `x = ${initial}\nx =${opInfo.symbol} ${operand}\nprint(x)`,
+                        correct: `x ${opInfo.op} ${operand}`,
+                        explanation: `=${opInfo.symbol} is not valid. The correct operator is ${opInfo.op} for ${opInfo.name}.`
+                    });
+                } else {
+                    activities.assignment.push({
+                        type: qType,
+                        question: qType === 'code-completion' ? `Complete the ${opInfo.name} operation:` : "What will be the value of x after this code runs?",
+                        code: qType === 'code-completion' ? `x = ${initial}\nx __ ${operand}\nprint(x)` : `x = ${initial}\nx ${opInfo.op} ${operand}\nprint(x)`,
+                        correct: qType === 'code-completion' ? opInfo.op : String(result),
+                        options: qType === 'multiple-choice' ? [String(result), String(result + 1), String(result - 1), String(initial + operand)] : undefined,
+                        explanation: `x ${opInfo.op} ${operand} is equivalent to x = x ${opInfo.symbol} ${operand}. So ${initial} ${opInfo.symbol} ${operand} = ${result}.`
+                    });
+                }
+            }
+        }
+
+        // Generate other categories (simplified for brevity)
+        function generateComparisonActivities() {
+            activities.comparison = Array(50).fill().map((_, i) => {
+                const ops = ['==', '!=', '<', '>', '<=', '>='];
+                const op = ops[i % ops.length];
+                const a = Math.floor(Math.random() * 20) + 1;
+                const b = Math.floor(Math.random() * 20) + 1;
+                
+                let result;
+                switch(op) {
+                    case '==': result = a === b; break;
+                    case '!=': result = a !== b; break;
+                    case '<': result = a < b; break;
+                    case '>': result = a > b; break;
+                    case '<=': result = a <= b; break;
+                    case '>=': result = a >= b; break;
+                }
+                
+                return {
+                    type: 'multiple-choice',
+                    question: "What will this code output?",
+                    code: `result = ${a} ${op} ${b}\nprint(result)`,
+                    options: ['True', 'False'],
+                    correct: result ? 0 : 1,
+                    explanation: `${a} ${op} ${b} evaluates to ${result}.`
+                };
+            });
+        }
+
+        function generateLogicalActivities() {
+            activities.logical = Array(50).fill().map((_, i) => ({
+                type: 'multiple-choice',
+                question: "What will this code output?",
+                code: `result = True and False\nprint(result)`,
+                options: ['True', 'False'],
+                correct: 1,
+                explanation: 'True and False evaluates to False because both operands must be True for and to return True.'
+            }));
+        }
+
+        function generateIdentityActivities() {
+            activities.identity = Array(50).fill().map((_, i) => ({
+                type: 'multiple-choice',
+                question: "What will this code output?",
+                code: `x = []\ny = []\nresult = x is y\nprint(result)`,
+                options: ['True', 'False'],
+                correct: 1,
+                explanation: 'is checks for identity (same object), not equality. Different list objects are not identical.'
+            }));
+        }
+
+        function generateMembershipActivities() {
+            activities.membership = Array(50).fill().map((_, i) => ({
+                type: 'multiple-choice',
+                question: "What will this code output?",
+                code: `result = 'a' in 'apple'\nprint(result)`,
+                options: ['True', 'False'],
+                correct: 0,
+                explanation: "'a' is found in the string 'apple', so the result is True."
+            }));
+        }
+
+        function generateBitwiseActivities() {
+            activities.bitwise = Array(50).fill().map((_, i) => ({
+                type: 'multiple-choice',
+                question: "What will this code output?",
+                code: `result = 5 & 3\nprint(result)`,
+                options: ['1', '3', '5', '7'],
+                correct: 0,
+                explanation: '5 & 3 performs bitwise AND: 101 & 011 = 001 = 1.'
+            }));
+        }
+
+        // Powerup tooltip functions
+        window.showPowerupInfo = function(text) {
+            const tooltip = document.getElementById('powerup-info');
+            tooltip.textContent = text;
+            tooltip.style.display = 'block';
+        };
+
+        window.hidePowerupInfo = function() {
+            document.getElementById('powerup-info').style.display = 'none';
+        };
+
+        // Event handlers
+        window.openCategory = function(category) {
+            const card = document.querySelector(`[data-category="${category}"]`);
+            if (card.classList.contains('locked')) {
+                alert('Complete the previous category to unlock this one!');
+                return;
+            }
+            
+            currentCategory = category;
+            currentActivityIndex = categoryProgress[category]?.completed || 0;
+            showActivity();
+        };
+
+        window.closeActivity = function() {
+            document.getElementById('activity-modal').style.display = 'none';
+        };
+
+        window.nextActivity = function() {
+            currentActivityIndex++;
+            
+            // Update category progress with new structure
+            if (!categoryProgress[currentCategory]) {
+                categoryProgress[currentCategory] = { completed: 0, unlocked: true };
+            }
+            categoryProgress[currentCategory].completed = currentActivityIndex;
+            
+            // Save progress
+            saveOperatorsProgress();
+            
+            // Check if category is completed
+            if (currentActivityIndex >= 50) {
+                unlockNextCategory();
+                alert(`🎉 Congratulations! You've completed ${currentCategory} operators!`);
+                closeActivity();
+                updateProgress();
+                return;
+            }
+            
+            showActivity();
+            updateProgress();
+        };
+
+        function showActivity() {
+            const activity = activities[currentCategory][currentActivityIndex];
+            if (!activity) return;
+            
+            activityStartTime = Date.now();
+            
+            document.getElementById('current-activity').textContent = currentActivityIndex + 1;
+            
+            // Show activity based on type
+            const container = document.getElementById('activity-question-container');
+            container.innerHTML = renderActivity(activity);
+            
+            document.getElementById('activity-feedback').style.display = 'none';
+            document.getElementById('next-activity-btn').style.display = 'none';
+            document.getElementById('activity-modal').style.display = 'flex';
+        }
+
+        function renderActivity(activity) {
+            let html = `<div class="question-type-indicator">${activity.type.replace('-', ' ').toUpperCase()}</div>`;
+            html += `<div class="activity-question">`;
+            html += `<h3>${activity.question}</h3>`;
+            
+            if (activity.code) {
+                // Format code with proper line breaks
+                const formattedCode = activity.code.replace(/\\n/g, '\n');
+                html += `<div class="code-area">${formattedCode}</div>`;
+            }
+            
+            html += `</div>`;
+
+            // Render based on activity type
+            switch (activity.type) {
+                case 'multiple-choice':
+                    html += `<div class="answer-options">`;
+                    activity.options.forEach((option, index) => {
+                        html += `<div class="answer-option" onclick="selectAnswer(${index})">${option}</div>`;
+                    });
+                    html += `</div>`;
+                    break;
+
+                case 'code-completion':
+                    html += `<div class="answer-options">`;
+                    html += `<input type="text" id="code-input" class="code-input" placeholder="${activity.placeholder || 'Enter your answer...'}" style="height: 50px; min-height: 50px;">`;
+                    html += `</div>`;
+                    html += `<button class="check-answer-btn" onclick="checkCodeCompletion()">Check Answer</button>`;
+                    break;
+
+                case 'debug':
+                    html += `<div class="answer-options">`;
+                    html += `<p><strong>Fix the highlighted line:</strong></p>`;
+                    const lines = activity.code.split('\n');
+                    lines.forEach((line, i) => {
+                        if (i === activity.buggyLine) {
+                            html += `<div class="code-area debug-highlight">${line}</div>`;
+                        }
+                    });
+                    html += `<textarea id="debug-input" class="code-input" placeholder="Enter the corrected line...">${lines[activity.buggyLine || 0]}</textarea>`;
+                    html += `</div>`;
+                    html += `<button class="check-answer-btn" onclick="checkDebugAnswer()">Check Fix</button>`;
+                    break;
+
+                case 'predict-output':
+                    html += `<div class="answer-options">`;
+                    html += `<input type="text" id="output-input" class="code-input" placeholder="What will this code print?" style="height: 50px; min-height: 50px;">`;
+                    html += `</div>`;
+                    html += `<button class="check-answer-btn" onclick="checkOutputPrediction()">Check Prediction</button>`;
+                    break;
+            }
+
+            return html;
+        }
+
+        window.selectAnswer = function(selectedIndex) {
+            const activity = activities[currentCategory][currentActivityIndex];
+            const isCorrect = selectedIndex === activity.correct;
+            const timeSpent = Date.now() - activityStartTime;
+            
+            handleAnswerResult(isCorrect, timeSpent, activity.explanation);
+            
+            // Update answer options
+            const options = document.querySelectorAll('.answer-option');
+            options.forEach((option, index) => {
+                option.onclick = null; // Disable further clicks
+                if (index === activity.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex) {
+                    option.classList.add('incorrect');
+                }
+            });
+        };
+
+        window.checkCodeCompletion = function() {
+            const activity = activities[currentCategory][currentActivityIndex];
+            const userAnswer = document.getElementById('code-input').value.trim();
+            const isCorrect = userAnswer === activity.correct;
+            const timeSpent = Date.now() - activityStartTime;
+            
+            handleAnswerResult(isCorrect, timeSpent, activity.explanation);
+        };
+
+        window.checkDebugAnswer = function() {
+            const activity = activities[currentCategory][currentActivityIndex];
+            const userAnswer = document.getElementById('debug-input').value.trim();
+            const isCorrect = userAnswer === activity.correct;
+            const timeSpent = Date.now() - activityStartTime;
+            
+            handleAnswerResult(isCorrect, timeSpent, activity.explanation);
+        };
+
+        window.checkOutputPrediction = function() {
+            const activity = activities[currentCategory][currentActivityIndex];
+            const userAnswer = document.getElementById('output-input').value.trim();
+            const isCorrect = userAnswer === activity.correct;
+            const timeSpent = Date.now() - activityStartTime;
+            
+            handleAnswerResult(isCorrect, timeSpent, activity.explanation);
+        };
+
+        function handleAnswerResult(isCorrect, timeSpent, explanation) {
+            // Show feedback
+            const feedback = document.getElementById('activity-feedback');
+            feedback.style.display = 'block';
+            feedback.className = `activity-feedback ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+            feedback.innerHTML = `
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">
+                    ${isCorrect ? '✅ Correct!' : '❌ Incorrect!'}
+                </div>
+                <div>${explanation}</div>
+            `;
+            
+            // Hide check buttons
+            const checkBtns = document.querySelectorAll('.check-answer-btn');
+            checkBtns.forEach(btn => btn.style.display = 'none');
+            
+            // Handle powerups and streaks
+            if (isCorrect) {
+                handleCorrectAnswer(timeSpent);
+            } else {
+                currentStreak = 0;
+                consecutiveCorrect = 0;
+                updateStreakDisplay();
+            }
+            
+            document.getElementById('next-activity-btn').style.display = 'block';
+        }
+
+        function handleCorrectAnswer(timeSpent) {
+            currentStreak++;
+            consecutiveCorrect++;
+            
+            // Speed bonus (under 5 seconds)
+            if (timeSpent < 5000) {
+                powerups.speed++;
+                showPowerupAnimation('⚡', 'Speed Lightning!');
+            }
+            
+            // Streak bonuses
+            if (currentStreak % 5 === 0) {
+                powerups.streak++;
+                showPowerupAnimation('🔥', `${currentStreak} Streak Fire!`);
+            }
+            
+            // Perfect score bonus (10 consecutive correct)
+            if (consecutiveCorrect >= 10) {
+                powerups.perfect++;
+                showPowerupAnimation('⭐', 'Perfect Star!');
+                consecutiveCorrect = 0; // Reset
+            }
+            
+            // Combo bonus (complete activity quickly with streak)
+            if (timeSpent < 3000 && currentStreak >= 3) {
+                powerups.combo++;
+                showPowerupAnimation('🏆', 'Combo Master!');
+            }
+            
+            updatePowerupDisplay();
+            updateStreakDisplay();
+        }
+
+        function showPowerupAnimation(icon, text) {
+            const animation = document.createElement('div');
+            animation.className = 'powerup-animation';
+            animation.innerHTML = `${icon}<br><small>${text}</small>`;
+            document.body.appendChild(animation);
+            
+            setTimeout(() => {
+                document.body.removeChild(animation);
+            }, 1000);
+        }
+
+        function updatePowerupDisplay() {
+            document.getElementById('streak-count').textContent = powerups.streak;
+            document.getElementById('perfect-count').textContent = powerups.perfect;
+            document.getElementById('speed-count').textContent = powerups.speed;
+            document.getElementById('combo-count').textContent = powerups.combo;
+        }
+
+        function updateStreakDisplay() {
+            const streakIndicator = document.getElementById('streak-indicator');
+            const streakSpan = document.getElementById('current-streak');
+            
+            if (currentStreak > 0) {
+                streakSpan.textContent = currentStreak;
+                streakIndicator.style.display = 'block';
+            } else {
+                streakIndicator.style.display = 'none';
+            }
+        }
+
+        function updateProgress() {
+            // Update category progress
+            Object.keys(categoryProgress).forEach(category => {
+                const data = categoryProgress[category];
+                const completed = data.completed || 0;
+                document.getElementById(`${category}-completed`).textContent = completed;
+                
+                // Update category card appearance
+                const card = document.querySelector(`[data-category="${category}"]`);
+                if (completed >= 50) {
+                    card.classList.remove('unlocked');
+                    card.classList.add('completed');
+                    document.getElementById(`${category}-status`).textContent = '✅ Completed';
+                } else if (card.classList.contains('unlocked')) {
+                    document.getElementById(`${category}-status`).textContent = completed > 0 ? '🔓 In Progress' : '🔓 Unlocked';
+                }
+            });
+            
+            // Update overall progress
+            const totalCompleted = Object.values(categoryProgress).reduce((sum, data) => sum + (data.completed || 0), 0);
+            document.getElementById('completed-activities').textContent = totalCompleted;
+            
+            const overallPercentage = (totalCompleted / 350) * 100;
+            document.getElementById('overall-progress').style.width = `${overallPercentage}%`;
+        }
+
+        function unlockNextCategory() {
+            const categories = ['arithmetic', 'assignment', 'comparison', 'logical', 'identity', 'membership', 'bitwise'];
+            const currentIndex = categories.indexOf(currentCategory);
+            
+            if (currentIndex < categories.length - 1) {
+                const nextCategory = categories[currentIndex + 1];
+                categoryProgress[nextCategory] = { completed: 0, unlocked: true };
+                
+                const nextCard = document.querySelector(`[data-category="${nextCategory}"]`);
+                nextCard.classList.remove('locked');
+                nextCard.classList.add('unlocked');
+                document.getElementById(`${nextCategory}-status`).textContent = '🔓 Unlocked';
+                
+                // Save the unlock
+                saveOperatorsProgress();
+            }
+        }
+
+        function unlockCategories() {
+            // Unlock categories based on saved progress
+            Object.entries(categoryProgress).forEach(([category, data]) => {
+                if (data.unlocked) {
+                    const card = document.querySelector(`[data-category="${category}"]`);
+                    if (card) {
+                        card.classList.remove('locked');
+                        card.classList.add('unlocked');
+                        
+                        if (data.completed >= 50) {
+                            card.classList.add('completed');
+                            document.getElementById(`${category}-status`).textContent = '✅ Completed';
+                        } else if (data.completed > 0) {
+                            document.getElementById(`${category}-status`).textContent = '🔓 In Progress';
+                        } else {
+                            document.getElementById(`${category}-status`).textContent = '🔓 Unlocked';
+                        }
+                    }
+                }
+            });
+        }
+
+        // Add click handlers to category cards
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    openCategory(category);
+                });
+            });
+        });
+
+        // Initialize everything
+        async function main() {
+            try {
+                await initFirebase();
+                generateActivities();
+                updateProgress();
+                updatePowerupDisplay();
+                console.log('Operators Mastery initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize:', error);
+                // Still load from localStorage if Firebase fails
+                loadFromLocalStorage();
+                generateActivities();
+                updateProgress();
+                updatePowerupDisplay();
+            }
+        }
+
+        main();
+    </script>
+</body>
+</html>

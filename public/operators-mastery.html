@@ -1,0 +1,3016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Operators Mastery — Code with Morais</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* Prevent flickering on page load */
+        body {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        body.loaded {
+            opacity: 1;
+        }
+        
+        .operators-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .lesson-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .progress-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .operator-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .category-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .category-card.unlocked {
+            border-color: #4CAF50;
+        }
+        
+        .category-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .category-card.completed {
+            border-color: #FFD700;
+            background: linear-gradient(135deg, #fff9c4, #f0f0f0);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: white;
+        }
+        
+        .arithmetic { background: linear-gradient(135deg, #FF6B6B, #FF8E8E); }
+        .assignment { background: linear-gradient(135deg, #4ECDC4, #44A08D); }
+        .comparison { background: linear-gradient(135deg, #45B7D1, #96C93D); }
+        .logical { background: linear-gradient(135deg, #F093FB, #F5576C); }
+        .identity { background: linear-gradient(135deg, #4CB8C4, #3CD3AD); }
+        .membership { background: linear-gradient(135deg, #FFECD2, #FCB69F); }
+        .bitwise { background: linear-gradient(135deg, #A8EDEA, #FED6E3); }
+        
+        .category-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .powerup-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        
+        .powerups {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .powerup {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .powerup:hover {
+            transform: scale(1.1);
+        }
+        
+        .powerup.streak { background: linear-gradient(135deg, #FF6B6B, #FF8E8E); }
+        .powerup.perfect { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .powerup.speed { background: linear-gradient(135deg, #00C9FF, #92FE9D); }
+        .powerup.combo { background: linear-gradient(135deg, #FC466B, #3F5EFB); }
+        .powerup.skip { background: linear-gradient(135deg, #FF9800, #F57C00); }
+        
+        .powerup-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #333;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .powerup-info {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            display: none;
+            z-index: 1001;
+        }
+        
+        .activity-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .skip-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2500;
+        }
+        
+        .skip-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 450px;
+            margin: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        .skip-modal-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ff9800;
+        }
+        
+        .skip-modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .skip-modal-text {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .skip-modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .skip-modal-btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .skip-modal-btn.confirm {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+        }
+        
+        .skip-modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
+        }
+        
+        .skip-modal-btn.cancel {
+            background: #f5f5f5;
+            color: #666;
+            border: 2px solid #ddd;
+        }
+        
+        .skip-modal-btn.cancel:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .activity-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+        
+        .activity-counter {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .close-activity {
+            background: #ff4757;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .activity-question {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #667eea;
+        }
+        
+        .code-area {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            margin: 1rem 0;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.8;
+            border: 1px solid #4a5568;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .code-area::before {
+            content: '>>> Python Console';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #2d3748;
+            color: #a0aec0;
+            padding: 0 10px;
+            font-size: 12px;
+        }
+        
+        .code-input {
+            background: #2d3748;
+            color: #e2e8f0;
+            border: 2px solid #4a5568;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .code-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .answer-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .answer-option {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        
+        .answer-option:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+        
+        .answer-option.correct {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+            animation: correctPulse 0.6s ease;
+        }
+        
+        .answer-option.incorrect {
+            border-color: #f44336;
+            background: #ffeaea;
+            animation: incorrectShake 0.6s ease;
+        }
+        
+        .activity-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .feedback-correct {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            color: #2e7d32;
+        }
+        
+        .feedback-incorrect {
+            background: #ffeaea;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+        
+        .next-activity-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .check-answer-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .check-answer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .skip-btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            position: relative;
+        }
+        
+        .skip-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
+        }
+        
+        .skip-btn:disabled {
+            background: linear-gradient(135deg, #ccc, #999);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .skip-count {
+            background: #ff5722;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .feedback-skip {
+            background: #fff3e0 !important;
+            border-left: 4px solid #ff9800 !important;
+        }
+        
+        .powerup-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3000;
+            font-size: 3rem;
+            animation: powerupPop 1s ease;
+            pointer-events: none;
+        }
+        
+        .streak-indicator {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            display: none;
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes powerupPop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+        
+        .question-type-indicator {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .debug-highlight {
+            background: #ffeb3b;
+            color: #333;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .leaderboard-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+        
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .leaderboard-item.current-user {
+            background: linear-gradient(135deg, #fff9c4, #f0f2ff);
+            border-left-color: #667eea;
+        }
+        
+        .leaderboard-item.top-3 {
+            border-left-color: #FFD700;
+        }
+        
+        .leaderboard-rank {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+            background: #667eea;
+            color: white;
+        }
+        
+        .leaderboard-rank.gold { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .leaderboard-rank.silver { background: linear-gradient(135deg, #C0C0C0, #A8A8A8); }
+        .leaderboard-rank.bronze { background: linear-gradient(135deg, #CD7F32, #B8860B); }
+        
+        .leaderboard-user {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .leaderboard-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .leaderboard-stats {
+            display: flex;
+            gap: 2rem;
+            margin-left: auto;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .leaderboard-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .toggle-leaderboard {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="operators-container">
+        <!-- Header -->
+        <div class="lesson-header">
+            <h1><i class="fas fa-calculator"></i> Python Operators Mastery</h1>
+            <p>Master all 7 types of Python operators through 350 interactive challenges!</p>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="operators-reference.html" style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 8px; margin: 0.5rem; transition: all 0.3s ease; backdrop-filter: blur(10px);" onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
+                    <i class="fas fa-book"></i> Operators Reference Guide
+                </a>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Overall Progress</h3>
+                <div class="activity-counter">
+                    <span id="completed-activities">0</span> / <span id="total-activities">350</span> Activities
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="overall-progress"></div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Section -->
+        <div class="leaderboard-section" id="leaderboard-section">
+            <div class="leaderboard-header">
+                <h3><i class="fas fa-trophy"></i> Global Leaderboard</h3>
+                <button class="toggle-leaderboard" onclick="toggleLeaderboard()" id="toggle-leaderboard-btn">
+                    <i class="fas fa-eye"></i> Show
+                </button>
+            </div>
+            <div id="leaderboard-content" style="display: none;">
+                <div class="leaderboard-list" id="leaderboard-list">
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="leaderboard-user">
+                            <div class="leaderboard-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>Loading leaderboard...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Powerups Display -->
+        <div class="powerup-display">
+            <h4 style="margin: 0 0 1rem 0; color: #333;">Powerups</h4>
+            <div class="powerups">
+                <div class="powerup streak" title="Streak Fire: 5 correct answers in a row" onmouseover="showPowerupInfo('🔥 Streak Fire: Earn 1 for every 5 correct answers in a row', this)" onmouseout="hidePowerupInfo()">
+                    <i class="fas fa-fire"></i>
+                    <div class="powerup-count" id="streak-count">0</div>
+                </div>
+                <div class="powerup perfect" title="Perfect Star: 10 consecutive correct answers" onmouseover="showPowerupInfo('⭐ Perfect Star: Earn 1 for 10 consecutive correct answers', this)" onmouseout="hidePowerupInfo()">
+                    <i class="fas fa-star"></i>
+                    <div class="powerup-count" id="perfect-count">0</div>
+                </div>
+                <div class="powerup speed" title="Speed Lightning: Answer in under 5 seconds" onmouseover="showPowerupInfo('⚡ Speed Lightning: Earn 1 for answering correctly in under 5 seconds', this)" onmouseout="hidePowerupInfo()">
+                    <i class="fas fa-bolt"></i>
+                    <div class="powerup-count" id="speed-count">0</div>
+                </div>
+                <div class="powerup combo" title="Combo Master: Fast answer + 3+ streak" onmouseover="showPowerupInfo('🏆 Combo Master: Earn 1 for answering fast while on a 3+ streak', this)" onmouseout="hidePowerupInfo()">
+                    <i class="fas fa-trophy"></i>
+                    <div class="powerup-count" id="combo-count">0</div>
+                </div>
+                <div class="powerup skip" title="Question Skip: Skip difficult questions" onmouseover="showPowerupInfo('⏭️ Question Skip: Earn 1 for every 5 correct answers. Use to skip difficult questions!', this)" onmouseout="hidePowerupInfo()">
+                    <i class="fas fa-forward"></i>
+                    <div class="powerup-count" id="skip-powerup-count">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Powerup Info Tooltip -->
+        <div class="powerup-info" id="powerup-info"></div>
+
+        <!-- Streak Indicator -->
+        <div class="streak-indicator" id="streak-indicator">
+            🔥 <span id="current-streak">0</span> Streak!
+        </div>
+
+        <!-- Operator Categories -->
+        <div class="operator-categories">
+            <!-- Arithmetic Operators -->
+            <div class="category-card unlocked" data-category="arithmetic">
+                <div class="category-header">
+                    <div class="category-icon arithmetic">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div>
+                        <h3>Arithmetic Operators</h3>
+                        <p>+, -, *, /, //, %, **</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="arithmetic-completed">0</span>/50 Activities</span>
+                    <span id="arithmetic-status">🔓 Unlocked</span>
+                </div>
+            </div>
+
+            <!-- Assignment Operators -->
+            <div class="category-card unlocked" data-category="assignment">
+                <div class="category-header">
+                    <div class="category-icon assignment">
+                        <i class="fas fa-equals"></i>
+                    </div>
+                    <div>
+                        <h3>Assignment Operators</h3>
+                        <p>=, +=, -=, *=, /=, //=, %=, **=</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="assignment-completed">0</span>/50 Activities</span>
+                    <span id="assignment-status">� Unlocked</span>
+                </div>
+            </div>
+
+            <!-- Comparison Operators -->
+            <div class="category-card unlocked" data-category="comparison">
+                <div class="category-header">
+                    <div class="category-icon comparison">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div>
+                        <h3>Comparison Operators</h3>
+                        <p>==, !=, <, >, <=, >=</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="comparison-completed">0</span>/50 Activities</span>
+                    <span id="comparison-status">� Unlocked</span>
+                </div>
+            </div>
+
+            <!-- Logical Operators -->
+            <div class="category-card unlocked" data-category="logical">
+                <div class="category-header">
+                    <div class="category-icon logical">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div>
+                        <h3>Logical Operators</h3>
+                        <p>and, or, not</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="logical-completed">0</span>/50 Activities</span>
+                    <span id="logical-status">� Unlocked</span>
+                </div>
+            </div>
+
+            <!-- Identity Operators -->
+            <div class="category-card unlocked" data-category="identity">
+                <div class="category-header">
+                    <div class="category-icon identity">
+                        <i class="fas fa-fingerprint"></i>
+                    </div>
+                    <div>
+                        <h3>Identity Operators</h3>
+                        <p>is, is not</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="identity-completed">0</span>/50 Activities</span>
+                    <span id="identity-status">� Unlocked</span>
+                </div>
+            </div>
+
+            <!-- Membership Operators -->
+            <div class="category-card unlocked" data-category="membership">
+                <div class="category-header">
+                    <div class="category-icon membership">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h3>Membership Operators</h3>
+                        <p>in, not in</p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="membership-completed">0</span>/50 Activities</span>
+                    <span id="membership-status">� Unlocked</span>
+                </div>
+            </div>
+
+            <!-- Bitwise Operators -->
+            <div class="category-card unlocked" data-category="bitwise">
+                <div class="category-header">
+                    <div class="category-icon bitwise">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <div>
+                        <h3>Bitwise Operators</h3>
+                        <p>&, |, ^, ~, <<, >></p>
+                    </div>
+                </div>
+                <div class="category-progress">
+                    <span><span id="bitwise-completed">0</span>/50 Activities</span>
+                    <span id="bitwise-status">� Unlocked</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="setAsMainPage()" class="btn-secondary" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;" id="main-page-btn">
+                <i class="fas fa-star"></i> Make This My Main Page
+            </button>
+        </div>
+    </div>
+
+    <!-- Activity Modal -->
+    <div class="activity-modal" id="activity-modal">
+        <div class="activity-content">
+            <div class="activity-header">
+                <div class="activity-counter" id="activity-progress">
+                    Activity <span id="current-activity">1</span> of <span id="category-total">50</span>
+                </div>
+                <button class="close-activity" onclick="closeActivity()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="activity-question-container">
+                <!-- Question content will be loaded here -->
+            </div>
+            
+            <div class="activity-feedback" id="activity-feedback">
+                <!-- Feedback will be shown here -->
+            </div>
+            
+            <button class="next-activity-btn" id="next-activity-btn" onclick="nextActivity()">
+                Next Activity <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Skip Confirmation Modal -->
+    <div class="skip-modal" id="skip-modal">
+        <div class="skip-modal-content">
+            <div class="skip-modal-icon">⏭️</div>
+            <div class="skip-modal-title">Skip This Activity?</div>
+            <div class="skip-modal-text">
+                This will use <strong>1 skip power-up</strong> from your collection.<br>
+                You currently have <span id="skip-count-display">1</span> skip(s) remaining.
+            </div>
+            <div class="skip-modal-buttons">
+                <button class="skip-modal-btn cancel" onclick="closeSkipModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="skip-modal-btn confirm" onclick="confirmSkip()">
+                    <i class="fas fa-forward"></i> Skip Activity
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Firebase and App.js -->
+    <script type="module" src="app.js"></script>
+    <script type="module">
+        // Import Firebase modules and config
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { firebaseConfig } from './firebase-config.js';
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let currentUser;
+        let currentCategory = null;
+        let currentActivityIndex = 0;
+        let categoryProgress = {
+            arithmetic: { completed: 0, unlocked: true },
+            assignment: { completed: 0, unlocked: true },
+            comparison: { completed: 0, unlocked: true },
+            logical: { completed: 0, unlocked: true },
+            identity: { completed: 0, unlocked: true },
+            membership: { completed: 0, unlocked: true },
+            bitwise: { completed: 0, unlocked: true }
+        };
+        // Initialize powerups - called when page loads
+        function initializePowerups() {
+            console.log('Initializing powerups...');
+            
+            // Clear potentially corrupted data for debugging
+            if (window.location.search.includes('reset=true')) {
+                console.log('Reset parameter detected, clearing saved data...');
+                localStorage.removeItem('operatorsMasteryPowerups');
+                localStorage.removeItem('operatorsMasteryProgress');
+            }
+            
+            powerups = {
+                streak: 0,
+                perfect: 0,
+                speed: 0,
+                combo: 0,
+                skips: 1
+            };
+            
+            console.log('Initial powerups set:', powerups);
+            updatePowerupDisplay();
+        }
+
+        let powerups = {
+            streak: 0,
+            perfect: 0,
+            speed: 0,
+            combo: 0,
+            skips: 1  // Give users 1 starting skip for testing
+        };
+        let currentStreak = 0;
+        let consecutiveCorrect = 0;
+        let activityStartTime = 0;
+        let isFirstAttempt = true;
+
+        // Format markdown text for HTML display
+        function formatMarkdown(text) {
+            if (!text) return text;
+            
+            return text
+                // Bold text: **text** or __text__
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/__(.*?)__/g, '<strong>$1</strong>')
+                // Italic text: *text* or _text_
+                .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>')
+                .replace(/(?<!_)_([^_]+)_(?!_)/g, '<em>$1</em>')
+                // Inline code: `code`
+                .replace(/`([^`]+)`/g, '<code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #1e293b;">$1</code>')
+                // Line breaks
+                .replace(/\n/g, '<br>');
+        }
+
+        // Check if current user is a teacher
+        async function checkTeacherStatus() {
+            try {
+                if (!auth || !currentUser) return;
+                
+                // Check by email first (immediate access)
+                if (currentUser.email === 'marco.morais@imaginenorthport.com') {
+                    document.getElementById('teacher-nav').style.display = 'block';
+                    return;
+                }
+                
+                // Also check in leaderboard for existing teacher status
+                const { getFirestore, collection, query, getDocs } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+                const db = getFirestore();
+                
+                const leaderboardRef = collection(db, 'leaderboard');
+                const q = query(leaderboardRef);
+                const snapshot = await getDocs(q);
+                
+                let isTeacher = false;
+                snapshot.forEach((doc) => {
+                    if (doc.data().userId === currentUser.uid && doc.data().teacher === true) {
+                        isTeacher = true;
+                    }
+                });
+
+                if (isTeacher) {
+                    document.getElementById('teacher-nav').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error checking teacher status:', error);
+            }
+        }
+
+        // Initialize Firebase
+        async function initFirebase() {
+            return new Promise((resolve, reject) => {
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        currentUser = user;
+                        console.log('User authenticated:', user.email);
+                        await loadOperatorsProgress();
+                        await checkTeacherStatus();
+                        resolve(user);
+                    } else {
+                        console.log('No user authenticated, working in offline mode');
+                        // Load from localStorage instead of redirecting
+                        loadFromLocalStorage();
+                        resolve(null);
+                    }
+                });
+            });
+        }
+
+        // Load operators mastery progress
+        async function loadOperatorsProgress() {
+            try {
+                if (window.ProgressTracker && currentUser) {
+                    const progress = await window.ProgressTracker.getOperatorsMasteryProgress(currentUser.uid);
+                    
+                    // Update local state with proper defaults
+                    categoryProgress = progress.categories || categoryProgress;
+                    const savedPowerups = progress.powerups || {};
+                    powerups = {
+                        streak: 0,
+                        perfect: 0,
+                        speed: 0,
+                        combo: 0,
+                        skips: 1,  // Default to 1 skip
+                        ...savedPowerups
+                    };
+                    // Don't reset skips to 1 if user has 0 - they used them legitimately
+                    
+                    console.log('Operators progress loaded:', progress);
+                    updateProgress();
+                    updatePowerupDisplay();
+                    unlockCategories();
+                } else {
+                    console.log('ProgressTracker not available, using local storage fallback');
+                    loadFromLocalStorage();
+                }
+            } catch (error) {
+                console.error('Error loading operators progress:', error);
+                loadFromLocalStorage();
+            }
+        }
+
+        // Fallback to localStorage
+        function loadFromLocalStorage() {
+            const savedProgress = localStorage.getItem('operatorsMasteryProgress');
+            const savedPowerups = localStorage.getItem('operatorsMasteryPowerups');
+            
+            if (savedProgress) {
+                categoryProgress = JSON.parse(savedProgress);
+            }
+            if (savedPowerups) {
+                const parsedPowerups = JSON.parse(savedPowerups);
+                powerups = {
+                    streak: 0,
+                    perfect: 0,
+                    speed: 0,
+                    combo: 0,
+                    skips: 1,  // Default to 1 skip if not specified
+                    ...parsedPowerups
+                };
+                // Don't reset skips to 1 if user has 0 - they used them legitimately
+            }
+            
+            updateProgress();
+            updatePowerupDisplay();
+            unlockCategories();
+        }
+
+        // Save operators mastery progress
+        async function saveOperatorsProgress() {
+            try {
+                // Save to Firebase if available
+                if (window.ProgressTracker && currentUser) {
+                    await window.ProgressTracker.saveOperatorsMasteryProgress(
+                        currentUser.uid,
+                        categoryProgress,
+                        powerups
+                    );
+                    console.log('Operators progress saved to Firebase');
+                }
+            } catch (error) {
+                console.error('Error saving to Firebase:', error);
+            }
+            
+            // Always save to localStorage as backup
+            localStorage.setItem('operatorsMasteryProgress', JSON.stringify(categoryProgress));
+            localStorage.setItem('operatorsMasteryPowerups', JSON.stringify(powerups));
+            console.log('Operators progress saved to localStorage');
+        }
+
+        // Enhanced activity database - loaded from JSON
+        let activities = {};
+
+        // Load activities from JSON file
+        async function loadActivities() {
+            try {
+                const response = await fetch('./activities.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                activities = await response.json();
+                console.log('Activities loaded from JSON:', Object.keys(activities));
+            } catch (error) {
+                console.error('Error loading activities:', error);
+                // Fallback to basic activities if JSON fails
+                initializeFallbackActivities();
+            }
+        }
+
+        // Fallback activities in case JSON loading fails
+        function initializeFallbackActivities() {
+            activities = {
+                arithmetic: [{ type: 'challenge', question: "Basic Addition", prompt: "Calculate 15 + 27", expectedOutput: "42\n", hint: "Use + operator" }],
+                assignment: [{ type: 'challenge', question: "Basic Assignment", prompt: "Create variable score = 100", expectedOutput: "100\n", hint: "Use = operator" }],
+                comparison: [{ type: 'challenge', question: "Age Check", prompt: "Check if 18 >= 16", expectedOutput: "True\n", hint: "Use >= operator" }],
+                logical: [{ type: 'challenge', question: "Access Control", prompt: "Check age AND license", expectedOutput: "True\n", hint: "Use 'and' operator" }],
+                identity: [{ type: 'challenge', question: "Object Identity", prompt: "Check if a is b", expectedOutput: "True\n", hint: "Use 'is' operator" }],
+                membership: [{ type: 'challenge', question: "String Search", prompt: "Check if 'p' in 'Python'", expectedOutput: "True\n", hint: "Use 'in' operator" }],
+                bitwise: [{ type: 'challenge', question: "Bitwise XOR", prompt: "Calculate 6 ^ 3", expectedOutput: "5\n", hint: "Use ^ operator" }]
+            };
+            console.log('Fallback activities initialized');
+        }
+
+        // Generate remaining activities programmatically
+        function generateActivities() {
+            // Generate more arithmetic activities to reach 50 total
+            const arithmeticTypes = [
+                { op: '+', name: 'addition', examples: [[12, 8], [25, 15], [7, 13], [9, 6], [14, 11]] },
+                { op: '-', name: 'subtraction', examples: [[20, 5], [30, 12], [15, 8], [25, 7], [18, 3]] },
+                { op: '*', name: 'multiplication', examples: [[6, 7], [8, 4], [9, 3], [5, 6], [7, 8]] },
+                { op: '/', name: 'division', examples: [[24, 6], [35, 5], [18, 3], [28, 4], [45, 9]] },
+                { op: '//', name: 'floor division', examples: [[22, 7], [17, 4], [29, 8], [19, 5], [33, 6]] },
+                { op: '%', name: 'modulus', examples: [[17, 5], [23, 6], [19, 4], [25, 8], [31, 7]] },
+                { op: '**', name: 'exponentiation', examples: [[2, 4], [3, 3], [5, 2], [4, 2], [2, 5]] }
+            ];
+
+            // Add more arithmetic activities to reach 50 total
+            while (activities.arithmetic.length < 50) {
+                const typeInfo = arithmeticTypes[activities.arithmetic.length % arithmeticTypes.length];
+                const exampleIndex = Math.floor(activities.arithmetic.length / arithmeticTypes.length) % typeInfo.examples.length;
+                const [a, b] = typeInfo.examples[exampleIndex];
+                
+                let result;
+                switch(typeInfo.op) {
+                    case '+': result = a + b; break;
+                    case '-': result = a - b; break;
+                    case '*': result = a * b; break;
+                    case '/': result = (a / b).toFixed(1); break;
+                    case '//': result = Math.floor(a / b); break;
+                    case '%': result = a % b; break;
+                    case '**': result = Math.pow(a, b); break;
+                }
+
+                const questionTypes = ['predict-output', 'code-completion', 'debug'];
+                const qType = questionTypes[activities.arithmetic.length % questionTypes.length];
+
+                if (qType === 'predict-output') {
+                    activities.arithmetic.push({
+                        type: 'predict-output',
+                        question: "What will this code print?",
+                        code: `x = ${a}\ny = ${b}\nresult = x ${typeInfo.op} y\nprint(result)`,
+                        correct: String(result),
+                        explanation: `${a} ${typeInfo.op} ${b} = ${result}. The ${typeInfo.op} operator performs ${typeInfo.name}.`
+                    });
+                } else if (qType === 'code-completion') {
+                    activities.arithmetic.push({
+                        type: 'code-completion',
+                        question: `Complete the code to perform ${typeInfo.name}:`,
+                        code: `result = ${a} __ ${b}\nprint(result)`,
+                        correct: typeInfo.op,
+                        explanation: `The ${typeInfo.op} operator performs ${typeInfo.name}. ${a} ${typeInfo.op} ${b} = ${result}.`
+                    });
+                } else {
+                    // Debug type
+                    activities.arithmetic.push({
+                        type: 'debug',
+                        question: "Fix the operator error:",
+                        code: `result = ${a} ${typeInfo.op === '+' ? 'plus' : typeInfo.op === '-' ? 'minus' : typeInfo.op === '*' ? 'times' : typeInfo.op === '/' ? 'divided by' : typeInfo.op} ${b}\nprint(result)`,
+                        correct: `${a} ${typeInfo.op} ${b}`,
+                        explanation: `Use the ${typeInfo.op} operator for ${typeInfo.name}, not words.`
+                    });
+                }
+            }
+
+            // Generate assignment activities
+            if (!activities.assignment || activities.assignment.length < 50) {
+                generateAssignmentActivities();
+            }
+            if (!activities.comparison) {
+                generateComparisonActivities();
+            }
+            if (!activities.logical) {
+                generateLogicalActivities();
+            }
+            if (!activities.identity) {
+                generateIdentityActivities();
+            }
+            if (!activities.membership) {
+                generateMembershipActivities();
+            }
+            if (!activities.bitwise) {
+                generateBitwiseActivities();
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateAssignmentActivities() {
+            // Assignment activities are already defined with challenges above
+            // No additional generation needed
+        }
+
+        // Generate other categories (simplified for brevity)
+        function generateComparisonActivities() {
+            activities.comparison = [
+                {
+                    type: 'challenge',
+                    question: "Temperature Checker",
+                    instruction: "Write a function that takes a temperature and returns 'Hot' if >= 80, 'Warm' if >= 60, 'Cool' if >= 40, otherwise 'Cold'.",
+                    code: `def check_temperature(temp):
+    # Your code here
+    pass
+
+# Test
+print(check_temperature(85))
+print(check_temperature(65))
+print(check_temperature(45))
+print(check_temperature(25))`,
+                    expected: "Hot\nWarm\nCool\nCold",
+                    hint: "Use if-elif-else with comparison operators: >=, <"
+                },
+                {
+                    type: 'challenge',
+                    question: "Age Category",
+                    instruction: "Create a function that categorizes age: 'Child' (< 13), 'Teen' (13-17), 'Adult' (18-64), 'Senior' (>= 65).",
+                    code: `def categorize_age(age):
+    # Your code here
+    pass
+
+# Test
+print(categorize_age(10))
+print(categorize_age(15))
+print(categorize_age(25))
+print(categorize_age(70))`,
+                    expected: "Child\nTeen\nAdult\nSenior",
+                    hint: "Use comparison operators with if-elif-else statements"
+                },
+                {
+                    type: 'challenge',
+                    question: "Grade Calculator",
+                    instruction: "Write a function that returns letter grade: A (>=90), B (>=80), C (>=70), D (>=60), F (<60).",
+                    code: `def get_letter_grade(score):
+    # Your code here
+    pass
+
+# Test
+print(get_letter_grade(95))
+print(get_letter_grade(85))
+print(get_letter_grade(75))
+print(get_letter_grade(55))`,
+                    expected: "A\nB\nC\nF",
+                    hint: "Use >= comparisons in descending order"
+                },
+                {
+                    type: 'code-completion',
+                    question: "Complete the comparison:",
+                    code: `x = 10\ny = 20\nresult = x __ y\nprint(result)  # Should print True`,
+                    correct: "<",
+                    explanation: "< operator checks if left value is less than right value"
+                },
+                {
+                    type: 'predict-output',
+                    question: "What will this code output?",
+                    code: `a = 15\nb = 10\nprint(a > b)\nprint(a == b)\nprint(a <= b)`,
+                    correct: "True\nFalse\nFalse",
+                    explanation: "15 > 10 is True, 15 == 10 is False, 15 <= 10 is False"
+                },
+                {
+                    type: 'debug',
+                    question: "Fix the comparison error:",
+                    code: `age = 18\nif age = 18:\n    print("You can vote!")`,
+                    correct: "age == 18",
+                    explanation: "Use == for comparison, = is for assignment"
+                }
+            ];
+        }
+
+        function generateLogicalActivities() {
+            activities.logical = [
+                {
+                    type: 'challenge',
+                    question: "Login Validator",
+                    instruction: "Create a function that validates login: username length >= 3 AND password length >= 8.",
+                    code: `def validate_login(username, password):
+    # Your code here
+    pass
+
+# Test
+print(validate_login("user", "password123"))
+print(validate_login("u", "password123"))
+print(validate_login("user", "pass"))
+print(validate_login("admin", "secret1234"))`,
+                    expected: "True\nFalse\nFalse\nTrue",
+                    hint: "Use 'and' operator with len() function"
+                },
+                {
+                    type: 'challenge',
+                    question: "Weekend Checker",
+                    instruction: "Write a function that returns True if it's Saturday OR Sunday.",
+                    code: `def is_weekend(day):
+    # Your code here
+    pass
+
+# Test
+print(is_weekend("Saturday"))
+print(is_weekend("Monday"))
+print(is_weekend("Sunday"))
+print(is_weekend("Friday"))`,
+                    expected: "True\nFalse\nTrue\nFalse",
+                    hint: "Use 'or' operator to check for both weekend days"
+                },
+                {
+                    type: 'challenge',
+                    question: "Access Control",
+                    instruction: "Create a function: grant access if user is admin OR (is_member AND has_permission).",
+                    code: `def check_access(is_admin, is_member, has_permission):
+    # Your code here
+    pass
+
+# Test
+print(check_access(True, False, False))
+print(check_access(False, True, True))
+print(check_access(False, True, False))
+print(check_access(False, False, True))`,
+                    expected: "True\nTrue\nFalse\nFalse",
+                    hint: "Use 'or' and 'and' operators with parentheses for grouping"
+                },
+                {
+                    type: 'code-completion',
+                    question: "Complete the logical operation:",
+                    code: `is_adult = True\nhas_license = False\ncan_drive = is_adult __ has_license\nprint(can_drive)`,
+                    correct: "and",
+                    explanation: "'and' requires both conditions to be True"
+                },
+                {
+                    type: 'predict-output',
+                    question: "What will this code output?",
+                    code: `x = True\ny = False\nprint(x and y)\nprint(x or y)\nprint(not x)`,
+                    correct: "False\nTrue\nFalse",
+                    explanation: "True and False = False, True or False = True, not True = False"
+                },
+                {
+                    type: 'debug',
+                    question: "Fix the logical operator error:",
+                    code: `age = 25\nif age >= 18 & age <= 65:\n    print("Working age")`,
+                    correct: "age >= 18 and age <= 65",
+                    explanation: "Use 'and' for logical operations, & is for bitwise operations"
+                }
+            ];
+        }
+
+        function generateIdentityActivities() {
+            activities.identity = [
+                {
+                    type: 'challenge',
+                    question: "Object Identity Checker",
+                    instruction: "Create a function that checks if two variables reference the same object using 'is'.",
+                    code: `def check_identity(a, b):
+    # Your code here
+    pass
+
+# Test
+x = [1, 2, 3]
+y = x
+z = [1, 2, 3]
+print(check_identity(x, y))
+print(check_identity(x, z))`,
+                    expected: "True\nFalse",
+                    hint: "Use 'is' operator to check object identity, not equality"
+                },
+                {
+                    type: 'challenge',
+                    question: "None Checker",
+                    instruction: "Write a function that safely checks if a value is None using identity comparison.",
+                    code: `def is_none_safe(value):
+    # Your code here
+    pass
+
+# Test
+print(is_none_safe(None))
+print(is_none_safe(0))
+print(is_none_safe(""))
+print(is_none_safe(False))`,
+                    expected: "True\nFalse\nFalse\nFalse",
+                    hint: "Use 'is None' to check for None values"
+                },
+                {
+                    type: 'challenge',
+                    question: "Singleton Pattern",
+                    instruction: "Create a function that checks if two string literals are the same object (identity).",
+                    code: `def check_string_identity(s1, s2):
+    # Your code here
+    pass
+
+# Test
+a = "hello"
+b = "hello"
+c = "hel" + "lo"
+print(check_string_identity(a, b))
+print(check_string_identity(a, c))`,
+                    expected: "True\nFalse",
+                    hint: "Use 'is' operator - string literals may be interned by Python"
+                },
+                {
+                    type: 'code-completion',
+                    question: "Complete the identity check:",
+                    code: `x = None\nif x __ None:\n    print("x is None")\nelse:\n    print("x is not None")`,
+                    correct: "is",
+                    explanation: "Use 'is' to check identity with None"
+                },
+                {
+                    type: 'predict-output',
+                    question: "What will this code output?",
+                    code: `a = []\nb = []\nc = a\nprint(a is b)\nprint(a is c)\nprint(a == b)`,
+                    correct: "False\nTrue\nTrue",
+                    explanation: "a and b are different objects, a and c reference same object, a and b have equal content"
+                },
+                {
+                    type: 'debug',
+                    question: "Fix the identity comparison error:",
+                    code: `value = None\nif value == None:\n    print("Value is None")`,
+                    correct: "value is None",
+                    explanation: "Use 'is None' instead of '== None' for None comparison"
+                }
+            ];
+        }
+
+        function generateMembershipActivities() {
+            activities.membership = [
+                {
+                    type: 'challenge',
+                    question: "Word Filter",
+                    instruction: "Create a function that checks if any bad words are in a text string.",
+                    code: `def contains_bad_words(text, bad_words):
+    # Your code here
+    pass
+
+# Test
+bad_list = ["spam", "hate", "virus"]
+print(contains_bad_words("This is spam email", bad_list))
+print(contains_bad_words("Hello world", bad_list))
+print(contains_bad_words("I hate this", bad_list))`,
+                    expected: "True\nFalse\nTrue",
+                    hint: "Use 'in' operator to check if any bad word is in the text"
+                },
+                {
+                    type: 'challenge',
+                    question: "Valid Email Domains",
+                    instruction: "Write a function that checks if an email domain is in the allowed list.",
+                    code: `def is_valid_domain(email, allowed_domains):
+    # Your code here
+    pass
+
+# Test
+domains = ["gmail.com", "yahoo.com", "outlook.com"]
+print(is_valid_domain("user@gmail.com", domains))
+print(is_valid_domain("user@spam.com", domains))
+print(is_valid_domain("admin@yahoo.com", domains))`,
+                    expected: "True\nFalse\nTrue",
+                    hint: "Extract domain after '@' and check if it's in allowed_domains"
+                },
+                {
+                    type: 'challenge',
+                    question: "Vowel Counter",
+                    instruction: "Create a function that counts vowels in a string using membership testing.",
+                    code: `def count_vowels(text):
+    # Your code here
+    pass
+
+# Test
+print(count_vowels("hello"))
+print(count_vowels("python"))
+print(count_vowels("xyz"))`,
+                    expected: "2\n1\n0",
+                    hint: "Use 'in' to check if each character is in 'aeiouAEIOU'"
+                },
+                {
+                    type: 'code-completion',
+                    question: "Complete the membership test:",
+                    code: `fruits = ["apple", "banana", "orange"]\nif "apple" __ fruits:\n    print("Found apple!")`,
+                    correct: "in",
+                    explanation: "'in' operator tests membership in a collection"
+                },
+                {
+                    type: 'predict-output',
+                    question: "What will this code output?",
+                    code: `numbers = [1, 2, 3, 4, 5]\nprint(3 in numbers)\nprint(6 in numbers)\nprint(2 not in numbers)`,
+                    correct: "True\nFalse\nFalse",
+                    explanation: "3 is in the list, 6 is not in the list, 2 is in the list so 'not in' is False"
+                },
+                {
+                    type: 'debug',
+                    question: "Fix the membership test error:",
+                    code: `text = "hello world"\nif "world" is text:\n    print("Found world")`,
+                    correct: '"world" in text',
+                    explanation: "Use 'in' for membership testing, 'is' is for identity comparison"
+                }
+            ];
+        }
+
+        function generateBitwiseActivities() {
+            activities.bitwise = [
+                {
+                    type: 'challenge',
+                    question: "Permission System",
+                    instruction: "Create a function using bitwise OR to combine permissions: READ=1, WRITE=2, EXECUTE=4.",
+                    code: `def combine_permissions(permissions_list):
+    # Your code here
+    pass
+
+# Test
+READ = 1
+WRITE = 2
+EXECUTE = 4
+print(combine_permissions([READ, WRITE]))
+print(combine_permissions([READ, EXECUTE]))
+print(combine_permissions([READ, WRITE, EXECUTE]))`,
+                    expected: "3\n5\n7",
+                    hint: "Use bitwise OR (|) to combine permission bits"
+                },
+                {
+                    type: 'challenge',
+                    question: "Binary Flag Checker",
+                    instruction: "Write a function that checks if a specific bit flag is set using bitwise AND.",
+                    code: `def has_permission(user_perms, check_perm):
+    # Your code here
+    pass
+
+# Test
+READ = 1
+WRITE = 2
+EXECUTE = 4
+user = 5  # READ + EXECUTE
+print(has_permission(user, READ))
+print(has_permission(user, WRITE))
+print(has_permission(user, EXECUTE))`,
+                    expected: "True\nFalse\nTrue",
+                    hint: "Use bitwise AND (&) and check if result equals the permission"
+                },
+                {
+                    type: 'challenge',
+                    question: "Bit Toggle",
+                    instruction: "Create a function that toggles specific bits using XOR operation.",
+                    code: `def toggle_bit(number, bit_position):
+    # Your code here
+    pass
+
+# Test
+print(toggle_bit(5, 1))  # 5 = 101, toggle bit 1
+print(toggle_bit(5, 2))  # 5 = 101, toggle bit 2
+print(toggle_bit(8, 3))  # 8 = 1000, toggle bit 3`,
+                    expected: "7\n1\n0",
+                    hint: "Use XOR (^) with (1 << bit_position) to toggle specific bit"
+                },
+                {
+                    type: 'code-completion',
+                    question: "Complete the bitwise operation:",
+                    code: `a = 5  # 101 in binary\nb = 3  # 011 in binary\nresult = a __ b\nprint(result)  # Should print 1`,
+                    correct: "&",
+                    explanation: "& performs bitwise AND: 101 & 011 = 001 = 1"
+                },
+                {
+                    type: 'predict-output',
+                    question: "What will this code output?",
+                    code: `x = 12  # 1100\ny = 10  # 1010\nprint(x & y)\nprint(x | y)\nprint(x ^ y)`,
+                    correct: "8\n14\n6",
+                    explanation: "AND: 1100 & 1010 = 1000 (8), OR: 1100 | 1010 = 1110 (14), XOR: 1100 ^ 1010 = 0110 (6)"
+                },
+                {
+                    type: 'debug',
+                    question: "Fix the bitwise shift error:",
+                    code: `number = 8\nresult = number << 2.5\nprint(result)`,
+                    correct: "number << 2",
+                    explanation: "Bitwise shift requires integer operands, not floating point"
+                }
+            ];
+        }
+
+        // Powerup tooltip functions
+        window.showPowerupInfo = function(text, element) {
+            const tooltip = document.getElementById('powerup-info');
+            tooltip.textContent = text;
+            
+            // Position tooltip below the powerup element
+            if (element) {
+                const rect = element.getBoundingClientRect();
+                tooltip.style.position = 'fixed';
+                tooltip.style.top = (rect.bottom + 10) + 'px';
+                tooltip.style.right = '20px';
+                tooltip.style.left = 'auto';
+            }
+            
+            tooltip.style.display = 'block';
+        };
+
+        window.hidePowerupInfo = function() {
+            document.getElementById('powerup-info').style.display = 'none';
+        };
+
+        // Confetti celebration function
+        function triggerConfetti(buttonElement = null) {
+            // Get button position if provided, otherwise use center
+            let origin = { y: 0.7, x: 0.5 };
+            
+            if (buttonElement) {
+                const rect = buttonElement.getBoundingClientRect();
+                const x = (rect.left + rect.width / 2) / window.innerWidth;
+                const y = (rect.top + rect.height / 2) / window.innerHeight;
+                origin = { x, y };
+            }
+            
+            // Create multiple confetti bursts for more celebration
+            const count = 200;
+            const defaults = { 
+                origin,
+                zIndex: 10000  // Ensure confetti appears above modals
+            };
+
+            function fire(particleRatio, opts) {
+                confetti({
+                    ...defaults,
+                    ...opts,
+                    particleCount: Math.floor(count * particleRatio)
+                });
+            }
+
+            // Multiple bursts with different configurations
+            fire(0.25, {
+                spread: 26,
+                startVelocity: 55,
+            });
+            fire(0.2, {
+                spread: 60,
+            });
+            fire(0.35, {
+                spread: 100,
+                decay: 0.91,
+                scalar: 0.8
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 25,
+                decay: 0.92,
+                scalar: 1.2
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 45,
+            });
+        }
+
+        // Skip activity function
+        window.skipActivity = function() {
+            if (powerups.skips <= 0) {
+                alert("You don't have any skip power-ups! Complete more activities to earn skips.");
+                return;
+            }
+
+            // Show custom skip modal instead of confirm dialog
+            showSkipModal();
+        };
+
+        // Show skip confirmation modal
+        window.showSkipModal = function() {
+            document.getElementById('skip-count-display').textContent = powerups.skips;
+            document.getElementById('skip-modal').style.display = 'flex';
+        }
+
+        // Close skip modal
+        window.closeSkipModal = function() {
+            document.getElementById('skip-modal').style.display = 'none';
+        }
+
+        // Confirm skip action
+        window.confirmSkip = function() {
+            console.log('confirmSkip called, current skips:', powerups.skips);
+            
+            try {
+                closeSkipModal();
+                console.log('Modal closed successfully');
+                
+                powerups.skips--;
+                console.log('After decrement, skips:', powerups.skips);
+                
+                saveOperatorsProgress();
+                console.log('Progress saved');
+                
+                updatePowerupDisplay();
+                console.log('Powerup display updated');
+                
+                // Show skip feedback
+                const feedback = document.getElementById('activity-feedback');
+                if (feedback) {
+                    feedback.style.display = 'block';
+                    feedback.className = 'activity-feedback feedback-skip';
+                    feedback.innerHTML = `
+                        <div style="font-weight: 600; margin-bottom: 0.5rem; color: #ff9800;">
+                            ⏭️ Activity skipped! 
+                        </div>
+                        <div>You used a skip power-up. You have ${powerups.skips} skips remaining.</div>
+                    `;
+                    console.log('Feedback displayed');
+                } else {
+                    console.error('activity-feedback element not found');
+                }
+                
+                // Hide buttons
+                const buttons = document.querySelectorAll('.check-answer-btn, .skip-btn');
+                buttons.forEach(btn => btn.style.display = 'none');
+                console.log('Buttons hidden, count:', buttons.length);
+                
+                // Show next button
+                const nextBtn = document.getElementById('next-activity-btn');
+                if (nextBtn) {
+                    nextBtn.style.display = 'block';
+                    console.log('Next button shown');
+                } else {
+                    console.error('next-activity-btn element not found');
+                }
+                
+                // Don't count as completed, just move to next
+                console.log('About to call nextActivity in 1.5 seconds');
+                setTimeout(() => {
+                    console.log('Calling nextActivity now');
+                    if (typeof nextActivity === 'function') {
+                        nextActivity();
+                    } else {
+                        console.error('nextActivity function not found');
+                    }
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error in confirmSkip:', error);
+            }
+        }
+
+        // Update skip button display
+        function updateSkipButton() {
+            const skipBtn = document.getElementById('skip-btn');
+            const skipCount = document.getElementById('skip-count');
+            if (skipBtn && skipCount) {
+                // Only reset if truly invalid (not just 0)
+                if (isNaN(powerups.skips) || powerups.skips === undefined || powerups.skips === null) {
+                    console.log('updateSkipButton: Invalid skip count detected, resetting to 0');
+                    powerups.skips = 0;
+                }
+                console.log('updateSkipButton: Setting skip count to', powerups.skips);
+                skipCount.textContent = powerups.skips;
+                if (powerups.skips <= 0) {
+                    skipBtn.disabled = true;
+                    skipBtn.style.opacity = '0.5';
+                } else {
+                    skipBtn.disabled = false;
+                    skipBtn.style.opacity = '1';
+                }
+            }
+        }
+
+        // Event handlers
+        window.openCategory = function(category) {
+            console.log('Opening category:', category);
+            console.log('Activities for category:', activities[category]);
+            
+            // All categories are now unlocked, no need to check for locks
+            currentCategory = category;
+            currentActivityIndex = categoryProgress[category]?.completed || 0;
+            
+            console.log('Current activity index:', currentActivityIndex);
+            console.log('Total activities in category:', activities[category]?.length);
+            
+            showActivity();
+        };
+
+        window.closeActivity = function() {
+            document.getElementById('activity-modal').style.display = 'none';
+        };
+
+        window.nextActivity = function() {
+            currentActivityIndex++;
+            
+            // Update category progress with new structure
+            if (!categoryProgress[currentCategory]) {
+                categoryProgress[currentCategory] = { completed: 0, unlocked: true };
+            }
+            categoryProgress[currentCategory].completed = currentActivityIndex;
+            
+            // Save progress
+            saveOperatorsProgress();
+            
+            // Check if category is completed
+            if (currentActivityIndex >= 50) {
+                unlockNextCategory();
+                alert(`🎉 Congratulations! You've completed ${currentCategory} operators!`);
+                closeActivity();
+                updateProgress();
+                return;
+            }
+            
+            showActivity();
+            updateProgress();
+        };
+
+        function showActivity() {
+            console.log('showActivity called, currentCategory:', currentCategory, 'currentActivityIndex:', currentActivityIndex);
+            const activity = activities[currentCategory][currentActivityIndex];
+            console.log('Activity found:', activity);
+            if (!activity) {
+                console.log('No activity found, returning');
+                return;
+            }
+            
+            activityStartTime = Date.now();
+            isFirstAttempt = true;
+            
+            document.getElementById('current-activity').textContent = currentActivityIndex + 1;
+            
+            // Show activity based on type
+            const container = document.getElementById('activity-question-container');
+            container.innerHTML = renderActivity(activity);
+            
+            document.getElementById('activity-feedback').style.display = 'none';
+            document.getElementById('next-activity-btn').style.display = 'none';
+            document.getElementById('activity-modal').style.display = 'flex';
+            
+            // Update skip button after modal is shown
+            setTimeout(() => {
+                updateSkipButton();
+            }, 100);
+        }
+
+        function renderActivity(activity) {
+            // Create compact title badges - type and question name side by side
+            let html = `<div class="title-badges" style="display: flex; gap: 0.5rem; margin-bottom: 1rem; align-items: center;">`;
+            html += `<div class="question-type-badge" style="background: #6366f1; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">${activity.type.replace('-', ' ')}</div>`;
+            html += `<div class="question-name-badge" style="background: #e5e7eb; color: #374151; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">${activity.question}</div>`;
+            html += `</div>`;
+            
+            // Add instruction for challenges with proper formatting
+            if (activity.instruction) {
+                html += `<div class="instruction" style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-left: 4px solid #4299e1; border-radius: 4px;">
+                    <strong>📝 Instructions:</strong><br>
+                    ${formatMarkdown(activity.instruction)}
+                </div>`;
+            }
+            
+            if (activity.code && activity.type !== 'challenge' && activity.type !== 'debug') {
+                // Format code with proper line breaks for HTML display
+                const formattedCode = activity.code
+                    .replace(/\\n/g, '\n')  // Handle escaped newlines
+                    .replace(/\n/g, '<br>') // Convert newlines to HTML breaks
+                    .trim();
+                html += `<div class="code-area">${formattedCode}</div>`;
+            }
+
+            // Render based on activity type
+            switch (activity.type) {
+                case 'code-completion':
+                    // Show the prompt/instruction for code completion
+                    if (activity.prompt) {
+                        html += `<div class="completion-prompt" style="margin-bottom: 1.5rem; font-size: 1.1rem; line-height: 1.5; padding: 1rem; background: #f8f9fa; border-left: 4px solid #10b981; border-radius: 4px; color: #333;">${activity.prompt}</div>`;
+                    }
+                    
+                    html += `<div class="answer-options">`;
+                    html += `<input type="text" id="code-input" class="code-input" placeholder="${activity.placeholder || 'Enter your answer...'}" style="height: 50px; min-height: 50px;">`;
+                    html += `</div>`;
+                    html += `<div class="button-container">`;
+                    html += `<button class="check-answer-btn" onclick="checkCodeCompletion(this)">Check Answer</button>`;
+                    html += `<button class="skip-btn" onclick="skipActivity()" id="skip-btn">Skip <span class="skip-count" id="skip-count">0</span></button>`;
+                    html += `</div>`;
+                    break;
+
+                case 'debug':
+                    html += `<div class="debug-container">`;
+                    
+                    // Show the main prompt/instruction clearly
+                    html += `<div class="debug-prompt" style="margin-bottom: 1.5rem; font-size: 1.1rem; line-height: 1.5; padding: 1rem; background: #f8f9fa; border-left: 4px solid #4299e1; border-radius: 4px; color: #333;">${activity.prompt}</div>`;
+                    
+                    // Show the complete code context with highlighted buggy line
+                    html += `<div class="code-context" style="margin-bottom: 1.5rem;">`;
+                    html += `<div style="font-weight: 600; margin-bottom: 0.75rem; color: #555; font-size: 1rem;">Current code:</div>`;
+                    
+                    const lines = activity.code.split('\n');
+                    html += `<div class="code-display" style="background: #f5f5f5; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">`;
+                    lines.forEach((line, i) => {
+                        if (i === activity.buggyLine) {
+                            html += `<div class="code-line buggy-line" style="background: #ffebee; border-left: 4px solid #f44336; padding: 0.5rem; margin: 0.25rem -1rem; font-family: 'Courier New', monospace; font-size: 0.95rem; position: relative;">`;
+                            html += `<span style="position: absolute; left: -30px; color: #f44336; font-weight: bold;">→</span>${line}`;
+                            html += `</div>`;
+                        } else {
+                            html += `<div class="code-line" style="padding: 0.5rem; font-family: 'Courier New', monospace; font-size: 0.95rem; color: #666;">${line}</div>`;
+                        }
+                    });
+                    html += `</div>`;
+                    html += `</div>`;
+                    
+                    // Input section
+                    html += `<div class="answer-options">`;
+                    html += `<label style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: #333; font-size: 1rem;">Enter the corrected line:</label>`;
+                    html += `<textarea id="debug-input" class="code-input" placeholder="Enter the corrected line..." style="min-height: 70px; font-family: 'Courier New', monospace; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 8px; width: 100%; box-sizing: border-box;">${lines[activity.buggyLine || 0]}</textarea>`;
+                    html += `</div>`;
+                    
+                    html += `<div class="button-container">`;
+                    html += `<button class="check-answer-btn" onclick="checkDebugAnswer(this)">Check Fix</button>`;
+                    html += `<button class="skip-btn" onclick="skipActivity()" id="skip-btn">Skip <span class="skip-count" id="skip-count">0</span></button>`;
+                    html += `</div>`;
+                    html += `</div>`;
+                    break;
+
+                case 'predict-output':
+                    html += `<div class="answer-options">`;
+                    html += `<input type="text" id="output-input" class="code-input" placeholder="What will this code print?" style="height: 50px; min-height: 50px;">`;
+                    html += `</div>`;
+                    html += `<div class="button-container">`;
+                    html += `<button class="check-answer-btn" onclick="checkOutputPrediction(this)">Check Prediction</button>`;
+                    html += `<button class="skip-btn" onclick="skipActivity()" id="skip-btn">Skip <span class="skip-count" id="skip-count">0</span></button>`;
+                    html += `</div>`;
+                    break;
+
+                case 'challenge':
+                    html += `<div class="challenge-container">`;
+                    
+                    // Show the main prompt/instruction
+                    html += `<div class="challenge-prompt" style="margin-bottom: 1rem; font-size: 1.1rem; line-height: 1.5; color: #333;">${activity.prompt}</div>`;
+                    
+                    // Show hint if available
+                    if (activity.hint) {
+                        html += `<div class="challenge-hint" style="margin-bottom: 1rem; padding: 0.75rem; background: #f0f7ff; border-left: 4px solid #4299e1; border-radius: 4px; font-size: 0.95rem;">`;
+                        html += `<strong>💡 Tip:</strong> ${activity.hint}`;
+                        html += `</div>`;
+                    }
+                    
+                    html += `<div class="answer-options">`;
+                    html += `<label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Write your Python code:</label>`;
+                    html += `<textarea id="challenge-input" class="code-input challenge-area" placeholder="Write your Python code here..." style="min-height: 100px; font-family: 'Courier New', monospace;"></textarea>`;
+                    html += `</div>`;
+                    html += `<div class="button-container">`;
+                    html += `<button class="check-answer-btn" onclick="checkChallenge(this)">Run Code & Check</button>`;
+                    html += `<button class="skip-btn" onclick="skipActivity()" id="skip-btn">Skip <span class="skip-count" id="skip-count">0</span></button>`;
+                    html += `</div>`;
+                    html += `</div>`;
+                    break;
+            }
+
+            return html;
+        }
+
+        window.checkCodeCompletion = function(buttonElement = null) {
+            const activity = activities[currentCategory][currentActivityIndex];
+            const userAnswer = document.getElementById('code-input').value.trim();
+            
+            // Handle multiple blanks by normalizing spaces and comparing
+            const normalizedUserAnswer = userAnswer.replace(/\s+/g, ' ').trim();
+            const normalizedCorrectAnswer = activity.correct.replace(/\s+/g, ' ').trim();
+            
+            const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+            const timeSpent = Date.now() - activityStartTime;
+            
+            handleAnswerResult(isCorrect, timeSpent, activity.explanation, buttonElement);
+        };
+
+        window.checkDebugAnswer = function(buttonElement = null) {
+            const activity = activities[currentCategory][currentActivityIndex];
+            const userAnswer = document.getElementById('debug-input').value.trim();
+            
+            // Normalize answers for comparison - handle newline differences and flexible whitespace
+            const expectedAnswer = activity.correct.replace(/\\n/g, '\n').trim();
+            const normalizedUserAnswer = userAnswer.trim();
+            
+            // Check for common mistakes and provide specific feedback
+            if (normalizedUserAnswer.includes(' is >=') || normalizedUserAnswer.includes(' is <=') || 
+                normalizedUserAnswer.includes(' is >') || normalizedUserAnswer.includes(' is <')) {
+                const timeSpent = Date.now() - activityStartTime;
+                const explanation = "❌ You're mixing the 'is' operator with comparison operators. The 'is' operator is for identity comparison, not numerical comparison. Remove 'is' and just use the comparison operator (>=, <=, >, <).";
+                handleAnswerResult(false, timeSpent, explanation, buttonElement);
+                return;
+            }
+            
+            // Normalize code for more flexible comparison
+            const normalizeCode = (code) => {
+                return code
+                    .split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0)
+                    .join('\n')
+                    .replace(/\s+/g, ' ')  // Normalize internal spacing
+                    .replace(/\(\s+/g, '(')  // Remove space after opening parenthesis
+                    .replace(/\s+\)/g, ')')  // Remove space before closing parenthesis
+                    .toLowerCase();  // Case insensitive comparison for variable names
+            };
+            
+            const normalizedExpected = normalizeCode(expectedAnswer);
+            const normalizedUser = normalizeCode(normalizedUserAnswer);
+            
+            const isCorrect = normalizedUser === normalizedExpected;
+            const timeSpent = Date.now() - activityStartTime;
+            
+            handleAnswerResult(isCorrect, timeSpent, activity.explanation, buttonElement);
+        };
+
+        window.checkOutputPrediction = function(buttonElement = null) {
+            const activity = activities[currentCategory][currentActivityIndex];
+            const userAnswer = document.getElementById('output-input').value.trim();
+            
+            // Normalize answers for comparison - remove trailing newlines from expected answer
+            const expectedAnswer = activity.correct.replace(/\n$/, '');
+            const normalizedUserAnswer = userAnswer.replace(/\n$/, '');
+            
+            const isCorrect = normalizedUserAnswer === expectedAnswer;
+            const timeSpent = Date.now() - activityStartTime;
+            
+            handleAnswerResult(isCorrect, timeSpent, activity.explanation, buttonElement);
+        };
+
+        window.checkChallenge = function(buttonElement = null) {
+            const activity = activities[currentCategory][currentActivityIndex];
+            const userCode = document.getElementById('challenge-input').value.trim();
+            
+            // Python code simulator with proper variable tracking and operator support
+            let isCorrect = false;
+            let simulatedOutput = '';
+            
+            try {
+                // Create a Python-like execution environment
+                const pythonEnvironment = new Map();
+                const lines = userCode.split('\n').map(line => line.trim()).filter(line => line);
+                
+                // Process each line of code
+                for (const line of lines) {
+                    if (line.startsWith('#') || !line) continue; // Skip comments and empty lines
+                    
+                    // Check for common syntax error: compound assignment inside print()
+                    if (line.includes('print(') && (line.includes('+=') || line.includes('-=') || 
+                        line.includes('*=') || line.includes('/=') || line.includes('//=') || 
+                        line.includes('%=') || line.includes('**='))) {
+                        return {
+                            output: '',
+                            error: 'SyntaxError: Cannot use compound assignment operators (like +=, -=) inside print(). Use the assignment on a separate line, then print the variable.'
+                        };
+                    }
+                    
+                    // Handle compound assignment operators (check //= before /= to avoid conflicts)
+                    if (line.includes('//=') || line.includes('**=') || line.includes('+=') || 
+                        line.includes('-=') || line.includes('*=') || line.includes('/=') || 
+                        line.includes('%=')) {
+                        
+                        // Check operators in order of specificity (longer operators first)
+                        const operators = ['//=', '**=', '+=', '-=', '*=', '/=', '%='];
+                        for (const op of operators) {
+                            if (line.includes(op)) {
+                                const [varName, expression] = line.split(op).map(s => s.trim());
+                                let currentVal = pythonEnvironment.get(varName) || 0;
+                                // Handle float objects properly
+                                if (typeof currentVal === 'object' && currentVal.isFloat) {
+                                    currentVal = currentVal.value;
+                                }
+                                const newVal = evaluatePythonExpression(expression, pythonEnvironment);
+                                // Handle float objects in newVal too
+                                const numericNewVal = (typeof newVal === 'object' && newVal.isFloat) ? newVal.value : newVal;
+                                
+                                let result;
+                                // Check if we need to preserve float type
+                                const isCurrentFloat = (typeof currentVal === 'object' && currentVal.isFloat);
+                                const isNewFloat = (typeof newVal === 'object' && newVal.isFloat);
+                                const shouldBeFloat = isCurrentFloat || isNewFloat;
+                                
+                                switch (op) {
+                                    case '+=': 
+                                        result = currentVal + numericNewVal;
+                                        if (shouldBeFloat) result = { isFloat: true, value: result };
+                                        break;
+                                    case '-=': 
+                                        result = currentVal - numericNewVal;
+                                        if (shouldBeFloat) result = { isFloat: true, value: result };
+                                        break;
+                                    case '*=': 
+                                        result = currentVal * numericNewVal;
+                                        if (shouldBeFloat) result = { isFloat: true, value: result };
+                                        break;
+                                    case '/=': 
+                                        // Division always returns float in Python
+                                        result = { isFloat: true, value: currentVal / numericNewVal }; 
+                                        break;
+                                    case '%=': 
+                                        result = currentVal % numericNewVal;
+                                        if (shouldBeFloat) result = { isFloat: true, value: result };
+                                        break;
+                                    case '**=': 
+                                        result = Math.pow(currentVal, numericNewVal);
+                                        if (shouldBeFloat) result = { isFloat: true, value: result };
+                                        break;
+                                    case '//=': result = Math.floor(currentVal / numericNewVal); break;
+                                }
+                                
+                                pythonEnvironment.set(varName, result);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Handle regular variable assignments (including chained assignments)
+                    else if (line.includes(' = ') && !line.startsWith('print')) {
+                        // Handle chained assignments like x = y = z = 0
+                        if ((line.match(/ = /g) || []).length > 1) {
+                            const parts = line.split(' = ').map(s => s.trim());
+                            const value = evaluatePythonExpression(parts[parts.length - 1], pythonEnvironment);
+                            // Assign the same value to all variables
+                            for (let i = 0; i < parts.length - 1; i++) {
+                                pythonEnvironment.set(parts[i], value);
+                            }
+                        } else {
+                            // Regular single assignment
+                            const [varName, expression] = line.split(' = ').map(s => s.trim());
+                            const value = evaluatePythonExpression(expression, pythonEnvironment);
+                            pythonEnvironment.set(varName, value);
+                        }
+                    }
+                    
+                    // Handle print statements
+                    else if (line.startsWith('print(') && line.endsWith(')')) {
+                        const expression = line.slice(6, -1); // Remove 'print(' and ')'
+                        const result = evaluatePythonExpression(expression, pythonEnvironment);
+                        simulatedOutput += formatPythonOutput(result) + '\n';
+                    }
+                }
+                
+                isCorrect = simulatedOutput.trim() === activity.expectedOutput.trim();
+            } catch (error) {
+                console.log('Challenge execution error:', error);
+                isCorrect = false;
+            }
+            
+            const timeSpent = Date.now() - activityStartTime;
+            const explanation = isCorrect ? 
+                `✅ Great job! Your code produces the expected output: ${activity.expectedOutput.trim()}` :
+                `❌ Not quite right. Expected output: ${activity.expectedOutput.trim()}, but got: ${simulatedOutput.trim() || 'no output'}. ${activity.hint}`;
+            
+            handleAnswerResult(isCorrect, timeSpent, explanation, buttonElement);
+        };
+
+        // Python expression evaluator with proper operator support
+        function evaluatePythonExpression(expression, environment) {
+            expression = expression.trim();
+            
+            // Handle string literals first (both single and double quotes)
+            if ((expression.startsWith('"') && expression.endsWith('"')) || 
+                (expression.startsWith("'") && expression.endsWith("'"))) {
+                return expression.slice(1, -1);
+            }
+            
+            // Handle numbers
+            if (/^-?\d+(\.\d+)?$/.test(expression)) {
+                return parseFloat(expression);
+            }
+            
+            // Handle boolean literals
+            if (expression === 'True') return true;
+            if (expression === 'False') return false;
+            if (expression === 'None') return null;
+            
+            // Handle variables
+            if (environment.has(expression)) {
+                return environment.get(expression);
+            }
+            
+            // Handle list literals
+            if (expression.startsWith('[') && expression.endsWith(']')) {
+                const content = expression.slice(1, -1).trim();
+                if (!content) return [];
+                return content.split(',').map(item => evaluatePythonExpression(item.trim(), environment));
+            }
+            
+            // Handle arithmetic operations with proper operator support
+            if (hasArithmeticOperators(expression)) {
+                return evaluateArithmetic(expression, environment);
+            }
+            
+            // Handle comparison operators
+            if (expression.includes(' == ') || expression.includes(' != ') || 
+                expression.includes(' < ') || expression.includes(' > ') || 
+                expression.includes(' <= ') || expression.includes(' >= ')) {
+                return evaluateComparison(expression, environment);
+            }
+            
+            // Handle identity operators
+            if (expression.includes(' is ') || expression.includes(' is not ')) {
+                return evaluateIdentity(expression, environment);
+            }
+            
+            // Handle logical operators
+            if (expression.includes(' and ') || expression.includes(' or ') || expression.startsWith('not ')) {
+                return evaluateLogical(expression, environment);
+            }
+            
+            // Handle membership operators
+            if (expression.includes(' in ') || expression.includes(' not in ')) {
+                return evaluateMembership(expression, environment);
+            }
+            
+            // Handle bitwise operators
+            if (expression.includes(' & ') || expression.includes(' | ') || 
+                expression.includes(' ^ ') || expression.includes(' << ') || 
+                expression.includes(' >> ') || expression.startsWith('~')) {
+                return evaluateBitwise(expression, environment);
+            }
+            
+            return expression; // Return as string if can't evaluate
+        }
+
+        // Helper function to evaluate comparison operations
+        function evaluateComparison(expression, environment) {
+            const operators = [' <= ', ' >= ', ' == ', ' != ', ' < ', ' > '];
+            
+            for (const op of operators) {
+                if (expression.includes(op)) {
+                    const [left, right] = expression.split(op);
+                    const leftVal = evaluatePythonExpression(left.trim(), environment);
+                    const rightVal = evaluatePythonExpression(right.trim(), environment);
+                    
+                    switch (op.trim()) {
+                        case '==': return leftVal === rightVal;  // Use strict equality
+                        case '!=': return leftVal !== rightVal;  // Use strict inequality
+                        case '<': return leftVal < rightVal;
+                        case '>': return leftVal > rightVal;
+                        case '<=': return leftVal <= rightVal;
+                        case '>=': return leftVal >= rightVal;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // Helper function to evaluate identity operations
+        function evaluateIdentity(expression, environment) {
+            if (expression.includes(' is not ')) {
+                const [left, right] = expression.split(' is not ').map(s => s.trim());
+                const leftVal = evaluatePythonExpression(left, environment);
+                const rightVal = evaluatePythonExpression(right, environment);
+                return !isIdentical(leftVal, rightVal);
+            } else if (expression.includes(' is ')) {
+                const [left, right] = expression.split(' is ').map(s => s.trim());
+                const leftVal = evaluatePythonExpression(left, environment);
+                const rightVal = evaluatePythonExpression(right, environment);
+                return isIdentical(leftVal, rightVal);
+            }
+            return false;
+        }
+        
+        // Helper function to check Python identity rules
+        function isIdentical(leftVal, rightVal) {
+            // Handle None
+            if (leftVal === null && rightVal === null) return true;
+            if (leftVal === null || rightVal === null) return false;
+            
+            // Handle booleans (True/False are singletons in Python)
+            if (typeof leftVal === 'boolean' && typeof rightVal === 'boolean') {
+                return leftVal === rightVal;
+            }
+            
+            // Handle integers - Python caches integers from -5 to 256
+            if (typeof leftVal === 'number' && typeof rightVal === 'number' && 
+                Number.isInteger(leftVal) && Number.isInteger(rightVal)) {
+                if (leftVal >= -5 && leftVal <= 256 && rightVal >= -5 && rightVal <= 256) {
+                    return leftVal === rightVal; // Cached integers
+                } else {
+                    return false; // Large integers are not cached, so different objects
+                }
+            }
+            
+            // Handle strings - small strings might be interned, but for safety return false unless same reference
+            if (typeof leftVal === 'string' && typeof rightVal === 'string') {
+                // In a real Python simulation, we'd need to track string interning
+                // For now, assume most strings are not interned unless they're the same reference
+                return leftVal === rightVal && leftVal.length <= 20; // Simplified heuristic
+            }
+            
+            // Handle objects - use reference comparison
+            if (typeof leftVal === 'object' && typeof rightVal === 'object') {
+                return leftVal === rightVal; // Reference comparison
+            }
+            
+            // Default case
+            return leftVal === rightVal;
+        }
+
+        // Helper function to evaluate logical operations
+        function evaluateLogical(expression, environment) {
+            if (expression.startsWith('not ')) {
+                const operand = expression.slice(4).trim();
+                const value = evaluatePythonExpression(operand, environment);
+                return !value;
+            } else if (expression.includes(' and ')) {
+                const parts = expression.split(' and ');
+                for (const part of parts) {
+                    if (!evaluatePythonExpression(part.trim(), environment)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else if (expression.includes(' or ')) {
+                const parts = expression.split(' or ');
+                for (const part of parts) {
+                    if (evaluatePythonExpression(part.trim(), environment)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return false;
+        }
+
+        // Helper function to evaluate membership operations
+        function evaluateMembership(expression, environment) {
+            if (expression.includes(' not in ')) {
+                const [left, right] = expression.split(' not in ').map(s => s.trim());
+                const leftVal = evaluatePythonExpression(left, environment);
+                const rightVal = evaluatePythonExpression(right, environment);
+                return !rightVal.includes(leftVal);
+            } else if (expression.includes(' in ')) {
+                const [left, right] = expression.split(' in ').map(s => s.trim());
+                const leftVal = evaluatePythonExpression(left, environment);
+                const rightVal = evaluatePythonExpression(right, environment);
+                return rightVal.includes(leftVal);
+            }
+            return false;
+        }
+
+        // Helper function to evaluate bitwise operations
+        function evaluateBitwise(expression, environment) {
+            if (expression.startsWith('~')) {
+                const operand = expression.slice(1).trim();
+                const value = evaluatePythonExpression(operand, environment);
+                return ~value;
+            }
+            
+            const operators = [' << ', ' >> ', ' & ', ' | ', ' ^ '];
+            for (const op of operators) {
+                if (expression.includes(op)) {
+                    const [left, right] = expression.split(op).map(s => s.trim());
+                    const leftVal = evaluatePythonExpression(left, environment);
+                    const rightVal = evaluatePythonExpression(right, environment);
+                    
+                    switch (op.trim()) {
+                        case '&': return leftVal & rightVal;
+                        case '|': return leftVal | rightVal;
+                        case '^': return leftVal ^ rightVal;
+                        case '<<': return leftVal << rightVal;
+                        case '>>': return leftVal >> rightVal;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        // Helper function to format Python output correctly
+        function formatPythonOutput(value) {
+            if (typeof value === 'boolean') {
+                return value ? 'True' : 'False';
+            } else if (value === null) {
+                return 'None';
+            } else if (Array.isArray(value)) {
+                return '[' + value.map(formatPythonOutput).join(', ') + ']';
+            } else if (typeof value === 'string') {
+                return value;
+            } else if (typeof value === 'object' && value.isFloat) {
+                // Handle values marked as floats from division
+                const num = value.value;
+                return num % 1 === 0 ? num + '.0' : num.toString();
+            } else if (typeof value === 'number') {
+                return value.toString();
+            } else {
+                return value.toString();
+            }
+        }
+
+        // Helper function to check if expression contains arithmetic operators
+        function hasArithmeticOperators(expression) {
+            // Check for all Python arithmetic operators: +, -, *, /, //, %, **
+            const arithmeticOps = ['+', '-', '*', '/', '//', '%', '**'];
+            
+            // Return true if contains any arithmetic operator and consists of valid characters
+            return arithmeticOps.some(op => expression.includes(op)) &&
+                   /^[\d\s+\-*/().%a-zA-Z_]+$/.test(expression) &&
+                   !expression.includes('==') && !expression.includes('!=') && 
+                   !expression.includes('<=') && !expression.includes('>=') &&
+                   !expression.includes(' and ') && !expression.includes(' or ') &&
+                   !expression.includes(' is ') && !expression.includes(' in ');
+        }
+
+        // Comprehensive arithmetic expression evaluator
+        function evaluateArithmetic(expression, environment) {
+            try {
+                // Replace variables with their values first
+                let processedExpression = expression;
+                for (const [varName, value] of environment) {
+                    const regex = new RegExp(`\\b${varName}\\b`, 'g');
+                    // Handle float objects properly
+                    const replacementValue = (typeof value === 'object' && value.isFloat) ? value.value : value;
+                    processedExpression = processedExpression.replace(regex, replacementValue.toString());
+                }
+
+                // Handle Python-specific operators in order of precedence
+                
+                // Exponentiation: ** becomes Math.pow(a, b) - highest precedence
+                processedExpression = processedExpression.replace(/(\d+(?:\.\d+)?|\([^)]+\))\s*\*\*\s*(\d+(?:\.\d+)?|\([^)]+\))/g, 
+                    'Math.pow($1, $2)');
+                
+                // Floor division: // becomes Math.floor(a/b)
+                processedExpression = processedExpression.replace(/(\d+(?:\.\d+)?|\([^)]+\))\s*\/\/\s*(\d+(?:\.\d+)?|\([^)]+\))/g, 
+                    'Math.floor($1 / $2)');
+
+                // Handle parentheses and all arithmetic operators: +, -, *, /, %
+                // JavaScript eval handles these correctly with proper precedence
+                if (/^[\d\s+\-*/.()%Math,pow floor]+$/.test(processedExpression)) {
+                    const result = eval(processedExpression);
+                    
+                    // In Python, division (/) always returns float, even for whole numbers
+                    // Check if the original expression contains regular division (not floor division)
+                    if (expression.includes('/') && !expression.includes('//')) {
+                        // Mark as float by ensuring decimal representation
+                        if (Number.isInteger(result)) {
+                            return { value: result, isFloat: true };
+                        }
+                    }
+                    
+                    return result;
+                }
+                
+                return expression;
+            } catch (error) {
+                console.log('Arithmetic evaluation error:', error, 'Expression:', expression);
+                return expression;
+            }
+        }
+
+        function handleAnswerResult(isCorrect, timeSpent, explanation, triggerButton = null) {
+            // Show feedback
+            const feedback = document.getElementById('activity-feedback');
+            feedback.style.display = 'block';
+            feedback.className = `activity-feedback ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+            
+            if (isCorrect) {
+                // Trigger confetti celebration from the button that was clicked!
+                triggerConfetti(triggerButton);
+                
+                feedback.innerHTML = `
+                    <div style="font-weight: 600; margin-bottom: 0.5rem; color: #4CAF50;">
+                        ✅ Correct! Great job!
+                    </div>
+                    <div>${formatMarkdown(explanation || '')}</div>
+                `;
+                
+                // Hide check buttons and skip button
+                const checkBtns = document.querySelectorAll('.check-answer-btn, .skip-btn');
+                checkBtns.forEach(btn => btn.style.display = 'none');
+                
+                // Handle powerups and streaks
+                handleCorrectAnswer(timeSpent);
+                
+                // Show next button for correct answers
+                document.getElementById('next-activity-btn').style.display = 'block';
+            } else {
+                feedback.innerHTML = `
+                    <div style="font-weight: 600; margin-bottom: 0.5rem; color: #f44336;">
+                        ❌ Not quite right. Try again!
+                    </div>
+                    ${explanation ? `<div style="margin-bottom: 1rem; padding: 0.5rem; background: #ffebee; border-radius: 4px; font-size: 0.9rem;">${formatMarkdown(explanation)}</div>` : ''}
+                    <div style="margin-bottom: 1rem;">
+                        ${powerups.skips > 0 ? `
+                        <button onclick="skipQuestion()" class="skip-btn" style="background: #9C27B0; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                            ⏭️ Skip Question (${powerups.skips} available)
+                        </button>
+                        ` : ''}
+                    </div>
+                `;
+                
+                // Mark that this is no longer the first attempt
+                isFirstAttempt = false;
+                
+                // Reset streak but don't reset consecutiveCorrect (for skip powerup tracking)
+                currentStreak = 0;
+                updateStreakDisplay();
+                
+                // Keep check buttons visible so user can try again
+                // Ensure buttons remain visible for retry
+                setTimeout(() => {
+                    const checkBtns = document.querySelectorAll('.check-answer-btn');
+                    checkBtns.forEach(btn => {
+                        btn.style.display = 'inline-block';
+                        btn.disabled = false;
+                    });
+                }, 100);
+                
+                // Don't show next button for incorrect answers
+                document.getElementById('next-activity-btn').style.display = 'none';
+            }
+        }
+
+        function handleCorrectAnswer(timeSpent) {
+            currentStreak++;
+            
+            // Only increment consecutiveCorrect and award skip powerups if it's the first attempt
+            if (isFirstAttempt) {
+                consecutiveCorrect++;
+                
+                // Skip powerup every 5 correct answers on first try
+                if (consecutiveCorrect % 5 === 0) {
+                    powerups.skips++;
+                    showPowerupAnimation('⏭️', 'Question Skip earned for first-try accuracy!');
+                }
+                
+                // Perfect score bonus (10 consecutive correct on first try)
+                if (consecutiveCorrect >= 15 && consecutiveCorrect % 10 === 5) {
+                    powerups.perfect++;
+                    showPowerupAnimation('⭐', 'Perfect Star for mastery!');
+                }
+            }
+            
+            // Speed bonus (under 5 seconds)
+            if (timeSpent < 5000) {
+                powerups.speed++;
+                showPowerupAnimation('⚡', 'Speed Lightning!');
+            }
+            
+            // Streak bonuses
+            if (currentStreak % 5 === 0) {
+                powerups.streak++;
+                showPowerupAnimation('🔥', `${currentStreak} Streak Fire!`);
+            }
+            
+            // Combo bonus (complete activity quickly with streak)
+            if (timeSpent < 3000 && currentStreak >= 3) {
+                powerups.combo++;
+                showPowerupAnimation('🏆', 'Combo Master!');
+            }
+            
+            updatePowerupDisplay();
+            updateStreakDisplay();
+        }
+
+        function showPowerupAnimation(icon, text) {
+            const animation = document.createElement('div');
+            animation.className = 'powerup-animation';
+            animation.innerHTML = `${icon}<br><small>${text}</small>`;
+            document.body.appendChild(animation);
+            
+            setTimeout(() => {
+                document.body.removeChild(animation);
+            }, 1000);
+        }
+
+        function updatePowerupDisplay() {
+            console.log('Updating powerup display, powerups object:', powerups);
+            
+            // Ensure all powerup values are valid numbers
+            if (!powerups || typeof powerups !== 'object') {
+                powerups = { streak: 0, perfect: 0, speed: 0, combo: 0, skips: 1 };
+            }
+            if (isNaN(powerups.streak) || powerups.streak === undefined) powerups.streak = 0;
+            if (isNaN(powerups.perfect) || powerups.perfect === undefined) powerups.perfect = 0;
+            if (isNaN(powerups.speed) || powerups.speed === undefined) powerups.speed = 0;
+            if (isNaN(powerups.combo) || powerups.combo === undefined) powerups.combo = 0;
+            if (isNaN(powerups.skips) || powerups.skips === undefined || powerups.skips === null) powerups.skips = 1;
+            
+            document.getElementById('streak-count').textContent = powerups.streak;
+            document.getElementById('perfect-count').textContent = powerups.perfect;
+            document.getElementById('speed-count').textContent = powerups.speed;
+            document.getElementById('combo-count').textContent = powerups.combo;
+            document.getElementById('skip-powerup-count').textContent = powerups.skips;
+        }
+
+        function updateStreakDisplay() {
+            const streakIndicator = document.getElementById('streak-indicator');
+            const streakSpan = document.getElementById('current-streak');
+            
+            if (currentStreak > 0) {
+                streakSpan.textContent = currentStreak;
+                streakIndicator.style.display = 'block';
+            } else {
+                streakIndicator.style.display = 'none';
+            }
+        }
+
+        function skipQuestion() {
+            if (powerups.skips > 0) {
+                powerups.skips--;
+                
+                // Show skip animation
+                showPowerupAnimation('⏭️', 'Question Skipped!');
+                
+                // Mark as completed for progression
+                categoryProgress[currentCategory].completed++;
+                updateProgress();
+                saveProgressToStorage();
+                
+                // Move to next activity
+                setTimeout(() => {
+                    nextActivity();
+                }, 1000);
+            }
+        }
+
+        function updateProgress() {
+            // Update category progress
+            Object.keys(categoryProgress).forEach(category => {
+                const data = categoryProgress[category];
+                const completed = data.completed || 0;
+                document.getElementById(`${category}-completed`).textContent = completed;
+                
+                // Update category card appearance
+                const card = document.querySelector(`[data-category="${category}"]`);
+                if (completed >= 50) {
+                    card.classList.remove('unlocked');
+                    card.classList.add('completed');
+                    document.getElementById(`${category}-status`).textContent = '✅ Completed';
+                } else if (card.classList.contains('unlocked')) {
+                    document.getElementById(`${category}-status`).textContent = completed > 0 ? '🔓 In Progress' : '🔓 Unlocked';
+                }
+            });
+            
+            // Update overall progress
+            const totalCompleted = Object.values(categoryProgress).reduce((sum, data) => sum + (data.completed || 0), 0);
+            document.getElementById('completed-activities').textContent = totalCompleted;
+            
+            const overallPercentage = (totalCompleted / 350) * 100;
+            document.getElementById('overall-progress').style.width = `${overallPercentage}%`;
+        }
+
+        function unlockNextCategory() {
+            const categories = ['arithmetic', 'assignment', 'comparison', 'logical', 'identity', 'membership', 'bitwise'];
+            const currentIndex = categories.indexOf(currentCategory);
+            
+            if (currentIndex < categories.length - 1) {
+                const nextCategory = categories[currentIndex + 1];
+                categoryProgress[nextCategory] = { completed: 0, unlocked: true };
+                
+                const nextCard = document.querySelector(`[data-category="${nextCategory}"]`);
+                nextCard.classList.remove('locked');
+                nextCard.classList.add('unlocked');
+                document.getElementById(`${nextCategory}-status`).textContent = '🔓 Unlocked';
+                
+                // Save the unlock
+                saveOperatorsProgress();
+            }
+        }
+
+        function unlockCategories() {
+            // All categories are unlocked by default now
+            Object.entries(categoryProgress).forEach(([category, data]) => {
+                const card = document.querySelector(`[data-category="${category}"]`);
+                if (card) {
+                    card.classList.remove('locked');
+                    card.classList.add('unlocked');
+                    
+                    if (data.completed >= 50) {
+                        card.classList.add('completed');
+                        document.getElementById(`${category}-status`).textContent = '✅ Completed';
+                    } else if (data.completed > 0) {
+                        document.getElementById(`${category}-status`).textContent = '🔓 In Progress';
+                    } else {
+                        document.getElementById(`${category}-status`).textContent = '🔓 Unlocked';
+                    }
+                }
+            });
+        }
+
+        // Leaderboard Functions
+        let leaderboardVisible = false;
+        let leaderboardData = [];
+
+        window.toggleLeaderboard = async function() {
+            const content = document.getElementById('leaderboard-content');
+            const btn = document.getElementById('toggle-leaderboard-btn');
+            
+            if (leaderboardVisible) {
+                content.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-eye"></i> Show';
+                leaderboardVisible = false;
+            } else {
+                content.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide';
+                leaderboardVisible = true;
+                
+                // Load leaderboard data
+                await loadLeaderboard();
+            }
+        };
+
+        async function loadLeaderboard() {
+            try {
+                if (!window.ProgressTracker || !currentUser) {
+                    showLeaderboardError();
+                    return;
+                }
+
+                // Show loading state
+                const leaderboardList = document.getElementById('leaderboard-list');
+                leaderboardList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>Loading leaderboard...</p>
+                    </div>
+                `;
+
+                // Get real leaderboard data from Firebase
+                const leaderboardData = await window.ProgressTracker.getLeaderboard();
+                displayLeaderboard(leaderboardData);
+                
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                showLeaderboardError();
+            }
+        }
+
+        async function getLeaderboardData() {
+            // Use the real Firebase leaderboard
+            return await window.ProgressTracker.getLeaderboard();
+        }
+
+        function displayLeaderboard(data) {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            leaderboardList.innerHTML = '';
+
+            console.log('Displaying leaderboard data:', data);
+
+            if (!data || data.length === 0) {
+                leaderboardList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        <i class="fas fa-trophy" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <p>No users on the leaderboard yet!</p>
+                        <p style="font-size: 0.9rem;">Complete some activities to be the first!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter out teachers from leaderboard
+            const studentsOnly = data.filter(user => !user.teacher);
+            console.log('Filtered leaderboard (students only):', studentsOnly);
+
+            if (studentsOnly.length === 0) {
+                leaderboardList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        <i class="fas fa-trophy" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <p>No students on the leaderboard yet!</p>
+                        <p style="font-size: 0.9rem;">Complete some activities to be the first!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            studentsOnly.forEach((user, index) => {
+                const rank = index + 1;
+                const isTop3 = rank <= 3;
+                const isCurrentUser = user.userId === currentUser?.uid;
+                
+                let rankClass = '';
+                let rankIcon = rank;
+                
+                if (rank === 1) {
+                    rankClass = 'gold';
+                    rankIcon = '🥇';
+                } else if (rank === 2) {
+                    rankClass = 'silver';
+                    rankIcon = '🥈';
+                } else if (rank === 3) {
+                    rankClass = 'bronze';
+                    rankIcon = '🥉';
+                }
+
+                // Calculate total powerups
+                const totalPowerups = (user.powerups?.streak || 0) + 
+                                    (user.powerups?.perfect || 0) + 
+                                    (user.powerups?.speed || 0) + 
+                                    (user.powerups?.combo || 0) + 
+                                    (user.powerups?.skips || 0);
+
+                const item = document.createElement('div');
+                item.className = `leaderboard-item ${isTop3 ? 'top-3' : ''} ${isCurrentUser ? 'current-user' : ''}`;
+                
+                item.innerHTML = `
+                    <div class="leaderboard-rank ${rankClass}">
+                        ${rankIcon}
+                    </div>
+                    <div class="leaderboard-user">
+                        <div class="leaderboard-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">${user.displayName || 'Anonymous User'}${isCurrentUser ? ' (You)' : ''}</div>
+                            <div style="font-size: 0.8rem; color: #666;">${user.email || 'unknown@example.com'}</div>
+                        </div>
+                    </div>
+                    <div class="leaderboard-stats">
+                        <div class="leaderboard-stat">
+                            <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                            <span>${user.activitiesCompleted || 0}/350</span>
+                        </div>
+                        <div class="leaderboard-stat">
+                            <i class="fas fa-trophy" style="color: #FFD700;"></i>
+                            <span>${totalPowerups}</span>
+                        </div>
+                        <div class="leaderboard-stat">
+                            <i class="fas fa-star" style="color: #667eea;"></i>
+                            <span>${user.totalScore || 0} pts</span>
+                        </div>
+                    </div>
+                `;
+                
+                leaderboardList.appendChild(item);
+            });
+        }
+
+        function showLeaderboardError() {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            leaderboardList.innerHTML = `
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank" style="background: #ff4757;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="leaderboard-user">
+                        <div class="leaderboard-avatar">
+                            <i class="fas fa-wifi" style="opacity: 0.5;"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Unable to load leaderboard</div>
+                            <div style="font-size: 0.8rem; color: #666;">Check your internet connection</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Main Page Setting Function
+        window.setAsMainPage = function() {
+            if (confirm('Set Operators Mastery as your main page? When you sign in, you\'ll come directly here instead of the dashboard.')) {
+                localStorage.setItem('preferredMainPage', 'operators-mastery');
+                alert('✅ Operators Mastery is now your main page! Next time you sign in, you\'ll come directly here.');
+                updateMainPageButtons();
+            }
+        };
+
+        function updateMainPageButtons() {
+            const isMainPage = localStorage.getItem('preferredMainPage') === 'operators-mastery';
+            const mainPageBtn = document.getElementById('main-page-btn');
+            
+            if (isMainPage) {
+                mainPageBtn.innerHTML = '<i class="fas fa-check"></i> This is Your Main Page';
+                mainPageBtn.style.background = '#4CAF50';
+            } else {
+                mainPageBtn.innerHTML = '<i class="fas fa-star"></i> Make This My Main Page';
+                mainPageBtn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            }
+        }
+
+        // Initialize everything
+        async function main() {
+            try {
+                // Initialize powerups first
+                initializePowerups();
+                
+                // Load activities from JSON first
+                await loadActivities();
+                await initFirebase();
+                updateProgress();
+                updatePowerupDisplay();
+                updateMainPageButtons();
+                
+                // Set up click handlers after everything is loaded
+                setupClickHandlers();
+                
+                // Show the page now that everything is loaded
+                document.body.classList.add('loaded');
+                
+                console.log('Operators Mastery initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize:', error);
+                // Still load from localStorage if Firebase fails
+                await loadActivities();
+                loadFromLocalStorage();
+                updateProgress();
+                updatePowerupDisplay();
+                updateMainPageButtons();
+                
+                // Set up click handlers even if Firebase fails
+                setupClickHandlers();
+                
+                // Show the page even if Firebase fails
+                document.body.classList.add('loaded');
+            }
+        }
+
+        // Setup click handlers function
+        function setupClickHandlers() {
+            console.log('Setting up click handlers');
+            const cards = document.querySelectorAll('.category-card');
+            console.log('Found category cards:', cards.length);
+            console.log('Activities loaded:', Object.keys(activities).length, 'categories');
+            
+            cards.forEach(card => {
+                console.log('Setting up click handler for card:', card.dataset.category);
+                card.addEventListener('click', function(e) {
+                    console.log('Card clicked:', this.dataset.category);
+                    e.preventDefault();
+                    const category = this.dataset.category;
+                    if (window.openCategory) {
+                        openCategory(category);
+                    } else {
+                        console.error('openCategory function not found');
+                    }
+                });
+            });
+        }
+
+        main();
+    </script>
+</body>
+</html>

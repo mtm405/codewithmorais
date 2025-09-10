@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Control Flow - Interactive Lesson</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #3b82f6;
+            --accent-green: #10b981;
+            --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .lesson-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .lesson-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .lesson-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .theory-panel, .practice-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .code-editor {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            min-height: 200px;
+            margin-bottom: 1rem;
+            resize: vertical;
+            border: none;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .output-panel {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 100px;
+            border-left: 4px solid var(--primary-blue);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .exercise-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .btn-run {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .btn-run:hover {
+            background: var(--secondary-blue);
+        }
+
+        .progress-tracker {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-blue);
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: var(--shadow-medium);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-blue);
+        }
+
+        .nav-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-blue);
+        }
+
+        @media (max-width: 768px) {
+            .lesson-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fab fa-python"></i>
+                <span>Python Lessons</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/dashboard.html" class="nav-link">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="lesson-container">
+        <div class="lesson-header">
+            <h1><i class="fas fa-code-branch"></i> Python Control Flow</h1>
+            <p>Learn how to make decisions and repeat actions in your Python programs</p>
+        </div>
+
+        <div class="progress-tracker">
+            <div class="flex-row">
+                <h3>Lesson Progress</h3>
+                <span id="progress-text">0 / 4 exercises completed</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="lesson-content">
+            <div class="theory-panel">
+                <h2>📚 Theory</h2>
+                <div id="theory-content">
+                    <h3>What is Control Flow?</h3>
+                    <p>Control flow determines the order in which code is executed. It allows programs to make decisions and repeat actions.</p>
+                    
+                    <h4>If Statements:</h4>
+                    <pre><code>if condition:
+    # code to execute if true
+elif another_condition:
+    # code for another condition
+else:
+    # code if all conditions are false</code></pre>
+                    
+                    <h4>For Loops:</h4>
+                    <pre><code>for item in range(5):
+    print(item)  # prints 0, 1, 2, 3, 4</code></pre>
+                    
+                    <h4>While Loops:</h4>
+                    <pre><code>count = 0
+while count < 5:
+    print(count)
+    count += 1</code></pre>
+
+                    <h4>Important Notes:</h4>
+                    <ul>
+                        <li>Python uses <strong>indentation</strong> to group code blocks</li>
+                        <li>Use 4 spaces for each indentation level</li>
+                        <li>Conditions must evaluate to True or False</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="practice-panel">
+                <h2>💻 Practice</h2>
+                <div id="exercise-area">
+                    <div class="exercise-card" id="exercise-1">
+                        <h4>Exercise 1: Simple If Statement</h4>
+                        <p>Create a variable <code>age = 16</code>. Write an if statement that prints "You can drive!" if age is 16 or older, otherwise print "Too young to drive".</p>
+                        <textarea class="code-editor" id="code-1" placeholder="# Write your code here">age = 16</textarea>
+                        <button class="btn-run" onclick="runCode(1)">
+                            <i class="fas fa-play"></i> Run Code
+                        </button>
+                        <button class="btn-run" onclick="showHint(1)" style="background: var(--accent-green);">
+                            <i class="fas fa-lightbulb"></i> Hint
+                        </button>
+                        <div class="output-panel" id="output-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-buttons" style="text-align: center; margin-top: 2rem;">
+            <button class="btn-primary" onclick="nextExercise()" id="next-btn" style="display: none;">
+                Next Exercise <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="btn-primary" onclick="completeLesson()" id="complete-btn" style="display: none;">
+                Complete Lesson <i class="fas fa-check"></i>
+            </button>
+        </div>
+    </main>
+
+    <script type="module">
+        let pyodide;
+        let currentExercise = 1;
+        let completedExercises = 0;
+        const totalExercises = 4;
+
+        const exercises = {
+            1: {
+                title: "Simple If Statement",
+                description: "Create a variable <code>age = 16</code>. Write an if statement that prints \"You can drive!\" if age is 16 or older, otherwise print \"Too young to drive\".",
+                hint: "Remember to use proper indentation:\nage = 16\nif age >= 16:\n    print(\"You can drive!\")\nelse:\n    print(\"Too young to drive\")",
+                solution: "age = 16\nif age >= 16:\n    print(\"You can drive!\")\nelse:\n    print(\"Too young to drive\")",
+                test: (code) => code.includes('if') && code.includes('age') && code.includes('print') && (code.includes('>=') || code.includes('>'))
+            },
+            2: {
+                title: "Grade Calculator",
+                description: "Create a variable <code>score = 85</code>. Write if/elif/else statements to print letter grades: A (90+), B (80-89), C (70-79), F (below 70).",
+                hint: "Use elif for multiple conditions:\nscore = 85\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelif score >= 70:\n    print(\"C\")\nelse:\n    print(\"F\")",
+                solution: "score = 85\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelif score >= 70:\n    print(\"C\")\nelse:\n    print(\"F\")",
+                test: (code) => code.includes('if') && code.includes('elif') && code.includes('else') && code.includes('score')
+            },
+            3: {
+                title: "For Loop Counting",
+                description: "Use a for loop to print numbers from 1 to 5. Use the range() function.",
+                hint: "Use range(1, 6) to get numbers 1-5:\nfor i in range(1, 6):\n    print(i)",
+                solution: "for i in range(1, 6):\n    print(i)",
+                test: (code) => code.includes('for') && code.includes('range') && code.includes('print')
+            },
+            4: {
+                title: "While Loop Challenge",
+                description: "Create a while loop that counts down from 5 to 1, then prints \"Blast off!\"",
+                hint: "Start with countdown = 5:\ncountdown = 5\nwhile countdown > 0:\n    print(countdown)\n    countdown -= 1\nprint(\"Blast off!\")",
+                solution: "countdown = 5\nwhile countdown > 0:\n    print(countdown)\n    countdown -= 1\nprint(\"Blast off!\")",
+                test: (code) => code.includes('while') && code.includes('countdown') && code.includes('-=') && code.includes('Blast off')
+            }
+        };
+
+        async function main() {
+            pyodide = await loadPyodide();
+            console.log("Pyodide is ready");
+        }
+
+        async function runCode(exerciseNum) {
+            const code = document.getElementById(`code-${exerciseNum}`).value;
+            const outputElement = document.getElementById(`output-${exerciseNum}`);
+            
+            try {
+                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+`);
+                
+                pyodide.runPython(code);
+                const output = pyodide.runPython("sys.stdout.getvalue()");
+                pyodide.runPython("sys.stdout = sys.__stdout__");
+                
+                outputElement.textContent = output || "Code executed successfully!";
+                outputElement.style.color = "#28a745";
+                
+                if (exercises[exerciseNum].test(code)) {
+                    outputElement.textContent += "\n✅ Perfect! Exercise completed!";
+                    markExerciseComplete(exerciseNum);
+                }
+                
+            } catch (error) {
+                outputElement.textContent = `Error: ${error.message}`;
+                outputElement.style.color = "#dc3545";
+            }
+        }
+
+        function showHint(exerciseNum) {
+            alert(exercises[exerciseNum].hint);
+        }
+
+        function markExerciseComplete(exerciseNum) {
+            if (!document.getElementById(`exercise-${exerciseNum}`).classList.contains('completed')) {
+                document.getElementById(`exercise-${exerciseNum}`).classList.add('completed');
+                completedExercises++;
+                updateProgress();
+                
+                if (exerciseNum < totalExercises) {
+                    document.getElementById('next-btn').style.display = 'inline-block';
+                } else {
+                    document.getElementById('complete-btn').style.display = 'inline-block';
+                }
+            }
+        }
+
+        function nextExercise() {
+            if (currentExercise < totalExercises) {
+                currentExercise++;
+                loadExercise(currentExercise);
+                document.getElementById('next-btn').style.display = 'none';
+            }
+        }
+
+        function loadExercise(exerciseNum) {
+            const exercise = exercises[exerciseNum];
+            const exerciseArea = document.getElementById('exercise-area');
+            
+            exerciseArea.innerHTML = `
+                <div class="exercise-card" id="exercise-${exerciseNum}">
+                    <h4>Exercise ${exerciseNum}: ${exercise.title}</h4>
+                    <p>${exercise.description}</p>
+                    <textarea class="code-editor" id="code-${exerciseNum}" placeholder="# Write your code here"></textarea>
+                    <button class="btn-run" onclick="runCode(${exerciseNum})">
+                        <i class="fas fa-play"></i> Run Code
+                    </button>
+                    <button class="btn-run" onclick="showHint(${exerciseNum})" style="background: var(--accent-green);">
+                        <i class="fas fa-lightbulb"></i> Hint
+                    </button>
+                    <div class="output-panel" id="output-${exerciseNum}"></div>
+                </div>
+            `;
+        }
+
+        function updateProgress() {
+            const progressPercent = (completedExercises / totalExercises) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').textContent = `${completedExercises} / ${totalExercises} exercises completed`;
+        }
+
+        function completeLesson() {
+            alert("🎉 Awesome! You've mastered Python control flow!");
+            window.location.href = '/dashboard.html';
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            .exercise-card.completed {
+                border-left-color: var(--accent-green);
+                background: #d4edda;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Make functions globally available for onclick handlers
+        window.runCode = runCode;
+        window.showHint = showHint;
+        window.nextExercise = nextExercise;
+        window.completeLesson = completeLesson;
+
+        main();
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Platform Fixes</title>
+</head>
+<body>
+    <h1>Testing Platform Fixes</h1>
+    <div id="test-results"></div>
+    
+    <script>
+        // Copy the exact functions from the platform
+        function formatPythonOutput(value) {
+            if (typeof value === 'boolean') {
+                return value ? 'True' : 'False';
+            } else if (value === null) {
+                return 'None';
+            } else if (Array.isArray(value)) {
+                return '[' + value.map(formatPythonOutput).join(', ') + ']';
+            } else if (typeof value === 'string') {
+                return value;
+            } else if (typeof value === 'object' && value.isFloat) {
+                // Handle values marked as floats from division
+                const num = value.value;
+                return num % 1 === 0 ? num + '.0' : num.toString();
+            } else if (typeof value === 'number') {
+                return value.toString();
+            } else {
+                return value.toString();
+            }
+        }
+
+        // Test cases
+        const tests = [
+            {
+                name: "Division assignment with /= operator",
+                operation: "100 /= 2",
+                expected: "50.0",
+                test: () => {
+                    const result = { isFloat: true, value: 100 / 2 };
+                    return formatPythonOutput(result);
+                }
+            },
+            {
+                name: "Floor division assignment with //= operator", 
+                operation: "17 //= 3",
+                expected: "5",
+                test: () => {
+                    const result = Math.floor(17 / 3);
+                    return formatPythonOutput(result);
+                }
+            },
+            {
+                name: "Regular division with whole number result",
+                operation: "10 / 2",
+                expected: "5.0",
+                test: () => {
+                    const result = { isFloat: true, value: 10 / 2 };
+                    return formatPythonOutput(result);
+                }
+            },
+            {
+                name: "Division with decimal result",
+                operation: "7 / 2",
+                expected: "3.5",
+                test: () => {
+                    const result = { isFloat: true, value: 7 / 2 };
+                    return formatPythonOutput(result);
+                }
+            },
+            {
+                name: "Regular integer",
+                operation: "integer 5",
+                expected: "5",
+                test: () => {
+                    return formatPythonOutput(5);
+                }
+            }
+        ];
+
+        // Run tests
+        let results = '<h2>Test Results:</h2>';
+        tests.forEach(test => {
+            const actual = test.test();
+            const passed = actual === test.expected;
+            results += `
+                <div style="padding: 10px; margin: 5px; border: 1px solid ${passed ? 'green' : 'red'}; border-radius: 5px;">
+                    <strong>${test.name}</strong><br>
+                    Operation: ${test.operation}<br>
+                    Expected: "${test.expected}"<br>
+                    Actual: "${actual}"<br>
+                    Status: <span style="color: ${passed ? 'green' : 'red'}">${passed ? 'PASS' : 'FAIL'}</span>
+                </div>
+            `;
+        });
+
+        document.getElementById('test-results').innerHTML = results;
+    </script>
+</body>
+</html>

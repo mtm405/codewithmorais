@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Testing Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔬 Progress Saving Test Suite</h1>
+        <p>This tool will test all aspects of the progress saving system to identify issues.</p>
+        
+        <div class="test-section">
+            <h2>1. Authentication Test</h2>
+            <button onclick="testAuthentication()">Test Authentication</button>
+            <div id="auth-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>2. Firebase Connection Test</h2>
+            <button onclick="testFirebaseConnection()">Test Firebase Connection</button>
+            <div id="firebase-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>3. ProgressTracker Test</h2>
+            <button onclick="testProgressTracker()">Test ProgressTracker</button>
+            <div id="progresstracker-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>4. Save Exercise Progress Test</h2>
+            <button onclick="testSaveExerciseProgress()">Test Save Exercise Progress</button>
+            <div id="save-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>5. Load Progress Test</h2>
+            <button onclick="testLoadProgress()">Test Load Progress</button>
+            <div id="load-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>6. Course Progress Calculation Test</h2>
+            <button onclick="testCourseProgressCalculation()">Test Course Progress</button>
+            <div id="course-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>7. localStorage Backup Test</h2>
+            <button onclick="testLocalStorageBackup()">Test localStorage Backup</button>
+            <div id="localstorage-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>8. Complete Integration Test</h2>
+            <button onclick="runFullTest()">Run Complete Test</button>
+            <div id="integration-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>9. Current Firebase Data</h2>
+            <button onclick="showCurrentData()">Show Current Firebase Data</button>
+            <div id="current-data"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc,
+            updateDoc,
+            serverTimestamp
+        } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        let firebaseConfig, app, auth, db, currentUser;
+
+        // Initialize Firebase
+        async function initFirebase() {
+            try {
+                const cfg = await import('./firebase-config.js');
+                firebaseConfig = cfg.firebaseConfig;
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                
+                return new Promise((resolve, reject) => {
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            currentUser = user;
+                            resolve(user);
+                        } else {
+                            reject(new Error('No user authenticated'));
+                        }
+                    });
+                });
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // Test functions
+        window.testAuthentication = async function() {
+            const resultDiv = document.getElementById('auth-result');
+            resultDiv.innerHTML = '<div class="info">Testing authentication...</div>';
+            
+            try {
+                await initFirebase();
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Authentication Success</div>
+                    <p><strong>User:</strong> ${currentUser.email}</p>
+                    <p><strong>UID:</strong> ${currentUser.uid}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ Authentication Failed</div>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p><strong>Solution:</strong> Make sure you're logged in first</p>
+                `;
+            }
+        };
+
+        window.testFirebaseConnection = async function() {
+            const resultDiv = document.getElementById('firebase-result');
+            resultDiv.innerHTML = '<div class="info">Testing Firebase connection...</div>';
+            
+            try {
+                if (!currentUser) {
+                    await initFirebase();
+                }
+                
+                // Test read access
+                const testDoc = doc(db, 'userProgress', currentUser.uid);
+                const docSnap = await getDoc(testDoc);
+                
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Firebase Connection Success</div>
+                    <p><strong>Database:</strong> Connected</p>
+                    <p><strong>User Document Exists:</strong> ${docSnap.exists()}</p>
+                    <p><strong>Document ID:</strong> ${testDoc.id}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ Firebase Connection Failed</div>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <pre>${error.stack}</pre>
+                `;
+            }
+        };
+
+        window.testProgressTracker = async function() {
+            const resultDiv = document.getElementById('progresstracker-result');
+            resultDiv.innerHTML = '<div class="info">Testing ProgressTracker...</div>';
+            
+            try {
+                if (!currentUser) {
+                    await initFirebase();
+                }
+
+                // Check if ProgressTracker exists
+                if (!window.ProgressTracker) {
+                    throw new Error('ProgressTracker not found on window object');
+                }
+
+                // Test ProgressTracker methods
+                const methods = ['initializeUserProgress', 'getUserProgress', 'saveExerciseProgress', 'updateCourseProgress'];
+                const results = [];
+                
+                for (const method of methods) {
+                    if (typeof window.ProgressTracker[method] === 'function') {
+                        results.push(`✅ ${method}: Available`);
+                    } else {
+                        results.push(`❌ ${method}: Missing`);
+                    }
+                }
+
+                resultDiv.innerHTML = `
+                    <div class="success">✅ ProgressTracker Found</div>
+                    <div class="status">${results.join('<br>')}</div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ ProgressTracker Test Failed</div>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p><strong>Available on window:</strong> ${Object.keys(window).filter(k => k.includes('Progress')).join(', ') || 'None'}</p>
+                `;
+            }
+        };
+
+        window.testSaveExerciseProgress = async function() {
+            const resultDiv = document.getElementById('save-result');
+            resultDiv.innerHTML = '<div class="info">Testing save exercise progress...</div>';
+            
+            try {
+                if (!currentUser) {
+                    await initFirebase();
+                }
+
+                if (!window.ProgressTracker) {
+                    throw new Error('ProgressTracker not available');
+                }
+
+                // Test data
+                const testData = {
+                    completed: 2,
+                    currentExercise: 3,
+                    totalExercises: 4,
+                    lastUpdated: new Date().toISOString()
+                };
+
+                console.log('Attempting to save test progress:', testData);
+
+                // Save test progress
+                await window.ProgressTracker.saveExerciseProgress(
+                    currentUser.uid,
+                    'python-fundamentals',
+                    'variables',
+                    testData
+                );
+
+                // Verify it was saved
+                const savedData = await window.ProgressTracker.getUserProgress(currentUser.uid);
+                const lessonData = savedData.courses['python-fundamentals'].lessons['variables'];
+
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Save Exercise Progress Success</div>
+                    <p><strong>Test Data Sent:</strong></p>
+                    <pre>${JSON.stringify(testData, null, 2)}</pre>
+                    <p><strong>Data Retrieved:</strong></p>
+                    <pre>${JSON.stringify(lessonData.exerciseProgress, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ Save Exercise Progress Failed</div>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <pre>${error.stack}</pre>
+                `;
+            }
+        };
+
+        window.testLoadProgress = async function() {
+            const resultDiv = document.getElementById('load-result');
+            resultDiv.innerHTML = '<div class="info">Testing load progress...</div>';
+            
+            try {
+                if (!currentUser) {
+                    await initFirebase();
+                }
+
+                if (!window.ProgressTracker) {
+                    throw new Error('ProgressTracker not available');
+                }
+
+                // Load progress
+                const progressData = await window.ProgressTracker.getUserProgress(currentUser.uid);
+                
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Load Progress Success</div>
+                    <p><strong>Courses Found:</strong> ${Object.keys(progressData.courses || {}).join(', ')}</p>
+                    <p><strong>Full Data:</strong></p>
+                    <pre>${JSON.stringify(progressData, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ Load Progress Failed</div>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <pre>${error.stack}</pre>
+                `;
+            }
+        };
+
+        window.testCourseProgressCalculation = async function() {
+            const resultDiv = document.getElementById('course-result');
+            resultDiv.innerHTML = '<div class="info">Testing course progress calculation...</div>';
+            
+            try {
+                if (!currentUser) {
+                    await initFirebase();
+                }
+
+                if (!window.ProgressTracker) {
+                    throw new Error('ProgressTracker not available');
+                }
+
+                // Get current progress
+                const beforeData = await window.ProgressTracker.getUserProgress(currentUser.uid);
+                const beforeProgress = beforeData.courses['python-fundamentals'].progress;
+
+                // Update course progress
+                await window.ProgressTracker.updateCourseProgress(currentUser.uid, 'python-fundamentals');
+
+                // Get updated progress
+                const afterData = await window.ProgressTracker.getUserProgress(currentUser.uid);
+                const afterProgress = afterData.courses['python-fundamentals'].progress;
+
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Course Progress Calculation Success</div>
+                    <p><strong>Progress Before:</strong> ${beforeProgress}%</p>
+                    <p><strong>Progress After:</strong> ${afterProgress}%</p>
+                    <p><strong>Course Data:</strong></p>
+                    <pre>${JSON.stringify(afterData.courses['python-fundamentals'], null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ Course Progress Calculation Failed</div>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <pre>${error.stack}</pre>
+                `;
+            }
+        };
+
+        window.testLocalStorageBackup = async function() {
+            const resultDiv = document.getElementById('localstorage-result');
+            resultDiv.innerHTML = '<div class="info">Testing localStorage backup...</div>';
+            
+            try {
+                // Test localStorage functionality
+                const testKey = 'pendingProgress_test';
+                const testData = {
+                    userId: 'test-user',
+                    courseId: 'test-course',
+                    lessonId: 'test-lesson',
+                    progressData: { completed: 1, total: 3 },
+                    timestamp: Date.now()
+                };
+
+                // Save to localStorage
+                localStorage.setItem(testKey, JSON.stringify(testData));
+
+                // Retrieve from localStorage
+                const retrieved = JSON.parse(localStorage.getItem(testKey));
+
+                // Check for existing pending progress
+                const pendingKeys = Object.keys(localStorage).filter(key => key.startsWith('pendingProgress_'));
+
+                // Clean up
+                localStorage.removeItem(testKey);
+
+                resultDiv.innerHTML = `
+                    <div class="success">✅ localStorage Backup Test Success</div>
+                    <p><strong>Test Data Saved and Retrieved:</strong> ${JSON.stringify(retrieved) === JSON.stringify(testData)}</p>
+                    <p><strong>Existing Pending Progress Keys:</strong> ${pendingKeys.join(', ') || 'None'}</p>
+                    <p><strong>localStorage Available:</strong> ${typeof Storage !== 'undefined'}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ localStorage Backup Test Failed</div>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            }
+        };
+
+        window.runFullTest = async function() {
+            const resultDiv = document.getElementById('integration-result');
+            resultDiv.innerHTML = '<div class="info">Running complete integration test...</div>';
+            
+            try {
+                if (!currentUser) {
+                    await initFirebase();
+                }
+
+                const results = [];
+
+                // Test complete flow
+                const exerciseData = {
+                    completed: 3,
+                    currentExercise: 4,
+                    totalExercises: 4,
+                    lastUpdated: new Date().toISOString()
+                };
+
+                // 1. Save exercise progress
+                await window.ProgressTracker.saveExerciseProgress(
+                    currentUser.uid,
+                    'python-fundamentals',
+                    'variables',
+                    exerciseData
+                );
+                results.push('✅ Exercise progress saved');
+
+                // 2. Verify course progress updated
+                const progressData = await window.ProgressTracker.getUserProgress(currentUser.uid);
+                const courseProgress = progressData.courses['python-fundamentals'].progress;
+                results.push(`✅ Course progress: ${courseProgress}%`);
+
+                // 3. Test localStorage backup
+                localStorage.setItem('pendingProgress_test', JSON.stringify({
+                    userId: currentUser.uid,
+                    courseId: 'python-fundamentals',
+                    lessonId: 'operators',
+                    progressData: { completed: 2, currentExercise: 3, totalExercises: 5 },
+                    timestamp: Date.now()
+                }));
+                results.push('✅ localStorage backup created');
+
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Full Integration Test Success</div>
+                    <div class="status">${results.join('<br>')}</div>
+                    <p><strong>Final Progress Data:</strong></p>
+                    <pre>${JSON.stringify(progressData.courses['python-fundamentals'], null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ Full Integration Test Failed</div>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <pre>${error.stack}</pre>
+                `;
+            }
+        };
+
+        window.showCurrentData = async function() {
+            const resultDiv = document.getElementById('current-data');
+            resultDiv.innerHTML = '<div class="info">Loading current Firebase data...</div>';
+            
+            try {
+                if (!currentUser) {
+                    await initFirebase();
+                }
+
+                const progressData = await window.ProgressTracker.getUserProgress(currentUser.uid);
+                
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Current Firebase Data</div>
+                    <pre>${JSON.stringify(progressData, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ Failed to Load Current Data</div>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            }
+        };
+
+        // Initialize Firebase on page load
+        console.log('Test page loaded, Firebase initializing...');
+    </script>
+
+    <!-- Include app.js to get ProgressTracker -->
+    <script type="module" src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Variables - Interactive Lesson</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #3b82f6;
+            --accent-green: #10b981;
+            --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .lesson-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .lesson-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .lesson-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .theory-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .practice-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .code-editor {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            min-height: 200px;
+            margin-bottom: 1rem;
+            resize: vertical;
+            border: none;
+            font-size: 14px;
+        }
+
+        .output-panel {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 100px;
+            border-left: 4px solid var(--primary-blue);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .exercise-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .btn-run {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .btn-run:hover {
+            background: var(--secondary-blue);
+        }
+
+        .progress-tracker {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-blue);
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: var(--shadow-medium);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-blue);
+        }
+
+        .nav-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-blue);
+        }
+
+        @media (max-width: 768px) {
+            .lesson-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fab fa-python"></i>
+                <span>Python Lessons</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/dashboard.html" class="nav-link">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="lesson-container">
+        <div class="lesson-header">
+            <h1><i class="fab fa-python"></i> Python Variables & Data Types</h1>
+            <p>Learn how to store and work with data in Python using variables</p>
+        </div>
+
+        <div class="progress-tracker">
+            <div class="flex-row">
+                <h3>Lesson Progress</h3>
+                <span id="progress-text">0 / 4 exercises completed</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="lesson-content">
+            <div class="theory-panel">
+                <h2>📚 Theory</h2>
+                <div id="theory-content">
+                    <h3>What are Variables?</h3>
+                    <p>Variables are containers that store data values. In Python, you create a variable by assigning a value to it.</p>
+                    
+                    <h4>Basic Syntax:</h4>
+                    <code>variable_name = value</code>
+                    
+                    <h4>Common Data Types:</h4>
+                    <ul>
+                        <li><strong>String:</strong> Text data in quotes - <code>"Hello"</code></li>
+                        <li><strong>Integer:</strong> Whole numbers - <code>42</code></li>
+                        <li><strong>Float:</strong> Decimal numbers - <code>3.14</code></li>
+                        <li><strong>Boolean:</strong> True or False - <code>True</code></li>
+                    </ul>
+
+                    <h4>Example:</h4>
+                    <pre><code>name = "Alice"
+age = 16
+height = 5.6
+is_student = True</code></pre>
+                </div>
+            </div>
+
+            <div class="practice-panel">
+                <h2>💻 Practice</h2>
+                <div id="exercise-area">
+                    <div class="exercise-card" id="exercise-1">
+                        <h4>Exercise 1: Create Your First Variable</h4>
+                        <p>Create a variable called <code>my_name</code> and assign it your name as a string.</p>
+                        <textarea class="code-editor" id="code-1" placeholder="# Write your code here">my_name = </textarea>
+                        <button class="btn-run" onclick="runCode(1)">
+                            <i class="fas fa-play"></i> Run Code
+                        </button>
+                        <button class="btn-run" onclick="showHint(1)" style="background: var(--accent-green);">
+                            <i class="fas fa-lightbulb"></i> Hint
+                        </button>
+                        <div class="output-panel" id="output-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-buttons" style="text-align: center; margin-top: 2rem;">
+            <button class="btn-primary" onclick="nextExercise()" id="next-btn" style="display: none;">
+                Next Exercise <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="btn-primary" onclick="completeLesson()" id="complete-btn" style="display: none;">
+                Complete Lesson <i class="fas fa-check"></i>
+            </button>
+        </div>
+    </main>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+        let firebaseConfig;
+        let app, auth, currentUser;
+
+        // Initialize Firebase
+        async function initFirebase() {
+            try {
+                const cfg = await import('./firebase-config.js');
+                firebaseConfig = cfg.firebaseConfig;
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                
+                // Return a promise that resolves when user is authenticated
+                return new Promise((resolve, reject) => {
+                    // Check authentication
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            currentUser = user;
+                            console.log('User authenticated:', user.email);
+                            resolve(user);
+                        } else {
+                            console.log('No user authenticated, redirecting to login');
+                            window.location.href = '/';
+                            reject(new Error('No user authenticated'));
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Firebase initialization failed:', error);
+                throw error;
+            }
+        }
+
+        let pyodide;
+        let currentExercise = 1;
+        let completedExercises = 0;
+        const totalExercises = 4;
+
+        const exercises = {
+            1: {
+                title: "Create Your First Variable",
+                description: "Create a variable called <code>my_name</code> and assign it your name as a string.",
+                hint: "Remember to put your name in quotes! Example: my_name = \"Your Name\"",
+                solution: "my_name = \"Alice\"",
+                test: (code) => code.includes('my_name') && code.includes('=') && (code.includes('"') || code.includes("'"))
+            },
+            2: {
+                title: "Working with Numbers",
+                description: "Create a variable called <code>age</code> and assign it your age as an integer.",
+                hint: "Numbers don't need quotes! Example: age = 16",
+                solution: "age = 16",
+                test: (code) => code.includes('age') && code.includes('=') && /\d+/.test(code)
+            },
+            3: {
+                title: "Multiple Variables",
+                description: "Create three variables: <code>name</code> (string), <code>grade</code> (integer), and <code>gpa</code> (float).",
+                hint: "Create each variable on a new line:\nname = \"Your Name\"\ngrade = 11\ngpa = 3.8",
+                solution: "name = \"Alice\"\ngrade = 11\ngpa = 3.8",
+                test: (code) => code.includes('name') && code.includes('grade') && code.includes('gpa')
+            },
+            4: {
+                title: "Print Your Variables",
+                description: "Use the <code>print()</code> function to display all your variables.",
+                hint: "Use print() to show each variable:\nprint(name)\nprint(grade)\nprint(gpa)",
+                solution: "print(name)\nprint(grade)\nprint(gpa)",
+                test: (code) => code.includes('print(') && code.includes('name') && code.includes('grade') && code.includes('gpa')
+            }
+        };
+
+        async function main() {
+            await initFirebase();
+            pyodide = await loadPyodide();
+            console.log("Pyodide is ready");
+            
+            // Load user's previous progress for this lesson
+            await loadLessonProgress();
+        }
+
+        // Load user's progress for this specific lesson
+        async function loadLessonProgress() {
+            if (currentUser && window.ProgressTracker) {
+                try {
+                    // Initialize user progress if needed, then get the data
+                    const progressData = await window.ProgressTracker.initializeUserProgress(currentUser.uid);
+                    if (progressData && progressData.courses && progressData.courses['python-fundamentals']) {
+                        const lesson = progressData.courses['python-fundamentals'].lessons['variables'];
+                        if (lesson && lesson.exerciseProgress) {
+                            console.log('Loading progress data:', lesson.exerciseProgress);
+                            
+                            // Restore completed exercises
+                            completedExercises = lesson.exerciseProgress.completed || 0;
+                            
+                            // Determine which exercise to load
+                            if (completedExercises === totalExercises) {
+                                // All exercises completed - load the last exercise and show complete button
+                                currentExercise = totalExercises;
+                                document.getElementById('complete-btn').style.display = 'inline-block';
+                            } else if (completedExercises > 0) {
+                                // Some exercises completed - load the next incomplete exercise
+                                currentExercise = completedExercises + 1;
+                            } else {
+                                // No exercises completed - start with first exercise
+                                currentExercise = 1;
+                            }
+                            
+                            console.log(`Progress restored: ${completedExercises}/${totalExercises} completed, loading exercise ${currentExercise}`);
+                            
+                            // Load the appropriate exercise
+                            loadExercise(currentExercise);
+                            
+                            // Mark completed exercises visually after loading
+                            setTimeout(() => {
+                                for (let i = 1; i <= completedExercises; i++) {
+                                    const exerciseElement = document.getElementById(`exercise-${i}`);
+                                    if (exerciseElement) {
+                                        exerciseElement.classList.add('completed');
+                                    }
+                                }
+                                updateProgress();
+                            }, 100);
+                            
+                        } else {
+                            console.log('No exercise progress found, starting fresh');
+                            // No previous progress, start with first exercise
+                            loadExercise(currentExercise);
+                        }
+                    } else {
+                        // No progress data, start fresh
+                        loadExercise(currentExercise);
+                    }
+                } catch (error) {
+                    console.error('Error loading lesson progress:', error);
+                    // Fallback to first exercise
+                    loadExercise(currentExercise);
+                }
+            } else {
+                // No Firebase connection, start fresh
+                loadExercise(currentExercise);
+            }
+        }
+
+        async function runCode(exerciseNum) {
+            const code = document.getElementById(`code-${exerciseNum}`).value;
+            const outputElement = document.getElementById(`output-${exerciseNum}`);
+            
+            try {
+                // Capture stdout
+                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+`);
+                
+                // Run the user's code
+                pyodide.runPython(code);
+                
+                // Get the output
+                const output = pyodide.runPython("sys.stdout.getvalue()");
+                
+                // Reset stdout
+                pyodide.runPython("sys.stdout = sys.__stdout__");
+                
+                outputElement.textContent = output || "Code executed successfully!";
+                outputElement.style.color = "#28a745";
+                
+                // Check if exercise is correct
+                if (exercises[exerciseNum].test(code)) {
+                    outputElement.textContent += "\n✅ Great job! Exercise completed!";
+                    markExerciseComplete(exerciseNum);
+                }
+                
+            } catch (error) {
+                outputElement.textContent = `Error: ${error.message}`;
+                outputElement.style.color = "#dc3545";
+            }
+        }
+
+        function showHint(exerciseNum) {
+            alert(exercises[exerciseNum].hint);
+        }
+
+        async function markExerciseComplete(exerciseNum) {
+            if (!document.getElementById(`exercise-${exerciseNum}`).classList.contains('completed')) {
+                document.getElementById(`exercise-${exerciseNum}`).classList.add('completed');
+                completedExercises++;
+                updateProgress();
+                
+                // Save exercise progress to Firebase
+                await saveExerciseProgress();
+                
+                if (exerciseNum < totalExercises) {
+                    document.getElementById('next-btn').style.display = 'inline-block';
+                } else {
+                    document.getElementById('complete-btn').style.display = 'inline-block';
+                }
+            }
+        }
+
+        // Save individual exercise progress to Firebase
+        async function saveExerciseProgress() {
+            if (currentUser && window.ProgressTracker) {
+                try {
+                    await window.ProgressTracker.saveExerciseProgress(
+                        currentUser.uid,
+                        'python-fundamentals',
+                        'variables',
+                        {
+                            completed: completedExercises,
+                            currentExercise: currentExercise,
+                            totalExercises: totalExercises,
+                            lastUpdated: new Date().toISOString()
+                        }
+                    );
+                    console.log(`Exercise progress saved: ${completedExercises}/${totalExercises}`);
+                } catch (error) {
+                    console.error('Error saving exercise progress:', error);
+                }
+            }
+        }
+
+        async function nextExercise() {
+            if (currentExercise < totalExercises) {
+                currentExercise++;
+                loadExercise(currentExercise);
+                document.getElementById('next-btn').style.display = 'none';
+                
+                // Save current exercise progress
+                await saveExerciseProgress();
+            }
+        }
+
+        function loadExercise(exerciseNum) {
+            const exercise = exercises[exerciseNum];
+            const exerciseArea = document.getElementById('exercise-area');
+            
+            exerciseArea.innerHTML = `
+                <div class="exercise-card" id="exercise-${exerciseNum}">
+                    <h4>Exercise ${exerciseNum}: ${exercise.title}</h4>
+                    <p>${exercise.description}</p>
+                    <textarea class="code-editor" id="code-${exerciseNum}" placeholder="# Write your code here"></textarea>
+                    <button class="btn-run" onclick="runCode(${exerciseNum})">
+                        <i class="fas fa-play"></i> Run Code
+                    </button>
+                    <button class="btn-run" onclick="showHint(${exerciseNum})" style="background: var(--accent-green);">
+                        <i class="fas fa-lightbulb"></i> Hint
+                    </button>
+                    <div class="output-panel" id="output-${exerciseNum}"></div>
+                </div>
+            `;
+        }
+
+        function updateProgress() {
+            const progressPercent = (completedExercises / totalExercises) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').textContent = `${completedExercises} / ${totalExercises} exercises completed`;
+        }
+
+        async function completeLesson() {
+            // Save lesson completion to Firebase
+            if (currentUser && window.ProgressTracker) {
+                try {
+                    await window.ProgressTracker.markLessonComplete(
+                        currentUser.uid, 
+                        'python-fundamentals', 
+                        'variables',
+                        Date.now() - lessonStartTime // time spent in milliseconds
+                    );
+                    console.log('Lesson completion saved to Firebase');
+                } catch (error) {
+                    console.error('Error saving lesson completion:', error);
+                }
+            }
+            
+            alert("🎉 Congratulations! You've completed the Variables lesson!");
+            window.location.href = '/dashboard.html';
+        }
+
+        // Track lesson start time for progress
+        const lessonStartTime = Date.now();
+
+        // Add CSS for completed exercises
+        const style = document.createElement('style');
+        style.textContent = `
+            .exercise-card.completed {
+                border-left-color: var(--accent-green);
+                background: #d4edda;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Make functions globally available for onclick handlers
+        window.runCode = runCode;
+        window.showHint = showHint;
+        window.nextExercise = nextExercise;
+        window.completeLesson = completeLesson;
+
+        // Save progress when user leaves the page
+        window.addEventListener('beforeunload', () => {
+            if (currentUser && window.ProgressTracker) {
+                // Use sendBeacon for reliable data transmission during page unload
+                const progressData = {
+                    completed: completedExercises,
+                    currentExercise: currentExercise,
+                    totalExercises: totalExercises,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                // Create a blob with the progress data
+                const blob = new Blob([JSON.stringify({
+                    userId: currentUser.uid,
+                    courseId: 'python-fundamentals',
+                    lessonId: 'variables',
+                    progressData: progressData
+                })], { type: 'application/json' });
+                
+                // Store in localStorage as backup
+                localStorage.setItem('pendingProgress_variables', JSON.stringify({
+                    userId: currentUser.uid,
+                    courseId: 'python-fundamentals',
+                    lessonId: 'variables',
+                    progressData: progressData,
+                    timestamp: Date.now()
+                }));
+            }
+        });
+
+        main();
+    </script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Code with Morais</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Prevent flash of unstyled content */
+    .dashboard-main {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .dashboard-main.loaded {
+      opacity: 1;
+    }
+    /* Loading animation for stats */
+    .stat-number {
+      min-width: 2ch;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo">
+        <i class="fas fa-code"></i>
+        <span>Code with Morais</span>
+      </div>
+      <nav class="main-nav">
+        <a href="#courses" class="nav-link active">Courses</a>
+        <a href="#progress" class="nav-link">Progress</a>
+        <a href="#assignments" class="nav-link">Assignments</a>
+        <a href="#help" class="nav-link">Help</a>
+      </nav>
+      <div class="user-menu">
+        <div id="user-avatar" class="user-avatar" hidden>
+          <img id="user-photo" src="" alt="User photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="avatar-fallback" style="display:none">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+        <div class="user-info-header">
+          <span id="user-name-header" class="user-name"></span>
+          <button id="signout" class="btn-secondary btn-small">
+            <i class="fas fa-sign-out-alt"></i>
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notifications Bar -->
+  <div class="notifications-bar">
+    <div class="container">
+      <div class="notification-item">
+        <i class="fas fa-check-circle notification-icon success"></i>
+        <span>Completed: Variables and Operators • Python Fundamentals • 2 hours ago</span>
+      </div>
+      <div class="notification-toggle">
+        <button id="notifications-btn" class="btn-icon">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div id="loading-state" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading your dashboard...</p>
+  </div>
+
+  <!-- Not Signed In State -->
+  <div id="not-signed-in" class="auth-error" hidden>
+    <div class="error-content">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h2>Authentication Required</h2>
+      <p>You need to sign in to access your dashboard.</p>
+      <a href="/" class="btn-primary">Return to Login</a>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Content -->
+  <main id="dashboard-content" class="dashboard-main" hidden>
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+      <div class="container">
+        <div class="welcome-content">
+          <h1>Welcome back, <span id="user-name-welcome"></span>!</h1>
+          <p class="welcome-subtitle">Ready to continue your Python programming journey?</p>
+          
+          <!-- Quick Actions -->
+          <div class="quick-actions" style="margin: 2rem 0; display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="test.html" class="quick-action-btn" style="background: linear-gradient(135deg, #e53e3e, #c53030); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease;">
+              <i class="fas fa-clipboard-list"></i>
+              Take Assessment Test
+            </a>
+            <a href="test-teacher-dashboard.html" class="quick-action-btn" style="background: linear-gradient(135deg, #805ad5, #6b46c1); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease;">
+              <i class="fas fa-chalkboard-teacher"></i>
+              Teacher Dashboard
+            </a>
+            <a href="operators-mastery.html" class="quick-action-btn" style="background: linear-gradient(135deg, #4299e1, #3182ce); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease;">
+              <i class="fas fa-play"></i>
+              Continue Learning
+            </a>
+            <a href="operators-reference.html" class="quick-action-btn" style="background: linear-gradient(135deg, #48bb78, #38a169); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease;">
+              <i class="fas fa-book"></i>
+              Reference Guide
+            </a>
+          </div>
+          
+          <style>
+            .quick-action-btn:hover {
+              transform: translateY(-2px);
+            }
+          </style>
+        </div>
+        <div class="quick-stats">
+          <div class="stat-card">
+            <i class="fab fa-python"></i>
+            <div class="stat-info">
+              <span class="stat-number">-</span>
+              <span class="stat-label">Python Lessons</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-trophy"></i>
+            <div class="stat-info">
+              <span class="stat-number">-</span>
+              <span class="stat-label">Course Progress</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-code"></i>
+            <div class="stat-info">
+              <span class="stat-number">-</span>
+              <span class="stat-label">Challenges Solved</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Course Grid -->
+    <section class="courses-section">
+      <div class="container">
+        <h2>Your Courses</h2>
+        <div class="course-grid">
+          <div class="course-card">
+            <div class="course-header">
+              <div class="course-icon">
+                <i class="fab fa-python"></i>
+              </div>
+              <div class="course-progress">
+                <span>-%</span>
+              </div>
+            </div>
+            <h3>Python Fundamentals</h3>
+            <p>Variables, operators, and data types</p>
+            <div class="course-meta">
+              <span><i class="fas fa-clock"></i> Loading...</span>
+              <span><i class="fas fa-book"></i> -/4 lessons</span>
+            </div>
+            <div class="lesson-links" style="margin: 1rem 0;">
+              <a href="#" class="lesson-link locked">
+                <i class="fas fa-spinner fa-spin"></i> Loading...
+              </a>
+              <a href="#" class="lesson-link locked">
+                <i class="fas fa-spinner fa-spin"></i> Loading...
+              </a>
+            </div>
+            <button class="btn-disabled btn-full" disabled>Loading...</button>
+          </div>
+
+          <div class="course-card">
+            <div class="course-header">
+              <div class="course-icon">
+                <i class="fas fa-code-branch"></i>
+              </div>
+              <div class="course-progress">
+                <span>0%</span>
+              </div>
+            </div>
+            <h3>Control Flow</h3>
+            <p>If/else statements, loops, and decision making</p>
+            <div class="course-meta">
+              <span><i class="fas fa-lock"></i> Locked</span>
+              <span><i class="fas fa-book"></i> 0/8 lessons</span>
+            </div>
+            <div class="lesson-links" style="margin: 1rem 0;">
+              <a href="#" class="lesson-link locked">
+                <i class="fas fa-lock"></i> If/Else Statements
+              </a>
+              <a href="#" class="lesson-link locked">
+                <i class="fas fa-lock"></i> Loops
+              </a>
+            </div>
+            <button class="btn-disabled btn-full" disabled>Complete Fundamentals First</button>
+          </div>
+
+          <div class="course-card">
+            <div class="course-header">
+              <div class="course-icon">
+                <i class="fas fa-list"></i>
+              </div>
+              <div class="course-progress">
+                <span>0%</span>
+              </div>
+            </div>
+            <h3>Data Structures</h3>
+            <p>Lists, dictionaries, and tuples</p>
+            <div class="course-meta">
+              <span><i class="fas fa-lock"></i> Locked</span>
+              <span><i class="fas fa-book"></i> 0/10 lessons</span>
+            </div>
+            <div class="lesson-links" style="margin: 1rem 0;">
+              <a href="#" class="lesson-link locked">
+                <i class="fas fa-lock"></i> Lists
+              </a>
+              <a href="#" class="lesson-link locked">
+                <i class="fas fa-lock"></i> Dictionaries
+              </a>
+            </div>
+            <button class="btn-disabled btn-full" disabled>Complete Control Flow First</button>
+          </div>
+
+          <div class="course-card">
+            <div class="course-header">
+              <div class="course-icon">
+                <i class="fas fa-function"></i>
+              </div>
+              <div class="course-progress">
+                <span>0%</span>
+              </div>
+            </div>
+            <h3>Functions</h3>
+            <p>Creating reusable code with functions</p>
+            <div class="course-meta">
+              <span><i class="fas fa-lock"></i> Locked</span>
+              <span><i class="fas fa-book"></i> 0/6 lessons</span>
+            </div>
+            <div class="lesson-links" style="margin: 1rem 0;">
+              <a href="#" class="lesson-link locked">
+                <i class="fas fa-lock"></i> Function Basics
+              </a>
+              <a href="#" class="lesson-link locked">
+                <i class="fas fa-lock"></i> Parameters & Return
+              </a>
+            </div>
+            <button class="btn-disabled btn-full" disabled>Complete Data Structures First</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/dashboard.js"></script>
+</body>
+</html>

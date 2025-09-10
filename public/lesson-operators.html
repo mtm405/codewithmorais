@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Operators - Interactive Lesson</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #3b82f6;
+            --accent-green: #10b981;
+            --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .lesson-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .lesson-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .lesson-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .theory-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .practice-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .code-editor {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            min-height: 200px;
+            margin-bottom: 1rem;
+            resize: vertical;
+            border: none;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .output-panel {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 100px;
+            border-left: 4px solid var(--primary-blue);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .exercise-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .btn-run {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .btn-run:hover {
+            background: var(--secondary-blue);
+        }
+
+        .progress-tracker {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-blue);
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: var(--shadow-medium);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-blue);
+        }
+
+        .nav-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-blue);
+        }
+
+        .operator-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .operator-table th,
+        .operator-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .operator-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .operator-code {
+            background: #e9ecef;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .lesson-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fab fa-python"></i>
+                <span>Python Lessons</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/dashboard.html" class="nav-link">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="lesson-container">
+        <div class="lesson-header">
+            <h1><i class="fas fa-calculator"></i> Python Operators</h1>
+            <p>Learn how to perform calculations and operations in Python</p>
+        </div>
+
+        <div class="progress-tracker">
+            <div class="flex-row">
+                <h3>Lesson Progress</h3>
+                <span id="progress-text">0 / 5 exercises completed</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="lesson-content">
+            <div class="theory-panel">
+                <h2>📚 Theory</h2>
+                <div id="theory-content">
+                    <h3>What are Operators?</h3>
+                    <p>Operators are symbols that perform operations on variables and values. Python has several types of operators.</p>
+                    
+                    <h4>Arithmetic Operators:</h4>
+                    <table class="operator-table">
+                        <thead>
+                            <tr>
+                                <th>Operator</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="operator-code">+</span></td>
+                                <td>Addition</td>
+                                <td><span class="operator-code">5 + 3 = 8</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="operator-code">-</span></td>
+                                <td>Subtraction</td>
+                                <td><span class="operator-code">5 - 3 = 2</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="operator-code">*</span></td>
+                                <td>Multiplication</td>
+                                <td><span class="operator-code">5 * 3 = 15</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="operator-code">/</span></td>
+                                <td>Division</td>
+                                <td><span class="operator-code">6 / 3 = 2.0</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="operator-code">**</span></td>
+                                <td>Exponent</td>
+                                <td><span class="operator-code">2 ** 3 = 8</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Comparison Operators:</h4>
+                    <ul>
+                        <li><code>==</code> Equal to</li>
+                        <li><code>!=</code> Not equal to</li>
+                        <li><code>&gt;</code> Greater than</li>
+                        <li><code>&lt;</code> Less than</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="practice-panel">
+                <h2>💻 Practice</h2>
+                <div id="exercise-area">
+                    <div class="exercise-card" id="exercise-1">
+                        <h4>Exercise 1: Basic Addition</h4>
+                        <p>Create two variables <code>a = 10</code> and <code>b = 5</code>, then calculate their sum and store it in a variable called <code>result</code>. Print the result.</p>
+                        <textarea class="code-editor" id="code-1" placeholder="# Write your code here"></textarea>
+                        <button class="btn-run" onclick="runCode(1)">
+                            <i class="fas fa-play"></i> Run Code
+                        </button>
+                        <button class="btn-run" onclick="showHint(1)" style="background: var(--accent-green);">
+                            <i class="fas fa-lightbulb"></i> Hint
+                        </button>
+                        <div class="output-panel" id="output-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-buttons" style="text-align: center; margin-top: 2rem;">
+            <button class="btn-primary" onclick="nextExercise()" id="next-btn" style="display: none;">
+                Next Exercise <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="btn-primary" onclick="completeLesson()" id="complete-btn" style="display: none;">
+                Complete Lesson <i class="fas fa-check"></i>
+            </button>
+        </div>
+    </main>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+        let firebaseConfig;
+        let app, auth, currentUser;
+
+        // Initialize Firebase
+        async function initFirebase() {
+            try {
+                const cfg = await import('./firebase-config.js');
+                firebaseConfig = cfg.firebaseConfig;
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                
+                // Return a promise that resolves when user is authenticated
+                return new Promise((resolve, reject) => {
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            currentUser = user;
+                            console.log('User authenticated:', user.email);
+                            resolve(user);
+                        } else {
+                            console.log('No user authenticated, redirecting to login');
+                            window.location.href = '/';
+                            reject(new Error('No user authenticated'));
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Firebase initialization failed:', error);
+                throw error;
+            }
+        }
+
+        let pyodide;
+        let currentExercise = 1;
+        let completedExercises = 0;
+        const totalExercises = 5;
+
+        const exercises = {
+            1: {
+                title: "Basic Addition",
+                description: "Create two variables <code>a = 10</code> and <code>b = 5</code>, then calculate their sum and store it in a variable called <code>result</code>. Print the result.",
+                hint: "Remember to use the + operator!\na = 10\nb = 5\nresult = a + b\nprint(result)",
+                solution: "a = 10\nb = 5\nresult = a + b\nprint(result)",
+                test: (code) => code.includes('a = 10') && code.includes('b = 5') && code.includes('result') && code.includes('+') && code.includes('print')
+            },
+            2: {
+                title: "Calculator Challenge",
+                description: "Create a simple calculator. Ask the user for two numbers and perform all basic operations (+, -, *, /) on them.",
+                hint: "Use variables like:\nnum1 = 12\nnum2 = 4\nprint('Addition:', num1 + num2)\nprint('Subtraction:', num1 - num2)\nprint('Multiplication:', num1 * num2)\nprint('Division:', num1 / num2)",
+                solution: "num1 = 12\nnum2 = 4\nprint('Addition:', num1 + num2)\nprint('Subtraction:', num1 - num2)\nprint('Multiplication:', num1 * num2)\nprint('Division:', num1 / num2)",
+                test: (code) => code.includes('+') && code.includes('-') && code.includes('*') && code.includes('/') && code.includes('print')
+            },
+            3: {
+                title: "Power and Exponents",
+                description: "Calculate 2 to the power of 8 using the ** operator. Store the result in a variable called <code>power_result</code> and print it.",
+                hint: "Use the ** operator for exponents:\npower_result = 2 ** 8\nprint(power_result)",
+                solution: "power_result = 2 ** 8\nprint(power_result)",
+                test: (code) => code.includes('**') && code.includes('power_result') && code.includes('print')
+            },
+            4: {
+                title: "Comparison Operations",
+                description: "Create two variables <code>x = 15</code> and <code>y = 10</code>. Use comparison operators to check if x is greater than y, and if they are equal.",
+                hint: "Use comparison operators:\nx = 15\ny = 10\nprint('x > y:', x > y)\nprint('x == y:', x == y)",
+                solution: "x = 15\ny = 10\nprint('x > y:', x > y)\nprint('x == y:', x == y)",
+                test: (code) => code.includes('x = 15') && code.includes('y = 10') && code.includes('>') && code.includes('==')
+            },
+            5: {
+                title: "Mixed Operations",
+                description: "Create a program that calculates the area of a rectangle. Use length = 8 and width = 5. Also calculate the perimeter.",
+                hint: "Area = length * width\nPerimeter = 2 * (length + width)\nlength = 8\nwidth = 5\narea = length * width\nperimeter = 2 * (length + width)\nprint('Area:', area)\nprint('Perimeter:', perimeter)",
+                solution: "length = 8\nwidth = 5\narea = length * width\nperimeter = 2 * (length + width)\nprint('Area:', area)\nprint('Perimeter:', perimeter)",
+                test: (code) => code.includes('length') && code.includes('width') && code.includes('area') && code.includes('perimeter') && code.includes('*')
+            }
+        };
+
+        async function main() {
+            await initFirebase();
+            pyodide = await loadPyodide();
+            console.log("Pyodide is ready");
+            
+            // Load user's previous progress for this lesson
+            await loadLessonProgress();
+        }
+
+        // Load user's progress for this specific lesson
+        async function loadLessonProgress() {
+            if (currentUser && window.ProgressTracker) {
+                try {
+                    // Initialize user progress if needed, then get the data
+                    const progressData = await window.ProgressTracker.initializeUserProgress(currentUser.uid);
+                    if (progressData && progressData.courses && progressData.courses['python-fundamentals']) {
+                        const lesson = progressData.courses['python-fundamentals'].lessons['operators'];
+                        if (lesson && lesson.exerciseProgress) {
+                            console.log('Loading progress data:', lesson.exerciseProgress);
+                            
+                            // Restore completed exercises
+                            completedExercises = lesson.exerciseProgress.completed || 0;
+                            
+                            // Determine which exercise to load
+                            if (completedExercises === totalExercises) {
+                                // All exercises completed - load the last exercise and show complete button
+                                currentExercise = totalExercises;
+                                document.getElementById('complete-btn').style.display = 'inline-block';
+                            } else if (completedExercises > 0) {
+                                // Some exercises completed - load the next incomplete exercise
+                                currentExercise = completedExercises + 1;
+                            } else {
+                                // No exercises completed - start with first exercise
+                                currentExercise = 1;
+                            }
+                            
+                            console.log(`Progress restored: ${completedExercises}/${totalExercises} completed, loading exercise ${currentExercise}`);
+                            
+                            // Load the appropriate exercise
+                            loadExercise(currentExercise);
+                            
+                            // Mark completed exercises visually after loading
+                            setTimeout(() => {
+                                for (let i = 1; i <= completedExercises; i++) {
+                                    const exerciseElement = document.getElementById(`exercise-${i}`);
+                                    if (exerciseElement) {
+                                        exerciseElement.classList.add('completed');
+                                    }
+                                }
+                                updateProgress();
+                            }, 100);
+                            
+                        } else {
+                            console.log('No exercise progress found, starting fresh');
+                            // No previous progress, start with first exercise
+                            loadExercise(currentExercise);
+                        }
+                    } else {
+                        // No progress data, start fresh
+                        loadExercise(currentExercise);
+                    }
+                } catch (error) {
+                    console.error('Error loading lesson progress:', error);
+                    // Fallback to first exercise
+                    loadExercise(currentExercise);
+                }
+            } else {
+                // No Firebase connection, start fresh
+                loadExercise(currentExercise);
+            }
+        }
+
+        async function runCode(exerciseNum) {
+            const code = document.getElementById(`code-${exerciseNum}`).value;
+            const outputElement = document.getElementById(`output-${exerciseNum}`);
+            
+            try {
+                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+`);
+                
+                pyodide.runPython(code);
+                const output = pyodide.runPython("sys.stdout.getvalue()");
+                pyodide.runPython("sys.stdout = sys.__stdout__");
+                
+                outputElement.textContent = output || "Code executed successfully!";
+                outputElement.style.color = "#28a745";
+                
+                if (exercises[exerciseNum].test(code)) {
+                    outputElement.textContent += "\n✅ Excellent! Exercise completed!";
+                    markExerciseComplete(exerciseNum);
+                }
+                
+            } catch (error) {
+                outputElement.textContent = `Error: ${error.message}`;
+                outputElement.style.color = "#dc3545";
+            }
+        }
+
+        function showHint(exerciseNum) {
+            alert(exercises[exerciseNum].hint);
+        }
+
+        // Save exercise progress to Firebase
+        async function saveExerciseProgress() {
+            if (currentUser && window.ProgressTracker) {
+                try {
+                    const progressData = {
+                        completed: completedExercises,
+                        currentExercise: currentExercise,
+                        totalExercises: totalExercises,
+                        lastAccessed: new Date().toISOString()
+                    };
+                    
+                    await window.ProgressTracker.saveExerciseProgress(currentUser.uid, 'python-fundamentals', 'operators', progressData);
+                    console.log(`Progress saved: ${completedExercises}/${totalExercises} exercises completed`);
+                } catch (error) {
+                    console.error('Error saving exercise progress:', error);
+                }
+            }
+        }
+
+        function markExerciseComplete(exerciseNum) {
+            if (!document.getElementById(`exercise-${exerciseNum}`).classList.contains('completed')) {
+                document.getElementById(`exercise-${exerciseNum}`).classList.add('completed');
+                completedExercises++;
+                updateProgress();
+                
+                // Save progress to Firebase
+                saveExerciseProgress();
+                
+                if (exerciseNum < totalExercises) {
+                    document.getElementById('next-btn').style.display = 'inline-block';
+                } else {
+                    document.getElementById('complete-btn').style.display = 'inline-block';
+                }
+            }
+        }
+
+        function nextExercise() {
+            if (currentExercise < totalExercises) {
+                currentExercise++;
+                loadExercise(currentExercise);
+                document.getElementById('next-btn').style.display = 'none';
+                
+                // Save progress when moving to next exercise
+                saveExerciseProgress();
+            }
+        }
+
+        function loadExercise(exerciseNum) {
+            const exercise = exercises[exerciseNum];
+            const exerciseArea = document.getElementById('exercise-area');
+            
+            exerciseArea.innerHTML = `
+                <div class="exercise-card" id="exercise-${exerciseNum}">
+                    <h4>Exercise ${exerciseNum}: ${exercise.title}</h4>
+                    <p>${exercise.description}</p>
+                    <textarea class="code-editor" id="code-${exerciseNum}" placeholder="# Write your code here"></textarea>
+                    <button class="btn-run" onclick="runCode(${exerciseNum})">
+                        <i class="fas fa-play"></i> Run Code
+                    </button>
+                    <button class="btn-run" onclick="showHint(${exerciseNum})" style="background: var(--accent-green);">
+                        <i class="fas fa-lightbulb"></i> Hint
+                    </button>
+                    <div class="output-panel" id="output-${exerciseNum}"></div>
+                </div>
+            `;
+        }
+
+        function updateProgress() {
+            const progressPercent = (completedExercises / totalExercises) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').textContent = `${completedExercises} / ${totalExercises} exercises completed`;
+        }
+
+        async function completeLesson() {
+            // Save lesson completion to Firebase
+            if (currentUser && window.ProgressTracker) {
+                try {
+                    await window.ProgressTracker.markLessonComplete(
+                        currentUser.uid, 
+                        'python-fundamentals', 
+                        'operators',
+                        Date.now() - lessonStartTime
+                    );
+                    console.log('Operators lesson completion saved to Firebase');
+                } catch (error) {
+                    console.error('Error saving lesson completion:', error);
+                }
+            }
+            
+            alert("🎉 Fantastic! You've mastered Python operators!");
+            window.location.href = '/dashboard.html';
+        }
+
+        // Track lesson start time
+        const lessonStartTime = Date.now();
+
+        const style = document.createElement('style');
+        style.textContent = `
+            .exercise-card.completed {
+                border-left-color: var(--accent-green);
+                background: #d4edda;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Make functions globally available for onclick handlers
+        window.runCode = runCode;
+        window.showHint = showHint;
+        window.nextExercise = nextExercise;
+        window.completeLesson = completeLesson;
+
+        // Save progress when user leaves the page
+        window.addEventListener('beforeunload', () => {
+            if (currentUser && window.ProgressTracker) {
+                // Store in localStorage as backup for reliable saving
+                localStorage.setItem('pendingProgress_operators', JSON.stringify({
+                    userId: currentUser.uid,
+                    courseId: 'python-fundamentals',
+                    lessonId: 'operators',
+                    progressData: {
+                        completed: completedExercises,
+                        currentExercise: currentExercise,
+                        totalExercises: totalExercises,
+                        lastAccessed: new Date().toISOString()
+                    },
+                    timestamp: Date.now()
+                }));
+            }
+        });
+
+        main();
+    </script>
+</body>
+</html>
