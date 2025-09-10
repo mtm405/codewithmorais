@@ -247,7 +247,7 @@ function generateSampleResponses(questionCount, averageScore) {
             code: generateSampleCode(i),
             score: score,
             maxScore: baseScore,
-            timeSpent: Math.floor(Math.random() * 300) + 60, // 1-6 minutes
+            timeSpent: Math.floor(Math.random() * 100) + 60, // 1-6 minutes
             submitted: true
         });
     }
@@ -359,7 +359,7 @@ function displayStudents() {
     grid.innerHTML = '';
 
     studentData.forEach(student => {
-        const percentage = Math.round(((student.score || 0) / 300) * 100);
+        const percentage = Math.round(((student.score || 0) / 100) * 100);
         const scoreClass = getScoreClass(percentage);
         const progressWidth = Math.round(((student.currentQuestionIndex || 0) / 15) * 100);
         
@@ -665,7 +665,7 @@ function filterStudents() {
     grid.innerHTML = '';
     
     filteredData.forEach(student => {
-        const percentage = Math.round(((student.score || 0) / 300) * 100);
+        const percentage = Math.round(((student.score || 0) / 100) * 100);
         const scoreClass = getScoreClass(percentage);
         const progressWidth = Math.round(((student.currentQuestionIndex || 0) / 15) * 100);
         
@@ -678,7 +678,7 @@ function filterStudents() {
                     <div class="student-email">${student.email}</div>
                 </div>
                 <div class="score-badge ${scoreClass}">
-                    ${student.score || 0}/300 (${percentage}%)
+                    ${student.score || 0}/100 (${percentage}%)
                 </div>
             </div>
             
@@ -784,3 +784,4 @@ function showError(message) {
         document.body.removeChild(errorDiv);
     }, 5000);
 }
+

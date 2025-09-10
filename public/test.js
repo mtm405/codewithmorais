@@ -311,27 +311,44 @@ function setupEventListeners() {
     document.getElementById('submit-answer-btn').addEventListener('click', submitAnswer);
     document.getElementById('next-question-btn').addEventListener('click', nextQuestion);
     document.getElementById('hints-toggle').addEventListener('click', toggleHints);
+    document.getElementById('toggle-nav').addEventListener('click', toggleNavigation);
     
-    // Auto-save code as user types
+    // Generate question navigation
+    generateQuestionNavigation();
+    
+    // Auto-save code as user types with better UX
     document.getElementById('code-input').addEventListener('input', function() {
         if (isTestActive && currentQuestionIndex < testData.activities.length) {
             userAnswers[currentQuestionIndex].code = this.value;
+            
+            // Mark as having unsaved changes
+            markUnsavedChanges();
+            
+            // Update navigation status to show progress
+            updateNavigationStatus();
             
             // Auto-save progress after a short delay to avoid too many saves
             clearTimeout(autoSaveTimeout);
             autoSaveTimeout = setTimeout(() => {
                 saveTestProgress();
+                markChangesSaved();
             }, 2000); // Save after 2 seconds of inactivity
         }
     });
     
-    // Prevent leaving the page accidentally
-    window.addEventListener('beforeunload', function(e) {
+    // Auto-save every 30 seconds
+    setInterval(() => {
         if (isTestActive) {
-            // Save progress before leaving
             saveTestProgress();
+            markChangesSaved();
+        }
+    }, 30000);
+    
+    // Prevent leaving the page accidentally - only if unsaved changes
+    window.addEventListener('beforeunload', function(e) {
+        if (isTestActive && window.hasUnsavedChanges) {
             e.preventDefault();
-            e.returnValue = 'You have an active test. Are you sure you want to leave?';
+            e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
         }
     });
 }
@@ -380,6 +397,9 @@ function loadQuestion(index) {
     
     // Update progress
     updateProgressDisplay();
+    
+    // Update navigation status
+    updateNavigationStatus();
 }
 
 // Load hints for current question
@@ -1319,4 +1339,98 @@ function showError(message) {
             errorDiv.parentNode.removeChild(errorDiv);
         }
     }, 5000);
+}
+
+// Save status indicator functions
+function markUnsavedChanges() {
+    window.hasUnsavedChanges = true;
+    const indicator = document.getElementById('save-indicator');
+    if (indicator) {
+        indicator.textContent = '● Unsaved changes';
+        indicator.style.color = '#f56565';
+    }
+}
+
+function markChangesSaved() {
+    window.hasUnsavedChanges = false;
+    const indicator = document.getElementById('save-indicator');
+    if (indicator) {
+        indicator.textContent = '✓ All changes saved';
+        indicator.style.color = '#48bb78';
+        setTimeout(() => {
+            if (indicator) {
+                indicator.textContent = '';
+            }
+        }, 3000);
+    }
+}
+
+// Question Navigation Functions
+function generateQuestionNavigation() {
+    const navContainer = document.getElementById('nav-questions');
+    if (!navContainer || !testData) return;
+    
+    navContainer.innerHTML = '';
+    
+    testData.activities.forEach((activity, index) => {
+        const button = document.createElement('button');
+        button.className = 'nav-question-btn';
+        button.innerHTML = `
+            <div style="font-size: 0.8rem;">#${index + 1}</div>
+            <div style="font-size: 0.7rem;">${activity.points}pts</div>
+        `;
+        button.addEventListener('click', () => navigateToQuestion(index));
+        navContainer.appendChild(button);
+    });
+    
+    updateNavigationStatus();
+}
+
+function updateNavigationStatus() {
+    const buttons = document.querySelectorAll('.nav-question-btn');
+    buttons.forEach((button, index) => {
+        button.className = 'nav-question-btn';
+        
+        if (index === currentQuestionIndex) {
+            button.classList.add('current');
+        } else if (userAnswers[index] && userAnswers[index].code && userAnswers[index].code.trim()) {
+            button.classList.add('answered');
+        } else {
+            button.classList.add('unanswered');
+        }
+    });
+}
+
+function navigateToQuestion(questionIndex) {
+    if (questionIndex < 0 || questionIndex >= testData.activities.length) return;
+    
+    // Save current question's code
+    if (currentQuestionIndex < testData.activities.length) {
+        const currentCode = document.getElementById('code-input').value;
+        userAnswers[currentQuestionIndex].code = currentCode;
+    }
+    
+    // Navigate to new question
+    currentQuestionIndex = questionIndex;
+    displayQuestion();
+    updateProgress();
+    updateNavigationStatus();
+    
+    // Auto-save progress
+    saveTestProgress();
+    markChangesSaved();
+}
+
+function toggleNavigation() {
+    const navContent = document.getElementById('nav-content');
+    const toggleBtn = document.getElementById('toggle-nav');
+    const icon = toggleBtn.querySelector('i');
+    
+    navContent.classList.toggle('collapsed');
+    
+    if (navContent.classList.contains('collapsed')) {
+        icon.className = 'fas fa-chevron-down';
+    } else {
+        icon.className = 'fas fa-chevron-up';
+    }
 }
