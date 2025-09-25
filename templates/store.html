@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Store - CodeLab{% endblock %}
+{% block content %}
+{% include 'partials/header_bar.html' %}
+<div class="dashboard-grid store-dashboard-grid">
+    <div class="store-items-list" id="store-items-list">
+        <!-- JS will populate store items here -->
+    </div>
+    {% if session.get('is_admin') %}
+    <button class="btn btn-primary add-store-item-btn" id="add-store-btn" title="Add Store Item">+</button>
+    {% endif %}
+</div>
+{% endblock %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/store.css') }}">
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+{% endblock %}
+</body>
+</html>

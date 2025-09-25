@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}Course Dashboard - CodeLab{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/course_dashboard.css', v=g.css_version) }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.min.css" />
+{% endblock %}
+
+{% block content %}
+{% include 'partials/header_bar.html' %}
+<div class="course-dashboard">
+  <div class="dashboard-header">
+    <div class="dashboard-announcement card">
+      <span class="material-symbols-outlined accent-yellow">campaign</span>
+      <span id="dashboard-announcement-text">Welcome to your Python journey! Check back daily for new challenges and updates.</span>
+    </div>
+  </div>
+  <div class="dashboard-main-grid">
+    <div class="dashboard-section leaderboard card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-cyan">emoji_events</span>
+        Leaderboard
+      </div>
+      <div class="leaderboard-content">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Name</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-list">
+            <!-- JS will populate rows here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="dashboard-section daily-challenge card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-yellow">bolt</span>
+        Daily Challenge
+      </div>
+      <div class="daily-challenge-content" id="daily-challenge-content">
+        <!-- Daily Challenge will be rendered here by JS -->
+      </div>
+    </div>
+    <div class="dashboard-section streak-tracker card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-yellow">local_fire_department</span>
+        Streak Tracker
+      </div>
+      <div class="streak-days" id="streak-days">0</div>
+      <div class="streak-label">Day streak</div>
+    </div>
+    <div class="dashboard-section recent-activity card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-blue">history</span>
+        Recent Activity
+      </div>
+      <ul class="activity-list" id="activity-list">
+        <!-- JS will populate activity here -->
+      </ul>
+    </div>
+    <div class="dashboard-section upcoming-assignments card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-yellow">event</span>
+        Upcoming Assignments
+      </div>
+      <ul class="assignment-list" id="assignment-list">
+        <!-- JS will populate assignments here -->
+      </ul>
+    </div>
+    <div class="dashboard-section study-tips card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-green">lightbulb</span>
+        Study Tips
+      </div>
+      <div class="tip-text" id="tip-text">Stay consistent! Practice a little every day for best results.</div>
+    </div>
+    <div class="dashboard-section resume-last card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-blue">play_circle</span>
+        Resume Last Lesson
+      </div>
+      <button class="btn resume-btn" id="resume-btn">Resume</button>
+    </div>
+    <div class="dashboard-section badges-achievements card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-yellow">military_tech</span>
+        Badges & Achievements
+      </div>
+      <div class="badge-list" id="badge-list">
+        <!-- JS will populate badges here -->
+      </div>
+    </div>
+    <div class="dashboard-section motivational-quote card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-cyan">format_quote</span>
+        Motivational Quote
+      </div>
+      <div class="quote-text" id="quote-text">“The only way to learn a new programming language is by writing programs in it.”</div>
+      <div class="quote-author" id="quote-author">- Dennis Ritchie</div>
+    </div>
+    <div class="dashboard-section schedule card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-yellow">calendar_month</span>
+        Schedule
+      </div>
+      <ul class="schedule-list">
+        <li><span class="schedule-date">Mon</span> <span class="schedule-topic">Lesson 1: Data Types</span></li>
+        <li><span class="schedule-date">Tue</span> <span class="schedule-topic">Lesson 2: Data Operations</span></li>
+        <li><span class="schedule-date">Wed</span> <span class="schedule-topic">Lesson 3: Flow Control</span></li>
+        <li><span class="schedule-date">Thu</span> <span class="schedule-topic">Lesson 4: Functions</span></li>
+        <li><span class="schedule-date">Fri</span> <span class="schedule-topic">Review & Challenge</span></li>
+      </ul>
+    </div>
+    <div class="dashboard-section course-progress card">
+      <div class="section-header">
+        <span class="material-symbols-outlined accent-blue">trending_up</span>
+        Course Progress
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%"></div>
+        </div>
+        <div class="progress-bar-label" id="progress-bar-label">Loading...</div>
+      </div>
+      <ul class="progress-list" id="progress-list">
+        <!-- JS will populate user progress here -->
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<!-- Load Ace Editor without integrity attribute to avoid browser blocking -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+<script src="{{ url_for('static', filename='js/course_dashboard.js', v=g.css_version) }}"></script>
+<script type="module">
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+const firebaseConfig = window.firebaseConfig;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth();
+
+function renderProgress(user) {
+  const progressBar = document.getElementById('progress-bar-fill');
+  const progressLabel = document.getElementById('progress-bar-label');
+  const progressList = document.getElementById('progress-list');
+  if (!user) {
+    progressLabel.textContent = 'Sign in to see your progress.';
+    return;
+  }
+  // Fetch user progress from Firestore
+  getDocs(collection(db, 'users')).then(snapshot => {
+    let userData = null;
+    snapshot.forEach(doc => {
+      if (doc.id === user.uid) userData = doc.data();
+    });
+    if (!userData) {
+      progressLabel.textContent = 'No progress found.';
+      return;
+    }
+    // Example: userData.progress = { lesson_1: true, lesson_2: false, ... }
+    const lessons = [
+      { id: 'lesson_1', name: 'Lesson 1: Data Types' },
+      { id: 'lesson_2', name: 'Lesson 2: Data Operations' },
+      { id: 'lesson_3', name: 'Lesson 3: Flow Control' },
+      { id: 'lesson_4', name: 'Lesson 4: Functions' },
+      { id: 'lesson_5', name: 'Lesson 5: Modules' }
+    ];
+    let completed = 0;
+    progressList.innerHTML = '';
+    lessons.forEach(lesson => {
+      const li = document.createElement('li');
+      li.className = 'progress-item';
+      if (userData.progress && userData.progress[lesson.id]) {
+        li.classList.add('completed');
+        completed++;
+      }
+      li.textContent = lesson.name;
+      progressList.appendChild(li);
+    });
+    const percent = Math.round((completed / lessons.length) * 100);
+    progressBar.style.width = percent + '%';
+    progressLabel.textContent = percent + '% Complete';
+  });
+}
+
+onAuthStateChanged(auth, user => {
+  renderProgress(user);
+});
+</script>
+{% endblock %}

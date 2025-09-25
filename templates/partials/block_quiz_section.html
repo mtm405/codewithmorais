@@ -1,0 +1,55 @@
+{# College-style Quiz Section: Clear, Accessible, Robust #}
+<div class="quiz-section-unified redesigned-quiz">
+  <h2 class="quiz-title">Quiz: Test Your Understanding</h2>
+  <div class="quiz-instructions">
+    Answer all questions below. You can review your answers before submitting. Your score will be shown at the end.
+  </div>
+  <div class="quiz-progress-bar-linear">
+    <div class="quiz-progress-bar-fill width-0"></div>
+  </div>
+  <div class="quiz-questions-list">
+    {% set shuffled_blocks = block.content.blocks %}
+    {% for quiz_block in shuffled_blocks %}
+      <div class="quiz-card-wrapper d-none">
+        <div class="quiz-header">
+          <span class="quiz-progress">Question {{ loop.index }} of {{ shuffled_blocks|length }}</span>
+        </div>
+        <div class="quiz-question-row">
+          {% if quiz_block.type == 'multiple_choice' %}
+            {% set block = quiz_block %}
+            {% include 'partials/block_multiple_choice.html' %}
+          {% elif quiz_block.type == 'fill_in_the_blank' %}
+            {% set block = quiz_block %}
+            {% include 'partials/block_fill_in_blank.html' %}
+          {% elif quiz_block.type == 'drag_and_drop' %}
+            {% set block = quiz_block %}
+            {% include 'partials/block_drag_and_drop.html' %}
+          {% elif quiz_block.type == 'debug_challenge' %}
+            {% set block = quiz_block %}
+            {% include 'partials/block_debug_challenge.html' %}
+          {% else %}
+            <p><em>Unknown quiz block type: {{ quiz_block.type }}</em></p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="quiz-summary-block-container"></div>
+    {% endfor %}
+  </div>
+  <div class="quiz-summary display-none">
+    <h2>Quiz Summary</h2>
+    <div class="quiz-final-score"></div>
+    <table class="quiz-summary-table">
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Your Answer</th>
+          <th>Correct Answer</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn quiz-retry-btn">Retry Quiz</button>
+  </div>
+</div>
+<script src="/static/js/quiz_summary_block.js"></script>

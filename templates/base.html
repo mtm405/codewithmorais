@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CodeLab{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts2.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css', v=g.css_version) }}">
+    {% block styles %}{% endblock %}
+    {% block head_extra %}{% endblock %}
+    <script>
+      // Prevent white/dark flash by setting the correct theme before CSS loads
+      (function() {
+        try {
+          var theme = localStorage.getItem('theme');
+          if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+          } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+      // Prevent sidebar flicker: add collapsed class before DOMContentLoaded
+      try {
+        if (localStorage.getItem('sidebar-collapsed') === 'true') {
+          document.documentElement.classList.add('sidebar-collapsed-preload');
+        }
+      } catch (e) {}
+    </script>
+    <script type="text/javascript">
+        // Pass config as a JS object for Firebase modular SDK
+        window.firebaseConfig = {{ firebase_config | tojson | safe }};
+    </script>
+    <!-- Removed compat Firebase SDKs. Modular SDKs are imported in JS files. -->
+</head>
+<body{% if lesson and lesson.id %} data-lesson-id="{{ lesson.id }}"{% endif %}>
+  <div class="layout-flex">
+    {% block sidebar %}
+    <aside class="sidebar" id="sidebar">
+      <!-- Sidebar Toggle Button -->
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar" title="Collapse sidebar">
+        <span class="material-symbols-outlined">menu_open</span>
+      </button>
+      <div class="sidebar-header">
+        <div class="profile-section">
+          <img src="{{ session.get('avatar_url', url_for('static', filename='img/default_avatar.png')) }}" class="sidebar-avatar" alt="Avatar" id="sidebar-avatar">
+          <div class="user-title-block"> <span class="user-name">{{ session.get('user_name', 'User').split(' ')[0] }}</span>
+            <span class="user-title">{{ session.get('user_title', 'Student') }}</span>
+          </div>
+        </div>
+        <div id="avatar-library-modal" class="avatar-modal d-none" style="display:none;">
+          <div class="avatar-modal-content">
+            <h3>Choose Your Avatar</h3>
+            <div class="avatar-library">
+              {% for i in range(1, 9) %}
+              <img src="{{ url_for('static', filename='img/avatar' ~ i ~ '.png') }}" class="avatar-choice" data-avatar="{{ url_for('static', filename='img/avatar' ~ i ~ '.png') }}">
+              {% endfor %}
+            </div>
+            <button class="btn close-avatar-modal">Close</button>
+          </div>
+        </div>
+      </div>
+      <div class="user-points user-points-grouped">
+        <div class="user-points-bytes">
+          <span class="material-symbols-outlined user-points-icon-bytes">memory</span>
+          <span id="sidebar-user-points" class="user-points-value">{{ user_bytes | default(0) }}</span>
+          <span class="accent-gold user-points-label">Bytes</span>
+        </div>
+        <span class="user-points-divider"></span>
+        <div class="user-points-tokens">
+          <span class="material-symbols-outlined coin-icon header-icon user-points-icon-tokens">token</span>
+          <span id="sidebar-user-currency" class="user-points-value">{{ user_currency | default(0) }}</span>
+          <span class="accent-gold user-points-label">Tokens</span>
+        </div>
+      </div>
+      <nav class="components" id="sidebar-menu-tabs">
+        <a class="menu-item-link{% if active_page == 'dashboard' %} active{% endif %}" href="{{ url_for('routes.dashboard') }}" data-menu="dashboard">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="menu-label">Dashboard</span> </a>
+        <a class="menu-item-link{% if active_page == 'python-basics' %} active{% endif %}" href="{{ url_for('routes.lesson', lesson_id='lesson_1_1') }}" data-menu="python-basics" data-first="lesson_1_1">
+          <span class="material-symbols-outlined">data_object</span>
+          <span class="menu-label">Python Basics</span> </a>
+        <a class="menu-item-link{% if active_page == 'flow-control' %} active{% endif %}" href="{{ url_for('routes.lesson', lesson_id='lesson_2_1') }}" data-menu="flow-control" data-first="lesson_2_1">
+          <span class="material-symbols-outlined">sync_alt</span>
+          <span class="menu-label">Flow Control</span> </a>
+        <a class="menu-item-link{% if active_page == 'io-operations' %} active{% endif %}" href="{{ url_for('routes.lesson', lesson_id='lesson_3_1') }}" data-menu="io-operations" data-first="lesson_3_1">
+          <span class="material-symbols-outlined">input</span>
+          <span class="menu-label">IO Operations</span> </a>
+        <a class="menu-item-link{% if active_page == 'code-structure' %} active{% endif %}" href="{{ url_for('routes.lesson', lesson_id='lesson_4_1') }}" data-menu="code-structure" data-first="lesson_4_1">
+          <span class="material-symbols-outlined">account_tree</span>
+          <span class="menu-label">Code Structure</span> </a>
+        <a class="menu-item-link{% if active_page == 'error-handling' %} active{% endif %}" href="{{ url_for('routes.lesson', lesson_id='lesson_5_1') }}" data-menu="error-handling" data-first="lesson_5_1">
+          <span class="material-symbols-outlined">bug_report</span>
+          <span class="menu-label">Error Handling</span> </a>
+        <a class="menu-item-link{% if active_page == 'module-operations' %} active{% endif %}" href="{{ url_for('routes.lesson', lesson_id='lesson_6_1') }}" data-menu="module-operations" data-first="lesson_6_1">
+          <span class="material-symbols-outlined">extension</span>
+          <span class="menu-label">Module Operations</span> </a>
+      </nav>
+      <div class="sidebar-footer"></div>
+    </aside>
+    <script>
+      // If the <html> has the preload class, collapse the sidebar immediately
+      if (document.documentElement.classList.contains('sidebar-collapsed-preload')) {
+        var sb = document.getElementById('sidebar');
+        if (sb) sb.classList.add('collapsed');
+      }
+    </script>
+    {% endblock %}
+    <div class="main-content-wrapper">
+        <div class="tabs-bar" id="sidebar-tabs-bar" style="display:none;"></div>
+        <div id="sidebar-tabs-content"></div>
+        {% block content %}{% endblock %}
+    </div>
+  </div>
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/quiz_core.js', v=g.css_version) }}"></script>
+<script type="module">
+  import { initSidebar } from '/static/js/modules/sidebar/index.js';
+  initSidebar();
+</script>
+<script type="module" src="{{ url_for('static', filename='js/modules/app.js', v=g.css_version) }}"></script>
+{% endblock %}
+<footer class="footer text-center mt-32 p-16-0 bg-main text-medium font-size-1em"></footer>
+<!-- All CSS is now in static/css/theme.css -->
+<script>
+      // Mark JS as ready to prevent FOUC/layout shift
+      document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.add('js-ready');
+      });
+    </script>
+    <!-- ACE Editor CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.4/ace.js" integrity="sha512-2Qw3QwQn6QwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>

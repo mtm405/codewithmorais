@@ -1,0 +1,145 @@
+{
+  "objective": "Expand knowledge of fundamental Python data structures beyond lists to include tuples, dictionaries, and sets. Learn their characteristics and essential operations. Reinforce the use of comparison operators for effective data filtering and evaluation.",
+  "blocks": [
+    {
+      "type": "text",
+      "content": "# Python Basics: More Core Data Structures & Comparison Operators\n\n### Objective:\nExpand knowledge of fundamental Python data structures beyond lists to include tuples, dictionaries, and sets. Learn their characteristics and essential operations. Reinforce the use of comparison operators for effective data filtering and evaluation."
+    },
+    {
+      "type": "text",
+      "content": "## Introduction: Diverse Ways to Organize Data\n\nSo far, you've mastered fundamental data types like numbers and strings, and gained proficiency with lists. Python offers even more built-in data structures, each with unique properties that make them ideal for different tasks. Understanding when and how to use **tuples**, **dictionaries**, and **sets** is crucial for writing efficient and effective Python programs.\n\nWe'll also revisit **comparison operators**, ensuring you're comfortable using them to evaluate conditions and select data based on specific criteria, a skill that's vital when working with any data structure."
+    },
+    {
+      "type": "text",
+      "content": "## 1. Tuples: Immutable Sequences\n\n**Concept:**\nA tuple is an **ordered**, **immutable** sequence of items. Like lists, tuples can store items of different data types and are accessed using indexing and slicing. The key difference is their immutability: once a tuple is created, you cannot change, add, or remove its elements.\n\n**When to use Tuples?**\n- For data that should not change (e.g., coordinates, RGB color values).\n- When returning multiple values from a function.\n- As dictionary keys (because they are immutable, unlike lists).\n\n**Syntax:**\nTuples are defined by enclosing comma-separated items within parentheses `()`. A single-item tuple requires a trailing comma (e.g., `(item,)`)."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Creating tuples\nmy_tuple = (1, 2, 'hello', True)\ncolors = ('red', 'green', 'blue')\nempty_tuple = ()\nsingle_item_tuple = (5,) # Important: comma for single-item tuple\n\nprint('my_tuple:', my_tuple)\nprint('colors:', colors)\nprint('empty_tuple:', empty_tuple)\nprint('single_item_tuple:', single_item_tuple)\n\n# Accessing elements (same as lists)\nprint('First element of colors:', colors[0])\nprint('Last element of my_tuple:', my_tuple[-1])\n\n# Slicing (same as lists)\nprint('Sliced colors:', colors[0:2])\n\n# Tuples are immutable: The following line would cause an error!\n# colors[0] = 'yellow' # Uncommenting this will raise a TypeError\n\n# Concatenation (creates a new tuple)\ntuple_a = (1, 2)\ntuple_b = (3, 4)\ncombined_tuple = tuple_a + tuple_b\nprint('Combined tuple:', combined_tuple)\n\n# Checking for membership with 'in' (works just like lists/strings)\nprint('Is \"green\" in colors?', 'green' in colors)\nprint('Is 10 in my_tuple?', 10 in my_tuple)"
+    },
+    {
+      "type": "ide",
+      "id": "try_tuples",
+      "label": "Try it yourself: Create and interact with tuples!",
+      "editable": true,
+      "default_code": "# Create a tuple of coordinates (e.g., latitude, longitude)\n# Access specific elements and try slicing.\n# Verify that you cannot change an element.\n\ncoordinates = (34.0522, -118.2437) # Los Angeles\nprint(f\"Latitude: {coordinates[0]}, Longitude: {coordinates[1]}\")\n\n# Uncomment the line below to see the error!\n# coordinates[0] = 35.0 # This will cause a TypeError\n"
+    },
+    {
+      "type": "text",
+      "content": "## 2. Dictionaries: Key-Value Pairs\n\n**Concept:**\nA dictionary is an **unordered** (prior to Python 3.7, now insertion-ordered), **mutable** collection of `key: value` pairs. Each key must be unique and immutable (e.g., strings, numbers, tuples). Values can be of any data type and can be duplicated. Dictionaries are incredibly useful for storing data where you need to look up information using a descriptive name (the key) rather than a numerical index.\n\n**Syntax:**\nDictionaries are defined by enclosing comma-separated `key: value` pairs within curly braces `{}`."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Creating dictionaries\nperson = {\n    'name': 'Alice',\n    'age': 30,\n    'city': 'New York'\n}\n\nstudent_grades = {'Math': 95, 'Science': 88, 'History': 76}\nempty_dict = {}\n\nprint('person:', person)\nprint('student_grades:', student_grades)\n\n# Accessing values by key\nprint('Alice\\'s age:', person['age'])\nprint('Math grade:', student_grades['Math'])\n\n# Adding or modifying entries\nperson['occupation'] = 'Engineer' # Add new key-value pair\nperson['age'] = 31               # Modify existing value\nprint('Updated person:', person)\n\n# Removing entries\ndel person['city'] # Remove by key\nprint('Person after removing city:', person)\n\npopped_grade = student_grades.pop('Science') # Remove and get value\nprint('Popped grade:', popped_grade)\nprint('Student grades after pop:', student_grades)\n\n# Getting all keys, values, or items\nprint('All person keys:', person.keys())     # Output: dict_keys(['name', 'age', 'occupation'])\nprint('All person values:', person.values()) # Output: dict_values(['Alice', 31, 'Engineer'])\nprint('All person items:', person.items())   # Output: dict_items([('name', 'Alice'), ('age', 31), ('occupation', 'Engineer')])\n\n# Checking for key existence with 'in'\nprint('Is \\\"name\\\" in person?', 'name' in person)       # Output: True\nprint('Is \\\"address\\\" in person?', 'address' in person) # Output: False\n\n# 'in' checks keys, not values by default\nprint('Is 31 in person (checking values)?', 31 in person.values()) # Output: True\n"
+    },
+    {
+      "type": "ide",
+      "id": "try_dictionaries",
+      "label": "Try it yourself: Build and manipulate a dictionary!",
+      "editable": true,
+      "default_code": "# Create a dictionary representing an item in a shop (name, price, quantity).\n# Access its price, update its quantity, and add a 'description'.\n\nproduct = {\n    'name': 'Laptop',\n    'price': 1200.00,\n    'quantity': 5\n}\n\nprint(f\"Product: {product['name']}, Price: ${product['price']}\")\n\nproduct['quantity'] -= 1 # Sell one laptop!\nproduct['description'] = 'High performance laptop with SSD'\n\nprint(\"Updated product info:\", product)\nprint(\"Is 'Laptop' a key in product?\", 'Laptop' in product)\n"
+    },
+    {
+      "type": "text",
+      "content": "## 3. Sets: Unique, Unordered Collections\n\n**Concept:**\nA set is an **unordered**, **mutable** collection of **unique** elements. This means sets automatically remove duplicate entries. Sets are useful for tasks involving mathematical set operations like union, intersection, and difference, or simply for efficiently checking for the presence of an item.\n\n**Syntax:**\nSets are defined by enclosing comma-separated items within curly braces `{}`. To create an empty set, you must use `set()` (because `{}` creates an empty dictionary)."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Creating sets\nmy_set = {1, 2, 3, 2, 1} # Duplicates are automatically removed\ncolors_set = {'red', 'blue', 'green'}\nempty_set = set() # Correct way to create an empty set\n\nprint('my_set:', my_set)       # Output: {1, 2, 3}\nprint('colors_set:', colors_set)\nprint('empty_set:', empty_set)\n\n# Adding elements\nmy_set.add(4)\nmy_set.add(1) # Adding a duplicate has no effect\nprint('my_set after adding:', my_set)\n\n# Removing elements\nmy_set.remove(2) # Removes 2, raises KeyError if not found\nprint('my_set after removing 2:', my_set)\n\nmy_set.discard(10) # Removes 10 if present, does not raise error if not found\nprint('my_set after discarding 10:', my_set)\n\n# Set operations\nset_a = {1, 2, 3, 4}\nset_b = {3, 4, 5, 6}\n\nprint('Union (A or B):', set_a.union(set_b))             # All unique elements: {1, 2, 3, 4, 5, 6}\nprint('Intersection (A and B):', set_a.intersection(set_b)) # Common elements: {3, 4}\nprint('Difference (A minus B):', set_a.difference(set_b))   # Elements in A but not in B: {1, 2}\n\n# Checking for membership with 'in' (very efficient)\nprint('Is 3 in my_set?', 3 in my_set) # Output: True\nprint('Is 5 in my_set?', 5 in my_set) # Output: False"
+    },
+    {
+      "type": "ide",
+      "id": "try_sets",
+      "label": "Try it yourself: Experiment with sets!",
+      "editable": true,
+      "default_code": "# Create a set of unique numbers from a list with duplicates.\n# Perform a set operation (e.g., union or intersection) with another set.\n\nnumbers_with_dupes = [1, 5, 3, 2, 5, 1, 4]\nunique_numbers = set(numbers_with_dupes)\nprint(\"Unique numbers:\", unique_numbers)\n\nprime_numbers = {2, 3, 5, 7}\ncomposite_numbers = {4, 6, 8, 9}\n\n# Find numbers that are both unique and prime\ncommon = unique_numbers.intersection(prime_numbers)\nprint(\"Numbers that are both unique and prime:\", common)\n"
+    },
+    {
+      "type": "text",
+      "content": "## 4. Reinforcing Comparison Operators (`==`, `!=`, `<`, `>`, `<=`, `>=`)\n\n**Concept:**\nAs seen in earlier lessons, comparison operators are fundamental for making decisions in your code. They compare two values and return a Boolean (`True` or `False`) result. You've used `==` (equality) and contrasted it with `is` (identity). Now let's ensure you're familiar with all the primary comparison operators for numerical and sequence comparisons.\n\nThese operators are crucial for filtering data, controlling program flow (e.g., in `if` statements), and sorting."
+    },
+    {
+      "type": "code_snippet",
+      "language": "python",
+      "code": "# Examples of Comparison Operators:\n\na = 10\nb = 20\nc = 10\n\n# Equality (==): Are the values equal?\nprint(f'{a} == {b}: {a == b}') # Output: 10 == 20: False\nprint(f'{a} == {c}: {a == c}') # Output: 10 == 10: True\n\n# Inequality (!=): Are the values not equal?\nprint(f'{a} != {b}: {a != b}') # Output: 10 != 20: True\nprint(f'{a} != {c}: {a != c}') # Output: 10 != 10: False\n\n# Greater Than (>): Is the left value greater than the right?\nprint(f'{a} > {b}: {a > b}') # Output: 10 > 20: False\n\n# Less Than (<): Is the left value less than the right?\nprint(f'{a} < {b}: {a < b}') # Output: 10 < 20: True\n\n# Greater Than or Equal To (>=): Is the left value greater than or equal to the right?\nprint(f'{a} >= {b}: {a >= b}') # Output: 10 >= 20: False\nprint(f'{a} >= {c}: {a >= c}') # Output: 10 >= 10: True\n\n# Less Than or Equal To (<=): Is the left value less than or equal to the right?\nprint(f'{a} <= {b}: {a <= b}') # Output: 10 <= 20: True\nprint(f'{a} <= {c}: {a <= c}') # Output: 10 <= 10: True\n\n# Comparing strings (lexicographical comparison)\nword1 = 'apple'\nword2 = 'banana'\nword3 = 'Apple'\n\nprint(f'{word1} < {word2}: {word1 < word2}') # Output: True ('a' comes before 'b')\nprint(f'{word1} == {word3}: {word1 == word3}') # Output: False (case-sensitive)\nprint(f'{word1.lower()} == {word3.lower()}: {word1.lower() == word3.lower()}') # Output: True\n\n# Comparing lists (element by element)\nlist_x = [1, 2, 3]\nlist_y = [1, 2, 4]\nlist_z = [1, 2, 3]\n\nprint(f'{list_x} == {list_z}: {list_x == list_z}') # Output: True\nprint(f'{list_x} < {list_y}: {list_x < list_y}') # Output: True (compares elements sequentially: 3 < 4)\n"
+    },
+    {
+      "type": "ide",
+      "id": "try_comparison_operators",
+      "label": "Try it yourself: Use comparison operators with different types!",
+      "editable": true,
+      "default_code": "# Compare numbers, strings, and even lists to practice all comparison operators.\n# Example:\n# temp_celsius = 25\n# is_hot = temp_celsius > 30\n# print(is_hot)\n\n# product_stock = 0\n# if product_stock == 0:\n#     print(\"Out of stock!\")\n\n# name1 = \"John\"\n# name2 = \"john\"\n# print(name1 != name2)\n"
+    },
+    {
+      "type": "text",
+      "content": "## Recap:\n\nYou've now completed your foundational journey into Python data types and operators! You can now:\n\n- **Construct and Operate on Tuples:** Use tuples for ordered, immutable sequences, understanding their key difference from lists and their common use cases.\n- **Construct and Operate on Dictionaries:** Store and retrieve data efficiently using descriptive key-value pairs, mastering adding, modifying, and removing entries.\n- **Construct and Operate on Sets:** Work with unordered collections of unique items, utilizing them for membership tests and mathematical set operations.\n- **Apply all Comparison Operators:** Confidently use `==`, `!=`, `<`, `>`, `<=`, `>=` to evaluate conditions and filter data across various data types, ensuring you 'select operators to achieve the intended results' as per the exam objectives.\n\nThis robust understanding of Python's core data structures and operators forms a critical foundation for building more complex and data-driven applications."
+    },
+    {
+      "type": "quiz_section",
+      "id": "lesson_1_4_quiz",
+      "content": {
+        "progress": {
+          "total": 5,
+          "completed": 0
+        },
+        "header": "Test your knowledge of Tuples, Dictionaries, Sets, and Comparison Operators!",
+        "blocks": [
+          {
+            "type": "multiple_choice_quiz",
+            "id": "quiz_data_structures",
+            "instructions": "Part 1: Data Structures",
+            "questions": [
+              {
+                "question": "Which Python data structure is **ordered** and **immutable**? <span class='points-badge'>1 pt</span>",
+                "options": ["List", "Dictionary", "Set", "Tuple"],
+                "correct_index": 3
+              },
+              {
+                "question": "Which data structure uses `key: value` pairs for storing data? <span class='points-badge'>1 pt</span>",
+                "options": ["List", "Dictionary", "Set", "Tuple"],
+                "correct_index": 1
+              },
+              {
+                "question": "What is a key characteristic of a Python `set`? <span class='points-badge'>1 pt</span>",
+                "options": ["Elements are ordered by insertion", "Allows duplicate elements", "Contains only unique elements", "Accessed by numerical index"],
+                "correct_index": 2
+              }
+            ]
+          },
+          {
+            "type": "fill_in_the_blanks",
+            "id": "quiz_comparison_operators",
+            "instructions": "Part 2: Evaluate the comparison.",
+            "questions": [
+              { "text": "What is the result of `7 < 7`? _________. <span class='points-badge'>1 pt</span>", "answers": ["False"] },
+              { "text": "What is the result of `'banana' != 'apple'`? _________. <span class='points-badge'>1 pt</span>", "answers": ["True"] }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "debug_challenge",
+      "id": "fix_dict_key_error",
+      "label": "**Fix the bug!**",
+      "buggy_code": "user_data = {'id': 101, 'username': 'pyfan'}\nprint(user_data['password'])",
+      "solution": {
+        "explanation": "This code will raise a `KeyError` because `'password'` is not a key in the `user_data` dictionary. To access a value, you must use an existing key. If the key might not exist, you can use the `.get()` method, which returns `None` (or a default value) instead of an error.",
+        "correct_code": "user_data = {'id': 101, 'username': 'pyfan'}\n# To fix, you could add the key first:\nuser_data['password'] = 'secure_pass123'\nprint(user_data['password'])\n\n# Or, to safely get a value that might not exist:\n# print(user_data.get('password', 'Password not set'))"
+      }
+    },
+    {
+      "type": "debug_challenge",
+      "id": "fix_set_duplicates",
+      "label": "**Another bug to fix!**",
+      "buggy_code": "numbers = [1, 2, 2, 3, 1]\nunique_numbers_list = list(numbers) # Intended to get unique numbers\nprint(unique_numbers_list)",
+      "solution": {
+        "explanation": "The current code simply converts a list to a list, which doesn't remove duplicates. To get unique numbers, you should convert the list to a `set` (which automatically handles uniqueness) and then back to a list if a list is required.",
+        "correct_code": "numbers = [1, 2, 2, 3, 1]\nunique_numbers_list = list(set(numbers)) # Convert to set for uniqueness, then back to list\nprint(unique_numbers_list)"
+      }
+    }
+  ]
+}
