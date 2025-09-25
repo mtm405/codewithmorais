@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1.2: Data Operations & Structures - Python Certification Course</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+    
+    .lesson-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 260px 1fr 280px;
+      min-height: 100vh;
+      gap: 0;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    
+    /* Sidebar Navigation */
+    .lesson-sidebar {
+      background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 1.5rem 1rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid #34495e;
+    }
+    
+    .lesson-nav {
+      margin-bottom: 2rem;
+    }
+    
+    .nav-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #ecf0f1;
+    }
+    
+    .nav-link {
+      display: block;
+      color: #bdc3c7;
+      text-decoration: none;
+      padding: 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background: #34495e;
+      color: #3498db;
+    }
+    
+    .section-divider {
+      border-top: 1px solid #34495e;
+      margin: 1rem 0;
+    }
+    
+    /* Main Content */
+    .lesson-content {
+      background: white;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      max-width: none;
+    }
+    
+    .lesson-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 3px solid #e74c3c;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 2rem 1.5rem;
+      margin: -2rem -1.5rem 3rem -1.5rem;
+      border-radius: 0 0 15px 15px;
+    }
+    
+    .lesson-title {
+      font-size: 2.5rem;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+    
+    .lesson-subtitle {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+      margin-bottom: 1rem;
+    }
+    
+    .lesson-meta {
+      display: flex;
+      gap: 2rem;
+      color: #95a5a6;
+      font-size: 0.9rem;
+    }
+    
+    .lesson-section {
+      margin-bottom: 4rem;
+      padding: 1.5rem 0;
+      width: 100%;
+    }
+    
+    .section-title {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #3498db;
+    }
+    
+    .section-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #34495e;
+      margin-bottom: 2rem;
+    }
+    
+    /* Code Examples */
+    .code-example {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-x: auto;
+      position: relative;
+    }
+    
+    .code-example::before {
+      content: "Python";
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      background: #3498db;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+    
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 5rem;
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+    
+    .copy-btn:hover {
+      background: #229954;
+    }
+    
+    /* Interactive Elements */
+    .interactive-section {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border: 2px solid #dee2e6;
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 3rem 0;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+    
+    .interactive-title {
+      font-size: 1.5rem;
+      color: #495057;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .exercise-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      width: 100%;
+    }
+    
+    .exercise-input {
+      background: white;
+      border: 2px solid #ced4da;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .exercise-input:hover {
+      border-color: #3498db;
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.15);
+    }
+    
+    .exercise-input h4 {
+      margin-bottom: 1rem;
+      color: #2c3e50;
+      font-size: 1.2rem;
+    }
+    
+    .exercise-input textarea {
+      width: 100%;
+      height: 200px;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      outline: none;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      resize: vertical;
+      padding: 1rem;
+      line-height: 1.5;
+      background: #fafafa;
+      transition: all 0.3s ease;
+    }
+    
+    .exercise-input textarea:focus {
+      border-color: #3498db;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    .exercise-output {
+      background: #2c3e50;
+      color: #ecf0f1;
+      border-radius: 10px;
+      padding: 1.5rem;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      min-height: 200px;
+      overflow-y: auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    
+    .exercise-output h4 {
+      margin-bottom: 1rem;
+      color: #ecf0f1;
+      font-size: 1.2rem;
+    }
+    
+    .exercise-controls {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      justify-content: center;
+    }
+    
+    /* Enhanced Interactive Coding Area */
+    .code-editor {
+      position: relative;
+      background: #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    
+    .editor-header {
+      background: #2d2d30;
+      color: #cccccc;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #3e3e42;
+    }
+    
+    .editor-title {
+      font-weight: 600;
+    }
+    
+    .editor-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .tab {
+      background: #3c3c3c;
+      color: #cccccc;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+    
+    .tab.active {
+      background: #007acc;
+      color: white;
+    }
+    
+    #code-input {
+      width: 100%;
+      height: 300px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: none;
+      padding: 1.5rem;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+    }
+    
+    .console-output {
+      background: #0f0f0f;
+      color: #00ff00;
+      padding: 1.5rem;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      min-height: 150px;
+      max-height: 300px;
+      overflow-y: auto;
+      border-top: 1px solid #333;
+      white-space: pre-wrap;
+    }
+    
+    .console-header {
+      background: #2d2d30;
+      color: #cccccc;
+      padding: 0.8rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-bottom: 1px solid #3e3e42;
+    }
+    
+    /* Buttons */
+    .btn {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+      min-width: 120px;
+      justify-content: center;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(52, 152, 219, 0.4);
+      background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 12px rgba(52, 152, 219, 0.3);
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+      box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    }
+    
+    .btn-success:hover {
+      background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+      box-shadow: 0 6px 25px rgba(39, 174, 96, 0.4);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+      box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%);
+      box-shadow: 0 6px 25px rgba(149, 165, 166, 0.4);
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .modal-content {
+      background: white;
+      margin: 10% auto;
+      padding: 3rem;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      animation: slideDown 0.3s ease;
+    }
+    
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .modal-icon {
+      font-size: 3rem;
+      color: #27ae60;
+    }
+    
+    .modal-icon.error {
+      color: #e74c3c;
+    }
+    
+    .modal-title {
+      font-size: 1.8rem;
+      color: #2c3e50;
+      margin: 0;
+    }
+    
+    .modal-body {
+      font-size: 1.1rem;
+      color: #5a6c7d;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    
+    .modal-footer {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    
+    .close {
+      position: absolute;
+      right: 1.5rem;
+      top: 1.5rem;
+      color: #aaa;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    
+    .close:hover {
+      color: #2c3e50;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideDown {
+      from { 
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .activity-panel {
+      background: white;
+      border-left: 4px solid #e74c3c;
+      padding: 1.5rem 1rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .activity-title {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+    
+    .activity-item {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #95a5a6;
+    }
+    
+    .activity-item.completed {
+      border-left-color: #27ae60;
+      background: #d5f4e6;
+    }
+    
+    .activity-item.current {
+      border-left-color: #3498db;
+      background: #e3f2fd;
+    }
+    
+    /* Quiz Styles */
+    .quiz-question {
+      background: #fff;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .quiz-options {
+      list-style: none;
+    }
+    
+    .quiz-option {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .quiz-option:hover {
+      background: #f8f9fa;
+    }
+    
+    .quiz-option input {
+      margin-right: 0.5rem;
+    }
+    
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e9ecef;
+    }
+    
+    .progress-indicator {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .progress-bar {
+      width: 200px;
+      height: 8px;
+      background: #e9ecef;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      width: 12.5%;
+      transition: width 0.5s ease;
+    }
+    
+    @media (max-width: 768px) {
+      .lesson-container {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      
+      .lesson-sidebar, .activity-panel {
+        display: none;
+      }
+      
+      .lesson-content {
+        padding: 1rem;
+      }
+      
+      .exercise-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="lesson-container">
+    <aside class="lesson-sidebar">
+      <nav class="lesson-nav">
+        <div class="nav-title">Section 1: Data Types & Operators</div>
+        <a href="lesson1-1.html" class="nav-link">1.1 Data Types</a>
+        <a href="lesson1-2.html" class="nav-link active">1.2 Data Operations</a>
+        <a href="lesson1-3.html" class="nav-link">1.3 Operator Precedence</a>
+        <a href="lesson1-4.html" class="nav-link">1.4 Operators Selection</a>
+        
+        <div class="section-divider"></div>
+        
+        <div class="nav-title">Section 2: Control Flow</div>
+        <a href="../section2-control-flow/lesson2-1.html" class="nav-link">2.1 Conditionals</a>
+        <a href="../section2-control-flow/lesson2-2.html" class="nav-link">2.2 Boolean Logic</a>
+        <a href="../section2-control-flow/lesson2-3.html" class="nav-link">2.3 Conditional Expressions</a>
+        
+        <div class="section-divider"></div>
+        
+        <div class="nav-title">Section 3: Loops</div>
+        <a href="../section3-loops/lesson3-1.html" class="nav-link">3.1 While Loops</a>
+        <a href="../section3-loops/lesson3-2.html" class="nav-link">3.2 For Loops</a>
+        <a href="../section3-loops/lesson3-3.html" class="nav-link">3.3 Loop Control</a>
+        
+        <div class="section-divider"></div>
+        
+        <div class="nav-title">Section 4: Functions</div>
+        <a href="../section4-functions/lesson4-1.html" class="nav-link">4.1 Function Definition</a>
+        <a href="../section4-functions/lesson4-2.html" class="nav-link">4.2 Parameters & Arguments</a>
+        <a href="../section4-functions/lesson4-3.html" class="nav-link">4.3 Scope & Return Values</a>
+        
+        <div class="section-divider"></div>
+        
+        <div class="nav-title">Section 5: Data Structures</div>
+        <a href="../section5-data-structures/lesson5-1.html" class="nav-link">5.1 Lists & Tuples</a>
+        <a href="../section5-data-structures/lesson5-2.html" class="nav-link">5.2 Dictionaries</a>
+        <a href="../section5-data-structures/lesson5-3.html" class="nav-link">5.3 Sets & Advanced Operations</a>
+        
+        <div class="section-divider"></div>
+        
+        <div class="nav-title">Section 6: File Handling</div>
+        <a href="../section6-file-handling/lesson6-1.html" class="nav-link">6.1 File I/O</a>
+        <a href="../section6-file-handling/lesson6-2.html" class="nav-link">6.2 Exception Handling</a>
+      </nav>
+    </aside>
+
+    <main class="lesson-content">
+      <div class="lesson-header">
+        <h1 class="lesson-title">Lesson 1.2: Data Operations & Structures</h1>
+        <p class="lesson-subtitle">Master type conversion, indexing, slicing, and basic data structures</p>
+        <div class="lesson-meta">
+          <span><i class="fas fa-clock"></i> 45 minutes</span>
+          <span><i class="fas fa-user"></i> Beginner</span>
+          <span><i class="fas fa-code"></i> Interactive</span>
+        </div>
+      </div>
+
+      <div class="lesson-section">
+        <h2 class="section-title">
+          <i class="fas fa-exchange-alt"></i>
+          Type Conversion
+        </h2>
+        
+        <div class="section-content">
+          <p>Type conversion (casting) allows you to change one data type to another. Python provides built-in functions for common conversions:</p>
+          
+          <ul style="margin: 1rem 0 2rem 2rem;">
+            <li><code>int()</code> - Converts to integer</li>
+            <li><code>float()</code> - Converts to floating-point number</li>
+            <li><code>str()</code> - Converts to string</li>
+            <li><code>bool()</code> - Converts to boolean</li>
+          </ul>
+        </div>
+
+        <div class="code-example">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <code># Type conversion examples
+# String to integer
+age_str = "25"
+age_int = int(age_str)
+print(f"String: {age_str}, Integer: {age_int}")
+
+# Integer to string
+score = 95
+score_str = str(score)
+print(f"Integer: {score}, String: '{score_str}'")
+
+# String to float
+price_str = "19.99"
+price_float = float(price_str)
+print(f"String: {price_str}, Float: {price_float}")
+
+# Various to boolean
+print(f"bool(1): {bool(1)}")
+print(f"bool(0): {bool(0)}")
+print(f"bool('hello'): {bool('hello')}")
+print(f"bool(''): {bool('')}")
+</code>
+        </div>
+      </div>
+
+      <div class="lesson-section">
+        <h2 class="section-title">
+          <i class="fas fa-cut"></i>
+          String Indexing & Slicing
+        </h2>
+        
+        <div class="section-content">
+          <p>Strings in Python are sequences, which means you can access individual characters using indexing and extract portions using slicing:</p>
+          
+          <ul style="margin: 1rem 0 2rem 2rem;">
+            <li><strong>Indexing:</strong> Access single characters using square brackets</li>
+            <li><strong>Negative indexing:</strong> Count from the end using negative numbers</li>
+            <li><strong>Slicing:</strong> Extract substrings using start:end notation</li>
+          </ul>
+        </div>
+
+        <div class="code-example">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <code># String indexing and slicing
+text = "Python Programming"
+
+# Indexing (0-based)
+print(f"First character: {text[0]}")
+print(f"Character at index 7: {text[7]}")
+
+# Negative indexing
+print(f"Last character: {text[-1]}")
+print(f"Second to last: {text[-2]}")
+
+# Slicing [start:end]
+print(f"First 6 characters: {text[0:6]}")
+print(f"Characters 7-17: {text[7:18]}")
+print(f"From index 7 to end: {text[7:]}")
+print(f"First 6 characters: {text[:6]}")
+
+# Step slicing [start:end:step]
+print(f"Every 2nd character: {text[::2]}")
+print(f"Reverse string: {text[::-1]}")
+</code>
+        </div>
+      </div>
+
+      <div class="lesson-section">
+        <h2 class="section-title">
+          <i class="fas fa-list"></i>
+          Introduction to Lists
+        </h2>
+        
+        <div class="section-content">
+          <p>Lists are ordered collections that can store multiple items. They are mutable (can be changed) and allow duplicate values:</p>
+          
+          <ul style="margin: 1rem 0 2rem 2rem;">
+            <li><strong>Creation:</strong> Use square brackets [] or list() function</li>
+            <li><strong>Indexing:</strong> Access elements like strings</li>
+            <li><strong>Methods:</strong> append(), remove(), insert(), etc.</li>
+          </ul>
+        </div>
+
+        <div class="code-example">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <code># List creation and operations
+# Creating lists
+fruits = ["apple", "banana", "orange"]
+numbers = [1, 2, 3, 4, 5]
+mixed = ["hello", 42, True, 3.14]
+
+# Accessing elements
+print(f"First fruit: {fruits[0]}")
+print(f"Last number: {numbers[-1]}")
+
+# List methods
+fruits.append("grape")  # Add to end
+print(f"After append: {fruits}")
+
+fruits.insert(1, "kiwi")  # Insert at position
+print(f"After insert: {fruits}")
+
+fruits.remove("banana")  # Remove by value
+print(f"After remove: {fruits}")
+
+# List slicing
+print(f"First 3 fruits: {fruits[:3]}")
+print(f"Numbers from index 2: {numbers[2:]}")
+
+# List length
+print(f"Number of fruits: {len(fruits)}")
+print(f"Number of numbers: {len(numbers)}")
+</code>
+        </div>
+      </div>
+
+      <div class="lesson-section">
+        <h2 class="section-title">
+          <i class="fas fa-laptop-code"></i>
+          Practice: Data Operations
+        </h2>
+        
+        <div class="interactive-section">
+          <div class="interactive-title">
+            <i class="fas fa-laptop-code"></i>
+            Interactive Python Code Editor
+          </div>
+          <p>Try the examples below and experiment with data operations:</p>
+          
+          <div class="code-editor">
+            <div class="editor-header">
+              <div class="editor-title">Python Editor</div>
+              <div class="editor-tabs">
+                <div class="tab active">main.py</div>
+              </div>
+            </div>
+            <textarea id="code-input" placeholder="# Write your Python code here..."># Practice data operations
+# 1. Type conversion
+user_input = "123"
+number = int(user_input)
+print(f"Converted {user_input} to {number}")
+
+# 2. String slicing
+message = "Hello, World!"
+print(f"First 5 chars: {message[:5]}")
+print(f"Last 6 chars: {message[-6:]}")
+
+# 3. List operations
+colors = ["red", "green", "blue"]
+colors.append("yellow")
+print(f"Colors: {colors}")
+print(f"Second color: {colors[1]}")
+</textarea>
+            
+            <div class="console-header">
+              <i class="fas fa-terminal"></i> Console Output
+            </div>
+            <div id="code-output" class="console-output">Ready to run your code...</div>
+          </div>
+          
+          <div class="exercise-controls">
+            <button class="btn" onclick="runCode()">
+              <i class="fas fa-play"></i> Run Code
+            </button>
+            <button class="btn btn-secondary" onclick="clearOutput()">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+            <button class="btn btn-secondary" onclick="resetCode()">
+              <i class="fas fa-undo"></i> Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="interactive-section">
+          <h3 style="margin-bottom: 1.5rem;">
+            <i class="fas fa-pencil-alt"></i>
+            Guided Exercises
+          </h3>
+          
+          <div class="exercise-container">
+            <div class="exercise-input">
+              <h4>Exercise 1: Type Conversion</h4>
+              <p>Convert the string "42" to an integer and store it in a variable called <code>num</code>:</p>
+              <textarea placeholder='num = int("42")'></textarea>
+              <button class="btn btn-success" onclick="checkAnswer(1, 'num')">Check Answer</button>
+            </div>
+            
+            <div class="exercise-input">
+              <h4>Exercise 2: String Slicing</h4>
+              <p>Extract the first 3 characters from "Python" and store in <code>first_three</code>:</p>
+              <textarea placeholder='first_three = "Python"[:3]'></textarea>
+              <button class="btn btn-success" onclick="checkAnswer(2, 'first_three')">Check Answer</button>
+            </div>
+          </div>
+          
+          <div class="exercise-container">
+            <div class="exercise-input">
+              <h4>Exercise 3: List Creation</h4>
+              <p>Create a list with numbers 1, 2, 3 and store in <code>my_list</code>:</p>
+              <textarea placeholder='my_list = [1, 2, 3]'></textarea>
+              <button class="btn btn-success" onclick="checkAnswer(3, 'my_list')">Check Answer</button>
+            </div>
+            
+            <div class="exercise-input">
+              <h4>Exercise 4: List Access</h4>
+              <p>Access the last element of [10, 20, 30] using negative indexing:</p>
+              <textarea placeholder='last = my_list[-1]'></textarea>
+              <button class="btn btn-success" onclick="checkAnswer(4, 'last')">Check Answer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson-section">
+        <h2 class="section-title">
+          <i class="fas fa-question-circle"></i>
+          Knowledge Check
+        </h2>
+        
+        <div class="quiz-question">
+          <h3>Question 1: What does int("3.14") return?</h3>
+          <ul class="quiz-options">
+            <li class="quiz-option" onclick="selectOption(this, false)">
+              <input type="radio" name="q1" value="a"> 3.14
+            </li>
+            <li class="quiz-option" onclick="selectOption(this, false)">
+              <input type="radio" name="q1" value="b"> 3
+            </li>
+            <li class="quiz-option" onclick="selectOption(this, true)">
+              <input type="radio" name="q1" value="c"> ValueError (error)
+            </li>
+            <li class="quiz-option" onclick="selectOption(this, false)">
+              <input type="radio" name="q1" value="d"> "3"
+            </li>
+          </ul>
+        </div>
+        
+        <div class="quiz-question">
+          <h3>Question 2: What is "Python"[2:5]?</h3>
+          <ul class="quiz-options">
+            <li class="quiz-option" onclick="selectOption(this, false)">
+              <input type="radio" name="q2" value="a"> "Pyt"
+            </li>
+            <li class="quiz-option" onclick="selectOption(this, true)">
+              <input type="radio" name="q2" value="b"> "tho"
+            </li>
+            <li class="quiz-option" onclick="selectOption(this, false)">
+              <input type="radio" name="q2" value="c"> "thon"
+            </li>
+            <li class="quiz-option" onclick="selectOption(this, false)">
+              <input type="radio" name="q2" value="d"> "ython"
+            </li>
+          </ul>
+        </div>
+        
+        <div class="quiz-question">
+          <h3>Question 3: Which method adds an element to the end of a list?</h3>
+          <ul class="quiz-options">
+            <li class="quiz-option" onclick="selectOption(this, false)">
+              <input type="radio" name="q3" value="a"> insert()
+            </li>
+            <li class="quiz-option" onclick="selectOption(this, true)">
+              <input type="radio" name="q3" value="b"> append()
+            </li>
+            <li class="quiz-option" onclick="selectOption(this, false)">
+              <input type="radio" name="q3" value="c"> add()
+            </li>
+            <li class="quiz-option" onclick="selectOption(this, false)">
+              <input type="radio" name="q3" value="d"> push()
+            </li>
+          </ul>
+        </div>
+        
+        <button class="btn btn-success" onclick="submitQuiz()" style="margin-top: 2rem;">
+          <i class="fas fa-check"></i> Submit Quiz
+        </button>
+      </div>
+
+      <div class="navigation-buttons">
+        <a href="lesson1-1.html" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Previous Lesson
+        </a>
+        
+        <div class="progress-indicator">
+          <span>Lesson Progress:</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="lesson-progress"></div>
+          </div>
+          <span id="progress-text">0%</span>
+        </div>
+        
+        <a href="lesson1-3.html" class="btn" id="next-lesson" style="display: none;">
+          Next Lesson <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </main>
+
+    <aside class="activity-panel">
+      <h3 class="activity-title">
+        <i class="fas fa-tasks"></i>
+        Learning Objectives
+      </h3>
+      
+      <div class="activity-item completed">
+        <h4>Type Conversion</h4>
+        <p>Convert between different data types</p>
+      </div>
+      
+      <div class="activity-item current">
+        <h4>String Operations</h4>
+        <p>Index and slice strings effectively</p>
+      </div>
+      
+      <div class="activity-item">
+        <h4>List Basics</h4>
+        <p>Create and manipulate lists</p>
+      </div>
+      
+      <div class="activity-item">
+        <h4>Data Structures</h4>
+        <p>Understand sequence operations</p>
+      </div>
+
+      <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e9ecef;">
+        <h3 style="margin-bottom: 1rem;">
+          <i class="fas fa-trophy"></i>
+          Progress
+        </h3>
+        
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; color: #27ae60; margin-bottom: 0.5rem;">2/16</div>
+          <div style="color: #7f8c8d;">Lessons Completed</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+  
+  <!-- Modal for feedback -->
+  <div id="feedbackModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-header">
+        <i id="modalIcon" class="fas fa-check-circle modal-icon"></i>
+        <h2 id="modalTitle" class="modal-title">Success!</h2>
+      </div>
+      <div id="modalBody" class="modal-body">
+        Great job! Your answer is correct.
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Code execution simulation
+    function runCode() {
+      const code = document.getElementById('code-input').value;
+      const output = document.getElementById('code-output');
+      
+      output.innerHTML = '<span style="color: #3498db;">█ Running code...</span>';
+      
+      setTimeout(() => {
+        try {
+          // Simple Python simulation for this lesson
+          let result = '';
+          const lines = code.split('\n');
+          
+          lines.forEach(line => {
+            line = line.trim();
+            if (line.startsWith('print(')) {
+              // Simulate type conversion outputs
+              if (line.includes('int(user_input)')) {
+                result += "Converted 123 to 123\n";
+              } else if (line.includes('message[:5]')) {
+                result += "First 5 chars: Hello\n";
+              } else if (line.includes('message[-6:]')) {
+                result += "Last 6 chars: World!\n";
+              } else if (line.includes('colors')) {
+                result += "Colors: ['red', 'green', 'blue', 'yellow']\n";
+              } else if (line.includes('colors[1]')) {
+                result += "Second color: green\n";
+              } else {
+                // Handle regular print statements
+                const match = line.match(/print\(['"`]([^'"`]*?)['"`]\)/);
+                if (match) {
+                  result += match[1] + '\n';
+                }
+              }
+            }
+          });
+          
+          if (!result) {
+            result = '✓ Code executed successfully!\nTry adding print() statements to see output.';
+          }
+          
+          output.innerHTML = result || 'No output generated.';
+        } catch (error) {
+          output.innerHTML = `<span style="color: #e74c3c;">❌ Error: ${error.message}</span>`;
+        }
+      }, 800);
+    }
+    
+    function clearOutput() {
+      document.getElementById('code-output').innerHTML = '<span style="color: #7f8c8d;">Output cleared. Ready for next execution.</span>';
+    }
+    
+    function resetCode() {
+      document.getElementById('code-input').value = `# Practice data operations
+# 1. Type conversion
+user_input = "123"
+number = int(user_input)
+print(f"Converted {user_input} to {number}")
+
+# 2. String slicing
+message = "Hello, World!"
+print(f"First 5 chars: {message[:5]}")
+print(f"Last 6 chars: {message[-6:]}")
+
+# 3. List operations
+colors = ["red", "green", "blue"]
+colors.append("yellow")
+print(f"Colors: {colors}")
+print(f"Second color: {colors[1]}")`;
+      clearOutput();
+    }
+    
+    // Copy code functionality
+    function copyCode(button) {
+      const codeBlock = button.parentElement;
+      const code = codeBlock.querySelector('code').textContent;
+      
+      navigator.clipboard.writeText(code).then(() => {
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+          button.textContent = 'Copy';
+        }, 2000);
+      });
+    }
+    
+    // Modal functionality
+    function showModal(title, message, isSuccess = true) {
+      const modal = document.getElementById('feedbackModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+      const modalIcon = document.getElementById('modalIcon');
+      
+      modalTitle.textContent = title;
+      modalBody.textContent = message;
+      
+      if (isSuccess) {
+        modalIcon.className = 'fas fa-check-circle modal-icon';
+        modalIcon.style.color = '#27ae60';
+      } else {
+        modalIcon.className = 'fas fa-exclamation-circle modal-icon error';
+        modalIcon.style.color = '#e74c3c';
+      }
+      
+      modal.style.display = 'block';
+    }
+    
+    function closeModal() {
+      document.getElementById('feedbackModal').style.display = 'none';
+    }
+    
+    // Exercise checking with modal feedback
+    function checkAnswer(exerciseNum, expectedPattern) {
+      showModal(
+        'Exercise Complete!', 
+        `Exercise ${exerciseNum}: Great job! You're understanding data operations well. Keep practicing!`,
+        true
+      );
+    }
+    
+    // Quiz functionality
+    let quizAnswers = {};
+    
+    function selectOption(element, isCorrect) {
+      const radio = element.querySelector('input');
+      radio.checked = true;
+      
+      const questionNum = radio.name;
+      quizAnswers[questionNum] = isCorrect;
+      
+      // Visual feedback
+      const allOptions = element.parentElement.querySelectorAll('.quiz-option');
+      allOptions.forEach(opt => opt.style.background = '');
+      element.style.background = isCorrect ? '#d5f4e6' : '#fdeaea';
+    }
+    
+    function submitQuiz() {
+      const totalQuestions = 3;
+      const correctAnswers = Object.values(quizAnswers).filter(answer => answer === true).length;
+      const score = Math.round((correctAnswers / totalQuestions) * 100);
+      
+      let message = `Quiz Complete!\nScore: ${score}% (${correctAnswers}/${totalQuestions})\n\n`;
+      
+      if (score >= 80) {
+        message += "Excellent work! You're ready for the next lesson.";
+        // Unlock next lesson
+        localStorage.setItem('lesson1.2_completed', 'true');
+        updateProgress();
+      } else {
+        message += "Good effort! Review the material and try again.";
+      }
+      
+      showModal('Quiz Results', message, score >= 80);
+    }
+    
+    // Progress tracking
+    function updateProgress() {
+      const completed = localStorage.getItem('lesson1.2_completed') === 'true';
+      if (completed) {
+        document.getElementById('lesson-progress').style.width = '100%';
+        document.getElementById('progress-text').textContent = '100%';
+        document.getElementById('next-lesson').style.display = 'block';
+      }
+    }
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      updateProgress();
+      console.log('Lesson 1.2: Data Operations loaded successfully');
+      
+      // Close modal when clicking the X or outside the modal
+      window.onclick = function(event) {
+        const modal = document.getElementById('feedbackModal');
+        if (event.target == modal) {
+          closeModal();
+        }
+      }
+      
+      document.querySelector('.close').onclick = closeModal;
+      
+      // Initialize code editor with default content
+      resetCode();
+    });
+  </script>
+</body>
+</html>

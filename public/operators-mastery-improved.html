@@ -634,7 +634,8 @@
         </div>
     </div>
 
-    <!-- Import Firebase and App.js -->
+    <!-- Import Firebase config and App.js -->
+    <script src="firebase-config.js"></script>
     <script type="module" src="/app.js"></script>
     <script type="module">
         // Import Firebase modules
@@ -666,8 +667,10 @@
         // Initialize Firebase
         async function initFirebase() {
             try {
-                const cfg = await import('./firebase-config.js');
-                firebaseConfig = cfg.firebaseConfig;
+                firebaseConfig = window.firebaseConfig;
+                if (!firebaseConfig) {
+                    throw new Error('Firebase configuration not found');
+                }
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 

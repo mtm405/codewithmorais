@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamepy - Learn Python Through Games</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100"/></svg>');
+            pointer-events: none;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.03) 2px,
+                rgba(255, 255, 255, 0.03) 4px
+            );
+            animation: slidePattern 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes slidePattern {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100px); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .game-card:hover .game-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .game-card:hover .play-button {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .game-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .game-description {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .game-topics {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .game-topics h4 {
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .topics-list {
+            list-style: none;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .topics-list li {
+            margin-bottom: 0.3rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .topics-list li::before {
+            content: '•';
+            color: #667eea;
+            position: absolute;
+            left: 0;
+        }
+
+        .play-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-beginner {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .difficulty-intermediate {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+        }
+
+        .difficulty-advanced {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+        }
+
+        .game-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 95%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .close {
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .game-interface {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .question-section {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 2rem;
+            border-radius: 16px;
+            border-left: 5px solid #667eea;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .code-display {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .option-button {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            color: #2d3748;
+        }
+
+        .option-button:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .option-button.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option-button.correct {
+            border-color: #48bb78;
+            background: #48bb78;
+            color: white;
+        }
+
+        .option-button.incorrect {
+            border-color: #e53e3e;
+            background: #e53e3e;
+            color: white;
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .score-display {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .feedback-section {
+            background: rgba(72, 187, 120, 0.1);
+            border: 1px solid #48bb78;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .feedback-section.show {
+            display: block;
+        }
+
+        .feedback-section.incorrect {
+            background: rgba(229, 62, 62, 0.1);
+            border-color: #e53e3e;
+        }
+
+        /* Game-specific styles */
+        .game-timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 100;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .racing-track {
+            position: relative;
+            height: 100px;
+            background: linear-gradient(90deg, #f7fafc 0%, #e2e8f0 50%, #f7fafc 100%);
+            border: 3px solid #4299e1;
+            border-radius: 50px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .racing-car {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: left 0.8s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .finish-line {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: repeating-linear-gradient(
+                45deg,
+                #000,
+                #000 10px,
+                #fff 10px,
+                #fff 20px
+            );
+        }
+
+        .power-up {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounce 1s infinite;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Snake Game Styles */
+        .snake-game {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(45deg, #1a202c 25%, transparent 25%), 
+                        linear-gradient(-45deg, #1a202c 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #1a202c 75%), 
+                        linear-gradient(-45deg, transparent 75%, #1a202c 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-color: #2d3748;
+            border: 3px solid #4a5568;
+            border-radius: 10px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .snake-segment {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            border: 1px solid #2f855a;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(72, 187, 120, 0.5);
+            transition: all 0.1s ease;
+        }
+
+        .snake-head {
+            background: linear-gradient(135deg, #4299e1, #3182ce) !important;
+            border: 1px solid #2b77ad !important;
+            box-shadow: 0 0 8px rgba(66, 153, 225, 0.6) !important;
+        }
+
+        .snake-food {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #f56565, #e53e3e);
+            border: 2px solid #c53030;
+            border-radius: 50%;
+            animation: pulse-food 1s infinite;
+        }
+
+        @keyframes pulse-food {
+            0% { transform: scale(1); box-shadow: 0 0 5px rgba(245, 101, 101, 0.5); }
+            50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(245, 101, 101, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 5px rgba(245, 101, 101, 0.5); }
+        }
+
+        .snake-score-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .snake-controls {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .direction-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            max-width: 150px;
+            margin: 1rem auto;
+        }
+
+        .direction-btn {
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .direction-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .direction-btn:active {
+            transform: scale(0.95);
+        }
+
+        .direction-btn:nth-child(2) { grid-column: 2; grid-row: 1; } /* Up */
+        .direction-btn:nth-child(1) { grid-column: 1; grid-row: 2; } /* Left */
+        .direction-btn:nth-child(3) { grid-column: 3; grid-row: 2; } /* Right */
+        .direction-btn:nth-child(4) { grid-column: 2; grid-row: 3; } /* Down */
+
+        .blaster-game {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(180deg, #1a202c 0%, #2d3748 100%);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .spaceship {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transition: left 0.1s ease;
+        }
+
+        .enemy {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            animation: enemyFall 3s linear;
+        }
+
+        @keyframes enemyFall {
+            from { top: -40px; }
+            to { top: 400px; }
+        }
+
+        .laser {
+            position: absolute;
+            width: 3px;
+            height: 20px;
+            background: #ffd700;
+            animation: laserShoot 1s linear;
+        }
+
+        @keyframes laserShoot {
+            from { bottom: 80px; }
+            to { bottom: 400px; }
+        }
+
+        .tower-defense {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f7fafc, #e2e8f0);
+            border-radius: 20px;
+        }
+
+        .tower-cell {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tower-cell:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .tower {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .enemy-path {
+            background: linear-gradient(135deg, #fed7d7, #feb2b2);
+            border-color: #e53e3e;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.6s ease;
+            transform-style: preserve-3d;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+            background: white;
+            color: #2d3748;
+            border: 3px solid #667eea;
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            transform: scale(0.95);
+        }
+
+        .health-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e53e3e, #fc8181);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .score-popup {
+            position: absolute;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #48bb78;
+            pointer-events: none;
+            animation: scoreFloat 1s ease-out forwards;
+        }
+
+        @keyframes scoreFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+        }
+
+        .streak-counter {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #2d3748;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .combo-multiplier {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            animation: glow 1s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(229, 62, 62, 0.5); }
+            to { box-shadow: 0 0 20px rgba(229, 62, 62, 0.8); }
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            padding: 3rem 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats-section h3,
+        .tips-section h3 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #4a5568;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .tips-list li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+                padding: 2rem 1rem;
+            }
+
+            .header {
+                padding: 2rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .modal-content {
+                width: 98%;
+                margin: 1% auto;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .tower-defense {
+                grid-template-columns: repeat(6, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-gamepad"></i> Gamepy</h1>
+                <p class="subtitle">Master Python Programming Through Epic Adventures</p>
+                <p style="font-size: 1rem; opacity: 0.8; margin-top: 1rem;">
+                    Choose your challenge: Snake adventures, space battles, trivia rushes, and memory games!
+                </p>
+            </div>
+        </div>
+
+        <div class="games-grid">
+            <!-- Game 1: Python Snake -->
+            <div class="game-card" onclick="openGame('pythonSnake')">
+                <div class="difficulty-badge difficulty-beginner">Beginner</div>
+                <div class="game-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h3 class="game-title">Python Snake Adventure</h3>
+                <p class="game-description">
+                    Navigate the Python snake through code challenges! Eat data types to grow while answering Python questions in this classic arcade adventure!
+                </p>
+                <div class="game-topics">
+                    <h4>Learning Objectives</h4>
+                    <ul class="topics-list">
+                        <li>Python data types (str, int, float, bool)</li>
+                        <li>Variable recognition and typing</li>
+                        <li>Quick decision making under pressure</li>
+                        <li>Progressive difficulty with speed increases</li>
+                    </ul>
+                </div>
+                <button class="play-button">
+                    <i class="fas fa-play"></i>
+                    Start Snake Adventure
+                </button>
+            </div>
+
+            <!-- Game 2: Space Blaster -->
+            <div class="game-card" onclick="openGame('spaceBlaster')">
+                <div class="difficulty-badge difficulty-intermediate">Intermediate</div>
+                <div class="game-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3 class="game-title">Space Code Blaster</h3>
+                <p class="game-description">
+                    Defend Earth by blasting asteroids with correct data operations! Shoot down enemies by solving list operations and type conversions!
+                </p>
+                <div class="game-topics">
+                    <h4>Learning Objectives</h4>
+                    <ul class="topics-list">
+                        <li>Data type conversion and operations</li>
+                        <li>List operations (sort, append, slice)</li>
+                        <li>Fast-paced action gameplay</li>
+                        <li>Health system with consequences</li>
+                    </ul>
+                </div>
+                <button class="play-button">
+                    <i class="fas fa-play"></i>
+                    Launch Mission
+                </button>
+            </div>
+
+            <!-- Game 3: Memory Match -->
+            <div class="game-card" onclick="openGame('operatorMemory')">
+                <div class="difficulty-badge difficulty-intermediate">Intermediate</div>
+                <div class="game-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="game-title">Operator Memory Match</h3>
+                <p class="game-description">
+                    Match operators with their correct symbols and functions! Flip cards to find pairs while learning operator types and usage!
+                </p>
+                <div class="game-topics">
+                    <h4>Learning Objectives</h4>
+                    <ul class="topics-list">
+                        <li>Operator recognition and symbols</li>
+                        <li>Assignment, comparison, and logical operators</li>
+                        <li>Memory-based learning reinforcement</li>
+                        <li>Pattern recognition skills</li>
+                    </ul>
+                </div>
+                <button class="play-button">
+                    <i class="fas fa-play"></i>
+                    Start Matching
+                </button>
+            </div>
+
+            <!-- Game 4: Python Trivia Rush -->
+            <div class="game-card" onclick="openGame('triviaRush')">
+                <div class="difficulty-badge difficulty-advanced">Advanced</div>
+                <div class="game-icon">
+                    <i class="fas fa-lightning-bolt"></i>
+                </div>
+                <h3 class="game-title">Python Trivia Rush</h3>
+                <p class="game-description">
+                    Race against time in this intense Python trivia challenge! Answer rapid-fire questions about loops, functions, and advanced concepts!
+                </p>
+                <div class="game-topics">
+                    <h4>Learning Objectives</h4>
+                    <ul class="topics-list">
+                        <li>Control flow (loops, conditionals)</li>
+                        <li>Functions and parameters</li>
+                        <li>Error handling and debugging</li>
+                        <li>Speed-based scoring system</li>
+                    </ul>
+                </div>
+                <button class="play-button">
+                    <i class="fas fa-play"></i>
+                    Start Rush
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-content">
+                <div class="stats-section">
+                    <h3><i class="fas fa-chart-line"></i> Learning Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">4</div>
+                            <div class="stat-label">Interactive Games</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">50+</div>
+                            <div class="stat-label">Python Questions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">∞</div>
+                            <div class="stat-label">Fun Learning</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tips-section">
+                    <h3><i class="fas fa-lightbulb"></i> Pro Tips</h3>
+                    <ul class="tips-list">
+                        <li>Start with Snake Adventure for basic Python concepts</li>
+                        <li>Try Trivia Rush to test your overall Python knowledge</li>
+                        <li>Use Space Blaster for advanced data operations</li>
+                        <li>Memory Match helps reinforce operator knowledge</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div id="gameModal" class="game-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Game Title</h2>
+                <span class="close" onclick="closeGame()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="game-interface" id="gameInterface">
+                    <!-- Game content will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state variables
+        let currentGame = null;
+        let gameTimer = null;
+        let timeLeft = 0;
+        let score = 0;
+        let lives = 3;
+        let streak = 0;
+        let gameInterval = null;
+
+        // Game data for different game types
+        const gameQuestions = {
+            dataTypes: [
+                { code: "x = 'Hello'", answer: "str", options: ["str", "int", "float", "bool"] },
+                { code: "x = 42", answer: "int", options: ["str", "int", "float", "bool"] },
+                { code: "x = 3.14", answer: "float", options: ["str", "int", "float", "bool"] },
+                { code: "x = True", answer: "bool", options: ["str", "int", "float", "bool"] },
+                { code: "x = 5 > 3", answer: "bool", options: ["str", "int", "float", "bool"] },
+                { code: "x = '123'", answer: "str", options: ["str", "int", "float", "bool"] },
+                { code: "x = 10 / 2", answer: "float", options: ["str", "int", "float", "bool"] },
+                { code: "x = int('50')", answer: "int", options: ["str", "int", "float", "bool"] }
+            ],
+            operations: [
+                { code: "str(42) + str(58)", answer: "'4258'", options: ["100", "'100'", "'4258'", "4258"] },
+                { code: "'Python'[1:4]", answer: "'yth'", options: ["'Pyt'", "'yth'", "'ytho'", "'thon'"] },
+                { code: "[3,1,4,1,5].sort()", answer: "None", options: ["[1,1,3,4,5]", "None", "[5,4,3,1,1]", "[3,1,4,1,5]"] },
+                { code: "max([10,5,8,3,12])", answer: "12", options: ["10", "5", "12", "3"] },
+                { code: "'Programming'[-3]", answer: "'i'", options: ["'g'", "'m'", "'i'", "'n'"] }
+            ],
+            operators: [
+                { question: "Add 5 to x and store result", answer: "+=", options: ["=", "+=", "==", "+"] },
+                { question: "Check if same object", answer: "is", options: ["==", "is", "!=", "in"] },
+                { question: "Check membership", answer: "in", options: ["==", "is", "in", "and"] },
+                { question: "Floor division", answer: "//", options: ["/", "//", "%", "**"] },
+                { question: "Remainder of division", answer: "%", options: ["/", "//", "%", "**"] }
+            ],
+            trivia: [
+                { question: "Which loop is best for iterating over a list?", answer: "for", options: ["while", "for", "do-while", "foreach"] },
+                { question: "What keyword defines a function in Python?", answer: "def", options: ["function", "def", "func", "define"] },
+                { question: "Which statement catches exceptions?", answer: "except", options: ["catch", "except", "error", "handle"] },
+                { question: "What does 'len([1,2,3])' return?", answer: "3", options: ["2", "3", "4", "1"] },
+                { question: "Which is the correct way to import math?", answer: "import math", options: ["import math", "include math", "use math", "require math"] },
+                { question: "What does 'range(5)' generate?", answer: "0,1,2,3,4", options: ["1,2,3,4,5", "0,1,2,3,4", "0,1,2,3,4,5", "1,2,3,4"] },
+                { question: "Which creates an empty dictionary?", answer: "{}", options: ["[]", "{}", "()", "set()"] },
+                { question: "What's the output of '3 * \"hi\"'?", answer: "hihihi", options: ["hi3", "hihihi", "3hi", "error"] },
+                { question: "Which method adds to the end of a list?", answer: "append", options: ["add", "append", "insert", "push"] },
+                { question: "What does 'break' do in a loop?", answer: "exits loop", options: ["skips iteration", "exits loop", "restarts loop", "pauses loop"] },
+                { question: "Which is Python's logical AND operator?", answer: "and", options: ["&&", "and", "&", "AND"] },
+                { question: "What type is returned by input()?", answer: "str", options: ["int", "str", "float", "any"] },
+                { question: "Which creates a comment in Python?", answer: "#", options: ["//", "#", "/*", "--"] },
+                { question: "What does 'elif' stand for?", answer: "else if", options: ["else if", "else elif", "elseif", "elif"] },
+                { question: "Which method removes an item from a list?", answer: "remove", options: ["delete", "remove", "pop", "clear"] }
+            ]
+        };
+
+        // Python Trivia Rush Game
+        function startTriviaRush() {
+            timeLeft = 60;
+            score = 0;
+            streak = 0;
+            let currentQuestion = 0;
+            let questionStartTime = Date.now();
+            let questionsAnswered = 0;
+            const questions = [...gameQuestions.trivia].sort(() => Math.random() - 0.5); // Shuffle questions
+            
+            const gameHTML = `
+                <div class="game-timer" id="timer">${timeLeft}s</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div class="streak-counter">
+                        <i class="fas fa-fire"></i>
+                        Streak: <span id="streak">0</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: bold;">Score: <span id="score">0</span></div>
+                        <div style="font-size: 1rem;">Questions: <span id="questionCount">0</span>/${questions.length}</div>
+                    </div>
+                    <div class="combo-multiplier" id="multiplier" style="display: none;">
+                        x<span id="multiplierValue">2</span>
+                    </div>
+                </div>
+                
+                <div style="width: 100%; height: 10px; background: #e2e8f0; border-radius: 5px; margin-bottom: 2rem; overflow: hidden;">
+                    <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #48bb78, #38a169); width: 0%; transition: width 0.3s ease;"></div>
+                </div>
+                
+                <div class="question-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="margin: 0;">Quick Fire Round!</h3>
+                        <div style="background: #667eea; color: white; padding: 0.5rem 1rem; border-radius: 20px;">
+                            Question <span id="currentQ">1</span>
+                        </div>
+                    </div>
+                    <div class="question-text" id="triviaQuestion">${questions[0].question}</div>
+                    <div class="options-grid" id="triviaOptions">
+                        ${questions[0].options.map((option, index) => 
+                            `<button class="option-button" onclick="answerTrivia(${index}, '${questions[0].answer}', '${option}')">${option}</button>`
+                        ).join('')}
+                    </div>
+                    <div style="margin-top: 1rem; text-align: center; color: #666;">
+                        Faster answers = more points!
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="control-btn btn-secondary" onclick="closeGame()">Exit Rush</button>
+                </div>
+            `;
+            
+            document.getElementById('gameInterface').innerHTML = gameHTML;
+            
+            // Start timer
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft + 's';
+                
+                if (timeLeft <= 0) {
+                    endTriviaRush();
+                }
+            }, 1000);
+            
+            // Store game data
+            window.triviaData = { questions, currentQuestion, questionStartTime, questionsAnswered };
+        }
+
+        function answerTrivia(selectedIndex, correctAnswer, selectedAnswer) {
+            const data = window.triviaData;
+            const isCorrect = selectedAnswer === correctAnswer;
+            const responseTime = Date.now() - data.questionStartTime;
+            
+            // Calculate score based on speed and correctness
+            let points = 0;
+            if (isCorrect) {
+                // Base points + speed bonus + streak bonus
+                points = 50;
+                if (responseTime < 2000) points += 30; // Fast answer bonus
+                else if (responseTime < 4000) points += 15; // Medium speed bonus
+                
+                streak++;
+                
+                // Streak multiplier
+                if (streak >= 5) {
+                    const multiplier = Math.min(Math.floor(streak / 5) + 1, 5);
+                    points *= multiplier;
+                    document.getElementById('multiplier').style.display = 'block';
+                    document.getElementById('multiplierValue').textContent = multiplier;
+                } else {
+                    document.getElementById('multiplier').style.display = 'none';
+                }
+                
+                showScorePopup(`+${points}`, '#48bb78');
+            } else {
+                streak = 0;
+                document.getElementById('multiplier').style.display = 'none';
+                showScorePopup('Wrong!', '#e53e3e');
+            }
+            
+            score += points;
+            data.questionsAnswered++;
+            
+            // Update UI
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('questionCount').textContent = data.questionsAnswered;
+            document.getElementById('progressBar').style.width = (data.questionsAnswered / data.questions.length * 100) + '%';
+            
+            // Show result briefly
+            const buttons = document.querySelectorAll('#triviaOptions .option-button');
+            buttons[selectedIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            // Highlight correct answer if wrong
+            if (!isCorrect) {
+                buttons.forEach((btn, index) => {
+                    if (btn.textContent === correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+            
+            // Next question after delay
+            setTimeout(() => {
+                data.currentQuestion++;
+                if (data.currentQuestion >= data.questions.length || timeLeft <= 0) {
+                    endTriviaRush();
+                } else {
+                    loadNextTriviaQuestion();
+                }
+            }, 1500);
+        }
+
+        function loadNextTriviaQuestion() {
+            const data = window.triviaData;
+            const question = data.questions[data.currentQuestion];
+            
+            document.getElementById('triviaQuestion').textContent = question.question;
+            document.getElementById('currentQ').textContent = data.currentQuestion + 1;
+            document.getElementById('triviaOptions').innerHTML = question.options.map((option, index) => 
+                `<button class="option-button" onclick="answerTrivia(${index}, '${question.answer}', '${option}')">${option}</button>`
+            ).join('');
+            
+            data.questionStartTime = Date.now();
+        }
+
+        function endTriviaRush() {
+            clearInterval(gameTimer);
+            const data = window.triviaData;
+            const percentage = Math.round((data.questionsAnswered / data.questions.length) * 100);
+            
+            let performance = 'Getting Started!';
+            let color = '#667eea';
+            if (percentage >= 90) { performance = 'Python Master!'; color = '#48bb78'; }
+            else if (percentage >= 75) { performance = 'Great Job!'; color = '#38a169'; }
+            else if (percentage >= 50) { performance = 'Good Work!'; color = '#ed8936'; }
+            
+            document.getElementById('gameInterface').innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <h2 style="color: ${color}; margin-bottom: 2rem;">⚡ ${performance}</h2>
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem; color: #667eea;">Final Score: ${score}</div>
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">Questions Answered: ${data.questionsAnswered}/${data.questions.length}</div>
+                    <div style="font-size: 1.3rem; margin-bottom: 1rem;">Best Streak: ${streak}</div>
+                    <div style="font-size: 1.2rem; margin-bottom: 2rem; color: #4a5568;">
+                        Accuracy: ${data.questionsAnswered > 0 ? Math.round((score > 0 ? streak : 0) / data.questionsAnswered * 100) : 0}%
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button class="control-btn btn-primary" onclick="openGame('triviaRush')">Rush Again</button>
+                        <button class="control-btn btn-secondary" onclick="closeGame()">Exit</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Python Snake Game
+        function startPythonSnake() {
+            score = 0;
+            lives = 3;
+            let snake = [{x: 10, y: 10}];
+            let food = {x: 5, y: 5, type: 'str', question: null};
+            let direction = {x: 0, y: 0};
+            let gameRunning = false;
+            let currentQuestion = null;
+            let gameSpeed = 300;
+            
+            const gameHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>Score: <span id="score">0</span></div>
+                    <div>Length: <span id="snakeLength">1</span></div>
+                    <div>Lives: <span id="lives">${lives}</span></div>
+                </div>
+                
+                <div class="snake-game" id="snakeGame">
+                    <!-- Snake segments and food will be added dynamically -->
+                </div>
+                
+                <div class="snake-controls">
+                    <p style="margin-bottom: 1rem;">Use arrow keys or buttons to move</p>
+                    <div class="direction-buttons">
+                        <button class="direction-btn" onclick="changeDirection(0, -1)">↑</button>
+                        <button class="direction-btn" onclick="changeDirection(-1, 0)">←</button>
+                        <button class="direction-btn" onclick="changeDirection(1, 0)">→</button>
+                        <button class="direction-btn" onclick="changeDirection(0, 1)">↓</button>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button class="control-btn btn-primary" onclick="startSnakeMovement()" id="startBtn">Start Game</button>
+                        <button class="control-btn btn-secondary" onclick="pauseSnake()" id="pauseBtn" style="display: none;">Pause</button>
+                        <button class="control-btn btn-secondary" onclick="closeGame()">Exit</button>
+                    </div>
+                </div>
+                
+                <div class="question-section" id="snakeQuestion" style="display: none;">
+                    <h3 id="questionTitle">Answer to continue growing!</h3>
+                    <div class="code-display" id="snakeCode"></div>
+                    <div class="options-grid" id="snakeOptions"></div>
+                </div>
+            `;
+            
+            document.getElementById('gameInterface').innerHTML = gameHTML;
+            
+            // Initialize game state
+            window.snakeData = { 
+                snake, 
+                food, 
+                direction, 
+                gameRunning, 
+                currentQuestion, 
+                gameSpeed,
+                gameLoop: null
+            };
+            
+            // Add keyboard controls
+            document.addEventListener('keydown', handleSnakeKeys);
+            
+            // Draw initial state
+            drawSnake();
+            generateFood();
+        }
+
+        function handleSnakeKeys(event) {
+            if (currentGame !== 'pythonSnake') return;
+            
+            switch(event.key) {
+                case 'ArrowUp':
+                    event.preventDefault();
+                    changeDirection(0, -1);
+                    break;
+                case 'ArrowDown':
+                    event.preventDefault();
+                    changeDirection(0, 1);
+                    break;
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    changeDirection(-1, 0);
+                    break;
+                case 'ArrowRight':
+                    event.preventDefault();
+                    changeDirection(1, 0);
+                    break;
+                case ' ':
+                    event.preventDefault();
+                    if (window.snakeData.gameRunning) {
+                        pauseSnake();
+                    } else {
+                        startSnakeMovement();
+                    }
+                    break;
+            }
+        }
+
+        function changeDirection(x, y) {
+            const data = window.snakeData;
+            // Prevent reversing into itself
+            if (data.snake.length > 1) {
+                if (x === -data.direction.x && y === -data.direction.y) return;
+            }
+            data.direction = {x, y};
+        }
+
+        function startSnakeMovement() {
+            const data = window.snakeData;
+            if (data.gameRunning) return;
+            
+            data.gameRunning = true;
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('pauseBtn').style.display = 'inline-block';
+            
+            data.gameLoop = setInterval(() => {
+                moveSnake();
+            }, data.gameSpeed);
+        }
+
+        function pauseSnake() {
+            const data = window.snakeData;
+            data.gameRunning = false;
+            clearInterval(data.gameLoop);
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('pauseBtn').style.display = 'none';
+        }
+
+        function moveSnake() {
+            const data = window.snakeData;
+            const head = {...data.snake[0]};
+            head.x += data.direction.x;
+            head.y += data.direction.y;
+            
+            // Check wall collision
+            if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20) {
+                handleSnakeCollision();
+                return;
+            }
+            
+            // Check self collision
+            if (data.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                handleSnakeCollision();
+                return;
+            }
+            
+            data.snake.unshift(head);
+            
+            // Check food collision
+            if (head.x === data.food.x && head.y === data.food.y) {
+                eatFood();
+            } else {
+                data.snake.pop(); // Remove tail if no food eaten
+            }
+            
+            drawSnake();
+        }
+
+        function eatFood() {
+            const data = window.snakeData;
+            
+            // Pause game and show question
+            pauseSnake();
+            showSnakeQuestion();
+            
+            // Don't remove tail to grow snake
+            score += 10;
+            document.getElementById('score').textContent = score;
+            document.getElementById('snakeLength').textContent = data.snake.length;
+            
+            // Increase speed slightly
+            data.gameSpeed = Math.max(data.gameSpeed - 10, 100);
+        }
+
+        function showSnakeQuestion() {
+            const questions = gameQuestions.dataTypes;
+            const question = questions[Math.floor(Math.random() * questions.length)];
+            window.snakeData.currentQuestion = question;
+            
+            document.getElementById('questionTitle').textContent = 'What data type is this?';
+            document.getElementById('snakeCode').textContent = question.code;
+            document.getElementById('snakeOptions').innerHTML = question.options.map((option, index) => 
+                `<button class="option-button" onclick="answerSnakeQuestion(${index}, '${question.answer}', '${option}')">${option}</button>`
+            ).join('');
+            
+            document.getElementById('snakeQuestion').style.display = 'block';
+        }
+
+        function answerSnakeQuestion(selectedIndex, correctAnswer, selectedAnswer) {
+            const isCorrect = selectedAnswer === correctAnswer;
+            
+            if (isCorrect) {
+                score += 15;
+                showScorePopup('+15 Correct!', '#48bb78');
+                generateFood(); // Generate new food
+            } else {
+                lives--;
+                document.getElementById('lives').textContent = lives;
+                showScorePopup('Wrong Answer!', '#e53e3e');
+                
+                if (lives <= 0) {
+                    endSnakeGame();
+                    return;
+                }
+                
+                // Regenerate same food for another try
+                generateFood();
+            }
+            
+            document.getElementById('score').textContent = score;
+            document.getElementById('snakeQuestion').style.display = 'none';
+            
+            // Resume game
+            setTimeout(() => {
+                if (currentGame === 'pythonSnake') {
+                    startSnakeMovement();
+                }
+            }, 1000);
+        }
+
+        function generateFood() {
+            const data = window.snakeData;
+            let newFood;
+            
+            do {
+                newFood = {
+                    x: Math.floor(Math.random() * 20),
+                    y: Math.floor(Math.random() * 20)
+                };
+            } while (data.snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
+            
+            data.food = newFood;
+            drawSnake();
+        }
+
+        function drawSnake() {
+            const data = window.snakeData;
+            const gameArea = document.getElementById('snakeGame');
+            gameArea.innerHTML = '';
+            
+            // Draw snake
+            data.snake.forEach((segment, index) => {
+                const segmentEl = document.createElement('div');
+                segmentEl.className = `snake-segment ${index === 0 ? 'snake-head' : ''}`;
+                segmentEl.style.left = (segment.x * 20) + 'px';
+                segmentEl.style.top = (segment.y * 20) + 'px';
+                gameArea.appendChild(segmentEl);
+            });
+            
+            // Draw food
+            const foodEl = document.createElement('div');
+            foodEl.className = 'snake-food';
+            foodEl.style.left = (data.food.x * 20 + 2) + 'px';
+            foodEl.style.top = (data.food.y * 20 + 2) + 'px';
+            gameArea.appendChild(foodEl);
+        }
+
+        function handleSnakeCollision() {
+            lives--;
+            document.getElementById('lives').textContent = lives;
+            showScorePopup('Collision!', '#e53e3e');
+            
+            if (lives <= 0) {
+                endSnakeGame();
+            } else {
+                // Reset snake position
+                pauseSnake();
+                window.snakeData.snake = [{x: 10, y: 10}];
+                window.snakeData.direction = {x: 0, y: 0};
+                document.getElementById('snakeLength').textContent = 1;
+                drawSnake();
+            }
+        }
+
+        function endSnakeGame() {
+            const data = window.snakeData;
+            pauseSnake();
+            document.removeEventListener('keydown', handleSnakeKeys);
+            
+            document.getElementById('gameInterface').innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <h2 style="color: #e53e3e; margin-bottom: 2rem;">🐍 Game Over!</h2>
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">Final Score: ${score}</div>
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">Snake Length: ${data.snake.length}</div>
+                    <div style="font-size: 1.2rem; margin-bottom: 2rem;">You learned about Python data types!</div>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button class="control-btn btn-primary" onclick="openGame('pythonSnake')">Play Again</button>
+                        <button class="control-btn btn-secondary" onclick="closeGame()">Exit</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Racing Game
+        function startPythonRacing() {
+            timeLeft = 60;
+            score = 0;
+            let carPosition = 0;
+            let currentQuestion = 0;
+            const questions = gameQuestions.dataTypes;
+            
+            const gameHTML = `
+                <div class="game-timer" id="timer">${timeLeft}s</div>
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div class="streak-counter">
+                        <i class="fas fa-fire"></i>
+                        Streak: <span id="streak">0</span>
+                    </div>
+                    <div style="margin: 1rem 0;">Score: <span id="score">0</span></div>
+                </div>
+                
+                <div class="racing-track">
+                    <div class="racing-car" id="racingCar" style="left: ${carPosition}%">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="finish-line"></div>
+                </div>
+                
+                <div class="question-section">
+                    <h3>What data type will this expression have?</h3>
+                    <div class="code-display" id="questionCode">${questions[0].code}</div>
+                    <div class="options-grid" id="optionsGrid">
+                        ${questions[0].options.map((option, index) => 
+                            `<button class="option-button" onclick="answerRacing(${index}, '${questions[0].answer}', '${option}')">${option}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="control-btn btn-secondary" onclick="closeGame()">Exit Race</button>
+                </div>
+            `;
+            
+            document.getElementById('gameInterface').innerHTML = gameHTML;
+            
+            // Start timer
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft + 's';
+                
+                if (timeLeft <= 0) {
+                    endRacing();
+                }
+            }, 1000);
+            
+            // Store game data
+            window.racingData = { questions, currentQuestion, carPosition };
+        }
+
+        function answerRacing(selectedIndex, correctAnswer, selectedAnswer) {
+            const isCorrect = selectedAnswer === correctAnswer;
+            const car = document.getElementById('racingCar');
+            
+            if (isCorrect) {
+                score += 10;
+                streak++;
+                window.racingData.carPosition += 12;
+                car.style.left = Math.min(window.racingData.carPosition, 90) + '%';
+                
+                // Show score popup
+                showScorePopup('+10', '#48bb78');
+                
+                // Check if reached finish line
+                if (window.racingData.carPosition >= 90) {
+                    setTimeout(() => {
+                        endRacing(true);
+                    }, 500);
+                    return;
+                }
+            } else {
+                streak = 0;
+                window.racingData.carPosition = Math.max(window.racingData.carPosition - 5, 0);
+                car.style.left = window.racingData.carPosition + '%';
+                showScorePopup('-5', '#e53e3e');
+            }
+            
+            // Update UI
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            
+            // Next question
+            window.racingData.currentQuestion++;
+            if (window.racingData.currentQuestion >= window.racingData.questions.length) {
+                window.racingData.currentQuestion = 0; // Loop questions
+            }
+            
+            setTimeout(() => {
+                loadNextRacingQuestion();
+            }, 800);
+        }
+
+        function loadNextRacingQuestion() {
+            const question = window.racingData.questions[window.racingData.currentQuestion];
+            document.getElementById('questionCode').textContent = question.code;
+            document.getElementById('optionsGrid').innerHTML = question.options.map((option, index) => 
+                `<button class="option-button" onclick="answerRacing(${index}, '${question.answer}', '${option}')">${option}</button>`
+            ).join('');
+        }
+
+        function endRacing(won = false) {
+            clearInterval(gameTimer);
+            const message = won ? '🏆 You Won the Race!' : '⏰ Time\'s Up!';
+            const color = won ? '#48bb78' : '#e53e3e';
+            
+            document.getElementById('gameInterface').innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <h2 style="color: ${color}; margin-bottom: 2rem;">${message}</h2>
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">Final Score: ${score}</div>
+                    <div style="font-size: 1.5rem; margin-bottom: 2rem;">Best Streak: ${streak}</div>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button class="control-btn btn-primary" onclick="openGame('pythonRacing')">Race Again</button>
+                        <button class="control-btn btn-secondary" onclick="closeGame()">Exit</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Space Blaster Game
+        function startSpaceBlaster() {
+            timeLeft = 90;
+            score = 0;
+            lives = 5;
+            let enemies = [];
+            let lasers = [];
+            let spaceshipPos = 50;
+            
+            const gameHTML = `
+                <div class="game-timer" id="timer">${timeLeft}s</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>Score: <span id="score">0</span></div>
+                    <div class="health-bar" style="width: 200px;">
+                        <div class="health-fill" id="healthFill" style="width: 100%;"></div>
+                    </div>
+                    <div>Lives: <span id="lives">${lives}</span></div>
+                </div>
+                
+                <div class="blaster-game" id="blasterGame" style="position: relative;">
+                    <div class="spaceship" id="spaceship"></div>
+                </div>
+                
+                <div class="question-section">
+                    <h3 id="blasterQuestion">Shoot the enemies to answer questions!</h3>
+                    <div class="code-display" id="blasterCode" style="display: none;"></div>
+                    <div class="options-grid" id="blasterOptions"></div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 1rem;">
+                    <p>Use A/D keys to move, SPACE to shoot!</p>
+                    <button class="control-btn btn-secondary" onclick="closeGame()">Abort Mission</button>
+                </div>
+            `;
+            
+            document.getElementById('gameInterface').innerHTML = gameHTML;
+            
+            // Game controls
+            document.addEventListener('keydown', handleSpaceBlasterKeys);
+            
+            // Start timer
+            gameTimer = setInterval(() => {
+                if (!window.blasterData.isPaused) {
+                    timeLeft--;
+                    document.getElementById('timer').textContent = timeLeft + 's';
+                    
+                    if (timeLeft <= 0 || lives <= 0) {
+                        endSpaceBlaster();
+                    }
+                }
+            }, 1000);
+            
+            // Spawn enemies with questions (slower spawning)
+            gameInterval = setInterval(() => {
+                if (!window.blasterData.isPaused) {
+                    spawnEnemy();
+                }
+            }, 3000); // Increased from 2000 to 3000 for easier gameplay
+            
+            window.blasterData = { enemies, lasers, spaceshipPos, isPaused: false };
+        }
+
+        function handleSpaceBlasterKeys(event) {
+            if (currentGame !== 'spaceBlaster') return;
+            
+            const spaceship = document.getElementById('spaceship');
+            const gameArea = document.getElementById('blasterGame');
+            
+            switch(event.key.toLowerCase()) {
+                case 'a':
+                    window.blasterData.spaceshipPos = Math.max(window.blasterData.spaceshipPos - 10, 0);
+                    spaceship.style.left = window.blasterData.spaceshipPos + '%';
+                    break;
+                case 'd':
+                    window.blasterData.spaceshipPos = Math.min(window.blasterData.spaceshipPos + 10, 90);
+                    spaceship.style.left = window.blasterData.spaceshipPos + '%';
+                    break;
+                case ' ':
+                    event.preventDefault();
+                    shootLaser();
+                    break;
+            }
+        }
+
+        function spawnEnemy() {
+            const enemy = document.createElement('div');
+            enemy.className = 'enemy';
+            enemy.style.left = Math.random() * 90 + '%';
+            enemy.style.top = '-40px';
+            enemy.textContent = '?';
+            
+            const gameArea = document.getElementById('blasterGame');
+            gameArea.appendChild(enemy);
+            
+            // Animate enemy falling (slower speed)
+            let position = -40;
+            const fallInterval = setInterval(() => {
+                // Only move if game is not paused
+                if (!window.blasterData.isPaused) {
+                    position += 1; // Reduced from 2 to 1 for slower movement
+                    enemy.style.top = position + 'px';
+                    
+                    if (position > 400) {
+                        enemy.remove();
+                        clearInterval(fallInterval);
+                        takeDamage();
+                    }
+                }
+            }, 80); // Increased from 50 to 80 for slower updates
+            
+            window.blasterData.enemies.push({ element: enemy, interval: fallInterval });
+        }
+
+        function shootLaser() {
+            const laser = document.createElement('div');
+            laser.className = 'laser';
+            laser.style.left = (window.blasterData.spaceshipPos + 3) + '%';
+            laser.style.bottom = '80px';
+            
+            const gameArea = document.getElementById('blasterGame');
+            gameArea.appendChild(laser);
+            
+            // Animate laser (slower speed)
+            let position = 80;
+            const shootInterval = setInterval(() => {
+                // Only move if game is not paused
+                if (!window.blasterData.isPaused) {
+                    position += 8; // Reduced from 10 to 8 for better collision detection
+                    laser.style.bottom = position + 'px';
+                    
+                    // Check collision with enemies
+                    const enemies = document.querySelectorAll('.enemy');
+                    enemies.forEach(enemy => {
+                        const laserRect = laser.getBoundingClientRect();
+                        const enemyRect = enemy.getBoundingClientRect();
+                        
+                        if (laserRect.left < enemyRect.right && 
+                            laserRect.right > enemyRect.left && 
+                            laserRect.top < enemyRect.bottom && 
+                            laserRect.bottom > enemyRect.top) {
+                            
+                            // Hit! Show question and pause game
+                            laser.remove();
+                            enemy.remove();
+                            clearInterval(shootInterval);
+                            pauseGameAndShowQuestion();
+                        }
+                    });
+                    
+                    if (position > 400) {
+                        laser.remove();
+                        clearInterval(shootInterval);
+                    }
+                }
+            }, 60); // Slightly slower laser movement
+        }
+
+        function pauseGameAndShowQuestion() {
+            // Pause the game
+            window.blasterData.isPaused = true;
+            
+            const questions = gameQuestions.operations;
+            const question = questions[Math.floor(Math.random() * questions.length)];
+            
+            document.getElementById('blasterQuestion').textContent = 'GAME PAUSED - Answer to Continue!';
+            document.getElementById('blasterCode').textContent = question.code;
+            document.getElementById('blasterCode').style.display = 'block';
+            document.getElementById('blasterOptions').innerHTML = question.options.map((option, index) => 
+                `<button class="option-button" onclick="answerBlaster(${index}, '${question.answer}', '${option}')">${option}</button>`
+            ).join('');
+            
+            // Add visual pause indicator
+            const gameArea = document.getElementById('blasterGame');
+            const pauseIndicator = document.createElement('div');
+            pauseIndicator.id = 'pauseIndicator';
+            pauseIndicator.style.cssText = `
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                font-size: 1.2rem;
+                font-weight: bold;
+                z-index: 1000;
+            `;
+            pauseIndicator.textContent = '⏸️ PAUSED - Answer Question';
+            gameArea.appendChild(pauseIndicator);
+        }
+
+        function resumeGame() {
+            // Resume the game
+            window.blasterData.isPaused = false;
+            
+            // Remove pause indicator
+            const pauseIndicator = document.getElementById('pauseIndicator');
+            if (pauseIndicator) pauseIndicator.remove();
+            
+            document.getElementById('blasterQuestion').textContent = 'Shoot the enemies to answer questions!';
+            document.getElementById('blasterCode').style.display = 'none';
+            document.getElementById('blasterOptions').innerHTML = '';
+        }
+
+        function answerBlaster(selectedIndex, correctAnswer, selectedAnswer) {
+            const isCorrect = selectedAnswer === correctAnswer;
+            
+            if (isCorrect) {
+                score += 15;
+                showScorePopup('+15', '#48bb78');
+            } else {
+                takeDamage();
+            }
+            
+            document.getElementById('score').textContent = score;
+            
+            // Resume game after answering
+            setTimeout(() => {
+                resumeGame();
+            }, 1500); // Give time to see the result
+        }
+
+        function takeDamage() {
+            lives--;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('healthFill').style.width = (lives / 5 * 100) + '%';
+            
+            if (lives <= 0) {
+                setTimeout(() => endSpaceBlaster(), 500);
+            }
+        }
+
+        function nextBlasterQuestion() {
+            // This function is no longer needed as questions are shown on demand
+            // when enemies are hit
+        }
+
+        function endSpaceBlaster() {
+            clearInterval(gameTimer);
+            clearInterval(gameInterval);
+            document.removeEventListener('keydown', handleSpaceBlasterKeys);
+            
+            // Clear all enemies
+            window.blasterData.enemies.forEach(enemy => {
+                clearInterval(enemy.interval);
+                enemy.element.remove();
+            });
+            
+            const message = lives > 0 ? '🚀 Mission Complete!' : '💥 Earth Destroyed!';
+            const color = lives > 0 ? '#48bb78' : '#e53e3e';
+            
+            document.getElementById('gameInterface').innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <h2 style="color: ${color}; margin-bottom: 2rem;">${message}</h2>
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">Final Score: ${score}</div>
+                    <div style="font-size: 1.5rem; margin-bottom: 2rem;">Lives Remaining: ${lives}</div>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button class="control-btn btn-primary" onclick="openGame('spaceBlaster')">New Mission</button>
+                        <button class="control-btn btn-secondary" onclick="closeGame()">Exit</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Tower Defense Game (simplified version)
+        function startOperatorTower() {
+            score = 0;
+            lives = 10;
+            let towers = [];
+            let wave = 1;
+            
+            const gameHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>Score: <span id="score">0</span></div>
+                    <div>Wave: <span id="wave">1</span></div>
+                    <div>Lives: <span id="lives">${lives}</span></div>
+                </div>
+                
+                <div class="tower-defense" id="towerGrid">
+                    ${Array.from({length: 64}, (_, i) => `<div class="tower-cell" onclick="placeTower(${i})"></div>`).join('')}
+                </div>
+                
+                <div class="question-section">
+                    <h3 id="towerQuestion">Click on cells to place towers!</h3>
+                    <div class="code-display" id="towerCode" style="display: none;"></div>
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <button class="control-btn btn-primary" onclick="startWave()">Start Wave</button>
+                        <button class="control-btn btn-secondary" onclick="closeGame()">Exit</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('gameInterface').innerHTML = gameHTML;
+            window.towerData = { towers, wave };
+        }
+
+        function placeTower(cellIndex) {
+            const cell = document.querySelectorAll('.tower-cell')[cellIndex];
+            if (cell.querySelector('.tower')) return; // Already has tower
+            
+            // Show operator question
+            const questions = gameQuestions.operators;
+            const question = questions[Math.floor(Math.random() * questions.length)];
+            
+            document.getElementById('towerQuestion').textContent = question.question;
+            document.getElementById('towerCode').textContent = `Choose the correct operator:`;
+            document.getElementById('towerCode').style.display = 'block';
+            
+            // Show options as buttons
+            const optionsHTML = question.options.map((option, index) => 
+                `<button class="option-button" onclick="answerTower(${index}, '${question.answer}', '${option}', ${cellIndex})">${option}</button>`
+            ).join('');
+            
+            document.getElementById('towerCode').insertAdjacentHTML('afterend', 
+                `<div class="options-grid" id="tempOptions">${optionsHTML}</div>`
+            );
+        }
+
+        function answerTower(selectedIndex, correctAnswer, selectedAnswer, cellIndex) {
+            const isCorrect = selectedAnswer === correctAnswer;
+            const cell = document.querySelectorAll('.tower-cell')[cellIndex];
+            
+            // Remove temp options
+            const tempOptions = document.getElementById('tempOptions');
+            if (tempOptions) tempOptions.remove();
+            
+            if (isCorrect) {
+                // Place tower
+                const tower = document.createElement('div');
+                tower.className = 'tower';
+                tower.textContent = correctAnswer;
+                cell.appendChild(tower);
+                
+                score += 20;
+                showScorePopup('+20', '#48bb78');
+                document.getElementById('score').textContent = score;
+            }
+            
+            document.getElementById('towerQuestion').textContent = 'Click on cells to place towers!';
+            document.getElementById('towerCode').style.display = 'none';
+        }
+
+        function startWave() {
+            // Simplified wave - just show completion
+            document.getElementById('towerQuestion').textContent = `Wave ${window.towerData.wave} Complete!`;
+            window.towerData.wave++;
+            document.getElementById('wave').textContent = window.towerData.wave;
+            score += 50;
+            document.getElementById('score').textContent = score;
+            showScorePopup('+50 Wave Bonus!', '#ffd700');
+        }
+
+        // Memory Match Game
+        function startOperatorMemory() {
+            score = 0;
+            let flippedCards = [];
+            let matchedPairs = 0;
+            const totalPairs = 8;
+            
+            const operators = [
+                { symbol: '+=', name: 'Add Assign' },
+                { symbol: '==', name: 'Equal' },
+                { symbol: '!=', name: 'Not Equal' },
+                { symbol: '//', name: 'Floor Div' },
+                { symbol: '%', name: 'Modulo' },
+                { symbol: '**', name: 'Power' },
+                { symbol: 'is', name: 'Identity' },
+                { symbol: 'in', name: 'Contains' }
+            ];
+            
+            // Create pairs and shuffle
+            const cards = [...operators, ...operators].sort(() => Math.random() - 0.5);
+            
+            const gameHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div>Score: <span id="score">0</span></div>
+                    <div>Pairs Found: <span id="pairs">0</span>/${totalPairs}</div>
+                </div>
+                
+                <div class="memory-grid" id="memoryGrid">
+                    ${cards.map((card, index) => 
+                        `<div class="memory-card" onclick="flipCard(${index})" data-symbol="${card.symbol}" data-name="${card.name}">
+                            ?
+                        </div>`
+                    ).join('')}
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="control-btn btn-secondary" onclick="closeGame()">Exit Game</button>
+                </div>
+            `;
+            
+            document.getElementById('gameInterface').innerHTML = gameHTML;
+            window.memoryData = { flippedCards, matchedPairs, totalPairs };
+        }
+
+        function flipCard(index) {
+            const card = document.querySelectorAll('.memory-card')[index];
+            const flippedCards = window.memoryData.flippedCards;
+            
+            if (card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length >= 2) {
+                return;
+            }
+            
+            card.classList.add('flipped');
+            card.textContent = card.dataset.symbol;
+            flippedCards.push({ element: card, index, symbol: card.dataset.symbol });
+            
+            if (flippedCards.length === 2) {
+                setTimeout(() => checkMatch(), 1000);
+            }
+        }
+
+        function checkMatch() {
+            const flippedCards = window.memoryData.flippedCards;
+            const [card1, card2] = flippedCards;
+            
+            if (card1.symbol === card2.symbol) {
+                // Match!
+                card1.element.classList.add('matched');
+                card2.element.classList.add('matched');
+                window.memoryData.matchedPairs++;
+                score += 25;
+                showScorePopup('+25', '#48bb78');
+                
+                document.getElementById('score').textContent = score;
+                document.getElementById('pairs').textContent = window.memoryData.matchedPairs;
+                
+                if (window.memoryData.matchedPairs === window.memoryData.totalPairs) {
+                    setTimeout(() => endMemoryGame(), 1000);
+                }
+            } else {
+                // No match
+                card1.element.classList.remove('flipped');
+                card2.element.classList.remove('flipped');
+                card1.element.textContent = '?';
+                card2.element.textContent = '?';
+            }
+            
+            window.memoryData.flippedCards = [];
+        }
+
+        function endMemoryGame() {
+            document.getElementById('gameInterface').innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <h2 style="color: #48bb78; margin-bottom: 2rem;">🧠 Memory Master!</h2>
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">Final Score: ${score}</div>
+                    <div style="font-size: 1.5rem; margin-bottom: 2rem;">All pairs matched!</div>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button class="control-btn btn-primary" onclick="openGame('operatorMemory')">Play Again</button>
+                        <button class="control-btn btn-secondary" onclick="closeGame()">Exit</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Utility functions
+        function showScorePopup(text, color) {
+            const popup = document.createElement('div');
+            popup.className = 'score-popup';
+            popup.textContent = text;
+            popup.style.color = color;
+            popup.style.left = '50%';
+            popup.style.top = '50%';
+            popup.style.transform = 'translate(-50%, -50%)';
+            
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 1000);
+        }
+
+        // Main game functions
+        function openGame(gameType) {
+            currentGame = gameType;
+            document.getElementById('modalTitle').textContent = getGameTitle(gameType);
+            document.getElementById('gameModal').style.display = 'block';
+            
+            switch(gameType) {
+                case 'pythonSnake':
+                    startPythonSnake();
+                    break;
+                case 'triviaRush':
+                    startTriviaRush();
+                    break;
+                case 'pythonRacing':
+                    startPythonRacing();
+                    break;
+                case 'spaceBlaster':
+                    startSpaceBlaster();
+                    break;
+                case 'operatorTower':
+                    startOperatorTower();
+                    break;
+                case 'operatorMemory':
+                    startOperatorMemory();
+                    break;
+            }
+        }
+
+        function getGameTitle(gameType) {
+            const titles = {
+                pythonSnake: 'Python Snake Adventure 🐍',
+                triviaRush: 'Python Trivia Rush ⚡',
+                pythonRacing: 'Python Racing 🏎️',
+                spaceBlaster: 'Data Operation Blaster 🚀',
+                operatorTower: 'Operator Tower Defense 🏰',
+                operatorMemory: 'Operator Memory Match 🧠'
+            };
+            return titles[gameType] || 'Game';
+        }
+
+        function closeGame() {
+            document.getElementById('gameModal').style.display = 'none';
+            currentGame = null;
+            
+            // Clean up timers and intervals
+            if (gameTimer) clearInterval(gameTimer);
+            if (gameInterval) clearInterval(gameInterval);
+            if (window.snakeData && window.snakeData.gameLoop) {
+                clearInterval(window.snakeData.gameLoop);
+            }
+            
+            // Remove event listeners
+            document.removeEventListener('keydown', handleSpaceBlasterKeys);
+            document.removeEventListener('keydown', handleSnakeKeys);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('gameModal');
+            if (event.target === modal) {
+                closeGame();
+            }
+        };
+    </script>
+</body>
+</html>

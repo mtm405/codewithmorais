@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python IDE - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1e1e1e;
+      color: #cccccc;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    /* IDE Layout */
+    .ide-container {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+    }
+    
+    /* Resizable panels */
+    .ide-main {
+      display: grid;
+      grid-template-columns: 250px 1fr 300px;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .resize-handle {
+      width: 4px;
+      background: #3e3e42;
+      cursor: col-resize;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+      transition: background 0.2s ease;
+    }
+    
+    .resize-handle:hover {
+      background: #4fc3f7;
+    }
+    
+    .resize-handle.left {
+      left: 250px;
+    }
+    
+    .resize-handle.right {
+      right: 300px;
+    }
+    
+    .panel-collapsed {
+      width: 0 !important;
+      min-width: 0 !important;
+      overflow: hidden;
+    }
+    
+    /* Header/Toolbar */
+    .ide-header {
+      background: #2d2d30;
+      border-bottom: 1px solid #3e3e42;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #4fc3f7;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .toolbar-section {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0 1rem;
+      border-left: 1px solid #3e3e42;
+    }
+    
+    .toolbar-section:first-child {
+      border-left: none;
+      padding-left: 0;
+    }
+    
+    .btn {
+      background: transparent;
+      border: 1px solid #3e3e42;
+      color: #cccccc;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    
+    .btn:hover {
+      background: #3e3e42;
+      border-color: #4fc3f7;
+    }
+    
+    .btn.primary {
+      background: #4fc3f7;
+      color: #1e1e1e;
+      border-color: #4fc3f7;
+    }
+    
+    .btn.primary:hover {
+      background: #29b6f6;
+    }
+    
+    .btn.success {
+      background: #4caf50;
+      color: white;
+      border-color: #4caf50;
+    }
+    
+    .btn.success:hover {
+      background: #45a049;
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    /* Main IDE Content */
+    .ide-main {
+      display: grid;
+      grid-template-columns: 250px 1fr 300px;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      background: #252526;
+      border-right: 1px solid #3e3e42;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-header {
+      padding: 1rem;
+      border-bottom: 1px solid #3e3e42;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .sidebar-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+    }
+    
+    /* File Explorer */
+    .file-explorer {
+      padding: 1rem;
+    }
+    
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s ease;
+    }
+    
+    .file-item:hover {
+      background: #2a2d2e;
+    }
+    
+    .file-item.active {
+      background: #094771;
+      color: #4fc3f7;
+    }
+    
+    .file-icon {
+      width: 16px;
+      text-align: center;
+    }
+    
+    /* Code Editor Panel */
+    .editor-panel {
+      display: flex;
+      flex-direction: column;
+      background: #1e1e1e;
+    }
+    
+    .editor-tabs {
+      background: #2d2d30;
+      border-bottom: 1px solid #3e3e42;
+      display: flex;
+      align-items: center;
+      min-height: 40px;
+    }
+    
+    .editor-tab {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #2d2d30;
+      border-right: 1px solid #3e3e42;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s ease;
+    }
+    
+    .editor-tab.active {
+      background: #1e1e1e;
+      border-bottom: 2px solid #4fc3f7;
+    }
+    
+    .editor-tab:hover:not(.active) {
+      background: #3e3e42;
+    }
+    
+    .tab-close {
+      margin-left: 0.5rem;
+      opacity: 0.5;
+      transition: opacity 0.2s ease;
+    }
+    
+    .tab-close:hover {
+      opacity: 1;
+      color: #ff6b6b;
+    }
+    
+    .editor-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    #code-editor {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Output Panel */
+    .output-panel {
+      background: #252526;
+      border-left: 1px solid #3e3e42;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .output-header {
+      padding: 1rem;
+      border-bottom: 1px solid #3e3e42;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .output-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .output-tab {
+      background: transparent;
+      border: none;
+      color: #cccccc;
+      padding: 0.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    
+    .output-tab.active {
+      background: #094771;
+      color: #4fc3f7;
+    }
+    
+    .output-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    
+    .console-output {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    
+    .output-line {
+      margin-bottom: 0.25rem;
+    }
+    
+    .output-line.error {
+      color: #ff6b6b;
+    }
+    
+    .output-line.success {
+      color: #4caf50;
+    }
+    
+    .output-line.info {
+      color: #4fc3f7;
+    }
+    
+    /* Status Bar */
+    .status-bar {
+      background: #007acc;
+      color: white;
+      padding: 0.25rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+    
+    .status-left, .status-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    /* Loading Indicator */
+    .loading {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .spinner {
+      width: 12px;
+      height: 12px;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .ide-main {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+      }
+      
+      .sidebar {
+        display: none;
+      }
+      
+      .output-panel {
+        max-height: 200px;
+        border-left: none;
+        border-top: 1px solid #3e3e42;
+      }
+      
+      .toolbar-section {
+        display: none;
+      }
+      
+      .toolbar-section:first-child {
+        display: flex;
+      }
+    }
+    
+    /* File Management */
+    .file-actions {
+      display: flex;
+      gap: 0.25rem;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    
+    .file-item:hover .file-actions {
+      opacity: 1;
+    }
+    
+    .file-action {
+      background: transparent;
+      border: none;
+      color: #cccccc;
+      padding: 0.25rem;
+      border-radius: 2px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+    }
+    
+    .file-action:hover {
+      background: #3e3e42;
+      color: #4fc3f7;
+    }
+    
+    /* Syntax Highlighting Fallback */
+    .code-fallback {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 0;
+      height: 100%;
+      resize: none;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+    }
+    
+    /* Enhanced Code Editor Container */
+    .code-editor-enhanced {
+      display: flex;
+      height: 100%;
+      background: #1e1e1e;
+      border: 1px solid #3e3e42;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+    
+    .line-numbers {
+      background: #1e1e1e;
+      color: #858585;
+      padding: 1rem 0.5rem 1rem 1rem;
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: right;
+      min-width: 50px;
+      border-right: 1px solid #3e3e42;
+      user-select: none;
+      white-space: pre;
+    }
+    
+    .code-input-container {
+      flex: 1;
+      position: relative;
+    }
+    
+    .code-textarea {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      color: #d4d4d4;
+      border: none;
+      outline: none;
+      padding: 1rem;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: none;
+      white-space: pre;
+      overflow-wrap: normal;
+      overflow-x: auto;
+      tab-size: 4;
+    }
+    
+    .code-highlight {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 1rem;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      color: transparent;
+      background: transparent;
+      border: none;
+      outline: none;
+      pointer-events: none;
+      white-space: pre;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .code-textarea {
+      position: relative;
+      z-index: 2;
+      background: transparent;
+      color: #d4d4d4;
+    }
+    
+    /* Python Syntax Highlighting */
+    .python-keyword {
+      color: #569cd6;
+      font-weight: bold;
+    }
+    
+    .python-string {
+      color: #ce9178;
+    }
+    
+    .python-comment {
+      color: #6a9955;
+      font-style: italic;
+    }
+    
+    .python-number {
+      color: #b5cea8;
+    }
+    
+    .python-function {
+      color: #dcdcaa;
+    }
+    
+    .python-operator {
+      color: #d4d4d4;
+    }
+    
+    .python-bracket {
+      color: #ffd700;
+    }
+    
+    .python-builtin {
+      color: #4ec9b0;
+    }
+    
+    /* Current line highlight */
+    .current-line-highlight {
+      background: rgba(255, 255, 255, 0.1);
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 21px; /* line-height * font-size */
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* Examples Panel */
+    .examples-section {
+      padding: 1rem;
+      border-top: 1px solid #3e3e42;
+    }
+    
+    .example-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s ease;
+      margin-bottom: 0.5rem;
+    }
+    
+    .example-item:hover {
+      background: #2a2d2e;
+    }
+    
+    .example-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .example-title {
+      font-weight: 500;
+    }
+    
+    .example-desc {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+    
+    /* Help Panel */
+    .help-content {
+      padding: 1rem;
+      line-height: 1.6;
+    }
+    
+    .help-section {
+      margin-bottom: 2rem;
+    }
+    
+    .help-section h3 {
+      color: #4fc3f7;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+    
+    .help-section p {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .keyboard-shortcut {
+      background: #3e3e42;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="ide-container">
+    <!-- Header/Toolbar -->
+    <header class="ide-header">
+      <div class="logo-section">
+        <div class="logo">
+          <i class="fas fa-code"></i>
+          <span>Python IDE</span>
+        </div>
+        <div class="toolbar">
+          <div class="toolbar-section">
+            <button class="btn success" id="run-btn">
+              <i class="fas fa-play"></i>
+              Run
+            </button>
+            <button class="btn" id="stop-btn" disabled>
+              <i class="fas fa-stop"></i>
+              Stop
+            </button>
+          </div>
+          <div class="toolbar-section">
+            <button class="btn" id="save-btn">
+              <i class="fas fa-save"></i>
+              Save
+            </button>
+            <button class="btn" id="new-file-btn">
+              <i class="fas fa-file-plus"></i>
+              New
+            </button>
+            <button class="btn" id="format-btn">
+              <i class="fas fa-magic"></i>
+              Format
+            </button>
+          </div>
+          <div class="toolbar-section">
+            <button class="btn" id="clear-output-btn">
+              <i class="fas fa-trash"></i>
+              Clear
+            </button>
+            <button class="btn" id="share-btn">
+              <i class="fas fa-share"></i>
+              Share
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="user-section">
+        <div class="user-info">
+          <i class="fas fa-user"></i>
+          <span id="user-name">Student</span>
+        </div>
+        <a href="/dashboard" class="btn">
+          <i class="fas fa-arrow-left"></i>
+          Dashboard
+        </a>
+      </div>
+    </header>
+
+    <!-- Main IDE Content -->
+    <main class="ide-main">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <span class="sidebar-title">Explorer</span>
+          <div style="display: flex; gap: 0.25rem;">
+            <button class="btn" id="new-folder-btn" title="New Folder">
+              <i class="fas fa-folder-plus"></i>
+            </button>
+            <button class="btn" id="toggle-sidebar" title="Toggle Sidebar">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+          </div>
+        </div>
+        <div class="sidebar-content">
+          <div class="file-explorer">
+            <div class="file-item active" data-file="main.py">
+              <i class="fab fa-python file-icon"></i>
+              <span>main.py</span>
+              <div class="file-actions">
+                <button class="file-action" title="Rename">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="file-action" title="Delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Code Examples -->
+          <div class="examples-section">
+            <div class="sidebar-header">
+              <span class="sidebar-title">Examples</span>
+            </div>
+            <div class="example-item" data-example="hello-world">
+              <div class="example-info">
+                <div class="example-title">Hello World</div>
+                <div class="example-desc">Basic print statement</div>
+              </div>
+              <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="example-item" data-example="variables">
+              <div class="example-info">
+                <div class="example-title">Variables</div>
+                <div class="example-desc">Working with variables</div>
+              </div>
+              <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="example-item" data-example="loops">
+              <div class="example-info">
+                <div class="example-title">For Loops</div>
+                <div class="example-desc">Iteration examples</div>
+              </div>
+              <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="example-item" data-example="functions">
+              <div class="example-info">
+                <div class="example-title">Functions</div>
+                <div class="example-desc">Define and call functions</div>
+              </div>
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Resize handle for left panel -->
+      <div class="resize-handle left" id="left-resize"></div>
+
+      <!-- Code Editor -->
+      <section class="editor-panel">
+        <div class="editor-tabs">
+          <div class="editor-tab active" data-file="main.py">
+            <i class="fab fa-python"></i>
+            <span>main.py</span>
+            <span class="tab-close">&times;</span>
+          </div>
+        </div>
+        <div class="editor-container">
+          <div id="code-editor"></div>
+          <!-- Enhanced Fallback Editor with Line Numbers -->
+          <div class="code-editor-enhanced" id="code-editor-enhanced" style="display: none;">
+            <div class="line-numbers" id="line-numbers">1</div>
+            <div class="code-input-container">
+              <div class="code-highlight" id="code-highlight"></div>
+              <textarea 
+                class="code-textarea" 
+                id="code-textarea" 
+                spellcheck="false"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                placeholder="# Welcome to Python IDE! Start coding here...
+
+# Your first Python program
+print('Hello, World!')
+
+# Variables
+name = 'Student'
+age = 18
+
+# Functions
+def greet(name):
+    return f'Hello, {name}! Welcome to Python programming!'
+
+# Call the function
+print(greet(name))
+
+# Loops
+print('Counting from 1 to 5:')
+for i in range(1, 6):
+    print(f'Number: {i}')
+
+# Try editing this code and click Run!"># Welcome to Python IDE! Start coding here...
+
+# Your first Python program
+print('Hello, World!')
+
+# Variables
+name = 'Student'
+age = 18
+
+# Functions
+def greet(name):
+    return f'Hello, {name}! Welcome to Python programming!'
+
+# Call the function
+print(greet(name))
+
+# Loops
+print('Counting from 1 to 5:')
+for i in range(1, 6):
+    print(f'Number: {i}')
+
+# Try editing this code and click Run!</textarea>
+            </div>
+          </div>
+          <!-- Original Fallback (hidden by default) -->
+          <textarea class="code-fallback" id="code-fallback" style="display: none;"># Welcome to Python IDE! Start coding here...
+
+# Your first Python program
+print('Hello, World!')
+
+# Variables
+name = 'Student'
+age = 18
+
+# Functions
+def greet(name):
+    return f'Hello, {name}! Welcome to Python programming!'
+
+# Call the function
+print(greet(name))
+
+# Loops
+print('Counting from 1 to 5:')
+for i in range(1, 6):
+    print(f'Number: {i}')
+
+# Try editing this code and click Run!</textarea>
+        </div>
+      </section>
+
+      <!-- Resize handle for right panel -->
+      <div class="resize-handle right" id="right-resize"></div>
+
+      <!-- Output Panel -->
+      <aside class="output-panel">
+        <div class="output-header">
+          <div class="output-tabs">
+            <button class="output-tab active" data-tab="console">Console</button>
+            <button class="output-tab" data-tab="help">Help</button>
+          </div>
+          <button class="btn" id="output-settings">
+            <i class="fas fa-cog"></i>
+          </button>
+        </div>
+        <div class="output-content">
+          <div class="console-output" id="console-output">
+            <div class="output-line info">Python IDE Ready - Click 'Run' to execute your code</div>
+            <div class="output-line">Try typing: print("Hello, World!")</div>
+          </div>
+          <div class="help-content" id="help-content" style="display: none;">
+            <div class="help-section">
+              <h3>Keyboard Shortcuts</h3>
+              <p><span class="keyboard-shortcut">Ctrl+Enter</span> - Run code</p>
+              <p><span class="keyboard-shortcut">Ctrl+S</span> - Save file</p>
+              <p><span class="keyboard-shortcut">Ctrl+N</span> - New file</p>
+              <p><span class="keyboard-shortcut">Ctrl+/</span> - Comment line</p>
+              <p><span class="keyboard-shortcut">Ctrl+B</span> - Toggle sidebar</p>
+              <p><span class="keyboard-shortcut">F1</span> - Format code</p>
+            </div>
+            <div class="help-section">
+              <h3>Python Basics</h3>
+              <p><strong>Variables:</strong> <code>name = "value"</code></p>
+              <p><strong>Print:</strong> <code>print("Hello")</code></p>
+              <p><strong>Functions:</strong> <code>def my_function():</code></p>
+              <p><strong>Loops:</strong> <code>for i in range(10):</code></p>
+              <p><strong>Conditionals:</strong> <code>if condition:</code></p>
+              <p><strong>Lists:</strong> <code>my_list = [1, 2, 3]</code></p>
+            </div>
+            <div class="help-section">
+              <h3>Common Functions</h3>
+              <p><code>len()</code> - Get length of object</p>
+              <p><code>str()</code> - Convert to string</p>
+              <p><code>int()</code> - Convert to integer</p>
+              <p><code>input()</code> - Get user input</p>
+              <p><code>range()</code> - Generate number sequence</p>
+            </div>
+            <div class="help-section">
+              <h3>Tips for Students</h3>
+              <p>• Use proper indentation (4 spaces)</p>
+              <p>• Variables are case-sensitive</p>
+              <p>• Use descriptive variable names</p>
+              <p>• Test your code frequently</p>
+              <p>• Read error messages carefully</p>
+              <p>• Practice with the provided examples</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Status Bar -->
+    <footer class="status-bar">
+      <div class="status-left">
+        <span>Python 3.11</span>
+        <span id="cursor-position">Ln 1, Col 1</span>
+        <span id="execution-status">Ready</span>
+      </div>
+      <div class="status-right">
+        <span id="file-info">UTF-8</span>
+        <span>Python IDE by Code with Morais</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Load Monaco Editor -->
+  <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
+  <script>
+    // Ensure basic functionality works immediately
+    console.log('IDE HTML loaded');
+    
+    // Add emergency fallback buttons that work immediately
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded, setting up emergency handlers');
+      
+      // Emergency Run button handler
+      const runBtn = document.getElementById('run-btn');
+      if (runBtn && !runBtn.hasAttribute('data-emergency-handler')) {
+        runBtn.setAttribute('data-emergency-handler', 'true');
+        runBtn.addEventListener('click', () => {
+          console.log('Emergency run handler triggered');
+          
+          const code = getEditorContent();
+          const output = document.getElementById('console-output');
+          if (output) {
+            output.innerHTML = '<div class="output-line info">Running code...</div>';
+            
+            // Simple Python simulation
+            setTimeout(() => {
+              let result = '<div class="output-line success">Code executed</div>';
+              
+              if (code.includes('print(')) {
+                const lines = code.split('\n');
+                lines.forEach(line => {
+                  if (line.trim().startsWith('print(')) {
+                    const match = line.match(/print\(['"](.+?)['"]\)/);
+                    if (match) {
+                      result += `<div class="output-line">${match[1]}</div>`;
+                    }
+                  }
+                });
+              }
+              
+              output.innerHTML = result;
+            }, 500);
+          }
+        });
+      }
+      
+      // Emergency Save button handler
+      const saveBtn = document.getElementById('save-btn');
+      if (saveBtn && !saveBtn.hasAttribute('data-emergency-handler')) {
+        saveBtn.setAttribute('data-emergency-handler', 'true');
+        saveBtn.addEventListener('click', () => {
+          console.log('Emergency save handler triggered');
+          const code = getEditorContent();
+          if (code) {
+            localStorage.setItem('ide-code-backup', code);
+            alert('Code saved to browser storage!');
+          }
+        });
+      }
+      
+      // Emergency Clear button handler
+      const clearBtn = document.getElementById('clear-output-btn');
+      if (clearBtn && !clearBtn.hasAttribute('data-emergency-handler')) {
+        clearBtn.setAttribute('data-emergency-handler', 'true');
+        clearBtn.addEventListener('click', () => {
+          console.log('Emergency clear handler triggered');
+          const output = document.getElementById('console-output');
+          if (output) {
+            output.innerHTML = '<div class="output-line info">Output cleared</div>';
+          }
+        });
+      }
+      
+      // Show fallback editor immediately
+      const codeEditor = document.getElementById('code-editor');
+      const fallbackEditor = document.getElementById('code-fallback');
+      const enhancedEditor = document.getElementById('code-editor-enhanced');
+      const codeTextarea = document.getElementById('code-textarea');
+      
+      if (codeEditor && enhancedEditor && codeTextarea) {
+        codeEditor.style.display = 'none';
+        fallbackEditor.style.display = 'none';
+        enhancedEditor.style.display = 'flex';
+        
+        // Initialize enhanced editor
+        initEnhancedEditor();
+        
+        codeTextarea.focus();
+        console.log('Enhanced editor activated immediately');
+      }
+    });
+    
+    // Enhanced Editor Functions
+    function initEnhancedEditor() {
+      const textarea = document.getElementById('code-textarea');
+      const lineNumbers = document.getElementById('line-numbers');
+      const highlight = document.getElementById('code-highlight');
+      
+      if (!textarea || !lineNumbers || !highlight) return;
+      
+      // Update line numbers and syntax highlighting
+      function updateEditor() {
+        const content = textarea.value;
+        const lines = content.split('\n');
+        
+        // Update line numbers
+        lineNumbers.textContent = lines.map((_, i) => i + 1).join('\n');
+        
+        // Apply syntax highlighting
+        const highlightedContent = applySyntaxHighlighting(content);
+        highlight.innerHTML = highlightedContent;
+        
+        // Sync scroll
+        highlight.scrollTop = textarea.scrollTop;
+        highlight.scrollLeft = textarea.scrollLeft;
+      }
+      
+      // Event listeners
+      textarea.addEventListener('input', updateEditor);
+      textarea.addEventListener('scroll', () => {
+        lineNumbers.scrollTop = textarea.scrollTop;
+        highlight.scrollTop = textarea.scrollTop;
+        highlight.scrollLeft = textarea.scrollLeft;
+      });
+      
+      // Tab key handling
+      textarea.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          const start = textarea.selectionStart;
+          const end = textarea.selectionEnd;
+          const spaces = '    '; // 4 spaces
+          
+          textarea.value = textarea.value.substring(0, start) + spaces + textarea.value.substring(end);
+          textarea.selectionStart = textarea.selectionEnd = start + spaces.length;
+          updateEditor();
+        }
+      });
+      
+      // Initial update
+      updateEditor();
+    }
+    
+    function applySyntaxHighlighting(code) {
+      // Python keywords
+      const keywords = /\b(def|class|if|elif|else|for|while|in|import|from|return|try|except|finally|with|as|pass|break|continue|and|or|not|is|lambda|global|nonlocal|assert|del|yield|async|await|True|False|None)\b/g;
+      
+      // Escape HTML
+      let highlighted = code
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      
+      // Apply highlighting
+      highlighted = highlighted
+        // Comments
+        .replace(/(#.*$)/gm, '<span class="python-comment">$1</span>')
+        // Strings
+        .replace(/('[^']*'|"[^"]*"|'''[\s\S]*?'''|"""[\s\S]*?""")/g, '<span class="python-string">$1</span>')
+        // Numbers
+        .replace(/\b(\d+\.?\d*)\b/g, '<span class="python-number">$1</span>')
+        // Keywords (avoid conflicts with strings/comments)
+        .replace(keywords, '<span class="python-keyword">$1</span>')
+        // Built-in functions
+        .replace(/\b(print|input|len|str|int|float|list|dict|tuple|set|range|enumerate|zip|map|filter|sum|max|min|abs|round|type|isinstance|hasattr|getattr|setattr)\b/g, '<span class="python-builtin">$1</span>')
+        // Function definitions
+        .replace(/\bdef\s+([a-zA-Z_][a-zA-Z0-9_]*)/g, 'def <span class="python-function">$1</span>')
+        // Brackets
+        .replace(/([()[\]{}])/g, '<span class="python-bracket">$1</span>');
+      
+      return highlighted;
+    }
+    
+    // Update emergency handlers to use enhanced editor
+    function getEditorContent() {
+      const enhancedTextarea = document.getElementById('code-textarea');
+      const fallbackEditor = document.getElementById('code-fallback');
+      
+      if (enhancedTextarea && enhancedTextarea.offsetParent !== null) {
+        return enhancedTextarea.value;
+      } else if (fallbackEditor && fallbackEditor.offsetParent !== null) {
+        return fallbackEditor.value;
+      }
+      return '';
+    }
+  </script>
+  <script type="module" src="/ide.js"></script>
+</body>
+</html>

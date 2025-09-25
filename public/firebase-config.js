@@ -1,4 +1,4 @@
-// Paste your Firebase config here from Project settings -> Web app
+// Firebase configuration for Code with Morais platform
 export const firebaseConfig = {
   apiKey: "AIzaSyAIwwM2V2qfPCB3TLVVeb8IW3FGxdNDhiY",
   // Use the custom domain for auth callbacks so state is persisted on your site
@@ -9,3 +9,6 @@ export const firebaseConfig = {
   appId: "1:208072504611:web:8ebd20260a9e16ceff8896",
   measurementId: "G-JLH66GJNFL"
 };
+
+// Also set on window for backward compatibility
+window.firebaseConfig = firebaseConfig;

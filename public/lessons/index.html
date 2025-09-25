@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Lessons - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      color: white;
+    }
+    
+    .header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    
+    .nav-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: 2px solid rgba(255,255,255,0.3);
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+    
+    .sections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .section-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      border-left: 5px solid;
+    }
+    
+    .section-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .section1 { border-left-color: #e74c3c; }
+    .section2 { border-left-color: #f39c12; }
+    .section3 { border-left-color: #2ecc71; }
+    .section4 { border-left-color: #3498db; }
+    .section5 { border-left-color: #9b59b6; }
+    .section6 { border-left-color: #1abc9c; }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .section-icon {
+      font-size: 2rem;
+      margin-right: 1rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    
+    .section1 .section-icon { background: #e74c3c; }
+    .section2 .section-icon { background: #f39c12; }
+    .section3 .section-icon { background: #2ecc71; }
+    .section4 .section-icon { background: #3498db; }
+    .section5 .section-icon { background: #9b59b6; }
+    .section6 .section-icon { background: #1abc9c; }
+    
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .section-subtitle {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .section-description {
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      color: #555;
+    }
+    
+    .lessons-list {
+      list-style: none;
+    }
+    
+    .lesson-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .lesson-item:hover {
+      background: #e9ecef;
+      transform: translateX(5px);
+    }
+    
+    .lesson-number {
+      background: #667eea;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    
+    .lesson-content {
+      flex: 1;
+    }
+    
+    .lesson-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .lesson-desc {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    
+    .lesson-status {
+      margin-left: 1rem;
+      font-size: 1.2rem;
+    }
+    
+    .status-locked { color: #bbb; }
+    .status-available { color: #f39c12; }
+    .status-completed { color: #2ecc71; }
+    
+    .progress-section {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .progress-header {
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #ecf0f1;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+    
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .sections-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1><i class="fab fa-python"></i> Python Programming Course</h1>
+      <p>Master Python programming step by step with interactive lessons and hands-on practice</p>
+    </header>
+    
+    <div class="nav-buttons">
+      <a href="/dashboard" class="nav-btn">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+      </a>
+      <a href="/ide" class="nav-btn">
+        <i class="fas fa-code"></i> Practice IDE
+      </a>
+      <a href="#progress" class="nav-btn">
+        <i class="fas fa-chart-line"></i> View Progress
+      </a>
+    </div>
+    
+    <div class="sections-grid">
+      <!-- Section 1: Data Types and Operators -->
+      <div class="section-card section1">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-database"></i>
+          </div>
+          <div>
+            <div class="section-title">Section 1: Data Types & Operators</div>
+            <div class="section-subtitle">Foundation concepts</div>
+          </div>
+        </div>
+        <div class="section-description">
+          Learn about Python's core data types (str, int, float, bool) and master all operators including arithmetic, comparison, logical, and assignment operators.
+        </div>
+        <ul class="lessons-list">
+          <li class="lesson-item" onclick="openLesson('1.1')">
+            <div class="lesson-number">1.1</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Data Types Evaluation</div>
+              <div class="lesson-desc">str, int, float, and bool</div>
+            </div>
+            <div class="lesson-status status-available"><i class="fas fa-play-circle"></i></div>
+          </li>
+          <li class="lesson-item" onclick="openLesson('1.2')">
+            <div class="lesson-number">1.2</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Data Operations</div>
+              <div class="lesson-desc">Conversion, indexing, slicing, lists</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+          <li class="lesson-item" onclick="openLesson('1.3')">
+            <div class="lesson-number">1.3</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Operator Precedence</div>
+              <div class="lesson-desc">Execution sequence rules</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+          <li class="lesson-item" onclick="openLesson('1.4')">
+            <div class="lesson-number">1.4</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Operator Selection</div>
+              <div class="lesson-desc">Choosing the right operators</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Section 2: Flow Control -->
+      <div class="section-card section2">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-route"></i>
+          </div>
+          <div>
+            <div class="section-title">Section 2: Flow Control</div>
+            <div class="section-subtitle">Decisions and loops</div>
+          </div>
+        </div>
+        <div class="section-description">
+          Master conditional statements and loops to control program flow with if/elif/else statements and while/for loops.
+        </div>
+        <ul class="lessons-list">
+          <li class="lesson-item" onclick="openLesson('2.1')">
+            <div class="lesson-number">2.1</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Branching Statements</div>
+              <div class="lesson-desc">if, elif, else, nested conditionals</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+          <li class="lesson-item" onclick="openLesson('2.2')">
+            <div class="lesson-number">2.2</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Iteration & Loops</div>
+              <div class="lesson-desc">while, for, break, continue, pass</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Section 3: Input/Output -->
+      <div class="section-card section3">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div>
+            <div class="section-title">Section 3: Input & Output</div>
+            <div class="section-subtitle">Data exchange</div>
+          </div>
+        </div>
+        <div class="section-description">
+          Learn to handle file operations and console input/output including reading, writing, and formatting data.
+        </div>
+        <ul class="lessons-list">
+          <li class="lesson-item" onclick="openLesson('3.1')">
+            <div class="lesson-number">3.1</div>
+            <div class="lesson-content">
+              <div class="lesson-title">File Input/Output</div>
+              <div class="lesson-desc">open, close, read, write, append</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+          <li class="lesson-item" onclick="openLesson('3.2')">
+            <div class="lesson-number">3.2</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Console Operations</div>
+              <div class="lesson-desc">print, input, formatting</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Section 4: Documentation -->
+      <div class="section-card section4">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div>
+            <div class="section-title">Section 4: Documentation</div>
+            <div class="section-subtitle">Code structure</div>
+          </div>
+        </div>
+        <div class="section-description">
+          Learn proper code documentation, commenting, and function definition best practices.
+        </div>
+        <ul class="lessons-list">
+          <li class="lesson-item" onclick="openLesson('4.1')">
+            <div class="lesson-number">4.1</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Code Documentation</div>
+              <div class="lesson-desc">Comments, docstrings, pydoc</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+          <li class="lesson-item" onclick="openLesson('4.2')">
+            <div class="lesson-number">4.2</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Function Definitions</div>
+              <div class="lesson-desc">def, parameters, return values</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Section 5: Error Handling -->
+      <div class="section-card section5">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-bug"></i>
+          </div>
+          <div>
+            <div class="section-title">Section 5: Error Handling</div>
+            <div class="section-subtitle">Troubleshooting</div>
+          </div>
+        </div>
+        <div class="section-description">
+          Master error detection, exception handling, and unit testing to write robust Python programs.
+        </div>
+        <ul class="lessons-list">
+          <li class="lesson-item" onclick="openLesson('5.1')">
+            <div class="lesson-number">5.1</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Error Analysis</div>
+              <div class="lesson-desc">Syntax, logic, runtime errors</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+          <li class="lesson-item" onclick="openLesson('5.2')">
+            <div class="lesson-number">5.2</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Exception Handling</div>
+              <div class="lesson-desc">try, except, else, finally</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+          <li class="lesson-item" onclick="openLesson('5.3')">
+            <div class="lesson-number">5.3</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Unit Testing</div>
+              <div class="lesson-desc">unittest, assert methods</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Section 6: Modules -->
+      <div class="section-card section6">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-puzzle-piece"></i>
+          </div>
+          <div>
+            <div class="section-title">Section 6: Modules & Tools</div>
+            <div class="section-subtitle">Advanced operations</div>
+          </div>
+        </div>
+        <div class="section-description">
+          Explore Python's powerful built-in modules for file system operations, mathematical calculations, and more.
+        </div>
+        <ul class="lessons-list">
+          <li class="lesson-item" onclick="openLesson('6.1')">
+            <div class="lesson-number">6.1</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Basic Modules</div>
+              <div class="lesson-desc">io, os, os.path, sys</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+          <li class="lesson-item" onclick="openLesson('6.2')">
+            <div class="lesson-number">6.2</div>
+            <div class="lesson-content">
+              <div class="lesson-title">Advanced Modules</div>
+              <div class="lesson-desc">math, datetime, random</div>
+            </div>
+            <div class="lesson-status status-locked"><i class="fas fa-lock"></i></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Progress Section -->
+    <div class="progress-section" id="progress">
+      <div class="progress-header">
+        <h2><i class="fas fa-chart-line"></i> Your Learning Progress</h2>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="completed-lessons">0</div>
+          <div class="stat-label">Lessons Completed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="total-lessons">16</div>
+          <div class="stat-label">Total Lessons</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="current-section">1</div>
+          <div class="stat-label">Current Section</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="completion-percent">0%</div>
+          <div class="stat-label">Course Progress</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Lesson navigation
+    function openLesson(lessonId) {
+      console.log('Opening lesson:', lessonId);
+      
+      // Check if lesson is available
+      const lessonItem = event.currentTarget;
+      const statusIcon = lessonItem.querySelector('.lesson-status i');
+      
+      if (statusIcon.classList.contains('fa-lock')) {
+        alert('This lesson is locked. Complete previous lessons first!');
+        return;
+      }
+      
+      // Navigate to specific lesson
+      const sectionMap = {
+        '1.1': 'section1-data-types-operators/lesson1-1.html',
+        '1.2': 'section1-data-types-operators/lesson1-2.html',
+        '1.3': 'section1-data-types-operators/lesson1-3.html',
+        '1.4': 'section1-data-types-operators/lesson1-4.html',
+        '2.1': 'section2-flow-control/lesson2-1.html',
+        '2.2': 'section2-flow-control/lesson2-2.html',
+        '3.1': 'section3-input-output/lesson3-1.html',
+        '3.2': 'section3-input-output/lesson3-2.html',
+        '4.1': 'section4-documentation-structure/lesson4-1.html',
+        '4.2': 'section4-documentation-structure/lesson4-2.html',
+        '5.1': 'section5-troubleshooting-errors/lesson5-1.html',
+        '5.2': 'section5-troubleshooting-errors/lesson5-2.html',
+        '5.3': 'section5-troubleshooting-errors/lesson5-3.html',
+        '6.1': 'section6-modules-tools/lesson6-1.html',
+        '6.2': 'section6-modules-tools/lesson6-2.html'
+      };
+      
+      const lessonPath = sectionMap[lessonId];
+      if (lessonPath) {
+        window.location.href = `/lessons/${lessonPath}`;
+      } else {
+        alert('Lesson coming soon!');
+      }
+    }
+    
+    // Progress tracking
+    function updateProgress() {
+      const completedLessons = parseInt(localStorage.getItem('completedLessons') || '0');
+      const totalLessons = 16;
+      const progressPercent = Math.round((completedLessons / totalLessons) * 100);
+      
+      document.getElementById('completed-lessons').textContent = completedLessons;
+      document.getElementById('completion-percent').textContent = progressPercent + '%';
+      document.getElementById('progress-fill').style.width = progressPercent + '%';
+      
+      // Update current section
+      let currentSection = 1;
+      if (completedLessons >= 4) currentSection = 2;
+      if (completedLessons >= 6) currentSection = 3;
+      if (completedLessons >= 8) currentSection = 4;
+      if (completedLessons >= 10) currentSection = 5;
+      if (completedLessons >= 13) currentSection = 6;
+      
+      document.getElementById('current-section').textContent = currentSection;
+      
+      // Unlock lessons based on progress
+      unlockLessons(completedLessons);
+    }
+    
+    function unlockLessons(completed) {
+      const allLessons = document.querySelectorAll('.lesson-item');
+      
+      allLessons.forEach((lesson, index) => {
+        const statusIcon = lesson.querySelector('.lesson-status i');
+        
+        if (index <= completed) {
+          // Unlock lesson
+          statusIcon.className = 'fas fa-play-circle';
+          lesson.querySelector('.lesson-status').className = 'lesson-status status-available';
+        } else if (index === completed + 1) {
+          // Next available lesson
+          statusIcon.className = 'fas fa-play-circle';
+          lesson.querySelector('.lesson-status').className = 'lesson-status status-available';
+        }
+      });
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateProgress();
+      console.log('Python Lessons page loaded successfully');
+    });
+  </script>
+</body>
+</html>

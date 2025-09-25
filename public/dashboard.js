@@ -149,6 +149,9 @@ if (signoutBtn) {
 // Start authentication check
 showLoading('Checking authentication...');
 
+// Add debug flag for testing with sample data
+const useSampleData = window.location.search.includes('demo=true');
+
 // Single, simple auth state listener
 onAuthStateChanged(auth, async (user) => {
   console.log('Dashboard: Auth state changed:', user ? `User: ${user.email}` : 'No user');
@@ -164,7 +167,13 @@ onAuthStateChanged(auth, async (user) => {
     // User is not authenticated
     authCheckComplete = true;
     isCheckingAuth = false;
-    showNotSignedIn();
+    
+    // Show demo data if requested, otherwise redirect to sign-in
+    if (useSampleData) {
+      showDemoData();
+    } else {
+      showNotSignedIn();
+    }
   }
 });
 
@@ -175,6 +184,45 @@ setTimeout(() => {
     window.location.href = '/';
   }
 }, 2000); // Reduced to 2 seconds
+
+// Show demo data for testing/preview purposes
+function showDemoData() {
+  console.log('Dashboard: Showing demo data');
+  currentUIState = 'dashboard';
+  
+  // Hide loading and not signed in states
+  if (loadingState) loadingState.hidden = true;
+  if (notSignedIn) notSignedIn.hidden = true;
+  
+  // Show dashboard
+  if (dashboardContent) dashboardContent.hidden = false;
+  
+  // Update with sample user info
+  if (userNameHeader) userNameHeader.textContent = 'Demo Student';
+  if (userNameWelcome) userNameWelcome.textContent = 'Demo Student';
+  if (userAvatar) userAvatar.hidden = false;
+  
+  // Load sample progress data
+  const sampleProgressData = {
+    courses: {
+      'python-fundamentals': {
+        progress: 65,
+        lessons: {
+          'variables': { 
+            completed: true, 
+            exerciseProgress: { completed: 8, totalExercises: 8 }
+          },
+          'operators-mastery': { 
+            completed: false, 
+            exerciseProgress: { completed: 45, totalExercises: 95 }
+          }
+        }
+      }
+    }
+  };
+  
+  updateDashboardProgress(sampleProgressData);
+}
 
 // Sync any pending progress from localStorage to Firebase
 async function syncPendingProgress(userId) {
@@ -253,58 +301,316 @@ async function loadUserProgress(userId) {
 function updateDashboardProgress(progressData) {
   console.log('Updating dashboard with progress data:', progressData);
   
-  // Update quick stats
+  // Update progress stats - match the new dashboard structure
   const statsElements = {
-    pythonLessons: document.querySelector('.stat-card:nth-child(1) .stat-number'),
-    courseProgress: document.querySelector('.stat-card:nth-child(2) .stat-number'),
-    challengesSolved: document.querySelector('.stat-card:nth-child(3) .stat-number')
+    pythonConcepts: document.querySelector('.stat-card:nth-child(1) .stat-value'),
+    moduleProgress: document.querySelector('.stat-card:nth-child(2) .stat-value'),
+    exercisesSolved: document.querySelector('.stat-card:nth-child(3) .stat-value'),
+    timeSpent: document.querySelector('.stat-card:nth-child(4) .stat-value')
   };
   
-  // Calculate total completed lessons across all courses
-  const totalCompletedLessons = Object.values(progressData.courses).reduce((total, course) => {
-    return total + (course.completedLessons ? course.completedLessons.length : 0);
-  }, 0);
-  
-  // Calculate total progress across all courses (weighted average)
-  const courses = Object.values(progressData.courses);
-  const totalProgress = courses.length > 0 ? 
-    Math.round(courses.reduce((sum, course) => sum + (course.progress || 0), 0) / courses.length) : 0;
-  
-  // Count total exercises completed from exercise progress
+  // Calculate concepts learned (topics completed across all modules)
+  let conceptsLearned = 0;
   let totalExercisesCompleted = 0;
+  let moduleProgressPercentage = 0;
+  
+  // Count completed concepts and exercises
   Object.values(progressData.courses).forEach(course => {
     if (course.lessons) {
       Object.values(course.lessons).forEach(lesson => {
         if (lesson.exerciseProgress) {
           totalExercisesCompleted += lesson.exerciseProgress.completed || 0;
+          
+          // Count concepts learned based on exercise completion
+          if (lesson.exerciseProgress.completed > 0) {
+            conceptsLearned++;
+          }
         }
       });
     }
   });
   
+  // Calculate time spent (estimate based on progress)
+  let totalTimeSpent = 0;
+  Object.values(progressData.courses).forEach(course => {
+    if (course.lessons) {
+      Object.values(course.lessons).forEach(lesson => {
+        if (lesson.exerciseProgress && lesson.exerciseProgress.completed > 0) {
+          // Estimate 5 minutes per completed exercise
+          totalTimeSpent += lesson.exerciseProgress.completed * 5;
+        }
+      });
+    }
+  });
+  
+  // Calculate module progress (focus on python-fundamentals for Module 1)
+  if (progressData.courses['python-fundamentals']) {
+    moduleProgressPercentage = progressData.courses['python-fundamentals'].progress || 0;
+  }
+  
   // Update stats with real data
-  if (statsElements.pythonLessons) {
-    statsElements.pythonLessons.textContent = totalCompletedLessons;
+  if (statsElements.pythonConcepts) {
+    statsElements.pythonConcepts.textContent = conceptsLearned;
   }
-  if (statsElements.courseProgress) {
-    statsElements.courseProgress.textContent = `${totalProgress}%`;
+  if (statsElements.moduleProgress) {
+    statsElements.moduleProgress.textContent = `${moduleProgressPercentage}%`;
   }
-  if (statsElements.challengesSolved) {
-    // Use exercise count as challenges
-    statsElements.challengesSolved.textContent = totalExercisesCompleted;
+  if (statsElements.exercisesSolved) {
+    statsElements.exercisesSolved.textContent = totalExercisesCompleted;
+  }
+  if (statsElements.timeSpent) {
+    const hours = Math.floor(totalTimeSpent / 60);
+    const minutes = totalTimeSpent % 60;
+    if (hours > 0) {
+      statsElements.timeSpent.textContent = `${hours}h ${minutes}m`;
+    } else {
+      statsElements.timeSpent.textContent = `${minutes}m`;
+    }
   }
   
-  // Update course cards
-  updateCourseCards(progressData.courses);
+  // Update module cards with real progress
+  updateModuleCards(progressData.courses);
   
-  // Update notifications with recent activity
-  updateNotifications(progressData);
+  // Update current learning section
+  updateCurrentLearning(progressData.courses);
   
   // Mark dashboard as fully loaded to prevent flickering
   const dashboardMain = document.querySelector('.dashboard-main');
   if (dashboardMain) {
     dashboardMain.classList.add('loaded');
   }
+}
+
+// Update current learning section with actual next lesson
+function updateCurrentLearning(courses) {
+  const currentLearningCard = document.querySelector('.current-learning-card');
+  if (!currentLearningCard) return;
+  
+  // Find the next lesson to work on
+  let nextLesson = null;
+  let nextLessonName = '';
+  let moduleTitle = '';
+  
+  // Check Module 1 first
+  if (courses['python-fundamentals']) {
+    const course = courses['python-fundamentals'];
+    const nextLessonId = findNextLesson(course);
+    
+    if (nextLessonId && course.progress < 100) {
+      nextLesson = nextLessonId;
+      moduleTitle = 'Module 1: Operations & Data Types';
+      
+      const lessonNames = {
+        'variables': 'Variables & Data Types',
+        'operators-mastery': 'Operators Mastery',
+        'data-types': 'Advanced Data Types',
+        'input-output': 'Input & Output'
+      };
+      nextLessonName = lessonNames[nextLessonId] || nextLessonId;
+    }
+  }
+  
+  // If Module 1 is complete, check Module 2
+  if (!nextLesson && courses['python-fundamentals'] && courses['python-fundamentals'].progress === 100) {
+    nextLesson = 'control-flow';
+    nextLessonName = 'Conditional Statements';
+    moduleTitle = 'Module 2: Flow Control';
+  }
+  
+  // Update the current learning card
+  if (nextLesson) {
+    const titleElement = currentLearningCard.querySelector('h3');
+    const descElement = currentLearningCard.querySelector('p');
+    const buttonElement = currentLearningCard.querySelector('.btn-primary');
+    
+    if (titleElement) {
+      titleElement.textContent = nextLessonName;
+    }
+    
+    if (descElement) {
+      descElement.textContent = `Continue your learning journey with ${moduleTitle}`;
+    }
+    
+    if (buttonElement) {
+      buttonElement.innerHTML = '<i class="fas fa-play"></i> Continue Learning';
+      buttonElement.onclick = () => {
+        if (nextLesson === 'operators-mastery') {
+          window.location.href = '/operators-mastery';
+        } else if (nextLesson === 'control-flow') {
+          window.location.href = '/lesson-control-flow';
+        } else {
+          window.location.href = `/lesson-${nextLesson}`;
+        }
+      };
+    }
+  } else {
+    // All lessons complete
+    const titleElement = currentLearningCard.querySelector('h3');
+    const descElement = currentLearningCard.querySelector('p');
+    const buttonElement = currentLearningCard.querySelector('.btn-primary');
+    
+    if (titleElement) {
+      titleElement.textContent = 'Congratulations! 🎉';
+    }
+    
+    if (descElement) {
+      descElement.textContent = 'You\'ve completed all available modules. Check back for new content!';
+    }
+    
+    if (buttonElement) {
+      buttonElement.innerHTML = '<i class="fas fa-trophy"></i> View Certificate';
+      buttonElement.className = 'btn-secondary btn-full';
+    }
+  }
+}
+
+// Update module cards with real progress
+function updateModuleCards(courses) {
+  // Module 1: Operations & Data Types
+  const module1Card = document.querySelector('.module-card.current');
+  if (module1Card && courses['python-fundamentals']) {
+    const course = courses['python-fundamentals'];
+    
+    // Update progress bar
+    const progressFill = module1Card.querySelector('.progress-fill');
+    const progressText = module1Card.querySelector('.progress-text');
+    
+    if (progressFill && progressText) {
+      const progress = course.progress || 0;
+      progressFill.style.width = `${progress}%`;
+      progressText.textContent = `${progress}% Complete`;
+    }
+    
+    // Update topic completion status
+    updateTopicStatus(module1Card, course);
+    
+    // Update primary action button
+    const primaryBtn = module1Card.querySelector('.btn-primary, .btn-disabled');
+    if (primaryBtn) {
+      if (course.progress === 100) {
+        primaryBtn.innerHTML = '<i class="fas fa-trophy"></i> Module Complete!';
+        primaryBtn.className = 'btn-disabled';
+        primaryBtn.disabled = true;
+      } else {
+        const nextLesson = findNextLesson(course);
+        if (nextLesson) {
+          primaryBtn.innerHTML = '<i class="fas fa-play"></i> Continue Learning';
+          primaryBtn.className = 'btn-primary';
+          primaryBtn.disabled = false;
+          
+          // Set up click handler
+          primaryBtn.onclick = () => {
+            if (nextLesson === 'operators-mastery') {
+              window.location.href = '/operators-mastery';
+            } else {
+              window.location.href = `/lesson-${nextLesson}`;
+            }
+          };
+        } else {
+          primaryBtn.innerHTML = '<i class="fas fa-play"></i> Start Module';
+          primaryBtn.className = 'btn-primary';
+          primaryBtn.disabled = false;
+          primaryBtn.onclick = () => window.location.href = '/operators-mastery';
+        }
+      }
+    }
+  }
+  
+  // Module 2: Flow Control - Check if Module 1 is complete
+  const module2Card = document.querySelector('.module-card.next');
+  if (module2Card) {
+    const module1Complete = courses['python-fundamentals'] && courses['python-fundamentals'].progress === 100;
+    
+    if (module1Complete) {
+      // Unlock Module 2
+      module2Card.classList.remove('next');
+      module2Card.classList.add('current');
+      
+      const statusBadge = module2Card.querySelector('.status-badge');
+      if (statusBadge) {
+        statusBadge.textContent = 'Available Now';
+        statusBadge.className = 'status-badge in-progress';
+      }
+      
+      const primaryBtn = module2Card.querySelector('.btn-disabled');
+      if (primaryBtn) {
+        primaryBtn.innerHTML = '<i class="fas fa-play"></i> Start Module 2';
+        primaryBtn.className = 'btn-primary';
+        primaryBtn.disabled = false;
+        primaryBtn.onclick = () => window.location.href = '/lesson-control-flow';
+      }
+      
+      // Update topic icons to unlocked
+      const topicIcons = module2Card.querySelectorAll('.topic-icon.locked');
+      topicIcons.forEach(icon => {
+        icon.classList.remove('locked');
+        icon.classList.add('pending');
+        icon.className = icon.className.replace('fa-lock', 'fa-circle');
+      });
+    }
+  }
+}
+
+// Update topic completion status within a module
+function updateTopicStatus(moduleCard, courseData) {
+  const topicItems = moduleCard.querySelectorAll('.topic-item');
+  
+  // Define which topics correspond to which lessons/exercises
+  const topicMapping = [
+    { text: 'Data Types', lessons: ['variables'] },
+    { text: 'Arithmetic Operators', lessons: ['operators-mastery'] },
+    { text: 'Assignment Operators', lessons: ['operators-mastery'] },
+    { text: 'Comparison Operators', lessons: ['operators-mastery'] },
+    { text: 'Logical Operators', lessons: ['operators-mastery'] },
+    { text: 'Identity & Containment', lessons: ['operators-mastery'] },
+    { text: 'Operator Precedence', lessons: ['operators-mastery'] }
+  ];
+  
+  topicItems.forEach((item, index) => {
+    const icon = item.querySelector('.topic-icon');
+    const mapping = topicMapping[index];
+    
+    if (mapping && icon) {
+      let isCompleted = false;
+      
+      // Check if any of the related lessons are completed
+      for (const lessonId of mapping.lessons) {
+        if (courseData.lessons && courseData.lessons[lessonId]) {
+          const lesson = courseData.lessons[lessonId];
+          // Consider completed if exercises are fully done
+          if (lesson.exerciseProgress && 
+              lesson.exerciseProgress.completed === lesson.exerciseProgress.totalExercises) {
+            isCompleted = true;
+            break;
+          }
+        }
+      }
+      
+      if (isCompleted) {
+        icon.classList.remove('pending', 'locked');
+        icon.className = icon.className.replace('fa-circle', 'fa-check-circle');
+        icon.style.color = '#48bb78';
+      } else {
+        // Check if lesson has started (has some progress)
+        let hasProgress = false;
+        for (const lessonId of mapping.lessons) {
+          if (courseData.lessons && courseData.lessons[lessonId] && 
+              courseData.lessons[lessonId].exerciseProgress &&
+              courseData.lessons[lessonId].exerciseProgress.completed > 0) {
+            hasProgress = true;
+            break;
+          }
+        }
+        
+        if (hasProgress) {
+          icon.classList.remove('locked');
+          icon.classList.add('pending');
+          icon.className = icon.className.replace('fa-lock', 'fa-circle');
+          icon.style.color = '#ed8936';
+        }
+      }
+    }
+  });
 }
 
 // Update course cards with real progress

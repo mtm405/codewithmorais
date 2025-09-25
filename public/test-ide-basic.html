@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IDE Basic Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #1e1e1e;
+      color: white;
+    }
+    
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+    
+    .btn {
+      background: #4fc3f7;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    textarea {
+      width: 100%;
+      height: 150px;
+      background: #2d2d30;
+      color: white;
+      border: 1px solid #444;
+      padding: 10px;
+      font-family: monospace;
+    }
+    
+    .output {
+      background: #252526;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid #444;
+      font-family: monospace;
+      min-height: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>IDE Basic Functionality Test</h1>
+    
+    <div class="test-section">
+      <h3>1. Basic Code Editor Test</h3>
+      <textarea id="basic-editor" placeholder="Type some Python code here...">print("Hello, World!")
+x = 5
+y = 10
+print(f"Sum: {x + y}")
+</textarea>
+      <br>
+      <button class="btn" onclick="testBasicRun()">Test Run</button>
+      <button class="btn" onclick="clearOutput()">Clear Output</button>
+      <div class="output" id="basic-output">Click "Test Run" to see output...</div>
+    </div>
+    
+    <div class="test-section">
+      <h3>2. Event Listener Test</h3>
+      <button class="btn" id="test-btn-1">Test Button 1</button>
+      <button class="btn" id="test-btn-2">Test Button 2</button>
+      <button class="btn" id="test-btn-3">Test Button 3</button>
+      <div class="output" id="event-output">Click buttons to test event handling...</div>
+    </div>
+    
+    <div class="test-section">
+      <h3>3. Console Output Test</h3>
+      <button class="btn" onclick="testConsole()">Test Console</button>
+      <div class="output" id="console-test">Check browser console for output...</div>
+    </div>
+    
+    <div class="test-section">
+      <h3>4. IDE Integration Test</h3>
+      <button class="btn" onclick="testIDEIntegration()">Test IDE Class</button>
+      <div class="output" id="ide-test">Testing IDE class availability...</div>
+    </div>
+    
+    <div class="test-section">
+      <h3>5. Monaco Editor Test</h3>
+      <button class="btn" onclick="testMonaco()">Test Monaco</button>
+      <div class="output" id="monaco-test">Testing Monaco Editor availability...</div>
+    </div>
+  </div>
+
+  <script>
+    function testBasicRun() {
+      const code = document.getElementById('basic-editor').value;
+      const output = document.getElementById('basic-output');
+      
+      try {
+        // Simple Python-like output simulation
+        let result = '';
+        const lines = code.split('\n');
+        
+        lines.forEach(line => {
+          line = line.trim();
+          if (line.startsWith('print(')) {
+            const match = line.match(/print\(['"](.+?)['"]\)/);
+            if (match) {
+              result += match[1] + '\n';
+            } else if (line.includes('f"') || line.includes("f'")) {
+              // Simple f-string parsing
+              result += line.replace(/print\(f['"](.+?)['"]\)/, '$1').replace(/\{.+?\}/g, '[value]') + '\n';
+            }
+          }
+        });
+        
+        output.innerHTML = result || 'Code executed (no print statements found)';
+      } catch (error) {
+        output.innerHTML = 'Error: ' + error.message;
+      }
+    }
+    
+    function clearOutput() {
+      document.getElementById('basic-output').innerHTML = 'Output cleared...';
+    }
+    
+    function testConsole() {
+      console.log('Console test successful!');
+      console.error('Error test');
+      console.warn('Warning test');
+      document.getElementById('console-test').innerHTML = 'Check browser console (F12) for output';
+    }
+    
+    function testIDEIntegration() {
+      const output = document.getElementById('ide-test');
+      
+      if (typeof window.ide !== 'undefined') {
+        output.innerHTML = '✅ IDE instance found: ' + typeof window.ide;
+        console.log('IDE instance:', window.ide);
+      } else if (typeof window.IDEManager !== 'undefined') {
+        output.innerHTML = '✅ IDEManager class found: ' + typeof window.IDEManager;
+      } else {
+        output.innerHTML = '❌ IDE not found - check if ide.js loaded properly';
+      }
+    }
+    
+    function testMonaco() {
+      const output = document.getElementById('monaco-test');
+      
+      if (typeof monaco !== 'undefined') {
+        output.innerHTML = '✅ Monaco Editor is available';
+        console.log('Monaco version:', monaco);
+      } else if (typeof require !== 'undefined') {
+        output.innerHTML = '⚠️ Monaco loader available, but Monaco not loaded yet';
+      } else {
+        output.innerHTML = '❌ Monaco Editor not available';
+      }
+    }
+    
+    // Event listener tests
+    document.addEventListener('DOMContentLoaded', () => {
+      const eventOutput = document.getElementById('event-output');
+      
+      document.getElementById('test-btn-1').addEventListener('click', () => {
+        eventOutput.innerHTML = '✅ Button 1 clicked at ' + new Date().toLocaleTimeString();
+      });
+      
+      document.getElementById('test-btn-2').addEventListener('click', () => {
+        eventOutput.innerHTML = '✅ Button 2 clicked at ' + new Date().toLocaleTimeString();
+      });
+      
+      document.getElementById('test-btn-3').addEventListener('click', () => {
+        eventOutput.innerHTML = '✅ Button 3 clicked at ' + new Date().toLocaleTimeString();
+      });
+      
+      console.log('Test page loaded successfully');
+    });
+  </script>
+</body>
+</html>

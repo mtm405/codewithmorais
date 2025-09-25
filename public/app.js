@@ -23,15 +23,29 @@ import {
 
 // Import Firebase configuration
 let firebaseConfig;
-try {
-  const cfg = await import('./firebase-config.js');
-  firebaseConfig = cfg.firebaseConfig;
-} catch (err) {
-  console.error('Missing ./firebase-config.js — copy firebase-config.js.example and fill values.');
+if (typeof window !== 'undefined' && window.firebaseConfig) {
+  firebaseConfig = window.firebaseConfig;
+} else {
+  // Fallback config if window.firebaseConfig is not available
+  firebaseConfig = {
+    apiKey: "AIzaSyAIwwM2V2qfPCB3TLVVeb8IW3FGxdNDhiY",
+    authDomain: "codewithmorais.com",
+    projectId: "code-with-morais-405",
+    storageBucket: "code-with-morais-405.firebasestorage.app",
+    messagingSenderId: "208072504611",
+    appId: "1:208072504611:web:8ebd20260a9e16ceff8896",
+    measurementId: "G-JLH66GJNFL"
+  };
+}
+
+// Check if config is available
+if (!firebaseConfig) {
+  console.error('Missing Firebase configuration');
   const statusElFallback = document.getElementById('status');
   if (statusElFallback) {
-    statusElFallback.textContent = 'Missing firebase-config.js — see README.';
+    statusElFallback.textContent = 'Missing firebase configuration — see README.';
   }
+  throw new Error('Firebase configuration not found');
 }
 
 // Initialize Firebase
@@ -166,17 +180,17 @@ onAuthStateChanged(auth, (user) => {
       // Check if user has set a preferred main page
       const preferredMainPage = localStorage.getItem('preferredMainPage');
       
-      if (preferredMainPage === 'operators-mastery') {
-        console.log('Redirecting to operators mastery (preferred main page)...');
-        window.location.href = '/operators-mastery.html';
+      if (preferredMainPage === 'projects') {
+        console.log('Redirecting to projects page (preferred main page)...');
+        window.location.href = '/projects.html';
       } else {
-        console.log('Redirecting to operators mastery (new default)...');
+        console.log('Redirecting to projects page (new default)...');
         if (redirectParam === 'dashboard') {
           // Clear the redirect parameter from URL
           window.history.replaceState({}, document.title, '/');
           window.location.href = '/dashboard.html';
         } else {
-          window.location.href = '/operators-mastery.html';
+          window.location.href = '/projects.html';
         }
       }
     }
@@ -649,8 +663,8 @@ getRedirectResult(auth)
   .then((result) => {
     if (result) {
       console.log('Main: Redirect result found, user signed in:', result.user.email);
-      // User just completed sign-in, redirect to operators mastery
-      window.location.href = '/operators-mastery.html';
+      // User just completed sign-in, redirect to projects page
+      window.location.href = '/projects.html';
     } else {
       console.log('Main: No redirect result, checking current auth state');
     }

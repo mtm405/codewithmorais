@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Progress Dashboard - Code with Morais</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .dashboard-controls {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .control-group select, .control-group input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .refresh-btn {
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .students-grid {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .student-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .student-info h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .student-info .student-id {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .student-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-active { background: #10b981; }
+        .status-inactive { background: #6b7280; }
+
+        .project-progress {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .project-item {
+            padding: 1rem;
+            background: rgba(248, 250, 252, 0.8);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .project-name {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-not-started {
+            color: #9ca3af;
+        }
+
+        .progress-in-progress {
+            color: #3b82f6;
+        }
+
+        .progress-completed {
+            color: #10b981;
+        }
+
+        .project-timestamp {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-top: 0.25rem;
+        }
+
+        .export-section {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .export-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #4a5568;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .control-group {
+                justify-content: space-between;
+            }
+
+            .stats-overview {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .students-grid {
+                padding: 1rem;
+            }
+
+            .project-progress {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-chart-line"></i> Student Progress Dashboard</h1>
+            <p class="subtitle">Monitor student progress on Python projects in real-time</p>
+            <div style="margin-top: 1rem;">
+                <a href="teacher-dashboard.html" style="
+                    background: rgba(255, 255, 255, 0.2);
+                    color: white;
+                    text-decoration: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    transition: all 0.3s ease;
+                " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    <i class="fas fa-key"></i> View Project Answers & Solutions
+                </a>
+            </div>
+        </header>
+
+        <!-- Dashboard Controls -->
+        <div class="dashboard-controls">
+            <div class="control-group">
+                <label for="classFilter">Class:</label>
+                <select id="classFilter">
+                    <option value="all">All Classes</option>
+                    <option value="python-101">Python 101</option>
+                    <option value="python-102">Python 102</option>
+                    <option value="advanced-python">Advanced Python</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="projectFilter">Project:</label>
+                <select id="projectFilter">
+                    <option value="all">All Projects</option>
+                    <option value="calculator">Calculator</option>
+                    <option value="todo">To-Do List</option>
+                    <option value="guessing">Number Guessing</option>
+                    <option value="password">Password Generator</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="not-started">Not Started</option>
+                    <option value="started">In Progress</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+            <button class="refresh-btn" onclick="refreshData()">
+                <i class="fas fa-sync-alt"></i>
+                Refresh Data
+            </button>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number" id="totalStudents">-</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="stat-number" id="activeStudents">-</div>
+                <div class="stat-label">Active Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-number" id="projectsInProgress">-</div>
+                <div class="stat-label">Projects in Progress</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number" id="completedProjects">-</div>
+                <div class="stat-label">Completed Projects</div>
+            </div>
+        </div>
+
+        <!-- Students Grid -->
+        <div class="students-grid" id="studentsContainer">
+            <div class="loading">
+                <i class="fas fa-spinner"></i>
+                <p>Loading student progress data...</p>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="export-section">
+            <h3>Export Progress Reports</h3>
+            <button class="export-btn" onclick="exportToCSV()">
+                <i class="fas fa-file-csv"></i>
+                Export to CSV
+            </button>
+            <button class="export-btn" onclick="exportToPDF()">
+                <i class="fas fa-file-pdf"></i>
+                Export to PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script>
+        // Firebase configuration - imported from config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAIwwM2V2qfPCB3TLVVeb8IW3FGxdNDhiY",
+            authDomain: "codewithmorais.com",
+            projectId: "code-with-morais-405",
+            storageBucket: "code-with-morais-405.firebasestorage.app",
+            messagingSenderId: "208072504611",
+            appId: "1:208072504611:web:8ebd20260a9e16ceff8896",
+            measurementId: "G-JLH66GJNFL"
+        };
+    </script>
+
+    <script>
+        // Firebase initialization
+        let db, auth;
+        
+        if (typeof firebaseConfig !== 'undefined') {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            auth = firebase.auth();
+        }
+
+        let currentData = [];
+
+        async function loadStudentData() {
+            if (!db) {
+                console.error('Firebase not initialized');
+                document.getElementById('studentsContainer').innerHTML = '<div class="loading"><p>Firebase not available.</p></div>';
+                return;
+            }
+
+            try {
+                const snapshot = await db.collection('userProgress').orderBy('lastActive', 'desc').get();
+                const students = [];
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    students.push({
+                        studentId: doc.id,
+                        name: data.displayName || 'Unknown Student',
+                        email: data.email || 'No email',
+                        photoURL: data.photoURL || '/default-avatar.png',
+                        class: data.class || 'unassigned',
+                        lastActive: data.lastActive || new Date().toISOString(),
+                        progress: data.progress || {}
+                    });
+                });
+
+                currentData = students;
+                displayStudentData(students);
+                updateStats(students);
+
+            } catch (error) {
+                console.error('Error loading student data:', error);
+                document.getElementById('studentsContainer').innerHTML = '<div class="loading"><p>Error loading data. Please check Firebase configuration.</p></div>';
+            }
+        }
+
+        function displayStudentData(students) {
+            const container = document.getElementById('studentsContainer');
+            
+            if (students.length === 0) {
+                container.innerHTML = '<div class="loading"><p>No student data found. Students need to sign in and start projects to appear here.</p></div>';
+                return;
+            }
+
+            container.innerHTML = students.map(student => `
+                <div class="student-card">
+                    <div class="student-header">
+                        <div class="student-info">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                <img src="${student.photoURL}" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                                <div>
+                                    <h3>${student.name}</h3>
+                                    <div class="student-id">Email: ${student.email}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="student-status">
+                            <div class="status-indicator ${isRecentlyActive(student.lastActive) ? 'status-active' : 'status-inactive'}"></div>
+                            <span>${isRecentlyActive(student.lastActive) ? 'Active' : 'Inactive'}</span>
+                            <div style="font-size: 0.8rem; color: #9ca3af; margin-left: 0.5rem;">
+                                ${formatTimestamp(student.lastActive)}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-progress">
+                        ${generateProjectProgress(student.progress)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function generateProjectProgress(progress) {
+            const projects = ['calculator', 'todo', 'guessing', 'password'];
+            
+            return projects.map(projectId => {
+                const projectData = progress[projectId] || { status: 'not-started' };
+                return `
+                    <div class="project-item">
+                        <div class="project-name">${getProjectName(projectId)}</div>
+                        <div class="progress-status progress-${projectData.status}">
+                            <i class="fas ${getStatusIcon(projectData.status)}"></i>
+                            ${formatStatus(projectData.status)}
+                        </div>
+                        ${projectData.startTime ? `<div class="project-timestamp">Started: ${formatTimestamp(projectData.startTime)}</div>` : ''}
+                        ${projectData.completedTime ? `<div class="project-timestamp">Completed: ${formatTimestamp(projectData.completedTime)}</div>` : ''}
+                        ${projectData.status === 'completed' && projectData.submissionData ? `
+                            <div class="project-timestamp" style="color: #667eea;">
+                                <i class="fas fa-code"></i> Code submitted
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats(students) {
+            const totalStudents = students.length;
+            const activeStudents = students.filter(s => isRecentlyActive(s.lastActive)).length;
+            
+            let projectsInProgress = 0;
+            let completedProjects = 0;
+            
+            students.forEach(student => {
+                Object.values(student.progress).forEach(project => {
+                    if (project.status === 'started') projectsInProgress++;
+                    if (project.status === 'completed') completedProjects++;
+                });
+            });
+
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('activeStudents').textContent = activeStudents;
+            document.getElementById('projectsInProgress').textContent = projectsInProgress;
+            document.getElementById('completedProjects').textContent = completedProjects;
+        }
+
+        function isRecentlyActive(lastActive) {
+            const oneHourAgo = new Date(Date.now() - 3600000);
+            return new Date(lastActive) > oneHourAgo;
+        }
+
+        function getProjectName(projectId) {
+            const names = {
+                calculator: 'Simple Calculator',
+                todo: 'To-Do List Manager',
+                guessing: 'Number Guessing Game',
+                password: 'Password Generator'
+            };
+            return names[projectId] || projectId;
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                'not-started': 'fa-circle',
+                'started': 'fa-play-circle',
+                'completed': 'fa-check-circle'
+            };
+            return icons[status] || 'fa-circle';
+        }
+
+        function formatStatus(status) {
+            const formats = {
+                'not-started': 'Not Started',
+                'started': 'In Progress',
+                'completed': 'Completed'
+            };
+            return formats[status] || status;
+        }
+
+        function formatTimestamp(timestamp) {
+            return new Date(timestamp).toLocaleString();
+        }
+
+        function refreshData() {
+            document.getElementById('studentsContainer').innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Refreshing data...</p></div>';
+            loadStudentData();
+        }
+
+        function exportToCSV() {
+            const csv = generateCSV(currentData);
+            downloadFile(csv, 'student-progress.csv', 'text/csv');
+        }
+
+        function exportToPDF() {
+            alert('PDF export would be implemented with a library like jsPDF');
+        }
+
+        function generateCSV(students) {
+            const headers = ['Student Name', 'Email', 'Last Active', 'Calculator', 'Todo List', 'Guessing Game', 'Password Generator'];
+            const rows = students.map(student => [
+                student.name,
+                student.email,
+                formatTimestamp(student.lastActive),
+                student.progress.calculator?.status || 'not-started',
+                student.progress.todo?.status || 'not-started',
+                student.progress.guessing?.status || 'not-started',
+                student.progress.password?.status || 'not-started'
+            ]);
+            
+            return [headers, ...rows].map(row => row.join(',')).join('\n');
+        }
+
+        function downloadFile(content, fileName, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudentData();
+            
+            // Add filter event listeners
+            ['classFilter', 'projectFilter', 'statusFilter'].forEach(filterId => {
+                document.getElementById(filterId).addEventListener('change', applyFilters);
+            });
+
+            // Set up real-time updates
+            if (db) {
+                db.collection('userProgress').onSnapshot((snapshot) => {
+                    console.log('Real-time update received');
+                    loadStudentData(); // Reload data when changes occur
+                });
+            }
+        });
+
+        function applyFilters() {
+            const classFilter = document.getElementById('classFilter').value;
+            const projectFilter = document.getElementById('projectFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            let filteredData = [...currentData];
+            
+            if (classFilter !== 'all') {
+                filteredData = filteredData.filter(student => student.class === classFilter);
+            }
+            
+            if (projectFilter !== 'all' && statusFilter !== 'all') {
+                filteredData = filteredData.filter(student => 
+                    student.progress[projectFilter]?.status === statusFilter
+                );
+            }
+            
+            displayStudentData(filteredData);
+            updateStats(filteredData);
+        }
+    </script>
+</body>
+</html>

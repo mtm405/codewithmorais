@@ -1,139 +1,284 @@
-# Student Activities (Firebase + Hosting) — Minimal Starter
+# CodeWithMorais - Python Learning Platform
 
-This folder contains a minimal static website set up for Firebase Hosting and Firebase Authentication (Google Sign-In).
+A comprehensive Python certification course platform with interactive IDE, lessons, and Firebase hosting. This project supports multi-device development using VS Code, Git, and GitHub for seamless collaboration across different computers.
 
-What I created for you (files and purpose):
+## 🎯 Project Overview
 
-- `public/index.html` — static single-page app with sign-in buttons and sample activities.
-- `public/app.js` — client code using Firebase modular SDK (CDN) for Google sign-in and simple UI.
-- `public/styles.css` — basic styles.
-- `public/firebase-config.js.example` — example Firebase config. Copy to `public/firebase-config.js` and fill with your project's values.
-- `firebase.json` — Firebase Hosting configuration (serves `public/`).
-- `.firebaserc` — placeholder for your Firebase project id.
+This platform includes:
+- **Interactive Python IDE**: Built with Monaco Editor and Pyodide for in-browser Python execution
+- **Comprehensive Lesson System**: 6 sections covering complete Python fundamentals to advanced topics
+- **Professional Dashboard**: Progress tracking, authentication, and course management
+- **Firebase Integration**: Hosting, authentication, and real-time data synchronization
+- **Multi-Device Development**: Git/GitHub workflow optimized for VS Code across multiple computers
 
-Requirements (what you need to install / configure):
+## 📁 Project Structure
 
-1. Node.js and npm (to install Firebase CLI). Install from https://nodejs.org/ if you don't have it.
-2. Firebase CLI: install globally:
+```
+cwm/
+├── public/                     # Main web application
+│   ├── lessons/               # Complete Python course curriculum
+│   │   ├── index.html        # Course overview and navigation
+│   │   ├── section1-data-types-operators/    # Python basics
+│   │   ├── section2-control-flow/            # If/else, conditions
+│   │   ├── section3-loops/                   # For/while loops
+│   │   ├── section4-functions/               # Functions and scope
+│   │   ├── section5-data-structures/         # Lists, dicts, sets
+│   │   └── section6-file-handling/           # File I/O and modules
+│   ├── ide.html              # Full-featured Python IDE
+│   ├── dashboard.html         # Student progress dashboard
+│   ├── index.html            # Main landing page
+│   └── firebase-config.js    # Firebase configuration
+├── firebase.json             # Firebase hosting settings
+├── .gitignore               # Git exclusions for multi-device dev
+└── README.md               # This documentation
 
+## 🚀 Multi-Device Development Setup
+
+### Prerequisites
+1. **Git**: Download from https://git-scm.com/
+2. **VS Code**: Download from https://code.visualstudio.com/
+3. **Node.js**: Download from https://nodejs.org/ (for Firebase CLI)
+4. **Firebase CLI**: Install globally with `npm install -g firebase-tools`
+
+### Initial Setup (First Computer)
+
+1. **Clone this repository** (after GitHub setup):
 ```powershell
-npm install -g firebase-tools
+git clone https://github.com/YOUR_USERNAME/cwm.git
+cd cwm
 ```
 
-3. A Firebase project in the Firebase Console: https://console.firebase.google.com/
+2. **Install VS Code Extensions** (recommended):
+- Live Server
+- Firebase
+- GitLens
+- Prettier
+- Auto Rename Tag
+- HTML CSS Support
 
-4. In the Firebase Console for your project:
-   - Go to Authentication -> Sign-in method -> enable **Google**.
-   - Add authorized domains (for local testing you can add `localhost`).
-   - Go to Project settings -> General -> Your apps -> Add a Web app to get the config values (apiKey, authDomain, appId, etc.).
-
-5. (Optional) If you need OAuth consent screen advanced configuration or publishing scopes, configure OAuth consent in the Google Cloud Console.
-
-Setup & deploy (quick start):
-
-1. Login to Firebase from your machine:
-
+3. **Configure Firebase**:
 ```powershell
 firebase login
-```
-
-2. (One-time) Initialize your local repo to the Firebase project (or use `firebase use` to select an existing one):
-
-```powershell
-# If you haven't linked a project yet:
-firebase init hosting
-# When prompted, select your Firebase project, set public directory to 'public', and choose single-page app = yes if asked.
-```
-
-3. Copy the config example and fill values:
-
-```powershell
 copy .\public\firebase-config.js.example .\public\firebase-config.js
-# then edit public\firebase-config.js to paste your project values
+# Edit firebase-config.js with your project values
 ```
 
-4. Serve locally to test (recommended):
+### Working on Additional Computers
 
+1. **Clone the repository**:
 ```powershell
-# Serve hosting locally
-firebase hosting:serve
-# or emulate (hosting + auth emulators) if you set up emulators
-firebase emulators:start --only hosting
+git clone https://github.com/YOUR_USERNAME/cwm.git
+cd cwm
 ```
 
-5. Deploy to Firebase Hosting:
+2. **Pull latest changes**:
+```powershell
+git pull origin main
+```
 
+3. **Start development**:
+```powershell
+# Test locally
+firebase serve --only hosting
+# or use VS Code Live Server extension
+```
+
+### Daily Development Workflow
+
+#### Before Starting Work:
+```powershell
+# Pull latest changes from other devices
+git pull origin main
+```
+
+#### During Development:
+- Use VS Code for editing
+- Test locally with `firebase serve` or Live Server extension
+- Make frequent commits with descriptive messages
+
+#### After Completing Work:
+```powershell
+# Stage all changes
+git add .
+
+# Commit with descriptive message
+git commit -m "Add lesson 2.1: If/Else Statements with interactive examples"
+
+# Push to GitHub
+git push origin main
+```
+
+## 🎓 Course Content Structure
+
+### Section 1: Data Types and Operators
+- **Lesson 1.1**: Data Types (Variables, strings, numbers, booleans) ✅
+- **Lesson 1.2**: Data Operations (Arithmetic, string operations) ✅
+- **Lesson 1.3**: Operator Precedence (Order of operations) ✅
+- **Lesson 1.4**: Input/Output Operations (Coming Soon)
+
+### Section 2: Control Flow
+- **Lesson 2.1**: Conditional Statements (if/else)
+- **Lesson 2.2**: Nested Conditions
+- **Lesson 2.3**: Logical Operators
+- **Lesson 2.4**: Practice Problems
+
+### Section 3: Loops
+- **Lesson 3.1**: For Loops
+- **Lesson 3.2**: While Loops
+- **Lesson 3.3**: Nested Loops
+- **Lesson 3.4**: Loop Control (break/continue)
+
+### Section 4: Functions
+- **Lesson 4.1**: Function Basics
+- **Lesson 4.2**: Parameters and Arguments
+- **Lesson 4.3**: Return Statements
+- **Lesson 4.4**: Scope and Local Variables
+
+### Section 5: Data Structures
+- **Lesson 5.1**: Lists and Indexing
+- **Lesson 5.2**: Dictionaries
+- **Lesson 5.3**: Sets and Tuples
+- **Lesson 5.4**: String Methods
+
+### Section 6: File Handling and Modules
+- **Lesson 6.1**: Reading Files
+- **Lesson 6.2**: Writing Files
+- **Lesson 6.3**: Importing Modules
+- **Lesson 6.4**: Final Projects
+
+## 🛠 Firebase Hosting Setup
+
+### Firebase Configuration
+
+1. **Create Firebase Project**: 
+   - Go to https://console.firebase.google.com/
+   - Create new project or select existing one
+
+2. **Enable Authentication**:
+   - Authentication → Sign-in method → Enable Google
+   - Add authorized domains (localhost for testing)
+
+3. **Get Configuration**:
+   - Project settings → General → Web apps → Add app
+   - Copy configuration values
+
+4. **Configure Locally**:
+```powershell
+firebase login
+firebase use --add  # Select your project
+copy .\public\firebase-config.js.example .\public\firebase-config.js
+# Edit firebase-config.js with your project values
+```
+
+### Local Development & Deployment
+
+**Test Locally**:
+```powershell
+firebase serve --only hosting
+# Navigate to http://localhost:5000
+```
+
+**Deploy to Production**:
 ```powershell
 firebase deploy --only hosting
 ```
 
-Notes and next steps:
-- This starter uses the Firebase JS SDK via CDN for simplicity. For production, consider bundling with a build tool and pinning SDK versions.
-- Do not commit your real `public/firebase-config.js` to public repos if you care about secrecy (the config keys are not secret by themselves but best practice is to avoid accidental leak of other secrets).
-- If you need server-side logic (grading, secure data), add `functions/` and use Cloud Functions (see Firebase docs).
+## 💻 VS Code Development Setup
 
-If you want, I can:
-- Walk you through creating the Firebase project and enabling Google sign-in step-by-step.
-- Initialize the project with `firebase init` from this machine (requires you to run login in terminal so I can link it), or provide exact commands to run.
-- Add a Cloud Firestore data model for storing activity results.
-
-Which of those would you like next?
-
-Cloud Run (Docker) — optional alternative hosting for a Python-backed app
---------------------------------------------------------------------
-
-If your previous project includes a Python backend (Flask/Django) and you prefer to keep the server-side code, you can containerize and deploy to Google Cloud Run. This repo now includes a `Dockerfile` and a GitHub Actions workflow template at `.github/workflows/cloud-run-deploy.yml`.
-
-Quick local build & run:
+### Recommended Extensions
+Install these extensions for optimal development experience:
 
 ```powershell
-# build
-docker build -t student-activities:local .
-# run locally (maps to port 8080)
-docker run --rm -p 8080:8080 student-activities:local
+# Open VS Code and install extensions
+code --install-extension ritwickdey.liveserver
+code --install-extension ms-vscode.vscode-firebase
+code --install-extension eamodio.gitlens
+code --install-extension esbenp.prettier-vscode
+code --install-extension formulahendry.auto-rename-tag
+code --install-extension ecmel.vscode-html-css
 ```
 
-Create a service account and key for GitHub Actions:
+### VS Code Settings
+Create `.vscode/settings.json` in your workspace:
 
-1. In GCP Console, go to IAM & Admin -> Service accounts -> Create Service Account.
-2. Give it the roles: Cloud Run Admin, Storage Admin (or Storage Object Admin), and Service Account User.
-3. Create a JSON key and copy its contents.
-4. In your GitHub repo, create two secrets:
-   - `GCP_PROJECT` = your GCP project id
-   - `GCP_SA_KEY` = the JSON key contents
-
-The provided workflow will build the container, push it to `gcr.io/$GCP_PROJECT/student-activities:<sha>` and deploy it to Cloud Run. Adjust region and service name in `.github/workflows/cloud-run-deploy.yml` if needed.
-
-DNS and custom domain:
-- If you deploy to Cloud Run and want to use your own domain, configure the domain mapping in GCP (Cloud Run -> Domain mappings) and add the DNS records shown there at your registrar. Cloud Run will provision a TLS certificate automatically.
-
-Notes:
-- Cloud Run may require enabling billing on the project for production traffic.
-- If your app is purely static (no server logic), Firebase Hosting is simpler and may be cheaper.
-
-Cleaning / node_modules (important)
-----------------------------------
-
-You should NOT commit the `node_modules/` folder to source control. Reasons:
-
-- It's large and would bloat the repository history.
-- Packages are rebuildable from `package.json` / `package-lock.json` (or `yarn.lock`).
-- Different environments/platforms can install platform-specific binaries — keep the source manifest instead.
-
-If you have a local `node_modules/` directory and want to clean it up or regenerate dependencies, run these PowerShell commands locally:
-
-```powershell
-# remove the installed modules and lockfile (if you want a clean reinstall)
-Remove-Item -Recurse -Force .\node_modules -ErrorAction SilentlyContinue
-Remove-Item -Force .\package-lock.json -ErrorAction SilentlyContinue
-
-# reinstall from package.json (creates a fresh package-lock.json)
-npm install
+```json
+{
+  "liveServer.settings.port": 5501,
+  "html.format.indentInnerHtml": true,
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": false,
+  "git.autofetch": true,
+  "git.confirmSync": false
+}
 ```
 
-Notes:
-- The repo already contains a `.gitignore` that excludes `node_modules/`.
-- Keep `package.json` (it describes dev tooling and dependencies). If the project has no Node build step, it's safe to keep it minimal or remove it later.
+### Workflow Tips
+- **Live Server**: Right-click on `public/index.html` → "Open with Live Server"
+- **Git Integration**: Use VS Code's built-in Git panel (Ctrl+Shift+G)
+- **Firebase**: Use Command Palette (Ctrl+Shift+P) → "Firebase" commands
+- **Multi-cursor editing**: Alt+Click for multiple selections
 
-If you want, I can remove `node_modules/` from the workspace now (if present) and run a fresh `npm install` — say "clean now" and I'll run the commands here.
+## 🔒 Security & Best Practices
+
+### Git Configuration
+- Firebase config files are excluded from commits (see `.gitignore`)
+- Always pull before starting work: `git pull origin main`
+- Use descriptive commit messages
+- Push frequently to avoid conflicts
+
+### Development Environment
+- Test locally before deploying
+- Use environment-specific configurations
+- Keep dependencies up to date
+- Regular backups via Git/GitHub
+
+## 📚 Development Resources
+
+### Learning Materials
+- **Python Fundamentals**: Start with Section 1 lessons
+- **IDE Usage**: Practice with the built-in Python IDE
+- **Firebase Docs**: https://firebase.google.com/docs
+- **Git Tutorial**: https://git-scm.com/docs/gittutorial
+
+### Troubleshooting
+- **Firebase Issues**: Check console.firebase.google.com
+- **Git Conflicts**: Use VS Code's merge conflict resolver
+- **IDE Problems**: Check browser console (F12)
+- **Deployment Issues**: Run `firebase serve` locally first
+
+## 🤝 Contributing
+
+When working across multiple devices:
+1. Always start with `git pull origin main`
+2. Make small, frequent commits
+3. Use descriptive commit messages
+4. Test locally before pushing
+5. Push changes immediately after completing work
+
+## 📞 Support
+
+If you encounter issues:
+1. Check this README for common solutions
+2. Verify Firebase configuration
+3. Ensure all dependencies are installed
+4. Check Git status for conflicts
+5. Test in incognito browser window
+
+---
+
+## 📝 License
+
+This project is created for educational purposes. Feel free to use and modify for learning Python programming.
+
+## 🚀 Getting Started Quickly
+
+**New to this project?** Follow these steps:
+
+1. **Clone the repository** (after GitHub setup)
+2. **Install VS Code extensions** (see recommended list above)
+3. **Configure Firebase** with your project settings
+4. **Start local development** with `firebase serve`
+5. **Begin with Section 1 lessons** in `public/lessons/`
+
+**Working on multiple devices?** Always start with `git pull origin main` and end with `git push origin main`.
 

@@ -3,236 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code with Morais - Learn Programming</title>
-    <link rel="stylesheet" href="/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Code with Morais - Learn Python Programming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: auto;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .welcome-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .welcome-container h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-section {
+            margin: 30px 0;
+        }
+
+        #auth-loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #login-btn {
+            background: #fff;
+            color: #333;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-welcome {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .user-avatar img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .avatar-fallback {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(238, 90, 82, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(238, 90, 82, 0.4);
+        }
+
+        #logout-btn {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        #logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .welcome-container p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .welcome-container ul {
+            text-align: left;
+            margin: 30px 0;
+            padding-left: 20px;
+        }
+
+        .welcome-container li {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .cta-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        #status {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .welcome-container h1 {
+                font-size: 2rem;
+            }
+
+            .welcome-container p {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Background -->
-    <canvas id="particles-canvas"></canvas>
+    <div id="particles-js"></div>
+    <div class="content-wrapper">
+        <div class="welcome-container">
+            <h1>Welcome, Future Python Developers!</h1>
+            
+            <div class="auth-section">
+                <div id="auth-loading">
+                    <div class="loading-spinner"></div>
+                    <span>Checking your authentication...</span>
+                </div>
+                
+                <div id="auth-signed-out">
+                    <button id="login-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+                </div>
+                
+                <div id="auth-signed-in" style="display: none;">
+                    <div class="user-welcome">
+                        <div class="user-avatar">
+                            <img id="user-photo" src="" alt="User photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                            <div class="avatar-fallback" style="display:none">👤</div>
+                        </div>
+                        <div>
+                            <h3 id="user-name"></h3>
+                            <p id="user-email"></p>
+                        </div>
+                    </div>
+                    <a href="/dashboard" class="btn-primary">� Dashboard</a>
+                    <a href="/ide" class="btn-primary">💻 Python IDE</a>
+                    <br>
+                    <button id="logout-btn">Sign out</button>
+                </div>
+            </div>
+
+            <p>Embark on a transformative journey with Mr. Morais to master Python and excel in your IT Specialist exam. This program is meticulously designed to equip you with essential, real-world coding skills:</p>
+            
+            <ul>
+                <li>Develop clean, well-structured, and logically sound Python programs.</li>
+                <li>Confidently utilize Python's diverse collection of data types and structures.</li>
+                <li>Harness the full potential of Python's ecosystem to solve complex challenges.</li>
+                <li>Analyze problems and implement robust, efficient Python solutions.</li>
+                <li>Acquire advanced techniques for identifying, fixing, and maintaining resilient programs.</li>
+            </ul>
+            
+            <p class="cta-text">Ready to begin your coding success story? <br> Let's build your future in IT!</p>
+        </div>
+    </div>
     
-    <!-- Header -->
-    <header class="landing-header">
-        <div class="header-container">
-            <div class="logo">
-                <i class="fas fa-code"></i>
-                <span>Code with Morais</span>
-            </div>
-            <nav class="landing-nav">
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#courses" class="nav-link">Courses</a>
-                <a href="#about" class="nav-link">About</a>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="landing-main">
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <div class="container">
-                <div class="hero-content">
-                    <div class="hero-text">
-                        <h1 class="hero-title">
-                            Learn Python Programming with
-                            <span class="highlight">Interactive Activities</span>
-                        </h1>
-                        <p class="hero-subtitle">
-                            Master Python programming from variables to data structures through hands-on coding exercises, 
-                            interactive quests, and step-by-step lessons designed specifically for high school students.
-                        </p>
-                        
-                        <!-- Authentication Card -->
-                        <div class="auth-card">
-                            <div class="auth-header">
-                                <h2>Start Your Python Journey</h2>
-                                <p>Sign in with your Google account to access your Python lessons and coding exercises</p>
-                            </div>
-                            
-                            <div id="auth-loading" class="auth-loading" hidden>
-                                <div class="loading-spinner"></div>
-                                <p>Checking your authentication...</p>
-                            </div>
-                            
-                            <div id="auth-signed-out" class="auth-content">
-                                <button id="login-btn" class="btn-google">
-                                    <i class="fab fa-google"></i>
-                                    Continue with Google
-                                </button>
-                                <p class="auth-note">
-                                    <i class="fas fa-shield-alt"></i>
-                                    Your data is secure and protected
-                                </p>
-                            </div>
-                            
-                            <div id="auth-signed-in" class="auth-content" hidden>
-                                <div class="user-welcome">
-                                    <div class="user-avatar-welcome">
-                                        <img id="user-photo-welcome" src="" alt="User photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                                        <div class="avatar-fallback" style="display:none">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    </div>
-                                    <div class="user-details">
-                                        <h3 id="user-name-welcome"></h3>
-                                        <p id="user-email-welcome"></p>
-                                    </div>
-                                </div>
-                                <a href="/dashboard.html" class="btn-primary btn-full">
-                                    <i class="fas fa-arrow-right"></i>
-                                    Go to Dashboard
-                                </a>
-                                <button id="logout-btn" class="btn-text">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    Sign out
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="hero-visual">
-                        <div class="code-preview">
-                            <div class="code-header">
-                                <div class="code-dots">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                                <span class="code-title">lesson.py</span>
-                            </div>
-                            <div class="code-content">
-                                <div class="code-line">
-                                    <span class="line-number">1</span>
-                                    <span class="code-text"><span class="keyword">def</span> <span class="function">calculate_grade</span>(<span class="param">score</span>):</span>
-                                </div>
-                                <div class="code-line">
-                                    <span class="line-number">2</span>
-                                    <span class="code-text">    <span class="keyword">if</span> <span class="param">score</span> >= <span class="number">90</span>:</span>
-                                </div>
-                                <div class="code-line">
-                                    <span class="line-number">3</span>
-                                    <span class="code-text">        <span class="keyword">return</span> <span class="string">"A"</span></span>
-                                </div>
-                                <div class="code-line">
-                                    <span class="line-number">4</span>
-                                    <span class="code-text">    <span class="keyword">elif</span> <span class="param">score</span> >= <span class="number">80</span>:</span>
-                                </div>
-                                <div class="code-line">
-                                    <span class="line-number">5</span>
-                                    <span class="code-text">        <span class="keyword">return</span> <span class="string">"B"</span></span>
-                                </div>
-                                <div class="code-line">
-                                    <span class="line-number">6</span>
-                                    <span class="code-text">    <span class="keyword">else</span>:</span>
-                                </div>
-                                <div class="code-line">
-                                    <span class="line-number">7</span>
-                                    <span class="code-text">        <span class="keyword">return</span> <span class="string">"C"</span></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section id="features" class="features-section">
-            <div class="container">
-                <h2>Why Learn Python with Us?</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fab fa-python"></i>
-                        </div>
-                        <h3>Python Focused</h3>
-                        <p>Learn Python from the ground up with hands-on coding exercises and real-time feedback.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <h3>Interactive Activities</h3>
-                        <p>Practice with coding challenges, quizzes, and step-by-step guided exercises.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h3>Track Your Progress</h3>
-                        <p>Monitor your Python learning journey with detailed progress tracking and lesson completion.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <h3>Learn Anywhere</h3>
-                        <p>Access your Python lessons on any device - Chromebooks, tablets, or computers.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Courses Preview -->
-        <section id="courses" class="courses-preview">
-            <div class="container">
-                <h2>Python Learning Path</h2>
-                <div class="course-preview-grid">
-                    <div class="course-preview-card">
-                        <div class="course-preview-icon">
-                            <i class="fab fa-python"></i>
-                        </div>
-                        <h3>Python Fundamentals</h3>
-                        <p>Variables, operators, and data types</p>
-                        <div class="course-meta">
-                            <span><i class="fas fa-book"></i> 6 lessons</span>
-                            <span><i class="fas fa-tasks"></i> 10 activities</span>
-                        </div>
-                    </div>
-                    <div class="course-preview-card">
-                        <div class="course-preview-icon">
-                            <i class="fas fa-code-branch"></i>
-                        </div>
-                        <h3>Control Flow</h3>
-                        <p>If/else statements, loops, and decision making</p>
-                        <div class="course-meta">
-                            <span><i class="fas fa-book"></i> 8 lessons</span>
-                            <span><i class="fas fa-tasks"></i> 12 activities</span>
-                        </div>
-                    </div>
-                    <div class="course-preview-card">
-                        <div class="course-preview-icon">
-                            <i class="fas fa-list"></i>
-                        </div>
-                        <h3>Data Structures</h3>
-                        <p>Lists, dictionaries, and tuples</p>
-                        <div class="course-meta">
-                            <span><i class="fas fa-book"></i> 10 lessons</span>
-                            <span><i class="fas fa-tasks"></i> 15 activities</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="landing-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <i class="fas fa-code"></i>
-                    <span>Code with Morais</span>
-                </div>
-                <p>&copy; 2025 Code with Morais. Made with ❤️ for students.</p>
-            </div>
-        </div>
-    </footer>
-
+    <footer class="footer">© 2025 Code with Morais. Made with ❤️ for students.</footer>
+    
     <section id="status-area" aria-live="polite"><span id="status">Initializing…</span></section>
 
-    <script type="module" src="/particles-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.particlesJS) {
+          particlesJS("particles-js", {
+            "particles": {
+              "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+              "color": { "value": "#BBBBBB" },
+              "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 }, "image": { "src": "img/github.svg", "width": 100, "height": 100 } },
+              "opacity": { "value": 0.6, "random": false, "anim": { "enable": true, "speed": 0.5, "opacity_min": 0.2, "sync": false } },
+              "size": { "value": 4, "random": true, "anim": { "enable": true, "speed": 2, "size_min": 0.5, "sync": false } },
+              "line_linked": { "enable": true, "distance": 180, "color": "#BBBBBB", "opacity": 0.5, "width": 1.5 },
+              "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 } }
+            },
+            "interactivity": {
+              "detect_on": "canvas",
+              "events": {
+                "onhover": { "enable": true, "mode": "grab" },
+                "onclick": { "enable": true, "mode": ["push", "bubble"] },
+                "resize": true
+              },
+              "modes": {
+                "grab": { "distance": 200, "line_linked": { "opacity": 0.8 } },
+                "bubble": { "distance": 100, "size": 12, "duration": 1, "opacity": 0.9, "speed": 3 },
+                "repulse": { "distance": 150, "duration": 0.8 },
+                "push": { "particles_nb": 8 },
+                "remove": { "particles_nb": 2 }
+              }
+            },
+            "retina_detect": true
+          });
+          
+          // Add click event listener for debugging
+          document.getElementById('particles-js').addEventListener('click', function(e) {
+            console.log('Canvas clicked at:', e.clientX, e.clientY);
+          });
+        } else {
+          console.error('particlesJS is not loaded');
+        }
+      });
+    </script>
+    
+    <script src="firebase-config.js"></script>
     <script type="module" src="/app.js"></script>
 </body>
 </html>

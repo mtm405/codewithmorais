@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Fundamentals - Code with Morais</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .hero-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100"/></svg>');
+            pointer-events: none;
+        }
+
+        .hero-header::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.03) 2px,
+                rgba(255, 255, 255, 0.03) 4px
+            );
+            animation: slidePattern 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes slidePattern {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-header .subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        .hero-header .description {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content-sections {
+            padding: 0;
+        }
+
+        .section-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 2rem;
+            border-radius: 20px;
+            padding: 3rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-subtitle {
+            color: #4a5568;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .concept-explorer {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .concept-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .concept-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            text-align: left;
+        }
+
+        .concept-btn:hover {
+            transform: translateX(5px);
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .concept-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            transform: translateX(5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .concept-btn .icon {
+            font-size: 2rem;
+            width: 50px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .concept-display {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 16px;
+            padding: 2.5rem;
+            min-height: 300px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .concept-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .concept-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concept-description {
+            color: #4a5568;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .concept-syntax {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 2rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .code-example {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 2rem;
+            border-radius: 12px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            border: 1px solid #2d3748;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .code-example::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .code-example .code-dots {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-example .code-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+
+        .code-example .code-dots span:nth-child(2) {
+            background: #f59e0b;
+        }
+
+        .code-example .code-dots span:nth-child(3) {
+            background: #10b981;
+        }
+
+        .code-content {
+            margin-top: 20px;
+        }
+
+        .keyword { color: #c678dd; }
+        .function { color: #61afef; }
+        .string { color: #98c379; }
+        .number { color: #d19a66; }
+        .comment { color: #5c6370; }
+
+        .simulation-section {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        }
+
+        .code-simulator {
+            background: #1a202c;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid #2d3748;
+        }
+
+        .simulator-header {
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .simulator-title {
+            color: #e2e8f0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-controls span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+
+        .window-controls span:nth-child(2) {
+            background: #f59e0b;
+        }
+
+        .window-controls span:nth-child(3) {
+            background: #10b981;
+        }
+
+        .simulator-code {
+            padding: 2rem;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            color: #e2e8f0;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .run-button {
+            display: block;
+            margin: 2rem auto;
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .run-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .output-section {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid #1e293b;
+        }
+
+        .output-header {
+            color: #94a3b8;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .output-display {
+            background: #000;
+            color: #00ff00;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #1e293b;
+        }
+
+        .example-selector {
+            text-align: center;
+        }
+
+        .example-btn {
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-btn:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .example-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .quick-reference {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .reference-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .reference-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .reference-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .reference-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .reference-table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .symbol-badge {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-weight: 600;
+            color: #667eea;
+            border: 1px solid #e2e8f0;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-content {
+            color: #4a5568;
+            font-size: 1rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .back-link:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                border-radius: 16px;
+            }
+
+            .hero-header {
+                padding: 3rem 1rem;
+            }
+
+            .hero-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-card {
+                margin: 1rem;
+                padding: 2rem;
+            }
+
+            .concept-explorer {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .concept-buttons {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+
+            .concept-btn {
+                min-width: 200px;
+                flex-shrink: 0;
+            }
+
+            .example-selector div {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .example-btn {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="main-container">
+        <!-- Hero Header -->
+        <header class="hero-header">
+            <div class="hero-content">
+                <h1><i class="fas fa-code"></i> Python Fundamentals</h1>
+                <p class="subtitle">Master the Building Blocks of Python Programming</p>
+                <p class="description">
+                    An interactive journey through variables and functions - the essential concepts every Python programmer needs to know.
+                </p>
+            </div>
+        </header>
+
+        <!-- Content Sections -->
+        <div class="content-sections">
+            <!-- Interactive Explorer -->
+            <section class="section-card">
+                <h2 class="section-title">
+                    <i class="fas fa-search"></i>
+                    Interactive Concept Explorer
+                </h2>
+                <p class="section-subtitle">
+                    Dive deep into Python's core concepts. Click on each concept below to explore its definition, syntax, and examples. 
+                    This focused approach helps you understand each building block before seeing how they work together.
+                </p>
+
+                <div class="concept-explorer">
+                    <div class="concept-buttons">
+                        <button class="concept-btn" data-concept="variables">
+                            <div class="icon">📦</div>
+                            <div>
+                                <div style="font-size: 1.2rem;">Variables</div>
+                                <div style="font-size: 0.9rem; opacity: 0.7;">Data Storage</div>
+                            </div>
+                        </button>
+                        <button class="concept-btn" data-concept="functions">
+                            <div class="icon">⚙️</div>
+                            <div>
+                                <div style="font-size: 1.2rem;">Functions</div>
+                                <div style="font-size: 0.9rem; opacity: 0.7;">Code Actions</div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="concept-display" id="conceptDisplay">
+                        <div style="text-align: center; color: #718096; padding: 2rem;">
+                            <i class="fas fa-mouse-pointer" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                            <h3>Choose a Concept to Explore</h3>
+                            <p>Click on 'Variables' or 'Functions' to learn about these fundamental Python concepts.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Code Simulation -->
+            <section class="section-card simulation-section">
+                <h2 class="section-title">
+                    <i class="fas fa-play-circle"></i>
+                    See Them in Action
+                </h2>
+                <p class="section-subtitle">
+                    Explore different examples of how variables and functions work together. 
+                    Choose an example below to see the code and run it to understand how Python processes each statement.
+                </p>
+
+                <!-- Example Selector -->
+                <div class="example-selector" style="margin-bottom: 2rem;">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                        <button class="example-btn active" data-example="greeting">
+                            <i class="fas fa-user"></i> Personal Greeting
+                        </button>
+                        <button class="example-btn" data-example="calculator">
+                            <i class="fas fa-calculator"></i> Simple Calculator
+                        </button>
+                        <button class="example-btn" data-example="age">
+                            <i class="fas fa-birthday-cake"></i> Age Calculator
+                        </button>
+                        <button class="example-btn" data-example="list">
+                            <i class="fas fa-list"></i> List Operations
+                        </button>
+                        <button class="example-btn" data-example="string">
+                            <i class="fas fa-font"></i> String Manipulation
+                        </button>
+                    </div>
+                </div>
+
+                <div class="code-simulator">
+                    <div class="simulator-header">
+                        <div class="simulator-title">
+                            <i class="fas fa-terminal"></i>
+                            <span id="exampleTitle">Python Interactive Shell - Personal Greeting</span>
+                        </div>
+                        <div class="window-controls">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="simulator-code" id="simulatorCode">
+                        <span class="comment"># Step 1: Create a variable to store a name</span><br>
+                        <span class="keyword">user_name</span> = <span class="string">"Alex"</span><br><br>
+                        <span class="comment"># Step 2: Use the print() function to display a greeting</span><br>
+                        <span class="function">print</span>(<span class="string">"Hello, "</span> + user_name + <span class="string">"! Welcome to Python!"</span>)
+                    </div>
+                </div>
+
+                <button class="run-button" id="runButton">
+                    <i class="fas fa-play"></i> Execute Code
+                </button>
+
+                <div class="output-section">
+                    <div class="output-header">
+                        <i class="fas fa-terminal"></i>
+                        Program Output
+                    </div>
+                    <div class="output-display" id="outputDisplay">
+                        <span style="color: #6b7280;">Click "Execute Code" to see the magic happen...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Reference -->
+            <section class="section-card">
+                <h2 class="section-title">
+                    <i class="fas fa-bookmark"></i>
+                    Quick Reference Guide
+                </h2>
+                <p class="section-subtitle">
+                    A handy reference table to help you remember the key differences between variables and functions at a glance.
+                </p>
+
+                <div class="quick-reference">
+                    <table class="reference-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-tag"></i> Concept</th>
+                                <th><i class="fas fa-cog"></i> Purpose</th>
+                                <th><i class="fas fa-code"></i> Key Symbol</th>
+                                <th><i class="fas fa-lightbulb"></i> Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Variables</strong></td>
+                                <td>Store and remember data values</td>
+                                <td><span class="symbol-badge">=</span></td>
+                                <td><code>name = "Python"</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Functions</strong></td>
+                                <td>Perform actions or operations</td>
+                                <td><span class="symbol-badge">()</span></td>
+                                <td><code>print("Hello")</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>Master Python fundamentals through interactive exploration and hands-on practice!</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Particles Background Script -->
+    <script src="/particles-init.js"></script>
+
+    <script>
+        // Concept Explorer Functionality
+        const conceptButtons = document.querySelectorAll('.concept-btn');
+        const conceptDisplay = document.getElementById('conceptDisplay');
+        const runButton = document.getElementById('runButton');
+        const outputDisplay = document.getElementById('outputDisplay');
+        const exampleButtons = document.querySelectorAll('.example-btn');
+        const simulatorCode = document.getElementById('simulatorCode');
+        const exampleTitle = document.getElementById('exampleTitle');
+
+        const conceptData = {
+            variables: {
+                title: "Variables - Data Storage Containers",
+                icon: "📦",
+                description: "Variables are like labeled boxes that store information in your program. They can hold different types of data such as numbers, text, lists, or even the results of calculations. Once you store something in a variable, you can use it anywhere in your program by referring to its name.",
+                syntax: "Create variables using the assignment operator (=)",
+                example: `<div class="code-example">
+                    <div class="code-dots"><span></span><span></span><span></span></div>
+                    <div class="code-content">
+                        <span class="comment"># Different types of variables</span><br>
+                        <span class="keyword">age</span> = <span class="number">25</span><br>
+                        <span class="keyword">name</span> = <span class="string">"Maria"</span><br>
+                        <span class="keyword">height</span> = <span class="number">5.8</span><br>
+                        <span class="keyword">is_student</span> = <span class="keyword">True</span>
+                    </div>
+                </div>`
+            },
+            functions: {
+                title: "Functions - Action Performers",
+                icon: "⚙️", 
+                description: "Functions are reusable blocks of code that perform specific tasks. Think of them as mini-programs within your program that you can 'call' whenever you need them to do their job. They can take input (called arguments), process it, and often return a result.",
+                syntax: "Call functions using parentheses () after the function name",
+                example: `<div class="code-example">
+                    <div class="code-dots"><span></span><span></span><span></span></div>
+                    <div class="code-content">
+                        <span class="comment"># Built-in Python functions</span><br>
+                        <span class="function">print</span>(<span class="string">"Hello World!"</span>)<br>
+                        <span class="keyword">length</span> = <span class="function">len</span>(<span class="string">"Python"</span>)<br>
+                        <span class="keyword">maximum</span> = <span class="function">max</span>([<span class="number">1</span>, <span class="number">5</span>, <span class="number">3</span>])
+                    </div>
+                </div>`
+            }
+        };
+
+        const codeExamples = {
+            greeting: {
+                title: "Python Interactive Shell - Personal Greeting",
+                code: `<span class="comment"># Step 1: Create a variable to store a name</span><br>
+                       <span class="keyword">user_name</span> = <span class="string">"Alex"</span><br><br>
+                       <span class="comment"># Step 2: Use the print() function to display a greeting</span><br>
+                       <span class="function">print</span>(<span class="string">"Hello, "</span> + user_name + <span class="string">"! Welcome to Python!"</span>)`,
+                output: "Hello, Alex! Welcome to Python!"
+            },
+            calculator: {
+                title: "Python Interactive Shell - Simple Calculator",
+                code: `<span class="comment"># Step 1: Store numbers in variables</span><br>
+                       <span class="keyword">first_number</span> = <span class="number">15</span><br>
+                       <span class="keyword">second_number</span> = <span class="number">7</span><br><br>
+                       <span class="comment"># Step 2: Calculate the sum using variables</span><br>
+                       <span class="keyword">result</span> = first_number + second_number<br><br>
+                       <span class="comment"># Step 3: Display the result using string conversion</span><br>
+                       <span class="function">print</span>(<span class="function">str</span>(first_number) + <span class="string">" + "</span> + <span class="function">str</span>(second_number) + <span class="string">" = "</span> + <span class="function">str</span>(result))`,
+                output: "15 + 7 = 22"
+            },
+            age: {
+                title: "Python Interactive Shell - Age Calculator",
+                code: `<span class="comment"># Step 1: Store the current year and birth year</span><br>
+                       <span class="keyword">current_year</span> = <span class="number">2025</span><br>
+                       <span class="keyword">birth_year</span> = <span class="number">2000</span><br><br>
+                       <span class="comment"># Step 2: Calculate age using variables</span><br>
+                       <span class="keyword">age</span> = current_year - birth_year<br><br>
+                       <span class="comment"># Step 3: Display the age using string conversion</span><br>
+                       <span class="function">print</span>(<span class="string">"You are "</span> + <span class="function">str</span>(age) + <span class="string">" years old!"</span>)`,
+                output: "You are 25 years old!"
+            },
+            list: {
+                title: "Python Interactive Shell - List Operations",
+                code: `<span class="comment"># Step 1: Create a list variable with favorite colors</span><br>
+                       <span class="keyword">colors</span> = [<span class="string">"red"</span>, <span class="string">"blue"</span>, <span class="string">"green"</span>]<br><br>
+                       <span class="comment"># Step 2: Use functions to work with the list</span><br>
+                       <span class="function">print</span>(<span class="string">"My colors: "</span> + <span class="function">str</span>(colors))<br>
+                       <span class="function">print</span>(<span class="string">"Total colors: "</span> + <span class="function">str</span>(<span class="function">len</span>(colors)))<br>
+                       <span class="function">print</span>(<span class="string">"First color: "</span> + colors[<span class="number">0</span>])`,
+                output: "My colors: ['red', 'blue', 'green']\\nTotal colors: 3\\nFirst color: red"
+            },
+            string: {
+                title: "Python Interactive Shell - String Manipulation",
+                code: `<span class="comment"># Step 1: Store a message in a variable</span><br>
+                       <span class="keyword">message</span> = <span class="string">"python programming"</span><br><br>
+                       <span class="comment"># Step 2: Use string functions to transform it</span><br>
+                       <span class="function">print</span>(<span class="string">"Original: "</span> + message)<br>
+                       <span class="function">print</span>(<span class="string">"Uppercase: "</span> + message.<span class="function">upper</span>())<br>
+                       <span class="function">print</span>(<span class="string">"Title case: "</span> + message.<span class="function">title</span>())<br>
+                       <span class="function">print</span>(<span class="string">"Length: "</span> + <span class="function">str</span>(<span class="function">len</span>(message)) + <span class="string">" characters"</span>)`,
+                output: "Original: python programming\\nUppercase: PYTHON PROGRAMMING\\nTitle case: Python Programming\\nLength: 18 characters"
+            }
+        };
+
+        function updateConceptDisplay(concept) {
+            const data = conceptData[concept];
+            if (!data) return;
+
+            conceptDisplay.innerHTML = `
+                <div class="concept-title">
+                    <span style="font-size: 2.5rem;">${data.icon}</span>
+                    ${data.title}
+                </div>
+                <div class="concept-description">${data.description}</div>
+                <div class="concept-syntax"><i class="fas fa-info-circle"></i> ${data.syntax}</div>
+                ${data.example}
+            `;
+
+            // Update button states
+            conceptButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.concept === concept) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function updateCodeExample(exampleKey) {
+            const example = codeExamples[exampleKey];
+            if (!example) return;
+
+            exampleTitle.textContent = example.title;
+            simulatorCode.innerHTML = example.code;
+
+            // Update button states
+            exampleButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.example === exampleKey) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Reset output display
+            outputDisplay.innerHTML = '<span style="color: #6b7280;">Click "Execute Code" to see the magic happen...</span>';
+        }
+
+        // Add click listeners to concept buttons
+        conceptButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const concept = button.dataset.concept;
+                updateConceptDisplay(concept);
+            });
+        });
+
+        // Add click listeners to example buttons
+        exampleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const example = button.dataset.example;
+                updateCodeExample(example);
+            });
+        });
+
+        // Code execution simulation
+        runButton.addEventListener('click', () => {
+            const activeExample = document.querySelector('.example-btn.active');
+            if (!activeExample) return;
+
+            const exampleKey = activeExample.dataset.example;
+            const example = codeExamples[exampleKey];
+
+            outputDisplay.innerHTML = '<span style="color: #94a3b8;"><i class="fas fa-spinner fa-spin"></i> Executing...</span>';
+            
+            setTimeout(() => {
+                outputDisplay.innerHTML = '<span style="color: #6b7280;">$ </span>';
+                const lines = example.output.split('\\n');
+                let lineIndex = 0;
+                
+                const cursor = document.createElement('span');
+                cursor.style.color = '#00ff00';
+                cursor.textContent = '▋';
+                cursor.style.animation = 'blink 1s infinite';
+                outputDisplay.appendChild(cursor);
+
+                function typeNextLine() {
+                    if (lineIndex < lines.length) {
+                        const line = lines[lineIndex];
+                        let charIndex = 0;
+
+                        const typeInterval = setInterval(() => {
+                            if (charIndex < line.length) {
+                                cursor.insertAdjacentText('beforebegin', line.charAt(charIndex));
+                                charIndex++;
+                            } else {
+                                clearInterval(typeInterval);
+                                lineIndex++;
+                                
+                                if (lineIndex < lines.length) {
+                                    // Add line break and continue with next line
+                                    cursor.insertAdjacentHTML('beforebegin', '<br>');
+                                    setTimeout(typeNextLine, 300);
+                                } else {
+                                    // All lines done
+                                    cursor.remove();
+                                    
+                                    // Add completion indicator
+                                    const completion = document.createElement('div');
+                                    completion.innerHTML = '<br><span style="color: #10b981;"><i class="fas fa-check"></i> Program executed successfully!</span>';
+                                    outputDisplay.appendChild(completion);
+                                }
+                            }
+                        }, 50);
+                    }
+                }
+
+                typeNextLine();
+            }, 1000);
+        });
+
+        // Add CSS for blinking cursor
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes blink {
+                0%, 50% { opacity: 1; }
+                51%, 100% { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

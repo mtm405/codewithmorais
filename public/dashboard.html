@@ -21,6 +21,878 @@
       min-width: 2ch;
       display: inline-block;
     }
+    
+    /* Enhanced Dashboard Styles */
+    .welcome-section {
+      background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #3182ce 100%);
+      color: white;
+      padding: 4rem 0 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .welcome-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.05)"><polygon points="0,100 1000,0 1000,100"/></svg>');
+      background-size: cover;
+    }
+    
+    .welcome-section .container {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .welcome-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .welcome-content h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      letter-spacing: -0.02em;
+    }
+    
+    .welcome-subtitle {
+      font-size: 1.3rem;
+      opacity: 0.9;
+      margin-bottom: 3rem;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    
+    /* Learning Path Styles */
+    .learning-path {
+      background: rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin: 3rem 0;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    
+    .learning-path h3 {
+      margin-bottom: 2rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    
+    .path-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .path-step {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .path-step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      transition: all 0.3s ease;
+    }
+    
+    .path-step.completed::before {
+      background: linear-gradient(180deg, #48bb78, #38a169);
+    }
+    
+    .path-step.current::before {
+      background: linear-gradient(180deg, #ed8936, #dd6b20);
+      animation: pulse-glow 2s infinite;
+    }
+    
+    .path-step.future::before {
+      background: linear-gradient(180deg, #718096, #4a5568);
+    }
+    
+    .path-step:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(237,137,54,0.4);
+      }
+      50% { 
+        box-shadow: 0 0 0 8px rgba(237,137,54,0);
+      }
+    }
+    
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .step-icon {
+      font-size: 1.8rem;
+      min-width: 3rem;
+      height: 3rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    
+    .path-step.completed .step-icon {
+      background: rgba(72,187,120,0.2);
+      color: #68d391;
+    }
+    
+    .path-step.current .step-icon {
+      background: rgba(237,137,54,0.2);
+      color: #f6ad55;
+    }
+    
+    .path-step.future .step-icon {
+      background: rgba(113,128,150,0.2);
+      color: #a0aec0;
+    }
+    
+    .step-content h4 {
+      margin-bottom: 0.75rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    
+    .step-content p {
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+    
+    .step-topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    
+    .topic-tag {
+      background: rgba(255,255,255,0.15);
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .topic-tag:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-1px);
+    }
+    
+    .topic-tag.next {
+      background: rgba(237,137,54,0.2);
+      border: 1px solid rgba(237,137,54,0.4);
+      color: #f6ad55;
+    }
+    
+    .topic-tag.future {
+      background: rgba(113,128,150,0.15);
+      border: 1px solid rgba(113,128,150,0.3);
+      color: #cbd5e0;
+    }
+    
+    /* Quick Actions Styles */
+    .quick-actions {
+      margin: 3rem 0;
+    }
+    
+    .quick-actions h3 {
+      margin-bottom: 2rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .action-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.08);
+      border-radius: 16px;
+      text-decoration: none;
+      color: white;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+    }
+    
+    .action-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    .action-icon {
+      font-size: 2rem;
+      min-width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+    }
+    
+    .action-content h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .action-content p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin: 0;
+      line-height: 1.4;
+    }
+    
+    /* Progress Stats */
+    .progress-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    
+    .stat-card {
+      background: rgba(255,255,255,0.12);
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.18);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      display: block;
+      opacity: 0.9;
+    }
+    
+    .stat-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #ffd700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .stat-label {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .stat-sublabel {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      font-weight: 400;
+    }
+    
+    /* Modules Section */
+    .modules-section {
+      padding: 4rem 0;
+      background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
+    }
+    
+    .modules-section h2 {
+      text-align: center;
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: #1a202c;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    
+    .section-subtitle {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #4a5568;
+      margin-bottom: 4rem;
+      font-weight: 400;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 2.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .module-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      transition: all 0.4s ease;
+      border: 1px solid #e2e8f0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .module-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .module-card.current::before {
+      background: linear-gradient(90deg, #ed8936, #dd6b20);
+    }
+    
+    .module-card.next::before {
+      background: linear-gradient(90deg, #4299e1, #3182ce);
+    }
+    
+    .module-card.future::before {
+      background: linear-gradient(90deg, #718096, #4a5568);
+    }
+    
+    .module-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.12);
+    }
+    
+    .module-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .module-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: white;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    
+    .module-card.current .module-icon {
+      background: linear-gradient(135deg, #ed8936, #dd6b20);
+    }
+    
+    .module-card.next .module-icon {
+      background: linear-gradient(135deg, #4299e1, #3182ce);
+    }
+    
+    .module-card.future .module-icon {
+      background: linear-gradient(135deg, #718096, #4a5568);
+    }
+    
+    .status-badge {
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .status-badge.in-progress {
+      background: linear-gradient(135deg, #fed7d7, #fbb6ce);
+      color: #c53030;
+    }
+    
+    .status-badge.upcoming {
+      background: linear-gradient(135deg, #bee3f8, #90cdf4);
+      color: #2b6cb0;
+    }
+    
+    .status-badge.future {
+      background: linear-gradient(135deg, #e2e8f0, #cbd5e0);
+      color: #4a5568;
+    }
+    
+    .module-content h3 {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+      color: #1a202c;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    
+    .module-content > p {
+      color: #4a5568;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    
+    .module-progress {
+      margin-bottom: 2.5rem;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #edf2f7;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #48bb78, #38a169);
+      transition: width 0.6s ease;
+      position: relative;
+    }
+    
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    .progress-text {
+      font-size: 0.95rem;
+      color: #4a5568;
+      font-weight: 600;
+    }
+    
+    .module-topics h4 {
+      margin-bottom: 1.25rem;
+      color: #1a202c;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    
+    .topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    
+    .topic-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.95rem;
+      padding: 0.75rem;
+      background: #f8fafc;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .topic-item:hover {
+      background: #edf2f7;
+      transform: translateX(4px);
+    }
+    
+    .topic-icon {
+      font-size: 0.9rem;
+      min-width: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .topic-icon:not(.pending):not(.locked) {
+      color: #48bb78;
+    }
+    
+    .topic-icon.pending {
+      color: #ed8936;
+    }
+    
+    .topic-icon.locked {
+      color: #a0aec0;
+    }
+    
+    .module-actions {
+      margin-top: 2.5rem;
+    }
+    
+    .btn-primary, .btn-disabled {
+      width: 100%;
+      padding: 1.25rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4299e1, #3182ce);
+      color: white;
+      box-shadow: 0 4px 16px rgba(66,153,225,0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(66,153,225,0.4);
+    }
+    
+    .btn-disabled {
+      background: #edf2f7;
+      color: #a0aec0;
+      cursor: not-allowed;
+    }
+    
+    .action-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+    
+    .action-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #4299e1;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      background: #ebf8ff;
+      font-weight: 500;
+    }
+    
+    .action-link:hover:not(.disabled) {
+      background: #bee3f8;
+      color: #2b6cb0;
+      transform: translateY(-1px);
+    }
+    
+    .action-link.disabled {
+      color: #a0aec0;
+      cursor: not-allowed;
+      background: #f7fafc;
+    }
+    
+    /* Header and Navigation */
+    .header {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1a202c;
+      text-decoration: none;
+    }
+    
+    .main-nav {
+      display: flex;
+      gap: 2rem;
+    }
+    
+    .nav-link {
+      color: #4a5568;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:hover {
+      color: #2d3748;
+      background: #f7fafc;
+    }
+    
+    .nav-link.active {
+      color: #4299e1;
+      background: #ebf8ff;
+    }
+    
+    /* Header Styles */
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .user-avatar:hover {
+      border-color: #4299e1;
+      transform: scale(1.05);
+    }
+    
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .avatar-fallback {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #4299e1, #3182ce);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    
+    .user-info-header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .user-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a202c;
+    }
+    
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-secondary {
+      background: #f7fafc;
+      color: #4a5568;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .btn-secondary:hover {
+      background: #edf2f7;
+      color: #2d3748;
+      transform: translateY(-1px);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .hero-section {
+        padding: 3rem 0;
+        text-align: center;
+      }
+      
+      .hero-content h1 {
+        font-size: 2.2rem;
+        line-height: 1.2;
+      }
+      
+      .hero-content p {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+      
+      .welcome-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+      
+      .stat-card {
+        padding: 1.25rem;
+      }
+      
+      .stat-value {
+        font-size: 1.8rem;
+      }
+      
+      .stat-label {
+        font-size: 0.85rem;
+      }
+      
+      .modules-section {
+        padding: 2rem 0;
+      }
+      
+      .modules-section h2 {
+        font-size: 2.2rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2.5rem;
+        padding: 0 1rem;
+      }
+      
+      .modules-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .module-card {
+        padding: 1.75rem;
+        margin: 0 0.5rem;
+      }
+      
+      .module-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .module-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 1.6rem;
+      }
+      
+      .module-content h3 {
+        font-size: 1.4rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .action-links {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .action-link {
+        justify-content: center;
+        padding: 0.875rem 1rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero-content h1 {
+        font-size: 1.9rem;
+      }
+      
+      .hero-content p {
+        font-size: 0.95rem;
+      }
+      
+      .welcome-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .modules-section h2 {
+        font-size: 1.9rem;
+      }
+      
+      .module-card {
+        padding: 1.5rem;
+        margin: 0;
+      }
+      
+      .module-content h3 {
+        font-size: 1.3rem;
+      }
+      
+      .topic-item {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body class="dashboard-body">
@@ -32,9 +904,9 @@
         <span>Code with Morais</span>
       </div>
       <nav class="main-nav">
-        <a href="#courses" class="nav-link active">Courses</a>
-        <a href="#progress" class="nav-link">Progress</a>
-        <a href="#assignments" class="nav-link">Assignments</a>
+        <a href="/dashboard" class="nav-link active">Dashboard</a>
+        <a href="/operators-mastery" class="nav-link">Practice</a>
+        <a href="/ide" class="nav-link">IDE</a>
         <a href="#help" class="nav-link">Help</a>
       </nav>
       <div class="user-menu">
@@ -93,174 +965,338 @@
     <section class="welcome-section">
       <div class="container">
         <div class="welcome-content">
-          <h1>Welcome back, <span id="user-name-welcome"></span>!</h1>
-          <p class="welcome-subtitle">Ready to continue your Python programming journey?</p>
+          <h1>Welcome back, <span id="user-name-welcome"></span>! 👨‍💻</h1>
+          <p class="welcome-subtitle">Master Python programming with hands-on practice and build the foundation for your coding journey</p>
           
+          <!-- Learning Path Overview -->
+          <div class="learning-path">
+            <h3>� Your Learning Journey</h3>
+            <div class="path-steps">
+              <div class="path-step completed">
+                <div class="step-header">
+                  <div class="step-icon">✅</div>
+                  <div class="step-status">
+                    <h4>Module 1: Operations & Data Types</h4>
+                    <p>Master Python's fundamental building blocks and operations</p>
+                  </div>
+                </div>
+                <div class="step-topics">
+                  <span class="topic-tag">Data Types</span>
+                  <span class="topic-tag">Arithmetic Operators</span>
+                  <span class="topic-tag">Assignment Operators</span>
+                  <span class="topic-tag">Comparison</span>
+                </div>
+              </div>
+              
+              <div class="path-step current">
+                <div class="step-header">
+                  <div class="step-icon">🎯</div>
+                  <div class="step-status">
+                    <h4>Module 2: Flow Control & Logic</h4>
+                    <p>Learn decision making and program flow control</p>
+                  </div>
+                </div>
+                <div class="step-topics">
+                  <span class="topic-tag next">Logical Operators</span>
+                  <span class="topic-tag next">If/Elif/Else</span>
+                  <span class="topic-tag next">Loops (for/while)</span>
+                  <span class="topic-tag next">Loop Controls</span>
+                </div>
+              </div>
+              
+              <div class="path-step future">
+                <div class="step-header">
+                  <div class="step-icon">🚀</div>
+                  <div class="step-status">
+                    <h4>Module 3: Data Structures</h4>
+                    <p>Work with collections and complex data</p>
+                  </div>
+                </div>
+                <div class="step-topics">
+                  <span class="topic-tag future">Lists & Operations</span>
+                  <span class="topic-tag future">Dictionaries</span>
+                  <span class="topic-tag future">Data Manipulation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Quick Actions -->
-          <div class="quick-actions" style="margin: 2rem 0; display: flex; gap: 1rem; flex-wrap: wrap;">
-            <a href="test.html" class="quick-action-btn" style="background: linear-gradient(135deg, #e53e3e, #c53030); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease;">
-              <i class="fas fa-clipboard-list"></i>
-              Take Assessment Test
-            </a>
-            <a href="test-teacher-dashboard.html" class="quick-action-btn" style="background: linear-gradient(135deg, #805ad5, #6b46c1); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease;">
-              <i class="fas fa-chalkboard-teacher"></i>
-              Teacher Dashboard
-            </a>
-            <a href="operators-mastery.html" class="quick-action-btn" style="background: linear-gradient(135deg, #4299e1, #3182ce); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease;">
-              <i class="fas fa-play"></i>
-              Continue Learning
-            </a>
-            <a href="operators-reference.html" class="quick-action-btn" style="background: linear-gradient(135deg, #48bb78, #38a169); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease;">
-              <i class="fas fa-book"></i>
-              Reference Guide
-            </a>
+          <div class="quick-actions">
+            <h3>⚡ Quick Actions</h3>
+            <div class="action-grid">
+              <a href="operators-mastery" class="action-card">
+                <div class="action-icon">🎯</div>
+                <div class="action-content">
+                  <h4>Continue Learning</h4>
+                  <p>Practice operators and master data types</p>
+                </div>
+              </a>
+              
+              <a href="operators-reference" class="action-card">
+                <div class="action-icon">�</div>
+                <div class="action-content">
+                  <h4>Reference Guide</h4>
+                  <p>Quick lookup for operators and syntax</p>
+                </div>
+              </a>
+              
+              <a href="gamepy" class="action-card">
+                <div class="action-icon">💻</div>
+                <div class="action-content">
+                  <h4>Practice IDE</h4>
+                  <p>Code in our interactive environment</p>
+                </div>
+              </a>
+              
+              <a href="test" class="action-card">
+                <div class="action-icon">🧪</div>
+                <div class="action-content">
+                  <h4>Test Knowledge</h4>
+                  <p>Validate your understanding</p>
+                </div>
+              </a>
+            </div>
           </div>
-          
-          <style>
-            .quick-action-btn:hover {
-              transform: translateY(-2px);
-            }
-          </style>
         </div>
-        <div class="quick-stats">
+        
+        <!-- Progress Stats -->
+        <div class="progress-stats">
           <div class="stat-card">
-            <i class="fab fa-python"></i>
-            <div class="stat-info">
+            <div class="stat-icon">🐍</div>
+            <div class="stat-content">
               <span class="stat-number">-</span>
-              <span class="stat-label">Python Lessons</span>
+              <span class="stat-label">Python Concepts</span>
+              <span class="stat-sublabel">Learned</span>
             </div>
           </div>
           <div class="stat-card">
-            <i class="fas fa-trophy"></i>
-            <div class="stat-info">
+            <div class="stat-icon">📈</div>
+            <div class="stat-content">
               <span class="stat-number">-</span>
-              <span class="stat-label">Course Progress</span>
+              <span class="stat-label">Module Progress</span>
+              <span class="stat-sublabel">Completed</span>
             </div>
           </div>
           <div class="stat-card">
-            <i class="fas fa-code"></i>
-            <div class="stat-info">
+            <div class="stat-icon">💪</div>
+            <div class="stat-content">
               <span class="stat-number">-</span>
-              <span class="stat-label">Challenges Solved</span>
+              <span class="stat-label">Exercises Solved</span>
+              <span class="stat-sublabel">Hands-on Practice</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Course Grid -->
-    <section class="courses-section">
+    <!-- Learning Modules Section -->
+    <section class="modules-section">
       <div class="container">
-        <h2>Your Courses</h2>
-        <div class="course-grid">
-          <div class="course-card">
-            <div class="course-header">
-              <div class="course-icon">
-                <i class="fab fa-python"></i>
+        <h2>📚 Learning Modules</h2>
+        <p class="section-subtitle">Master Python concepts step by step with hands-on practice</p>
+        
+        <div class="modules-grid">
+          <!-- Module 1: Operations & Data Types -->
+          <div class="module-card current">
+            <div class="module-header">
+              <div class="module-icon">
+                <i class="fas fa-calculator"></i>
               </div>
-              <div class="course-progress">
-                <span>-%</span>
+              <div class="module-status">
+                <span class="status-badge in-progress">In Progress</span>
               </div>
             </div>
-            <h3>Python Fundamentals</h3>
-            <p>Variables, operators, and data types</p>
-            <div class="course-meta">
-              <span><i class="fas fa-clock"></i> Loading...</span>
-              <span><i class="fas fa-book"></i> -/4 lessons</span>
+            
+            <div class="module-content">
+              <h3>Module 1: Operations & Data Types</h3>
+              <p>Master Python's fundamental building blocks and operations</p>
+              
+              <div class="module-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">0% Complete</span>
+              </div>
+              
+              <div class="module-topics">
+                <h4>📖 What You'll Learn:</h4>
+                <div class="topic-list">
+                  <div class="topic-item">
+                    <i class="fas fa-check-circle topic-icon"></i>
+                    <span>Data Types: str, int, float, bool</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-check-circle topic-icon"></i>
+                    <span>Arithmetic Operators (+, -, *, /, %, **, //)</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-check-circle topic-icon"></i>
+                    <span>Assignment Operators (=, +=, -=, *=, etc.)</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-check-circle topic-icon"></i>
+                    <span>Comparison Operators (==, !=, <, >, <=, >=)</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-circle topic-icon pending"></i>
+                    <span>Logical Operators (and, or, not)</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-circle topic-icon pending"></i>
+                    <span>Identity & Containment (is, in)</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-circle topic-icon pending"></i>
+                    <span>Operator Precedence & Execution Order</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="module-actions">
+                <a href="operators-mastery" class="btn-primary btn-full">
+                  <i class="fas fa-play"></i>
+                  Continue Learning
+                </a>
+                <div class="action-links">
+                  <a href="operators-reference" class="action-link">
+                    <i class="fas fa-book"></i>
+                    Reference Guide
+                  </a>
+                  <a href="/ide" class="action-link">
+                    <i class="fas fa-code"></i>
+                    Practice IDE
+                  </a>
+                </div>
+              </div>
             </div>
-            <div class="lesson-links" style="margin: 1rem 0;">
-              <a href="#" class="lesson-link locked">
-                <i class="fas fa-spinner fa-spin"></i> Loading...
-              </a>
-              <a href="#" class="lesson-link locked">
-                <i class="fas fa-spinner fa-spin"></i> Loading...
-              </a>
-            </div>
-            <button class="btn-disabled btn-full" disabled>Loading...</button>
           </div>
 
-          <div class="course-card">
-            <div class="course-header">
-              <div class="course-icon">
+          <!-- Module 2: Flow Control -->
+          <div class="module-card next">
+            <div class="module-header">
+              <div class="module-icon">
                 <i class="fas fa-code-branch"></i>
               </div>
-              <div class="course-progress">
-                <span>0%</span>
+              <div class="module-status">
+                <span class="status-badge upcoming">Coming Next</span>
               </div>
             </div>
-            <h3>Control Flow</h3>
-            <p>If/else statements, loops, and decision making</p>
-            <div class="course-meta">
-              <span><i class="fas fa-lock"></i> Locked</span>
-              <span><i class="fas fa-book"></i> 0/8 lessons</span>
+            
+            <div class="module-content">
+              <h3>Module 2: Flow Control with Decisions & Loops</h3>
+              <p>Learn to make decisions and control program flow</p>
+              
+              <div class="module-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">Unlocks after Module 1</span>
+              </div>
+              
+              <div class="module-topics">
+                <h4>🎯 What You'll Master:</h4>
+                <div class="topic-list">
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Branching Statements (if, elif, else)</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Nested & Compound Conditional Expressions</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Iteration with while Loops</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Iteration with for Loops</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Loop Controls (break, continue, pass)</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Nested Loops & Complex Conditions</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="module-actions">
+                <button class="btn-disabled btn-full" disabled>
+                  <i class="fas fa-lock"></i>
+                  Complete Module 1 First
+                </button>
+                <div class="action-links">
+                  <a href="lesson-control-flow" class="action-link disabled">
+                    <i class="fas fa-eye"></i>
+                    Preview Lessons
+                  </a>
+                </div>
+              </div>
             </div>
-            <div class="lesson-links" style="margin: 1rem 0;">
-              <a href="#" class="lesson-link locked">
-                <i class="fas fa-lock"></i> If/Else Statements
-              </a>
-              <a href="#" class="lesson-link locked">
-                <i class="fas fa-lock"></i> Loops
-              </a>
-            </div>
-            <button class="btn-disabled btn-full" disabled>Complete Fundamentals First</button>
           </div>
 
-          <div class="course-card">
-            <div class="course-header">
-              <div class="course-icon">
+          <!-- Module 3: Data Structures -->
+          <div class="module-card future">
+            <div class="module-header">
+              <div class="module-icon">
                 <i class="fas fa-list"></i>
               </div>
-              <div class="course-progress">
-                <span>0%</span>
+              <div class="module-status">
+                <span class="status-badge future">Future Module</span>
               </div>
             </div>
-            <h3>Data Structures</h3>
-            <p>Lists, dictionaries, and tuples</p>
-            <div class="course-meta">
-              <span><i class="fas fa-lock"></i> Locked</span>
-              <span><i class="fas fa-book"></i> 0/10 lessons</span>
-            </div>
-            <div class="lesson-links" style="margin: 1rem 0;">
-              <a href="#" class="lesson-link locked">
-                <i class="fas fa-lock"></i> Lists
-              </a>
-              <a href="#" class="lesson-link locked">
-                <i class="fas fa-lock"></i> Dictionaries
-              </a>
-            </div>
-            <button class="btn-disabled btn-full" disabled>Complete Control Flow First</button>
-          </div>
-
-          <div class="course-card">
-            <div class="course-header">
-              <div class="course-icon">
-                <i class="fas fa-function"></i>
+            
+            <div class="module-content">
+              <h3>Module 3: Data Structures & Collections</h3>
+              <p>Work with lists, dictionaries, and complex data</p>
+              
+              <div class="module-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">Available Later</span>
               </div>
-              <div class="course-progress">
-                <span>0%</span>
+              
+              <div class="module-topics">
+                <h4>🚀 Advanced Topics:</h4>
+                <div class="topic-list">
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Lists & List Operations</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Data Manipulation & Sorting</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Dictionaries & Key-Value Pairs</span>
+                  </div>
+                  <div class="topic-item">
+                    <i class="fas fa-lock topic-icon locked"></i>
+                    <span>Tuples & Immutable Data</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="module-actions">
+                <button class="btn-disabled btn-full" disabled>
+                  <i class="fas fa-hourglass-half"></i>
+                  Coming Soon
+                </button>
               </div>
             </div>
-            <h3>Functions</h3>
-            <p>Creating reusable code with functions</p>
-            <div class="course-meta">
-              <span><i class="fas fa-lock"></i> Locked</span>
-              <span><i class="fas fa-book"></i> 0/6 lessons</span>
-            </div>
-            <div class="lesson-links" style="margin: 1rem 0;">
-              <a href="#" class="lesson-link locked">
-                <i class="fas fa-lock"></i> Function Basics
-              </a>
-              <a href="#" class="lesson-link locked">
-                <i class="fas fa-lock"></i> Parameters & Return
-              </a>
-            </div>
-            <button class="btn-disabled btn-full" disabled>Complete Data Structures First</button>
           </div>
         </div>
       </div>
     </section>
   </main>
 
+  <script type="module" src="/app.js"></script>
   <script type="module" src="/dashboard.js"></script>
 </body>
 </html>
