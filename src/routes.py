@@ -1,5 +1,5 @@
 # src/routes.py
-from flask import Blueprint, render_template, redirect, url_for, session, request, jsonify, current_app
+from flask import Blueprint, render_template, redirect, url_for, session, request, jsonify, current_app, send_file
 import firebase_admin
 import pytz
 from firebase_admin import firestore
@@ -317,6 +317,13 @@ def profile():
     user_id = session.get('user_id')
     user = db.collection('users').document(user_id).get().to_dict() if db else {}
     return render_template('profile.html', user=user)
+
+@routes_bp.route('/projects')
+def projects():
+    """Serve the Python projects practice page."""
+    if 'user_id' not in session:
+        return redirect(url_for('auth.index'))
+    return render_template('projects.html', active_page='projects')
 
 @routes_bp.route('/lesson/<lesson_id>')
 def lesson(lesson_id):
