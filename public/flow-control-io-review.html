@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow Control & I/O Operations Review | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #dee2e6;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 1em;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .nav-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #2b5876;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section h3 {
+            color: #4e4376;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .section h4 {
+            color: #667eea;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .concept-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .concept-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .concept-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .concept-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .code-block .keyword {
+            color: #c678dd;
+        }
+
+        .code-block .string {
+            color: #98c379;
+        }
+
+        .code-block .number {
+            color: #d19a66;
+        }
+
+        .code-block .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        .code-block .function {
+            color: #61afef;
+        }
+
+        code {
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #c7254e;
+            font-size: 0.9em;
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid;
+        }
+
+        .alert-danger {
+            background: #fee;
+            border-color: #e74c3c;
+            color: #c0392b;
+        }
+
+        .alert-success {
+            background: #efd;
+            border-color: #27ae60;
+            color: #229954;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            border-color: #3498db;
+            color: #2980b9;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #f39c12;
+            color: #e67e22;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .activity-card h3 {
+            color: white;
+            margin-top: 0;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .activity-content {
+            background: white;
+            color: #333;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .dropdown-select {
+            background: #fff3cd;
+            color: #856404;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            border: 2px solid #ffc107;
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 4px;
+        }
+
+        .solution-box {
+            background: #e8f5e9;
+            border-left: 5px solid #27ae60;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .solution-box.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 1000px;
+            }
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            margin: 10px 5px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .key-point {
+            background: #fff3cd;
+            border-left: 5px solid #f39c12;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .key-point strong {
+            color: #e67e22;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #495057;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .nav-tab {
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+
+            .back-link {
+                position: static;
+                display: block;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="/dashboard.html" class="back-link">← Back to Dashboard</a>
+            <h1>🐍 Flow Control & I/O Review</h1>
+            <p>Master Conditional Logic, Loops, and Input/Output Operations</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="flow-control">Flow Control</button>
+            <button class="nav-tab" data-tab="loops">Loops</button>
+            <button class="nav-tab" data-tab="io-operations">I/O Operations</button>
+            <button class="nav-tab" data-tab="activities">Activities</button>
+            <button class="nav-tab" data-tab="solutions">Solutions</button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Tab 1: Flow Control -->
+            <div class="tab-content active" id="flow-control">
+                <div class="section">
+                    <h2>A. Mastering Conditional Logic (if/elif/else)</h2>
+                    
+                    <p>The primary risk here is <strong>mismanaging the execution order</strong> and <strong>failing to define variables in all paths</strong>.</p>
+
+                    <h3>Key Concept: Mutually Exclusive Paths</h3>
+                    
+                    <p>In Python, the <code>if/elif/else</code> structure guarantees that <strong>only one block of code will execute</strong>. This is why order and operators are critical.</p>
+
+                    <table class="concept-table">
+                        <thead>
+                            <tr>
+                                <th>Condition</th>
+                                <th>Operator</th>
+                                <th>Example Use Case (Q38: Grading)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Specific Value</td>
+                                <td><code>==</code></td>
+                                <td>if grade == 100: (Only 100 is Outstanding)</td>
+                            </tr>
+                            <tr>
+                                <td>Upper Range</td>
+                                <td><code>>=</code></td>
+                                <td>elif grade >= 90: (Handles 90-99, since 100 was already handled)</td>
+                            </tr>
+                            <tr>
+                                <td>Lower Range</td>
+                                <td><code><=</code></td>
+                                <td>elif grade <= 70: (Handles 70 and below)</td>
+                            </tr>
+                            <tr>
+                                <td>Catch-all</td>
+                                <td><code>else:</code></td>
+                                <td>Catches everything not met above (71-89)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>🔴 Critical Error Review: Q17 (The NameError)</h3>
+
+                    <div class="alert alert-danger">
+                        <strong>The Problem:</strong>
+                        <p>When the function hits certain execution paths, the variable <code>subtotal</code> is never assigned a value, causing a <code>NameError</code> when the function attempts to return it.</p>
+                    </div>
+
+                    <div class="code-block"># ... Inside calcTotal function, when called with ("No", 500, .07, 0)
+<span class="comment"># 'if taxable == "Yes":' is False</span>
+<span class="keyword">elif</span> shipping == <span class="number">0</span>:
+    <span class="keyword">pass</span>  <span class="comment"># 'pass' is just a placeholder - means "do nothing"</span>
+<span class="comment"># 'else:' is skipped</span>
+<span class="keyword">return</span> subtotal  <span class="comment"># ❌ subtotal was never defined in the 'elif' path!</span></div>
+
+                    <div class="alert alert-warning">
+                        <strong>⚠️ The Fix:</strong> Every possible execution path must define the variable you intend to return or use later.
+                    </div>
+
+                    <div class="key-point">
+                        <strong>💡 Key Takeaway:</strong>
+                        Always ensure that variables are defined in ALL possible code paths before they are used!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Loops -->
+            <div class="tab-content" id="loops">
+                <div class="section">
+                    <h2>B. Deep Dive: Loop Structures (for and while)</h2>
+                    
+                    <p>Loops are the foundation of repeated actions. The key is knowing <strong>which one to use</strong> and <strong>how to control its iteration</strong>.</p>
+
+                    <h3>for Loops and range()</h3>
+                    
+                    <p>The <code>for</code> loop is ideal when you know the number of iterations or are looping through a collection (list, string, etc.).</p>
+
+                    <div class="alert alert-info">
+                        <strong>Remember:</strong> <code>range(start, stop)</code> - The <code>stop</code> value is <strong>exclusive</strong>.
+                        <br>To iterate 5 times (weeks 1 to 5), you need <code>range(1, 6)</code>.
+                    </div>
+
+                    <h3>break Statement</h3>
+                    
+                    <p>The <code>break</code> keyword immediately terminates the innermost loop.</p>
+
+                    <h4>Example (Q35):</h4>
+                    <div class="code-block">cities = [<span class="string">'Anchorage'</span>, <span class="string">'Juneau'</span>, <span class="string">'Fairbanks'</span>, <span class="string">'Ketchikan'</span>, <span class="string">'Sitka'</span>, <span class="string">'Wasilla'</span>]
+<span class="keyword">for</span> city <span class="keyword">in</span> cities:
+    <span class="function">print</span>(<span class="string">f'<span class="keyword">{</span>city<span class="keyword">}</span> is a famous Alaskan city.'</span>)  <span class="comment"># This executes FIRST</span>
+    <span class="keyword">if</span> city == <span class="string">'Ketchikan'</span>:
+        <span class="keyword">break</span>  <span class="comment"># This stops the loop</span></div>
+
+                    <div class="alert alert-success">
+                        Since the <code>print()</code> happens <strong>before</strong> the break is checked, <strong>'Ketchikan' is printed</strong>, resulting in <strong>4 cities</strong> being printed total.
+                    </div>
+
+                    <h3>while Loops for Validation (Q29)</h3>
+                    
+                    <p>A <code>while</code> loop runs indefinitely until its condition becomes <code>False</code>.</p>
+                    
+                    <p><strong>Goal:</strong> Keep asking for input until the response is valid.</p>
+
+                    <div class="code-block">location = [<span class="string">"North"</span>, <span class="string">"South"</span>, <span class="string">"West"</span>, <span class="string">"East"</span>]
+
+<span class="comment"># Must get the first response to initialize the variable</span>
+response = <span class="function">input</span>(<span class="string">"Enter North, South, West, or East for a location: "</span>) 
+
+<span class="comment"># The loop continues AS LONG AS the response is NOT in the list</span>
+<span class="keyword">while</span> response <span class="keyword">not in</span> location:  <span class="comment"># The key is 'not in'</span>
+    <span class="function">print</span>(<span class="string">"Try again."</span>)
+    <span class="comment"># Must ask for input again INSIDE the loop</span>
+    response = <span class="function">input</span>(<span class="string">"Enter North, South, West, or East for a location: "</span>)
+
+<span class="function">print</span>(response)</div>
+
+                    <div class="key-point">
+                        <strong>💡 Key Points:</strong>
+                        <ul>
+                            <li>Must initialize the variable BEFORE the while loop</li>
+                            <li>Use <code>not in</code> to check if value is NOT in the list</li>
+                            <li>Must ask for input again INSIDE the loop</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: I/O Operations -->
+            <div class="tab-content" id="io-operations">
+                <div class="section">
+                    <h2>🔴 Deep Dive: Input and Output Operations (I/O)</h2>
+
+                    <h3>A. Type Casting and String Manipulation</h3>
+                    
+                    <p>The confusion here involves handling different data types (<code>int</code>, <code>float</code>, <code>str</code>) and joining text correctly.</p>
+
+                    <table class="concept-table">
+                        <thead>
+                            <tr>
+                                <th>Quiz Concept</th>
+                                <th>Explanation</th>
+                                <th>Correct Syntax</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Casting to String</td>
+                                <td>To ensure a number cannot be used in a calculation, cast it to <code>str</code>.</td>
+                                <td><code>serialnumber = str(55555)</code></td>
+                            </tr>
+                            <tr>
+                                <td>Casting to Float</td>
+                                <td>Use <code>float()</code> for numbers that should allow decimals (like currency).</td>
+                                <td><code>amount = float(44)</code></td>
+                            </tr>
+                            <tr>
+                                <td>String Concatenation</td>
+                                <td>Use the <code>+</code> operator to join strings (text) together.</td>
+                                <td><code>message = "Serial: " + serialnumber</code></td>
+                            </tr>
+                            <tr>
+                                <td>print() Continuation</td>
+                                <td>Use a comma (<code>,</code>) to separate multiple arguments in a single <code>print()</code> call.</td>
+                                <td><code>print(..., "and you are based...")</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>B. File I/O and Safety (with open() and os)</h3>
+                    
+                    <p>File I/O requires strict adherence to modes and using the <code>os</code> module for safety checks.</p>
+
+                    <table class="concept-table">
+                        <thead>
+                            <tr>
+                                <th>Quiz Concept</th>
+                                <th>Explanation</th>
+                                <th>Correct Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>File Safety Check</td>
+                                <td>Use <code>os.path.exists()</code> to verify a file is present before reading it. Prevents crashes.</td>
+                                <td><code>if os.path.exists('work.txt') == True:</code></td>
+                            </tr>
+                            <tr>
+                                <td>File Reading</td>
+                                <td>Once open, use methods like <code>.readline()</code> to read one line of text.</td>
+                                <td><code>workFile.readline()</code></td>
+                            </tr>
+                            <tr>
+                                <td>Write Mode ('w')</td>
+                                <td>'w' mode guarantees the file is <strong>overwritten</strong>. No old data is left.</td>
+                                <td><code>open('log.txt', 'w')</code></td>
+                            </tr>
+                            <tr>
+                                <td>file.close()</td>
+                                <td>When using <code>with open(...)</code>, the file is closed automatically, so <code>file.close()</code> is NOT needed.</td>
+                                <td><code>with open('log.txt', 'w') as file: ...</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-info">
+                        <strong>📁 File Modes Quick Reference:</strong>
+                        <ul>
+                            <li><code>'r'</code> - Read only (default)</li>
+                            <li><code>'w'</code> - Write (overwrites existing file)</li>
+                            <li><code>'a'</code> - Append (adds to end of file)</li>
+                            <li><code>'x'</code> - Create (fails if file exists)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Activities -->
+            <div class="tab-content" id="activities">
+                <div class="section">
+                    <h2>🎯 Practice Activities</h2>
+
+                    <!-- Activity 1 -->
+                    <div class="activity-card">
+                        <h3>Activity 1: Complete the Bonus Logic</h3>
+                        <p><strong>Goal:</strong> Correctly implement the bonus logic using an if/else statement, ensuring the <code>bonus_amount</code> variable is defined regardless of the sales result.</p>
+                        
+                        <div class="activity-content">
+                            <div class="code-block">sales_amount = <span class="number">31000</span>
+
+<span class="comment"># Write the code here, defining bonus_amount in ALL cases</span>
+<span class="comment"># Sales > 30000 gets "5% bonus", otherwise "no bonus"</span>
+
+<span class="comment"># Solution using standard if/else:</span>
+<span class="keyword">if</span> <span class="dropdown-select">Choose One...</span>:
+    bonus_amount = <span class="string">"5% bonus"</span>
+<span class="dropdown-select">Choose One...</span>:
+    bonus_amount = <span class="string">"no bonus"</span>
+    
+<span class="function">print</span>(<span class="string">f"Bonus: <span class="keyword">{</span>bonus_amount<span class="keyword">}</span>"</span>)</div>
+                            
+                            <p><strong>Options:</strong></p>
+                            <ul>
+                                <li><code>sales_amount > 30000</code></li>
+                                <li><code>sales_amount >= 30000</code></li>
+                                <li><code>elif:</code></li>
+                                <li><code>else:</code></li>
+                            </ul>
+                            
+                            <button class="btn btn-success" onclick="toggleSolution('solution1')">Show Solution</button>
+                        </div>
+                    </div>
+
+                    <!-- Activity 2 -->
+                    <div class="activity-card">
+                        <h3>Activity 2: Write the range Loop</h3>
+                        <p><strong>Goal:</strong> Write a loop that prints the numbers 2, 4, 6, 8, 10.</p>
+                        <p>Use <code>range()</code> with three arguments: <code>range(start, stop, step)</code>.</p>
+                        
+                        <div class="activity-content">
+                            <div class="code-block"><span class="comment"># CODE ACTIVITY 2: Write the for loop here</span>
+<span class="keyword">for</span> num <span class="keyword">in</span> <span class="function">range</span>(<span class="dropdown-select">Choose One...</span>, <span class="dropdown-select">Choose One...</span>, <span class="dropdown-select">Choose One...</span>):
+    <span class="function">print</span>(num)</div>
+                            
+                            <p><strong>Options:</strong></p>
+                            <ul>
+                                <li>Start: 1, 2, 0</li>
+                                <li>Stop: 10, 11, 12</li>
+                                <li>Step: 1, 2, 3</li>
+                            </ul>
+                            
+                            <button class="btn btn-success" onclick="toggleSolution('solution2')">Show Solution</button>
+                        </div>
+                    </div>
+
+                    <!-- Activity 3 -->
+                    <div class="activity-card">
+                        <h3>Activity 3: Data Type Conversion</h3>
+                        <p><strong>Goal:</strong> Convert a variable to a string and print its type.</p>
+                        
+                        <div class="activity-content">
+                            <div class="code-block">zip_code = <span class="number">84095</span>
+
+<span class="comment"># 1. Convert zip_code to a string and store it in the same variable</span>
+zip_code = <span class="dropdown-select">Choose One...</span>(zip_code)
+
+<span class="comment"># 2. Print the data type of the zip code</span>
+<span class="function">print</span>(<span class="dropdown-select">Choose One...</span>(zip_code))</div>
+                            
+                            <p><strong>Options:</strong></p>
+                            <ul>
+                                <li><code>str</code>, <code>int</code>, <code>float</code></li>
+                                <li><code>type</code>, <code>typeof</code>, <code>datatype</code></li>
+                            </ul>
+                            
+                            <button class="btn btn-success" onclick="toggleSolution('solution3')">Show Solution</button>
+                        </div>
+                    </div>
+
+                    <!-- Activity 4 -->
+                    <div class="activity-card">
+                        <h3>Activity 4: Open and Read a File</h3>
+                        <p><strong>Goal:</strong> Write the code to open a file named <code>list.txt</code> in read-only mode and display its contents.</p>
+                        
+                        <div class="activity-content">
+                            <div class="code-block"><span class="comment"># 1. Write code to open the file in read mode ('r') and store contents</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">"list.txt"</span>, <span class="dropdown-select">Choose One...</span>) <span class="keyword">as</span> file:
+    content = <span class="dropdown-select">Choose One...</span>
+
+<span class="comment"># 2. Write code to display the text</span>
+<span class="function">print</span>(content)</div>
+                            
+                            <p><strong>Options:</strong></p>
+                            <ul>
+                                <li>Mode: <code>'r'</code>, <code>'w'</code>, <code>'a'</code></li>
+                                <li>Method: <code>file.read()</code>, <code>file.readline()</code>, <code>file.readlines()</code></li>
+                            </ul>
+                            
+                            <button class="btn btn-success" onclick="toggleSolution('solution4')">Show Solution</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Solutions -->
+            <div class="tab-content" id="solutions">
+                <div class="section">
+                    <h2>🔑 Activity Solutions</h2>
+
+                    <!-- Solution 1 -->
+                    <div class="alert alert-success">
+                        <h3>Activity 1 Solution (Bonus Logic)</h3>
+                        <div class="code-block">sales_amount = <span class="number">31000</span>
+
+<span class="keyword">if</span> sales_amount > <span class="number">30000</span>:
+    bonus_amount = <span class="string">"5% bonus"</span>
+<span class="keyword">else</span>:
+    bonus_amount = <span class="string">"no bonus"</span>
+    
+<span class="function">print</span>(<span class="string">f"Bonus: <span class="keyword">{</span>bonus_amount<span class="keyword">}</span>"</span>)</div>
+                        <p><strong>The dropdowns would be:</strong></p>
+                        <ul>
+                            <li>First dropdown: <code>sales_amount > 30000</code></li>
+                            <li>Second dropdown: <code>else:</code></li>
+                        </ul>
+                    </div>
+
+                    <!-- Solution 2 -->
+                    <div class="alert alert-success">
+                        <h3>Activity 2 Solution (range Loop)</h3>
+                        <div class="code-block"><span class="keyword">for</span> num <span class="keyword">in</span> <span class="function">range</span>(<span class="number">2</span>, <span class="number">12</span>, <span class="number">2</span>):
+    <span class="function">print</span>(num)</div>
+                        <p><strong>The dropdowns would be:</strong></p>
+                        <ul>
+                            <li>Start: <code>2</code></li>
+                            <li>Stop: <code>12</code> (remember, stop is exclusive, so to get 10, we need 12)</li>
+                            <li>Step: <code>2</code></li>
+                        </ul>
+                        <p><strong>Output:</strong> 2, 4, 6, 8, 10</p>
+                    </div>
+
+                    <!-- Solution 3 -->
+                    <div class="alert alert-success">
+                        <h3>Activity 3 Solution (Data Type Conversion)</h3>
+                        <div class="code-block">zip_code = <span class="number">84095</span>
+
+<span class="comment"># 1. Convert zip_code to a string</span>
+zip_code = <span class="function">str</span>(zip_code)
+
+<span class="comment"># 2. Print the data type of the zip code</span>
+<span class="function">print</span>(<span class="function">type</span>(zip_code))</div>
+                        <p><strong>The dropdowns would be:</strong></p>
+                        <ul>
+                            <li>First dropdown: <code>str</code></li>
+                            <li>Second dropdown: <code>type</code></li>
+                        </ul>
+                        <p><strong>Output:</strong> <code>&lt;class 'str'&gt;</code></p>
+                    </div>
+
+                    <!-- Solution 4 -->
+                    <div class="alert alert-success">
+                        <h3>Activity 4 Solution (Open and Read a File)</h3>
+                        <div class="code-block"><span class="comment"># 1. Write code to open the file in read mode ('r') and store contents</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">"list.txt"</span>, <span class="string">'r'</span>) <span class="keyword">as</span> file:
+    content = file.<span class="function">read</span>()  <span class="comment"># .read() gets all content; .readline() gets just the first line</span>
+
+<span class="comment"># 2. Write code to display the text</span>
+<span class="function">print</span>(content)</div>
+                        <p><strong>The dropdowns would be:</strong></p>
+                        <ul>
+                            <li>Mode: <code>'r'</code></li>
+                            <li>Method: <code>file.read()</code></li>
+                        </ul>
+                        <div class="alert alert-info">
+                            <strong>Note:</strong>
+                            <ul>
+                                <li><code>file.read()</code> - Reads the entire file content as one string</li>
+                                <li><code>file.readline()</code> - Reads just one line at a time</li>
+                                <li><code>file.readlines()</code> - Reads all lines and returns them as a list</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        const tabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+
+                // Add active class to clicked tab
+                tab.classList.add('active');
+
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Solution toggle functionality
+        function toggleSolution(solutionId) {
+            const solution = document.getElementById(solutionId);
+            if (solution) {
+                solution.classList.toggle('show');
+            }
+        }
+    </script>
+</body>
+</html>

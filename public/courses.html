@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masterclass Courses - Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .course-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .course-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .course-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .course-header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .course-content {
+            padding: 30px;
+        }
+
+        .course-description {
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .course-topics {
+            margin-bottom: 25px;
+        }
+
+        .course-topics h3 {
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .course-topics ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .course-topics li {
+            color: #666;
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .course-topics li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .course-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stat {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #999;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .course-buttons {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .back-home a {
+            color: white;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-home a:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .course-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Masterclass Courses</h1>
+            <p>Interactive Python learning with hands-on practice</p>
+        </div>
+
+        <div class="courses-grid">
+            <!-- Python Operators Course -->
+            <div class="course-card">
+                <div class="course-header">
+                    <div class="course-icon">⚙️</div>
+                    <h2>Python Operators</h2>
+                    <p>Master all operator types</p>
+                </div>
+                <div class="course-content">
+                    <p class="course-description">
+                        Learn to use arithmetic, comparison, logical, identity, membership, and bitwise operators with real-world examples and practice problems.
+                    </p>
+
+                    <div class="course-stats">
+                        <div class="stat">
+                            <div class="stat-number">7</div>
+                            <div class="stat-label">Topics</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">44</div>
+                            <div class="stat-label">Slides</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">14</div>
+                            <div class="stat-label">Quizzes</div>
+                        </div>
+                    </div>
+
+                    <div class="course-topics">
+                        <h3>What You'll Learn:</h3>
+                        <ul>
+                            <li>Arithmetic operators (+, -, *, /, //, %, **)</li>
+                            <li>Assignment operators (=, +=, -=, etc.)</li>
+                            <li>Comparison operators (<, >, <=, >=, ==, !=)</li>
+                            <li>Logical operators (and, or, not)</li>
+                            <li>Identity operators (is, is not)</li>
+                            <li>Membership operators (in, not in)</li>
+                            <li>Bitwise operators (&, |, ^, ~, <<, >>)</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-buttons">
+                        <a href="python_operators_masterclass.html" class="btn btn-primary">Start Masterclass</a>
+                        <a href="python_operators_handout.html" class="btn btn-secondary" target="_blank">Download Handout</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Python Lists Course -->
+            <div class="course-card">
+                <div class="course-header">
+                    <div class="course-icon">📋</div>
+                    <h2>Python Lists</h2>
+                    <p>Complete list mastery</p>
+                </div>
+                <div class="course-content">
+                    <p class="course-description">
+                        Become a list expert! Learn indexing, slicing, methods, nested lists, and list comprehension with practical examples.
+                    </p>
+
+                    <div class="course-stats">
+                        <div class="stat">
+                            <div class="stat-number">6</div>
+                            <div class="stat-label">Topics</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">26</div>
+                            <div class="stat-label">Slides</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Methods</div>
+                        </div>
+                    </div>
+
+                    <div class="course-topics">
+                        <h3>What You'll Learn:</h3>
+                        <ul>
+                            <li>Creating and organizing lists</li>
+                            <li>Positive and negative indexing</li>
+                            <li>Slicing with start, stop, step</li>
+                            <li>List methods (append, extend, insert, remove, pop)</li>
+                            <li>Searching and sorting (index, count, sort, reverse)</li>
+                            <li>Nested lists and list comprehension</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-buttons">
+                        <a href="python_lists_masterclass.html" class="btn btn-primary">Start Masterclass</a>
+                        <a href="python_lists_handout.html" class="btn btn-secondary" target="_blank">Download Handout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-home">
+            <a href="index.html">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

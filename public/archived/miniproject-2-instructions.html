@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Miniproject 2: Text-Based Adventure Game Instructions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 5px solid #007bff;
+        }
+        
+        .step-card {
+            background: white;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+        
+        .step-header {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .prompt-generator {
+            background: #e7f3ff;
+            border: 2px dashed #007bff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        
+        .interactive-prompt {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-prompt:hover {
+            background: #ffe8a1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .reveal-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px 0;
+            transition: background 0.3s;
+        }
+        
+        .reveal-button:hover {
+            background: #218838;
+        }
+        
+        .hidden-content {
+            display: none;
+            background: #d1ecf1;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .warning-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .deliverables {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .challenge-emoji {
+            font-size: 2em;
+            margin: 0 10px;
+        }
+        
+        .step-counter {
+            display: inline-block;
+            background: #dc3545;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .code-hint {
+            font-family: 'Courier New', monospace;
+            background: #f1f3f4;
+            padding: 5px 8px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        .progress-tracker {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .checkbox-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="challenge-emoji">🎮</span>Flow Control Miniproject: The Logic Gate Challenge<span class="challenge-emoji">🧠</span></h1>
+            <h2>Focus: Flow Control (Decisions and Loops)</h2>
+            <p><strong>Goal:</strong> Build a "Higher or Lower" guessing game while learning to use AI as a Logic Consultant</p>
+        </div>
+
+        <div class="warning-box no-select">
+            <strong>⚠️ IMPORTANT RULE:</strong> You are <u>forbidden</u> from asking Gemini to write the final Python code for you! You must only ask for advice on logic, structure, strategy, and best practices. Think of Gemini as your programming mentor, not your code writer.
+        </div>
+
+        <div class="section">
+            <h3>📝 The Challenge: Build a Guessing Game</h3>
+            <p>Your program must:</p>
+            <ul>
+                <li>Select a random number between 1 and 100</li>
+                <li>Allow the user to guess repeatedly using a loop</li>
+                <li>Use decisions (if/elif/else) to give hints ("Too High," "Too Low," "Correct")</li>
+                <li>Track the number of guesses and display the final score</li>
+            </ul>
+        </div>
+
+        <div class="progress-tracker">
+            <h4>📊 Your Progress Tracker</h4>
+            <div class="checkbox-item">
+                <input type="checkbox" id="step1"> <label for="step1">Step 1: Game Loop Strategy</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="step2"> <label for="step2">Step 2: Input Error Handling</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="step3"> <label for="step3">Step 3: Basic Hint Logic</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="step4"> <label for="step4">Step 4: Advanced Hint Logic</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="step5"> <label for="step5">Step 5: Loop Termination</label>
+            </div>
+        </div>
+
+        <!-- Part 1: Game Loop -->
+        <div class="section">
+            <h3>🔄 Part 1: Setting up the Game Loop (while Loop)</h3>
+            
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-counter">1</span>Loop Strategy Design
+                </div>
+                <p><strong>Task:</strong> Design the main game loop structure.</p>
+                
+                <div class="prompt-generator">
+                    <p><strong>Your Mission:</strong> Ask Gemini about loop strategies.</p>
+                    <button class="reveal-button" onclick="toggleContent('prompt1')">🎯 Reveal Prompt Guidelines</button>
+                    <div id="prompt1" class="hidden-content no-select">
+                        <p><strong>Key concepts to include in your prompt:</strong></p>
+                        <ul>
+                            <li>Mention you need a loop for unknown number of attempts</li>
+                            <li>Ask about <span class="code-hint">while True</span> vs <span class="code-hint">while guess != number</span></li>
+                            <li>Ask which is more "Pythonic" and why</li>
+                            <li>Ask about best practices for this type of loop</li>
+                        </ul>
+                        <p><em>Now craft your own unique prompt using these concepts!</em></p>
+                    </div>
+                </div>
+                
+                <div class="interactive-prompt" onclick="showHint('hint1')">
+                    💡 Click here after you get Gemini's response for coding hints
+                </div>
+                <div id="hint1" class="hidden-content">
+                    <p><strong>What to code:</strong> Write the opening line of your while loop based on Gemini's advice.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-counter">2</span>Handling Input Errors
+                </div>
+                <p><strong>Task:</strong> Prevent crashes when users enter text instead of numbers.</p>
+                
+                <div class="prompt-generator">
+                    <button class="reveal-button" onclick="toggleContent('prompt2')">🎯 Reveal Prompt Guidelines</button>
+                    <div id="prompt2" class="hidden-content no-select">
+                        <p><strong>Key concepts to include:</strong></p>
+                        <ul>
+                            <li>Mention what happens when <span class="code-hint">int("hello")</span> is called</li>
+                            <li>Ask about <span class="code-hint">try/except</span> vs other methods</li>
+                            <li>Ask how to use <span class="code-hint">continue</span> to skip to next loop iteration</li>
+                            <li>Ask about the safest approach for input validation</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="interactive-prompt" onclick="showHint('hint2')">
+                    💡 Click for coding guidance after Gemini responds
+                </div>
+                <div id="hint2" class="hidden-content">
+                    <p><strong>What to code:</strong> Create the input validation block that safely converts user input to integer.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 2: Decisions -->
+        <div class="section">
+            <h3>🤔 Part 2: Providing Hints (if/elif/else Decisions)</h3>
+            
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-counter">3</span>Basic Hint Logic
+                </div>
+                <p><strong>Task:</strong> Write the core comparison logic for "Too High," "Too Low," "Correct."</p>
+                
+                <div class="prompt-generator">
+                    <button class="reveal-button" onclick="toggleContent('prompt3')">🎯 Reveal Prompt Guidelines</button>
+                    <div id="prompt3" class="hidden-content no-select">
+                        <p><strong>Key concepts to ask about:</strong></p>
+                        <ul>
+                            <li>You have variables <span class="code-hint">guess</span> and <span class="code-hint">secret_number</span></li>
+                            <li>Ask about the most efficient order for the checks</li>
+                            <li>Ask what the final <span class="code-hint">else</span> block should represent</li>
+                            <li>Ask about the logic flow of if/elif/else for this scenario</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="interactive-prompt" onclick="showHint('hint3')">
+                    💡 Get coding direction here
+                </div>
+                <div id="hint3" class="hidden-content">
+                    <p><strong>What to code:</strong> Write your if/elif/else block that compares guess to secret_number.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-counter">4</span>Advanced Hint Logic
+                </div>
+                <p><strong>Task:</strong> Add "Very Close" hints for guesses within 5 of the target.</p>
+                
+                <div class="prompt-generator">
+                    <button class="reveal-button" onclick="toggleContent('prompt4')">🎯 Reveal Prompt Guidelines</button>
+                    <div id="prompt4" class="hidden-content no-select">
+                        <p><strong>Key concepts to explore:</strong></p>
+                        <ul>
+                            <li>Ask about compound conditions using <span class="code-hint">and</span></li>
+                            <li>Ask about checking if guess is higher AND within range of 5</li>
+                            <li>Mention absolute value functions for distance calculation</li>
+                            <li>Ask for the mathematical structure of the condition</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="interactive-prompt" onclick="showHint('hint4')">
+                    💡 Click for advanced coding tips
+                </div>
+                <div id="hint4" class="hidden-content">
+                    <p><strong>What to code:</strong> Modify your if/elif statements to include "Very Close" conditions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 3: Final Touches -->
+        <div class="section">
+            <h3>🎯 Part 3: Final Touches (break and Counter)</h3>
+            
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-counter">5</span>Loop Termination & Scoring
+                </div>
+                <p><strong>Task:</strong> End the game properly and display the final score.</p>
+                
+                <div class="prompt-generator">
+                    <button class="reveal-button" onclick="toggleContent('prompt5')">🎯 Reveal Prompt Guidelines</button>
+                    <div id="prompt5" class="hidden-content no-select">
+                        <p><strong>Key concepts to discuss:</strong></p>
+                        <ul>
+                            <li>Ask about where to place the <span class="code-hint">break</span> statement</li>
+                            <li>Ask about the relationship between counter increment and break</li>
+                            <li>Ask how to ensure accurate guess counting</li>
+                            <li>Ask about the sequence: increment, check, break vs other orders</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="interactive-prompt" onclick="showHint('hint5')">
+                    💡 Get final implementation guidance
+                </div>
+                <div id="hint5" class="hidden-content">
+                    <p><strong>What to code:</strong> Add the guess counter, break statement, and final score display.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deliverables -->
+        <div class="deliverables">
+            <h3>🚀 Deliverables and Grading</h3>
+            <p><strong>Submit these two items:</strong></p>
+            
+            <h4>1. The Code: guessing_game.py</h4>
+            <p>Your final, working Python script that runs the complete game.</p>
+            
+            <h4>2. The Prompt Engineering Log (Most Important!)</h4>
+            <p>Create a document with this table format:</p>
+            
+            <div style="overflow-x: auto; margin: 15px 0;">
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                    <tr style="background: #f8f9fa;">
+                        <th style="border: 1px solid #ddd; padding: 8px;">Step #</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Your Full Prompt to Gemini</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Gemini's Core Advice (1-2 Sentences)</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">The Code Element You Wrote</th>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 8px;">1</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">[Paste your exact prompt here]</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">[Summarize the advice]</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">[Your while loop condition]</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 8px;">2-5</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">...continue for all steps...</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <h4>3. Reflection Question</h4>
+            <p><strong>Answer in one paragraph:</strong> Was it easier or harder to plan the logic before writing code? Describe one time Gemini gave advice you decided not to use, and explain your reasoning.</p>
+        </div>
+
+        <div class="warning-box">
+            <p><strong>Remember:</strong> This exercise teaches you to think like a programmer and use AI as a strategic tool, not a shortcut. The goal is to understand the logic flow, not just get working code!</p>
+        </div>
+    </div>
+
+    <script>
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable common copy shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 'a' || e.key === 'c' || e.key === 's' || e.key === 'u')) {
+                e.preventDefault();
+            }
+            if (e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+
+        function toggleContent(elementId) {
+            const element = document.getElementById(elementId);
+            if (element.style.display === 'none' || element.style.display === '') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+
+        function showHint(hintId) {
+            const hint = document.getElementById(hintId);
+            hint.style.display = 'block';
+        }
+
+        // Add some visual feedback for interactions
+        document.querySelectorAll('.interactive-prompt').forEach(prompt => {
+            prompt.addEventListener('click', function() {
+                this.style.background = '#d4edda';
+                this.innerHTML = '✅ ' + this.innerHTML;
+            });
+        });
+
+        // Progress tracking
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const completed = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                const total = document.querySelectorAll('input[type="checkbox"]').length;
+                
+                if (completed === total) {
+                    alert('🎉 Congratulations! You\'ve completed all steps. Time to submit your deliverables!');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

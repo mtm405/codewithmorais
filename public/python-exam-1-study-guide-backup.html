@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Exam 1 - Complete Study Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+
+        .topic-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .topic-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .concept {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .concept h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .code-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.6;
+            border: 1px solid #3e3e3e;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .code-example .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .code-example .keyword {
+            color: #569cd6;
+            font-weight: 600;
+        }
+
+        .code-example .string {
+            color: #ce9178;
+        }
+
+        .code-example .function {
+            color: #dcdcaa;
+        }
+
+        .code-example .number {
+            color: #b5cea8;
+        }
+
+        .code-example .operator {
+            color: #d4d4d4;
+        }
+
+        .code-example .variable {
+            color: #9cdcfe;
+        }
+
+        .code-example .builtin {
+            color: #4ec9b0;
+        }
+
+        .important-note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .important-note strong {
+            color: #856404;
+        }
+
+        .key-points {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .key-points ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .key-points li {
+            margin: 5px 0;
+        }
+
+        .practice-question {
+            background: #f0e6ff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .answer {
+            background: #d4edda;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #28a745;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .quick-reference {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .ref-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+        }
+
+        .ref-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍 Python Exam 1 Study Guide</h1>
+        <p class="subtitle">Master All Concepts for a Passing Score</p>
+
+        <!-- Topic 1: Data Types -->
+        <div class="topic-section">
+            <h2>1. Data Types & Type Conversion</h2>
+            
+            <div class="concept">
+                <h3>📌 Understanding Python Data Types</h3>
+                <div class="key-points">
+                    <strong>Key Points:</strong>
+                    <ul>
+                        <li>Python does NOT require you to declare data types (dynamically typed)</li>
+                        <li>Python distinguishes between integers (int) and floating-point numbers (float)</li>
+                        <li>Boolean values must start with a capital letter: <code>True</code> or <code>False</code></li>
+                        <li>Strings can store numbers but they cannot be used in calculations</li>
+                    </ul>
+                </div>
+
+                <div class="code-example">
+<span class="comment"># Python automatically determines data types</span>
+<span class="variable">x</span> = <span class="number">5</span>              <span class="comment"># int</span>
+<span class="variable">y</span> = <span class="number">3.14</span>           <span class="comment"># float</span>
+<span class="variable">name</span> = <span class="string">"Alice"</span>    <span class="comment"># str</span>
+<span class="variable">is_student</span> = <span class="keyword">True</span>  <span class="comment"># bool (capital T!)</span>
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Common Exam Question:</strong> When declaring variables in Python, do you need to specify a data type? <strong>NO!</strong>
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>🔄 Type Conversion Functions</h3>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <th>Purpose</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td><code>str()</code></td>
+                        <td>Convert to string (prevents calculations)</td>
+                        <td><code>serialnumber = str(55555)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>float()</code></td>
+                        <td>Convert to decimal number</td>
+                        <td><code>amount = float(44)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>int()</code></td>
+                        <td>Convert to whole number</td>
+                        <td><code>age = int("25")</code></td>
+                    </tr>
+                </table>
+
+                <div class="practice-question">
+                    <strong>Practice:</strong> A serial number should not be used in calculations, and a dollar amount needs decimals.
+                    <div class="code-example">
+serialnumber = <span class="function">str</span>(55555)
+amount = <span class="function">float</span>(44)
+message = <span class="string">"Serial:"</span> + <span class="function">str</span>(serialnumber) + <span class="string">" Price:"</span> + <span class="function">str</span>(amount)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 2: Lists & Data Structures -->
+        <div class="topic-section">
+            <h2>2. Lists & Data Structures</h2>
+            
+            <div class="concept">
+                <h3>📋 Working with Lists</h3>
+                <div class="code-example">
+<span class="comment"># Creating and manipulating lists</span>
+<span class="variable">animals</span> = [<span class="string">"Bears"</span>, <span class="string">"Panthers"</span>, <span class="string">"Lions"</span>]
+
+<span class="comment"># Adding items</span>
+<span class="variable">animals</span>.<span class="function">append</span>(<span class="string">"Jaguars"</span>)  <span class="comment"># Adds to end</span>
+
+<span class="comment"># Sorting</span>
+<span class="variable">animals</span>.<span class="function">sort</span>()  <span class="comment"># Alphabetical order</span>
+
+<span class="comment"># Looping through lists</span>
+<span class="keyword">for</span> <span class="variable">animal</span> <span class="keyword">in</span> <span class="variable">animals</span>:
+    <span class="builtin">print</span>(<span class="variable">animal</span>)
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Common Mistake:</strong> Use <code>.append()</code> not <code>.add()</code>. Python lists don't have a <code>.add()</code> method!
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>🎯 List Indexing</h3>
+                <div class="code-example">
+<span class="variable">pieces</span> = [<span class="string">"king"</span>, <span class="string">"queen"</span>, <span class="string">"rook"</span>, <span class="string">"bishop"</span>, <span class="string">"knight"</span>, <span class="string">"pawn"</span>]
+<span class="variable">pieces</span>.<span class="function">sort</span>()  <span class="comment"># Now: ["bishop", "king", "knight", "pawn", "queen", "rook"]</span>
+
+<span class="comment"># Accessing items (remember: index starts at 0!)</span>
+<span class="builtin">print</span>(<span class="variable">pieces</span>[<span class="number">3</span>])   <span class="comment"># "pawn" (4th item)</span>
+<span class="builtin">print</span>(<span class="variable">pieces</span>[<span class="number">5</span>])   <span class="comment"># "rook" (6th item)</span>
+<span class="builtin">print</span>(<span class="variable">pieces</span>[<span class="number">-1</span>])  <span class="comment"># "rook" (last item)</span>
+                </div>
+
+                <div class="key-points">
+                    <strong>Index Rules:</strong>
+                    <ul>
+                        <li>Indexing starts at 0 (first item is [0])</li>
+                        <li>Negative indexing starts from the end ([-1] is last item)</li>
+                        <li>After sorting alphabetically, indices change!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 3: Operators & Expressions -->
+        <div class="topic-section">
+            <h2>3. Operators & Arithmetic</h2>
+            
+            <div class="concept">
+                <h3>➗ Arithmetic Operators</h3>
+                <div class="quick-reference">
+                    <div class="ref-card">
+                        <h4>+</h4>
+                        <p>Addition<br><code>10 + 3 = 13</code></p>
+                    </div>
+                    <div class="ref-card">
+                        <h4>-</h4>
+                        <p>Subtraction<br><code>10 - 3 = 7</code></p>
+                    </div>
+                    <div class="ref-card">
+                        <h4>*</h4>
+                        <p>Multiplication<br><code>10 * 3 = 30</code></p>
+                    </div>
+                    <div class="ref-card">
+                        <h4>/</h4>
+                        <p>Division (decimal)<br><code>10 / 3 = 3.33</code></p>
+                    </div>
+                    <div class="ref-card">
+                        <h4>//</h4>
+                        <p>Floor Division (whole)<br><code>10 // 3 = 3</code></p>
+                    </div>
+                    <div class="ref-card">
+                        <h4>%</h4>
+                        <p>Modulo (remainder)<br><code>10 % 3 = 1</code></p>
+                    </div>
+                    <div class="ref-card">
+                        <h4>**</h4>
+                        <p>Exponent (power)<br><code>5 ** 2 = 25</code></p>
+                    </div>
+                </div>
+
+                <div class="practice-question">
+                    <strong>Practice Problem:</strong> Evaluate these expressions:
+                    <div class="code-example">
+<span class="variable">a</span> = <span class="number">100</span> <span class="operator">-</span> <span class="number">70</span> <span class="operator">/</span> <span class="number">7</span>    <span class="comment"># a = 90 (division first!)</span>
+<span class="variable">b</span> = (<span class="number">35</span> <span class="operator">%</span> <span class="number">15</span>) <span class="operator">//</span> <span class="number">2</span>  <span class="comment"># b = 2 (35%15=5, then 5//2=2)</span>
+<span class="variable">c</span> = <span class="operator">-</span><span class="number">3</span> <span class="operator">**</span> <span class="number">2</span>         <span class="comment"># c = -9 (exponent first, then negative)</span>
+                    </div>
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Order of Operations:</strong> PEMDAS applies in Python!
+                    <ol>
+                        <li>Parentheses ()</li>
+                        <li>Exponents **</li>
+                        <li>Multiplication/Division *, /, //, %</li>
+                        <li>Addition/Subtraction +, -</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>🔧 Assignment Operators</h3>
+                <div class="code-example">
+<span class="variable">a</span> = <span class="number">5</span>
+<span class="variable">b</span> = <span class="number">2</span>
+<span class="variable">c</span> = <span class="number">3</span>
+
+<span class="comment"># Compound assignment operators</span>
+<span class="variable">a</span> <span class="operator">**=</span> <span class="variable">b</span>    <span class="comment"># a = a ** b → a = 5 ** 2 = 25</span>
+<span class="variable">b</span> <span class="operator">%=</span> <span class="variable">c</span>     <span class="comment"># b = b % c → b = 2 % 3 = 2</span>
+<span class="variable">a</span> <span class="operator">//=</span> <span class="variable">b</span>    <span class="comment"># a = a // b → a = 25 // 2 = 12</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 4: Comparison & Boolean Operators -->
+        <div class="topic-section">
+            <h2>4. Comparison & Boolean Logic</h2>
+            
+            <div class="concept">
+                <h3>⚖️ Comparison Operators</h3>
+                <table>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td><code>==</code></td>
+                        <td>Equal to</td>
+                        <td><code>5 == 5</code> → True</td>
+                    </tr>
+                    <tr>
+                        <td><code>!=</code></td>
+                        <td>Not equal to</td>
+                        <td><code>5 != 3</code> → True</td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;</code></td>
+                        <td>Greater than</td>
+                        <td><code>5 &gt; 3</code> → True</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;</code></td>
+                        <td>Less than</td>
+                        <td><code>5 &lt; 3</code> → False</td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;=</code></td>
+                        <td>Greater than or equal</td>
+                        <td><code>5 &gt;= 5</code> → True</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;=</code></td>
+                        <td>Less than or equal</td>
+                        <td><code>5 &lt;= 3</code> → False</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="concept">
+                <h3>🔗 Boolean Operators & Identity</h3>
+                <div class="code-example">
+<span class="variable">a</span> = <span class="number">5</span>
+<span class="variable">b</span> = <span class="number">3</span>
+<span class="variable">c</span> = <span class="variable">b</span>
+
+<span class="comment"># Comparison operators</span>
+<span class="variable">a</span> <span class="operator">!=</span> <span class="variable">b</span>     <span class="comment"># True (5 is not equal to 3)</span>
+<span class="variable">a</span> <span class="operator">></span> <span class="variable">b</span>      <span class="comment"># True (5 is greater than 3)</span>
+
+<span class="comment"># Identity operators (check if same object in memory)</span>
+<span class="variable">a</span> <span class="keyword">is</span> <span class="variable">b</span>     <span class="comment"># False (different values)</span>
+<span class="variable">c</span> <span class="keyword">is</span> <span class="variable">b</span>     <span class="comment"># True (c points to same object as b)</span>
+
+<span class="comment"># Membership operator</span>
+<span class="string">"nine"</span> <span class="keyword">in</span> <span class="variable">quote</span>  <span class="comment"># True if "nine" is in the string</span>
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Important:</strong> <code>is</code> checks if two variables reference the same object in memory, not just if they have the same value!
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>🧮 Logical Operators</h3>
+                <div class="code-example">
+<span class="comment"># Evaluation order: not → and → or</span>
+<span class="variable">x</span> = <span class="number">5</span>
+<span class="variable">y</span> = <span class="number">3</span>
+<span class="variable">z</span> = <span class="variable">x</span> <span class="operator">+</span> <span class="variable">y</span> <span class="operator">></span> <span class="number">7</span> <span class="keyword">and</span> <span class="variable">x</span> <span class="operator">*</span> <span class="variable">y</span> <span class="operator"><</span> <span class="number">15</span> <span class="keyword">or</span> <span class="variable">x</span> <span class="operator">-</span> <span class="variable">y</span> <span class="operator">></span> <span class="number">2</span>
+
+<span class="comment"># Step-by-step evaluation:</span>
+<span class="comment"># 1. x + y = 8, 8 > 7 → True</span>
+<span class="comment"># 2. x * y = 15, 15 < 15 → False</span>
+<span class="comment"># 3. True and False → False</span>
+<span class="comment"># 4. x - y = 2, 2 > 2 → False</span>
+<span class="comment"># 5. False or False → False</span>
+                </div>
+
+                <div class="key-points">
+                    <strong>Operator Precedence:</strong>
+                    <ul>
+                        <li><code>not</code> (evaluated first)</li>
+                        <li><code>and</code> (evaluated second)</li>
+                        <li><code>or</code> (evaluated last)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 5: Conditionals (if/elif/else) -->
+        <div class="topic-section">
+            <h2>5. Conditional Statements</h2>
+            
+            <div class="concept">
+                <h3>🔀 If/Elif/Else Statements</h3>
+                <div class="code-example">
+<span class="keyword">if</span> grade >= 100:
+    <span class="function">print</span>(<span class="string">"Outstanding"</span>)
+<span class="keyword">elif</span> grade >= 90:
+    <span class="function">print</span>(<span class="string">"Great"</span>)
+<span class="keyword">elif</span> grade >= 70:
+    <span class="function">print</span>(<span class="string">"You are doing well. Strive to improve."</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"Study hard"</span>)
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Order Matters!</strong> Python checks conditions from top to bottom and stops at the first True condition. Make sure your conditions are in the right order!
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>📊 Multiple Conditions Example</h3>
+                <div class="code-example">
+<span class="comment"># Proper structure for nested messages</span>
+<span class="keyword">if</span> month_sales > 10000:
+    <span class="function">print</span>(<span class="string">"Great month"</span>)
+    <span class="function">print</span>(<span class="string">"Keep it going"</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"Room for improvement"</span>)
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>✅ Bonus Calculation Example</h3>
+                <div class="practice-question">
+                    <strong>Problem:</strong> Salesperson gets 5% bonus if sales exceed 30000, otherwise no bonus.
+                    <div class="answer">
+                        <div class="code-example">
+sales_amount = 31000
+
+<span class="keyword">if</span> sales_amount > 30000:
+    bonus_amount = <span class="string">"5% bonus"</span>
+<span class="keyword">else</span>:
+    bonus_amount = <span class="string">"no bonus"</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 6: Loops -->
+        <div class="topic-section">
+            <h2>6. Loops (For & While)</h2>
+            
+            <div class="concept">
+                <h3>🔁 For Loops</h3>
+                <div class="code-example">
+<span class="comment"># Basic for loop with range</span>
+<span class="keyword">for</span> week <span class="keyword">in</span> <span class="function">range</span>(1, 6):  <span class="comment"># 1, 2, 3, 4, 5 (excludes 6!)</span>
+    <span class="function">print</span>(<span class="string">f"You should walk for {week * 10} minutes in week {week}"</span>)
+
+<span class="comment"># Looping through a list</span>
+<span class="keyword">for</span> animal <span class="keyword">in</span> animals:
+    <span class="function">print</span>(animal)
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Range Function:</strong> <code>range(1, 6)</code> goes from 1 to 5 (stops before 6!)
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>🔄 While Loops</h3>
+                <div class="code-example">
+location = [<span class="string">"North"</span>, <span class="string">"South"</span>, <span class="string">"West"</span>, <span class="string">"East"</span>]
+response = <span class="function">input</span>(<span class="string">"Enter North, South, West, or East: "</span>)
+
+<span class="keyword">while</span> response <span class="keyword">not in</span> location:
+    <span class="function">print</span>(<span class="string">"Try again."</span>)
+    response = <span class="function">input</span>(<span class="string">"Enter North, South, West, or East: "</span>)
+
+<span class="function">print</span>(response)
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>⏸️ Loop Control Keywords</h3>
+                <table>
+                    <tr>
+                        <th>Keyword</th>
+                        <th>Purpose</th>
+                    </tr>
+                    <tr>
+                        <td><code>break</code></td>
+                        <td>Exits the loop completely</td>
+                    </tr>
+                    <tr>
+                        <td><code>continue</code></td>
+                        <td>Skips current iteration, moves to next</td>
+                    </tr>
+                    <tr>
+                        <td><code>pass</code></td>
+                        <td>Placeholder (does nothing, used for future code)</td>
+                    </tr>
+                </table>
+
+                <div class="code-example">
+cities = [<span class="string">'Anchorage'</span>, <span class="string">'Juneau'</span>, <span class="string">'Fairbanks'</span>, <span class="string">'Ketchikan'</span>, <span class="string">'Sitka'</span>, <span class="string">'Wasilla'</span>]
+<span class="keyword">for</span> city <span class="keyword">in</span> cities:
+    <span class="function">print</span>(<span class="string">f'{city} is a famous Alaskan city.'</span>)
+    <span class="keyword">if</span> city == <span class="string">'Ketchikan'</span>:
+        <span class="keyword">break</span>  <span class="comment"># Stops after Ketchikan (prints 4 cities)</span>
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>🔢 Printing Every Location</h3>
+                <div class="practice-question">
+                    <strong>Problem:</strong> Print every location in a list
+                    <div class="answer">
+                        <div class="code-example">
+locations = [<span class="string">'Bali'</span>, <span class="string">'Auckland'</span>, <span class="string">'Sydney'</span>, <span class="string">"Bangkok"</span>, <span class="string">"Tokyo"</span>]
+
+<span class="keyword">for</span> location <span class="keyword">in</span> locations:
+    <span class="function">print</span>(location)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 7: Functions -->
+        <div class="topic-section">
+            <h2>7. Functions</h2>
+            
+            <div class="concept">
+                <h3>🎯 Defining Functions</h3>
+                <div class="code-example">
+<span class="comment"># Function definition</span>
+<span class="keyword">def</span> <span class="function">calcSubtotal</span>(amount, salesTaxRate):
+    subtotal = amount * (1 + salesTaxRate)
+    <span class="keyword">return</span> subtotal
+
+<span class="comment"># Calling the function</span>
+order_total = <span class="function">calcSubtotal</span>(500, 0.07)
+<span class="function">print</span>(order_total)  <span class="comment"># 535.0</span>
+                </div>
+
+                <div class="key-points">
+                    <strong>Function Basics:</strong>
+                    <ul>
+                        <li>Use <code>def</code> keyword to define</li>
+                        <li>Parameters go in parentheses</li>
+                        <li>Use <code>return</code> to send back a value</li>
+                        <li>Call by using function name with arguments</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>⚙️ Function with Conditionals</h3>
+                <div class="code-example">
+<span class="keyword">def</span> <span class="function">calcTotal</span>(taxable, amount, salesTax, shipping):
+    <span class="keyword">if</span> taxable == <span class="string">"Yes"</span>:
+        subtotal = amount * (1 + salesTax) + shipping
+    <span class="keyword">elif</span> shipping == 0:
+        <span class="keyword">pass</span>  <span class="comment"># Placeholder</span>
+    <span class="keyword">else</span>:
+        subtotal = amount + shipping
+    <span class="keyword">return</span> subtotal
+
+order1 = <span class="function">calcTotal</span>(<span class="string">"No"</span>, 500, 0.07, 0)
+<span class="comment"># This will raise an error! subtotal not defined when shipping is 0</span>
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Common Error:</strong> Make sure all paths in your function define the return variable, or you'll get an error!
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 8: Comments & String Formatting -->
+        <div class="topic-section">
+            <h2>8. Comments & String Formatting</h2>
+            
+            <div class="concept">
+                <h3>💬 Comments</h3>
+                <div class="code-example">
+<span class="comment"># This is a single-line comment</span>
+
+x = 5  <span class="comment"># Comments can go after code too</span>
+
+<span class="comment">"""
+This is a multi-line comment
+or docstring
+"""</span>
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Comment Symbol:</strong> Use <code>#</code> for single-line comments in Python!
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>📝 String Formatting</h3>
+                <div class="code-example">
+<span class="comment"># f-strings (modern way)</span>
+name = <span class="string">"Nicole"</span>
+region = <span class="string">"East"</span>
+office = <span class="string">"Potomac"</span>
+
+<span class="function">print</span>(<span class="string">f"Your rep is {name}, region: {region}, office: {office}"</span>)
+
+<span class="comment"># Continuation character for long strings</span>
+<span class="function">print</span>(<span class="string">f"Your sales representative is Nicole, you are in the East region, "</span> \
+      <span class="string">"and you are based in the Potomac office."</span>)
+
+<span class="comment"># Format with specific width and alignment</span>
+chickens = 50
+txt = <span class="string">"We have {:<4} chickens"</span>  <span class="comment"># 4 chars wide, left-aligned</span>
+<span class="function">print</span>(txt.<span class="function">format</span>(chickens))
+
+<span class="comment"># Format to 2 decimal places</span>
+area = 78.5398
+<span class="function">print</span>(<span class="string">f"Area: {area:.2f}"</span>)  <span class="comment"># "Area: 78.54"</span>
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Line Continuation:</strong> Use backslash <code>\</code> at end of line to continue a long string on the next line.
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 9: File Operations -->
+        <div class="topic-section">
+            <h2>9. File Operations</h2>
+            
+            <div class="concept">
+                <h3>📂 Reading Files</h3>
+                <div class="code-example">
+<span class="keyword">import</span> os.path
+
+<span class="comment"># Check if file exists before opening</span>
+<span class="keyword">if</span> os.path.<span class="function">exists</span>(<span class="string">'work.txt'</span>) == <span class="keyword">True</span>:
+    workFile = <span class="function">open</span>(<span class="string">'work.txt'</span>, <span class="string">'r'</span>)
+    workFileContent = workFile.<span class="function">read</span>()
+    <span class="function">print</span>(workFileContent)
+    workFile.<span class="function">close</span>()
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"The work file is not in this folder."</span>)
+                </div>
+
+                <div class="practice-question">
+                    <strong>Read File Example:</strong>
+                    <div class="answer">
+                        <div class="code-example">
+<span class="comment"># Open in read-only mode</span>
+content = <span class="function">open</span>(<span class="string">"list.txt"</span>, <span class="string">"r"</span>)
+<span class="function">print</span>(content.<span class="function">read</span>())
+content.<span class="function">close</span>()
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>✍️ Writing Files</h3>
+                <div class="code-example">
+<span class="comment"># Using 'with' statement (automatically closes file)</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">'log.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> file:
+    file.<span class="function">write</span>(<span class="string">'Daily Log'</span>)
+    <span class="comment"># file.close() not needed with 'with' statement!</span>
+                </div>
+
+                <div class="key-points">
+                    <strong>File Mode Characters:</strong>
+                    <ul>
+                        <li><code>'r'</code> - Read only (file must exist)</li>
+                        <li><code>'w'</code> - Write (overwrites existing file!)</li>
+                        <li><code>'a'</code> - Append (adds to end of file)</li>
+                    </ul>
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Important:</strong>
+                    <ul>
+                        <li>Using <code>'w'</code> mode overwrites the entire file!</li>
+                        <li>The <code>with</code> statement automatically closes the file</li>
+                        <li><code>close()</code> is not needed when using <code>with</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 10: Error Handling -->
+        <div class="topic-section">
+            <h2>10. Error Handling (Try/Except)</h2>
+            
+            <div class="concept">
+                <h3>🛡️ Try/Except Blocks</h3>
+                <div class="code-example">
+x = <span class="function">float</span>(<span class="function">input</span>(<span class="string">"Enter a number: "</span>))
+y = <span class="function">float</span>(<span class="function">input</span>(<span class="string">"Enter a number to divide by: "</span>))
+
+<span class="keyword">try</span>:
+    <span class="function">print</span>(<span class="string">f"The answer is {x/y}."</span>)
+<span class="keyword">except</span>:
+    <span class="keyword">if</span> y == 0:
+        <span class="keyword">raise</span> <span class="function">Exception</span>(<span class="string">"You cannot divide by zero"</span>)
+<span class="keyword">finally</span>:
+    <span class="function">print</span>(<span class="string">"Thank you for playing."</span>)
+                </div>
+
+                <div class="key-points">
+                    <strong>Error Handling Keywords:</strong>
+                    <ul>
+                        <li><code>try:</code> - Attempt to run code that might fail</li>
+                        <li><code>except:</code> - Code to run if error occurs</li>
+                        <li><code>raise</code> - Throw an exception</li>
+                        <li><code>finally:</code> - Runs no matter what (error or not)</li>
+                    </ul>
+                </div>
+
+                <div class="practice-question">
+                    <strong>Division Error Handling:</strong>
+                    <div class="answer">
+                        <div class="code-example">
+x = 10
+y = 0
+
+<span class="keyword">try</span>:
+    result = x / y
+<span class="keyword">except</span>:
+    <span class="function">print</span>(<span class="string">"You may have tried to divide by zero"</span>)
+<span class="keyword">finally</span>:
+    <span class="function">print</span>(<span class="string">"Thank you for playing"</span>)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 11: Built-in Modules -->
+        <div class="topic-section">
+            <h2>11. Built-in Modules</h2>
+            
+            <div class="concept">
+                <h3>📦 Common Python Modules</h3>
+                <table>
+                    <tr>
+                        <th>Module</th>
+                        <th>Purpose</th>
+                        <th>Common Methods</th>
+                    </tr>
+                    <tr>
+                        <td><code>math</code></td>
+                        <td>Mathematical operations</td>
+                        <td><code>math.pi, math.ceil(), math.floor(), int()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>random</code></td>
+                        <td>Random number generation</td>
+                        <td><code>random.choice(), random.shuffle(), random.sample()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>datetime</code></td>
+                        <td>Date and time operations</td>
+                        <td><code>datetime.datetime.now(), datetime.datetime.today()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>os</code></td>
+                        <td>Operating system operations</td>
+                        <td><code>os.mkdir(), os.path.exists()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>sys</code></td>
+                        <td>System-specific functions</td>
+                        <td><code>sys.exit(), sys.argv[]</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>statistics</code></td>
+                        <td>Statistical calculations</td>
+                        <td><code>statistics.mean()</code></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="concept">
+                <h3>🎲 Math Module Examples</h3>
+                <div class="code-example">
+<span class="keyword">import</span> math
+
+average_inventory = 77.4
+
+<span class="comment"># Rounding functions</span>
+upper_bound = math.<span class="function">ceil</span>(average_inventory)   <span class="comment"># 78 (round up)</span>
+lower_bound = math.<span class="function">floor</span>(average_inventory)  <span class="comment"># 77 (round down)</span>
+bound = <span class="function">int</span>(average_inventory)               <span class="comment"># 77 (truncate)</span>
+
+<span class="comment"># Using pi</span>
+pi = math.pi
+radius = <span class="function">float</span>(<span class="function">input</span>(<span class="string">"Enter a radius for a circle: "</span>))
+area = pi * radius ** 2
+<span class="function">print</span>(<span class="string">f"A circle with radius {radius} has area {area:.2f}"</span>)
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>🎰 Random Module Examples</h3>
+                <div class="code-example">
+<span class="keyword">import</span> random
+
+countries = [<span class="string">'USA'</span>, <span class="string">'Canada'</span>, <span class="string">'Mexico'</span>, <span class="string">'Japan'</span>, <span class="string">'Spain'</span>, <span class="string">'Kenya'</span>]
+
+result1 = random.<span class="function">choice</span>(countries)      <span class="comment"># Pick one random country</span>
+result2 = random.<span class="function">shuffle</span>(countries)     <span class="comment"># Shuffle list in place</span>
+result3 = random.<span class="function">sample</span>(countries, 2)   <span class="comment"># Pick 2 random countries</span>
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>📅 DateTime Module</h3>
+                <div class="code-example">
+<span class="keyword">import</span> datetime
+
+<span class="comment"># Get current date and time</span>
+log_time = datetime.datetime.<span class="function">now</span>()
+<span class="function">print</span>(<span class="string">f"Entry time: {log_time}"</span>)
+
+<span class="comment"># Alternative</span>
+log_time = datetime.datetime.<span class="function">today</span>()
+                </div>
+            </div>
+
+            <div class="concept">
+                <h3>💻 Sys Module - Command Line Arguments</h3>
+                <div class="code-example">
+<span class="keyword">import</span> sys
+
+<span class="comment"># sys.argv[0] is the file name</span>
+<span class="comment"># sys.argv[1], sys.argv[2], etc. are arguments</span>
+
+<span class="function">print</span>(sys.argv[0])  <span class="comment"># Prints the Python script filename</span>
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ sys.argv[0]:</strong> Always contains the filename of the script being run!
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 12: Unit Testing -->
+        <div class="topic-section">
+            <h2>12. Unit Testing</h2>
+            
+            <div class="concept">
+                <h3>🧪 Creating Unit Tests</h3>
+                <div class="code-example">
+<span class="keyword">import</span> unittest
+
+a = 3
+b = 6
+
+<span class="keyword">class</span> <span class="function">Test_Example_UnitTest</span>(unittest.<span class="function">TestCase</span>):
+    <span class="keyword">def</span> <span class="function">test_equal</span>(self):
+        self.<span class="function">assertEqual</span>(2 + 8, a + b)
+    
+    <span class="keyword">def</span> <span class="function">test_memory</span>(self):
+        a = 3
+        b = a
+        self.<span class="function">assertIs</span>(a, b)  <span class="comment"># Check if same memory location</span>
+
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    unittest.<span class="function">main</span>()
+                </div>
+
+                <div class="key-points">
+                    <strong>Common Assert Methods:</strong>
+                    <ul>
+                        <li><code>assertEqual(a, b)</code> - Check if values are equal</li>
+                        <li><code>assertIs(a, b)</code> - Check if same memory location</li>
+                        <li><code>assertTrue(x)</code> - Check if x is True</li>
+                        <li><code>assertIn(a, b)</code> - Check if a is in b</li>
+                    </ul>
+                </div>
+
+                <div class="important-note">
+                    <strong>⚠️ Unit Test Requirements:</strong>
+                    <ul>
+                        <li>Import <code>unittest</code> module</li>
+                        <li>Class must inherit from <code>unittest.TestCase</code></li>
+                        <li>Use <code>if __name__ == '__main__':</code> to run as main module</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 13: Common Mistakes & Tips -->
+        <div class="topic-section">
+            <h2>13. Common Exam Mistakes to Avoid</h2>
+            
+            <div class="concept">
+                <h3>⚠️ Top Mistakes Students Make</h3>
+                
+                <div class="important-note">
+                    <strong>1. Order of Operations</strong>
+                    <div class="code-example">
+<span class="comment"># WRONG - Doesn't apply interest to entire loan</span>
+totalLoan = carLoan + licenseFee * intRate
+
+<span class="comment"># RIGHT - Adds loan and fee first, then applies interest</span>
+totalLoan = (carLoan + licenseFee) * intRate
+                    </div>
+                </div>
+
+                <div class="important-note">
+                    <strong>2. List Methods</strong>
+                    <div class="code-example">
+<span class="comment"># WRONG - lists don't have .add()</span>
+animals.<span class="function">add</span>(<span class="string">"Jaguars"</span>)
+
+<span class="comment"># RIGHT - use .append()</span>
+animals.<span class="function">append</span>(<span class="string">"Jaguars"</span>)
+                    </div>
+                </div>
+
+                <div class="important-note">
+                    <strong>3. Boolean Capitalization</strong>
+                    <div class="code-example">
+<span class="comment"># WRONG - lowercase</span>
+is_student = true
+
+<span class="comment"># RIGHT - capital T and F</span>
+is_student = <span class="keyword">True</span>
+is_teacher = <span class="keyword">False</span>
+                    </div>
+                </div>
+
+                <div class="important-note">
+                    <strong>4. Calling Functions</strong>
+                    <div class="code-example">
+<span class="comment"># WRONG - don't use 'def' or 'call'</span>
+order_total = <span class="keyword">def</span> subtotal(500, 0.07)
+order_total = call subtotal(500, 0.07)
+
+<span class="comment"># RIGHT - just use function name</span>
+order_total = <span class="function">subtotal</span>(500, 0.07)
+                    </div>
+                </div>
+
+                <div class="important-note">
+                    <strong>5. Range Function</strong>
+                    <div class="code-example">
+<span class="comment"># range(1, 6) gives: 1, 2, 3, 4, 5 (NOT 6!)</span>
+<span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(1, 6):
+    <span class="function">print</span>(i)  <span class="comment"># Prints 1 through 5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Reference Card -->
+        <div class="topic-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 style="color: white;">📋 Quick Reference Card</h2>
+            
+            <div class="quick-reference">
+                <div class="ref-card" style="border-color: white;">
+                    <h4>Data Types</h4>
+                    <code>int, float, str, bool</code><br>
+                    <code>str(), int(), float()</code>
+                </div>
+                <div class="ref-card" style="border-color: white;">
+                    <h4>List Operations</h4>
+                    <code>.append(item)</code><br>
+                    <code>.sort()</code><br>
+                    <code>list[index]</code>
+                </div>
+                <div class="ref-card" style="border-color: white;">
+                    <h4>Operators</h4>
+                    <code>+, -, *, /, //, %, **</code><br>
+                    <code>==, !=, &lt;, &gt;, &lt;=, &gt;=</code>
+                </div>
+                <div class="ref-card" style="border-color: white;">
+                    <h4>Logic</h4>
+                    <code>and, or, not</code><br>
+                    <code>in, is</code>
+                </div>
+                <div class="ref-card" style="border-color: white;">
+                    <h4>Conditionals</h4>
+                    <code>if/elif/else</code><br>
+                    Remember colons!
+                </div>
+                <div class="ref-card" style="border-color: white;">
+                    <h4>Loops</h4>
+                    <code>for item in list:</code><br>
+                    <code>while condition:</code><br>
+                    <code>break, continue, pass</code>
+                </div>
+                <div class="ref-card" style="border-color: white;">
+                    <h4>Functions</h4>
+                    <code>def name(params):</code><br>
+                    <code>return value</code>
+                </div>
+                <div class="ref-card" style="border-color: white;">
+                    <h4>Files</h4>
+                    <code>open(file, 'r'/'w')</code><br>
+                    <code>.read(), .write()</code><br>
+                    <code>.close()</code>
+                </div>
+                <div class="ref-card" style="border-color: white;">
+                    <h4>Error Handling</h4>
+                    <code>try/except/finally</code><br>
+                    <code>raise Exception()</code>
+                </div>
+                <div class="ref-card" style="border-color: white;">
+                    <h4>Comments</h4>
+                    <code># Single line</code><br>
+                    <code>"""Multi-line"""</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Tips -->
+        <div class="topic-section">
+            <h2>💡 Study Tips for Success</h2>
+            
+            <div class="key-points">
+                <strong>Before the Exam:</strong>
+                <ul>
+                    <li>✅ Review ALL code examples in this guide</li>
+                    <li>✅ Practice writing code by hand (no autocomplete!)</li>
+                    <li>✅ Memorize the order of operations (PEMDAS)</li>
+                    <li>✅ Know the difference between <code>/</code>, <code>//</code>, and <code>%</code></li>
+                    <li>✅ Remember: <code>True</code> and <code>False</code> are capitalized</li>
+                    <li>✅ Practice list indexing (starts at 0, negative from end)</li>
+                    <li>✅ Know when to use <code>.append()</code> vs <code>.sort()</code></li>
+                    <li>✅ Understand <code>break</code>, <code>continue</code>, and <code>pass</code></li>
+                </ul>
+            </div>
+
+            <div class="important-note">
+                <strong>During the Exam:</strong>
+                <ul>
+                    <li>📖 Read each question carefully - order matters in conditionals!</li>
+                    <li>🔍 Watch for parentheses in calculations</li>
+                    <li>⚠️ Check if <code>range()</code> is inclusive or exclusive</li>
+                    <li>✓ Remember <code>sys.argv[0]</code> is the filename</li>
+                    <li>🎯 For drag-and-drop questions, think about logical order first</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 30px; background: #f8f9fa; border-radius: 10px; margin-top: 40px;">
+            <h2 style="color: #667eea; margin-bottom: 15px;">You've Got This! 🎓</h2>
+            <p style="font-size: 1.2em; color: #666;">
+                Review this guide thoroughly, practice the code examples, and you'll be ready to ace the exam!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add print functionality
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'p') {
+                window.print();
+            }
+        });
+    </script>
+</body>
+</html>

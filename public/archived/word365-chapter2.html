@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Text, Paragraphs & Sections - Word 365 Learning System</title>
+    <style>
+        :root {
+            --primary-blue: #0078d4;
+            --secondary-blue: #106ebe;
+            --accent-orange: #ff8c00;
+            --success-green: #107c10;
+            --warning-yellow: #ffb900;
+            --error-red: #d13438;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e1e1e1;
+            --dark-gray: #323130;
+            --chapter-color: #107c10;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            line-height: 1.6;
+        }
+
+        .chapter-header {
+            background: linear-gradient(135deg, var(--chapter-color), #0d8d0d);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(16, 124, 16, 0.3);
+        }
+
+        .chapter-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .breadcrumb {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .objectives-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid var(--chapter-color);
+        }
+
+        .objectives-card h2 {
+            color: var(--chapter-color);
+            margin-top: 0;
+        }
+
+        .lab-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid var(--chapter-color);
+        }
+
+        .lab-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .lab-icon {
+            font-size: 2rem;
+            background: var(--chapter-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lab-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin: 0;
+        }
+
+        .lab-difficulty {
+            background: var(--light-gray);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .scenario-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .scenario-box h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .steps-container {
+            background: var(--light-gray);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--chapter-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            background: var(--chapter-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step-content {
+            display: inline-block;
+            vertical-align: top;
+            width: calc(100% - 50px);
+        }
+
+        .ribbon-path {
+            background: var(--chapter-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .tip-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .demo-box {
+            background: #e2e3f0;
+            border: 2px dashed var(--chapter-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .demo-text {
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .formatting-example {
+            border: 1px solid var(--medium-gray);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .checkpoint {
+            background: linear-gradient(135deg, var(--chapter-color), #0d8d0d);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success {
+            background: var(--chapter-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #0d8d0d;
+            transform: translateY(-2px);
+        }
+
+        .completion-tracker {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            background: var(--light-gray);
+            height: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--chapter-color), var(--primary-blue));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .lab-checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .lab-checklist li {
+            padding: 10px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--medium-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lab-checklist li.completed {
+            border-left-color: var(--chapter-color);
+            background: #d4edda;
+        }
+
+        .practical-exercise {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .exercise-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .chapter-header h1 {
+                font-size: 2rem;
+            }
+            
+            .step-content {
+                width: 100%;
+                display: block;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chapter-header">
+        <h1>✏️ Chapter 2: Insert and Format Text, Paragraphs, and Sections</h1>
+        <p>Master advanced text formatting, paragraph controls, and document sections</p>
+    </div>
+
+    <div class="breadcrumb">
+        <a href="word365-learning-system.html">📚 Learning System</a> → 
+        <a href="word365-chapter1.html">Chapter 1</a> →
+        <span style="color: var(--dark-gray);"><strong>Chapter 2: Text, Paragraphs & Sections</strong></span>
+    </div>
+
+    <div class="objectives-card">
+        <h2>🎯 Learning Objectives</h2>
+        <p>By the end of this chapter, you will be able to:</p>
+        <ul>
+            <li>Apply advanced text formatting techniques including fonts, effects, and character spacing</li>
+            <li>Control line and paragraph spacing with precision</li>
+            <li>Master indentation for professional document layout</li>
+            <li>Create and configure document sections with different layouts</li>
+            <li>Apply and customize built-in styles for consistency</li>
+            <li>Modify styles to match organizational branding</li>
+            <li>Use the Format Painter for efficient formatting</li>
+            <li>Create professional documents with advanced typography</li>
+        </ul>
+    </div>
+
+    <div class="completion-tracker">
+        <h3>📊 Chapter Progress</h3>
+        <div class="progress-bar">
+            <div class="progress-fill" id="chapterProgress"></div>
+        </div>
+        <p id="progressText">0 of 6 labs completed</p>
+        
+        <ul class="lab-checklist">
+            <li data-lab="1">🔤 Lab 1: Advanced Text Formatting</li>
+            <li data-lab="2">📏 Lab 2: Line and Paragraph Spacing</li>
+            <li data-lab="3">📐 Lab 3: Indentation Mastery</li>
+            <li data-lab="4">📑 Lab 4: Document Sections</li>
+            <li data-lab="5">🎨 Lab 5: Built-in Styles</li>
+            <li data-lab="6">🖌️ Lab 6: Style Customization</li>
+        </ul>
+    </div>
+
+    <!-- Lab 1: Advanced Text Formatting -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">🔤</div>
+            <div>
+                <h3 class="lab-title">Lab 1: Advanced Text Formatting</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're creating a marketing brochure that needs eye-catching headlines, professional body text, and special effects for product names. The text must match brand guidelines and create visual hierarchy.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Font Formatting Basics</strong>
+                    <div class="ribbon-path">Home → Font Group</div>
+                    <p>Master font family, size, color, bold, italic, underline. Use the Font dialog (Ctrl+D) for advanced options.</p>
+                    <div class="formatting-example">
+                        <strong>Example:</strong> <span style="font-family: Arial; font-size: 18px; color: #0078d4; font-weight: bold;">Company Name</span> - Bold, Blue, 18pt Arial
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Text Effects and Typography</strong>
+                    <div class="ribbon-path">Home → Text Effects and Typography</div>
+                    <p>Apply shadows, reflections, glows, and 3D effects. Use preset combinations or create custom effects.</p>
+                    <div class="demo-box">
+                        <p style="font-size: 24px; text-shadow: 2px 2px 4px #888;">Shadow Effect</p>
+                        <p style="font-size: 24px; color: #ff8c00; font-weight: bold;">Glow Effect</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Character Spacing and Position</strong>
+                    <div class="ribbon-path">Home → Font Dialog → Advanced Tab</div>
+                    <p>Adjust character spacing (condensed/expanded), position (raised/lowered), and kerning for professional typography.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Format Painter</strong>
+                    <div class="ribbon-path">Home → Format Painter</div>
+                    <p>Copy formatting from one text to another. Single-click for one use, double-click to apply to multiple selections.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-exercise">
+            <h4>🎯 Practical Exercise</h4>
+            <p>Create a business flyer with the following formatting requirements:</p>
+            <div class="exercise-grid">
+                <div class="exercise-card">
+                    <h5>Headline</h5>
+                    <p>24pt Calibri Bold, Blue color with shadow effect</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Subheading</h5>
+                    <p>16pt Calibri, Orange color, expanded character spacing</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Body Text</h5>
+                    <p>11pt Calibri, Black, normal spacing with proper contrast</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Call-to-Action</h5>
+                    <p>14pt Calibri Bold, White text on blue background</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create text with 5 different formatting combinations using font effects, spacing, and position adjustments. Use Format Painter to copy styles efficiently.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(1)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 2: Line and Paragraph Spacing -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📏</div>
+            <div>
+                <h3 class="lab-title">Lab 2: Line and Paragraph Spacing</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're formatting an academic paper that requires double spacing for body text, specific spacing between sections, and tight spacing for references to fit within page limits.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Line Spacing Options</strong>
+                    <div class="ribbon-path">Home → Line and Paragraph Spacing</div>
+                    <p>Choose from Single (1.0), 1.15, 1.5, Double (2.0), or create exact spacing measurements.</p>
+                    <div class="formatting-example">
+                        <div style="line-height: 1.0; margin-bottom: 10px;">Single spacing text looks like this with minimal space between lines.</div>
+                        <div style="line-height: 1.5;">1.5 spacing provides more breathing room between lines of text.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Paragraph Spacing</strong>
+                    <div class="ribbon-path">Layout → Paragraph → Spacing</div>
+                    <p>Control space before and after paragraphs. Use points (pt) for precise measurements.</p>
+                    <div class="demo-box">
+                        <p style="margin-bottom: 0;">Paragraph with 0 pt after</p>
+                        <p style="margin-top: 0; margin-bottom: 12pt;">Paragraph with 12 pt after</p>
+                        <p style="margin-top: 0;">Next paragraph shows the spacing effect</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Advanced Spacing Controls</strong>
+                    <div class="ribbon-path">Home → Paragraph Dialog → Indents and Spacing</div>
+                    <p>Use exact measurements: Single = 12pt, 1.5 = 18pt, Double = 24pt. Set "Don't add space between paragraphs of the same style".</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Remove Space After Paragraph</strong>
+                    <div class="ribbon-path">Design → Paragraph Spacing → No Spacing</div>
+                    <p>Quickly remove all paragraph spacing for tight layouts or when copying from other sources.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Professional Tips</h5>
+            <p><strong>Academic Papers:</strong> Use double spacing with 0 pt spacing after paragraphs. <strong>Business Documents:</strong> Use single spacing with 6-12 pt after paragraphs for readability.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Format a multi-paragraph document with different spacing: title (18pt before/after), headings (12pt before, 6pt after), and body text (double spacing, 0pt after).</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(2)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 3: Indentation Mastery -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📐</div>
+            <div>
+                <h3 class="lab-title">Lab 3: Indentation Mastery</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're formatting a legal document with complex citation requirements: hanging indents for references, first-line indents for paragraphs, and specific left/right margins for quoted material.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>First Line Indentation</strong>
+                    <div class="ribbon-path">Home → Paragraph → First Line Indent</div>
+                    <p>Indent only the first line of each paragraph (common in academic and book formatting).</p>
+                    <div class="formatting-example">
+                        <p style="text-indent: 0.5in; margin-bottom: 10px;">    This paragraph has a first-line indent of 0.5 inches. Notice how only the first line is indented while subsequent lines align with the left margin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Hanging Indentation</strong>
+                    <div class="ribbon-path">Home → Paragraph → Hanging Indent</div>
+                    <p>Indent all lines except the first (perfect for bibliographies and reference lists).</p>
+                    <div class="formatting-example">
+                        <p style="padding-left: 0.5in; text-indent: -0.5in;">Smith, J. (2024). Advanced Word Processing Techniques. Academic Press. This reference demonstrates hanging indent where the first line starts at the margin but subsequent lines are indented.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Left and Right Indents</strong>
+                    <div class="ribbon-path">Layout → Paragraph → Indentation</div>
+                    <p>Move entire paragraphs in from both margins (useful for quotes, examples, or emphasis).</p>
+                    <div class="demo-box">
+                        <div style="margin: 0 40px; font-style: italic; border-left: 3px solid #ccc; padding-left: 15px;">
+                            "This quoted text is indented from both left and right margins to set it apart from the main body text and draw attention to important information."
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Using the Ruler</strong>
+                    <div class="ribbon-path">View → Ruler</div>
+                    <p>Drag indent markers on the ruler: first-line indent (top triangle), hanging indent (bottom triangle), left indent (rectangle).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-exercise">
+            <h4>🎯 Practice Exercise</h4>
+            <p>Create a document with these indentation styles:</p>
+            <div class="exercise-grid">
+                <div class="exercise-card">
+                    <h5>Paragraph Text</h5>
+                    <p>First-line indent: 0.5"</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Bibliography</h5>
+                    <p>Hanging indent: 0.5"</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Block Quote</h5>
+                    <p>Left indent: 1", Right indent: 0.5"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create a document demonstrating all four indentation types. Use the ruler to adjust indents and verify measurements are accurate.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(3)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 4: Document Sections -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📑</div>
+            <div>
+                <h3 class="lab-title">Lab 4: Create and Configure Document Sections</h3>
+                <span class="lab-difficulty">Advanced</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're creating a company annual report with a portrait title page, landscape financial charts section, and portrait appendices. Each section needs different headers, footers, and page numbering.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Insert Section Breaks</strong>
+                    <div class="ribbon-path">Layout → Breaks → Section Breaks</div>
+                    <p>Choose Next Page, Continuous, Even Page, or Odd Page breaks depending on your layout needs.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Different Page Orientations</strong>
+                    <div class="ribbon-path">Layout → Orientation (after section break)</div>
+                    <p>Create sections with different orientations. Insert section break, then change orientation for that section only.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Section-Specific Headers/Footers</strong>
+                    <div class="ribbon-path">Insert → Header/Footer → Link to Previous (uncheck)</div>
+                    <p>Unlink headers/footers from previous sections to create unique content for each section.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Different Page Numbering</strong>
+                    <div class="ribbon-path">Insert → Page Number → Format Page Numbers</div>
+                    <p>Start page numbering over in new sections or use different numbering formats (Roman numerals, letters).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Section Management Tips</h5>
+            <p><strong>Next Page:</strong> New section starts on next page. <strong>Continuous:</strong> New section starts on same page (for column changes). <strong>Even/Odd:</strong> Forces section to start on specific page type.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create a 3-section document: Section 1 (portrait, Roman numerals), Section 2 (landscape, Arabic numbers), Section 3 (portrait, continue Arabic). Each with unique headers.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(4)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 5: Built-in Styles -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">🎨</div>
+            <div>
+                <h3 class="lab-title">Lab 5: Built-in Styles</h3>
+                <span class="lab-difficulty">Beginner</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're creating a technical manual with consistent formatting throughout. Using built-in styles ensures professional appearance and allows for quick formatting changes across the entire document.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Explore Style Gallery</strong>
+                    <div class="ribbon-path">Home → Styles Gallery</div>
+                    <p>Review built-in styles: Normal, Heading 1-9, Title, Subtitle, Quote, Emphasis, Strong, etc.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Apply Heading Styles</strong>
+                    <div class="ribbon-path">Home → Heading 1, Heading 2, etc.</div>
+                    <p>Create document hierarchy with Heading 1 (main sections), Heading 2 (subsections), Heading 3 (sub-subsections).</p>
+                    <div class="formatting-example">
+                        <h1 style="font-size: 16pt; color: #0078d4; margin-bottom: 5px;">Heading 1 Style</h1>
+                        <h2 style="font-size: 14pt; color: #0078d4; margin-bottom: 5px;">Heading 2 Style</h2>
+                        <h3 style="font-size: 12pt; color: #0078d4; margin-bottom: 5px;">Heading 3 Style</h3>
+                        <p style="margin-top: 5px;">Normal paragraph style</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Special Text Styles</strong>
+                    <div class="ribbon-path">Home → Quote, Emphasis, Strong</div>
+                    <p>Use Quote for callouts, Emphasis for subtle highlighting, Strong for important text, and Title/Subtitle for document headers.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Style Benefits</strong>
+                    <div class="ribbon-path">Navigation Pane shows heading outline</div>
+                    <p>Styles enable automatic table of contents, navigation pane outline, and consistent formatting changes throughout the document.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-exercise">
+            <h4>🎯 Document Structure Exercise</h4>
+            <p>Create a structured document using these styles:</p>
+            <div class="exercise-grid">
+                <div class="exercise-card">
+                    <h5>Document Title</h5>
+                    <p>Use Title style</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Main Sections</h5>
+                    <p>Use Heading 1 style</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Subsections</h5>
+                    <p>Use Heading 2 style</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Body Text</h5>
+                    <p>Use Normal style with Quote and Emphasis as needed</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create a well-structured document using at least 6 different built-in styles. Check that the Navigation Pane shows your heading structure correctly.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(5)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 6: Style Customization -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">🖌️</div>
+            <div>
+                <h3 class="lab-title">Lab 6: Style Customization and Management</h3>
+                <span class="lab-difficulty">Advanced</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>Your organization has specific brand guidelines requiring custom fonts, colors, and spacing. You need to modify built-in styles to match these requirements and create new custom styles for consistency.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Modify Existing Styles</strong>
+                    <div class="ribbon-path">Home → Styles → Right-click style → Modify</div>
+                    <p>Change font, size, color, spacing, and other formatting for any built-in style. Changes apply to all text using that style.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Create New Styles</strong>
+                    <div class="ribbon-path">Home → Styles → New Style</div>
+                    <p>Create custom styles for special formatting needs: company address, product names, warning text, etc.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Style Based On</strong>
+                    <div class="ribbon-path">Style Dialog → Based on</div>
+                    <p>Base new styles on existing ones to inherit formatting, then modify specific properties. This creates style hierarchies.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Update Styles</strong>
+                    <div class="ribbon-path">Right-click style → Update Style to Match Selection</div>
+                    <p>Format text manually, then update the style to match your formatting. This updates all instances of that style.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Style Management Best Practices</h5>
+            <p><strong>Organize:</strong> Name styles clearly (e.g., "Company_Header", "Product_Name"). <strong>Document:</strong> Keep a style guide showing what each style is for. <strong>Template:</strong> Save customized styles in document templates.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Modify Heading 1 to match brand colors, create a custom "Call-out Box" style, and demonstrate updating a style to match formatted text selections.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(6)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <div class="checkpoint" style="background: linear-gradient(135deg, var(--chapter-color), #0d8d0d); margin-top: 40px;">
+        <h3>🎉 Chapter 2 Complete!</h3>
+        <p>Excellent work! You've mastered text formatting, paragraphs, and sections. Ready for Chapter 3?</p>
+        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+            <a href="word365-chapter2-project.html" class="btn" style="background: white; color: var(--chapter-color);">
+                <span>📋</span> Chapter Project
+            </a>
+            <a href="word365-chapter2-assessment.html" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;">
+                <span>📝</span> Post-Assessment
+            </a>
+            <a href="word365-chapter3.html" class="btn" style="background: var(--accent-orange); color: white;">
+                <span>➡️</span> Next: Chapter 3
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let completedLabs = JSON.parse(localStorage.getItem('word365_chapter2_labs') || '[]');
+
+        function markLabComplete(labNumber) {
+            if (!completedLabs.includes(labNumber)) {
+                completedLabs.push(labNumber);
+                localStorage.setItem('word365_chapter2_labs', JSON.stringify(completedLabs));
+                updateProgress();
+                
+                // Visual feedback
+                const labItem = document.querySelector(`[data-lab="${labNumber}"]`);
+                labItem.classList.add('completed');
+                
+                // Show success message
+                alert(`✅ Lab ${labNumber} completed! Great job!`);
+                
+                // Check if all labs completed
+                if (completedLabs.length === 6) {
+                    localStorage.setItem('word365_chapter2_completed', 'true');
+                    setTimeout(() => {
+                        alert('🎉 All Chapter 2 labs completed! You can now proceed to the chapter project and assessment.');
+                    }, 500);
+                }
+            }
+        }
+
+        function updateProgress() {
+            const progress = (completedLabs.length / 6) * 100;
+            document.getElementById('chapterProgress').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${completedLabs.length} of 6 labs completed`;
+            
+            // Mark completed labs in checklist
+            completedLabs.forEach(labNumber => {
+                const labItem = document.querySelector(`[data-lab="${labNumber}"]`);
+                if (labItem) labItem.classList.add('completed');
+            });
+        }
+
+        // Initialize progress on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            
+            // Add click handlers to checklist items
+            document.querySelectorAll('.lab-checklist li').forEach(item => {
+                item.addEventListener('click', function() {
+                    const labNumber = parseInt(this.dataset.lab);
+                    if (!this.classList.contains('completed')) {
+                        this.classList.add('completed');
+                        markLabComplete(labNumber);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

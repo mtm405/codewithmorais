@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production Student Dashboard - Code with Morais</title>
+    <link rel="stylesheet" href="static/css/theme.css">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #1e40af;
+            --accent-green: #10b981;
+            --warning-orange: #f59e0b;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f8fafc;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            margin: 20px;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid var(--primary-blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-info h1 {
+            color: var(--text-dark);
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-btn {
+            background: var(--warning-orange);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            color: var(--text-dark);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-section {
+            margin-bottom: 25px;
+        }
+
+        .progress-item {
+            margin-bottom: 15px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-text {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .progress-percentage {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-green));
+            width: 0%;
+            transition: width 1s ease-in-out;
+            border-radius: 4px;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .achievement-item.unlocked {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .achievement-item.locked {
+            background: #f3f4f6;
+            color: var(--text-light);
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .achievement-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .activity-feed {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 12px;
+            border-left: 4px solid var(--primary-blue);
+            margin-bottom: 10px;
+            background: rgba(37, 99, 235, 0.05);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .activity-time {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+
+        .activity-description {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        .learning-path {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .path-section {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .path-section.completed {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .path-section.current {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .path-section.locked {
+            background: #f3f4f6;
+            color: var(--text-light);
+        }
+
+        .section-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .section-lessons {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #dc2626;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #16a34a;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-stats {
+                justify-content: center;
+                gap: 20px;
+            }
+
+            .user-info h1 {
+                font-size: 1.5rem;
+            }
+
+            .achievements-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+
+            .learning-path {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation for achievement unlock */
+        @keyframes achievementUnlock {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1.05) rotate(0deg); }
+        }
+
+        .achievement-item.just-unlocked {
+            animation: achievementUnlock 0.8s ease-in-out;
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-green);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--warning-orange);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+    </style>
+    
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getAuth, signInWithCredential, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+
+        // Firebase configuration - REAL PROJECT
+        const firebaseConfig = {
+            apiKey: "AIzaSyAIwwM2V2qfPCB3TLVVeb8IW3FGxdNDhiY",
+            authDomain: "code-with-morais-405.firebaseapp.com",
+            projectId: "code-with-morais-405",
+            storageBucket: "code-with-morais-405.firebasestorage.app",
+            messagingSenderId: "208072504611",
+            appId: "1:208072504611:web:8ebd20260a9e16ceff8896",
+            measurementId: "G-JLH66GJNFL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global variables
+        let currentUser = null;
+        let userProgressData = null;
+        let realTimeListeners = [];
+
+        // Learning path configuration
+        const learningPath = [
+            { section: 1, title: "Data Types & Variables", lessons: 4 },
+            { section: 2, title: "Operators & Expressions", lessons: 2 },
+            { section: 3, title: "Control Flow", lessons: 2 },
+            { section: 4, title: "Advanced Concepts", lessons: 4 }
+        ];
+
+        // Achievement definitions
+        const achievements = [
+            { id: 'first_steps', title: 'First Steps', icon: '👶', requirement: 1 },
+            { id: 'getting_started', title: 'Getting Started', icon: '🚀', requirement: 3 },
+            { id: 'halfway_there', title: 'Halfway There', icon: '🎯', requirement: 6 },
+            { id: 'almost_done', title: 'Almost Done', icon: '🏃', requirement: 10 },
+            { id: 'course_master', title: 'Course Master', icon: '🏆', requirement: 12 }
+        ];
+
+        // DOM Elements
+        const authWrapper = document.querySelector('.auth-wrapper');
+        const dashboardContainer = document.querySelector('.dashboard-container');
+
+        // Authentication functions
+        window.handleCredentialResponse = async (response) => {
+            try {
+                const credential = GoogleAuthProvider.credential(response.credential);
+                const result = await signInWithCredential(auth, credential);
+                console.log('User signed in:', result.user);
+            } catch (error) {
+                console.error('Sign-in error:', error);
+                showNotification('Sign-in failed. Please try again.', 'error');
+            }
+        };
+
+        // Initialize Google Sign-In
+        function initGoogleSignIn() {
+            if (typeof google !== 'undefined') {
+                google.accounts.id.initialize({
+                    client_id: "208072504611-h61tkfvq2ksf1t8pe45d6o90fi8n2ii6.apps.googleusercontent.com",
+                    callback: handleCredentialResponse
+                });
+
+                google.accounts.id.renderButton(
+                    document.getElementById("google-signin-button"),
+                    { 
+                        theme: "outline", 
+                        size: "large",
+                        text: "signin_with",
+                        width: 250
+                    }
+                );
+            } else {
+                setTimeout(initGoogleSignIn, 100);
+            }
+        }
+
+        // Auth state observer
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                console.log('User authenticated:', user);
+                currentUser = user;
+                await initUserData();
+                showDashboard();
+            } else {
+                console.log('User not authenticated');
+                showAuthScreen();
+            }
+        });
+
+        // Initialize user data in Firestore
+        async function initUserData() {
+            try {
+                const userRef = doc(db, 'userProgress', currentUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                if (!userSnap.exists()) {
+                    // Create new user progress document
+                    const initialData = {
+                        displayName: currentUser.displayName,
+                        email: currentUser.email,
+                        createdAt: new Date().toISOString(),
+                        completedLessons: [],
+                        totalCoins: 0,
+                        totalPoints: 0,
+                        achievements: [],
+                        lastActive: new Date().toISOString(),
+                        currentSection: 1,
+                        recentActivity: [
+                            {
+                                timestamp: new Date().toISOString(),
+                                description: "Welcome to Code with Morais! Start your Python journey."
+                            }
+                        ]
+                    };
+
+                    await setDoc(userRef, initialData);
+                    userProgressData = initialData;
+                    console.log('Created new user data:', initialData);
+                } else {
+                    userProgressData = userSnap.data();
+                    console.log('Loaded existing user data:', userProgressData);
+                    
+                    // Update last active time
+                    await updateDoc(userRef, {
+                        lastActive: new Date().toISOString()
+                    });
+                }
+
+                // Set up real-time listener
+                setupRealtimeListeners();
+            } catch (error) {
+                console.error('Error initializing user data:', error);
+                showNotification('Failed to load user data', 'error');
+            }
+        }
+
+        // Setup real-time listeners
+        function setupRealtimeListeners() {
+            // Clear existing listeners
+            realTimeListeners.forEach(unsubscribe => unsubscribe());
+            realTimeListeners = [];
+
+            // Listen to user progress changes
+            const userRef = doc(db, 'userProgress', currentUser.uid);
+            const unsubscribeProgress = onSnapshot(userRef, (doc) => {
+                if (doc.exists()) {
+                    userProgressData = doc.data();
+                    updateDashboardUI();
+                    console.log('Real-time update received:', userProgressData);
+                }
+            }, (error) => {
+                console.error('Real-time listener error:', error);
+                showNotification('Connection issue. Some data may not be real-time.', 'error');
+            });
+
+            realTimeListeners.push(unsubscribeProgress);
+        }
+
+        // Show authentication screen
+        function showAuthScreen() {
+            authWrapper.style.display = 'flex';
+            dashboardContainer.style.display = 'none';
+            
+            // Initialize Google Sign-In if not already done
+            if (!document.getElementById('google-signin-button').innerHTML) {
+                initGoogleSignIn();
+            }
+        }
+
+        // Show dashboard
+        function showDashboard() {
+            authWrapper.style.display = 'none';
+            dashboardContainer.style.display = 'block';
+            updateDashboardUI();
+        }
+
+        // Update dashboard UI with real data
+        function updateDashboardUI() {
+            if (!userProgressData || !currentUser) return;
+
+            // Update user info
+            document.getElementById('user-name').textContent = userProgressData.displayName || 'Student';
+            document.getElementById('user-email').textContent = userProgressData.email || '';
+
+            // Update stats
+            const completedCount = userProgressData.completedLessons?.length || 0;
+            const totalLessons = learningPath.reduce((sum, section) => sum + section.lessons, 0);
+            const progressPercentage = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+
+            document.getElementById('total-lessons').textContent = completedCount;
+            document.getElementById('total-coins').textContent = userProgressData.totalCoins || 0;
+            document.getElementById('total-points').textContent = userProgressData.totalPoints || 0;
+            document.getElementById('overall-progress').textContent = `${progressPercentage}%`;
+            document.getElementById('overall-progress-bar').style.width = `${progressPercentage}%`;
+
+            // Update section progress
+            updateSectionProgress();
+
+            // Update achievements
+            updateAchievements();
+
+            // Update activity feed
+            updateActivityFeed();
+
+            // Update learning path
+            updateLearningPath();
+        }
+
+        // Update section progress
+        function updateSectionProgress() {
+            const completedLessons = userProgressData.completedLessons || [];
+            
+            learningPath.forEach((section, index) => {
+                const sectionLessons = completedLessons.filter(lesson => 
+                    lesson.startsWith(`lesson_${section.section}_`)
+                ).length;
+                
+                const progressElement = document.getElementById(`section-${section.section}-progress`);
+                const progressBar = document.getElementById(`section-${section.section}-bar`);
+                
+                if (progressElement && progressBar) {
+                    const percentage = Math.round((sectionLessons / section.lessons) * 100);
+                    progressElement.textContent = `${percentage}%`;
+                    progressBar.style.width = `${percentage}%`;
+                }
+            });
+        }
+
+        // Update achievements
+        function updateAchievements() {
+            const completedCount = userProgressData.completedLessons?.length || 0;
+            const unlockedAchievements = userProgressData.achievements || [];
+
+            achievements.forEach(achievement => {
+                const element = document.getElementById(`achievement-${achievement.id}`);
+                if (element) {
+                    const isUnlocked = completedCount >= achievement.requirement;
+                    const wasAlreadyUnlocked = unlockedAchievements.includes(achievement.id);
+
+                    if (isUnlocked && !wasAlreadyUnlocked) {
+                        // Newly unlocked achievement
+                        element.className = 'achievement-item unlocked just-unlocked';
+                        showNotification(`🎉 Achievement Unlocked: ${achievement.title}!`);
+                        
+                        // Update Firestore
+                        updateUserAchievements(achievement.id);
+                        
+                        // Remove animation class after animation completes
+                        setTimeout(() => {
+                            element.classList.remove('just-unlocked');
+                        }, 800);
+                    } else if (isUnlocked) {
+                        element.className = 'achievement-item unlocked';
+                    } else {
+                        element.className = 'achievement-item locked';
+                    }
+                }
+            });
+        }
+
+        // Update user achievements in Firestore
+        async function updateUserAchievements(achievementId) {
+            try {
+                const userRef = doc(db, 'userProgress', currentUser.uid);
+                const currentAchievements = userProgressData.achievements || [];
+                
+                if (!currentAchievements.includes(achievementId)) {
+                    await updateDoc(userRef, {
+                        achievements: [...currentAchievements, achievementId]
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating achievements:', error);
+            }
+        }
+
+        // Update activity feed
+        function updateActivityFeed() {
+            const activityFeed = document.getElementById('activity-feed');
+            const recentActivity = userProgressData.recentActivity || [];
+            
+            if (recentActivity.length === 0) {
+                activityFeed.innerHTML = '<div class="activity-item"><div class="activity-description">No recent activity. Complete a lesson to get started!</div></div>';
+                return;
+            }
+
+            activityFeed.innerHTML = recentActivity
+                .slice(-10)
+                .reverse()
+                .map(activity => `
+                    <div class="activity-item">
+                        <div class="activity-time">${formatTime(activity.timestamp)}</div>
+                        <div class="activity-description">${activity.description}</div>
+                    </div>
+                `).join('');
+        }
+
+        // Update learning path
+        function updateLearningPath() {
+            const completedLessons = userProgressData.completedLessons || [];
+            const currentSection = userProgressData.currentSection || 1;
+
+            learningPath.forEach((section, index) => {
+                const element = document.getElementById(`path-section-${section.section}`);
+                if (element) {
+                    const sectionLessons = completedLessons.filter(lesson => 
+                        lesson.startsWith(`lesson_${section.section}_`)
+                    ).length;
+
+                    let className = 'path-section ';
+                    if (sectionLessons === section.lessons) {
+                        className += 'completed';
+                    } else if (section.section === currentSection) {
+                        className += 'current';
+                    } else if (section.section < currentSection) {
+                        className += 'completed';
+                    } else {
+                        className += 'locked';
+                    }
+
+                    element.className = className;
+                }
+            });
+        }
+
+        // Utility functions
+        function formatTime(timestamp) {
+            if (!timestamp) return 'Recently';
+            
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffDays > 0) {
+                return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            } else if (diffHours > 0) {
+                return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            } else {
+                return 'Recently';
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Show notification
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            // Hide and remove notification
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                // Clear real-time listeners
+                realTimeListeners.forEach(unsubscribe => unsubscribe());
+                realTimeListeners = [];
+                
+                await signOut(auth);
+                currentUser = null;
+                userProgressData = null;
+                showNotification('Logged out successfully');
+            } catch (error) {
+                console.error('Logout error:', error);
+                showNotification('Logout failed', 'error');
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            console.log('Production dashboard initialized');
+        });
+
+        // Network status monitoring
+        window.addEventListener('online', () => {
+            document.querySelector('.offline-indicator').classList.remove('show');
+            showNotification('Back online! Data syncing resumed.');
+        });
+
+        window.addEventListener('offline', () => {
+            document.querySelector('.offline-indicator').classList.add('show');
+        });
+
+        // Global function for lesson completion (to be called by lesson pages)
+        window.completeLesson = async function(lessonId, points = 100, coins = 50) {
+            if (!currentUser || !userProgressData) {
+                console.log('User not authenticated');
+                return;
+            }
+
+            try {
+                const userRef = doc(db, 'userProgress', currentUser.uid);
+                const currentLessons = userProgressData.completedLessons || [];
+                
+                if (currentLessons.includes(lessonId)) {
+                    console.log('Lesson already completed');
+                    return;
+                }
+
+                const newActivity = {
+                    timestamp: new Date().toISOString(),
+                    description: `Completed ${lessonId.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}`
+                };
+
+                const updates = {
+                    completedLessons: [...currentLessons, lessonId],
+                    totalPoints: (userProgressData.totalPoints || 0) + points,
+                    totalCoins: (userProgressData.totalCoins || 0) + coins,
+                    lastActive: new Date().toISOString(),
+                    recentActivity: [...(userProgressData.recentActivity || []), newActivity]
+                };
+
+                await updateDoc(userRef, updates);
+                showNotification(`🎉 Lesson completed! +${points} points, +${coins} coins`);
+            } catch (error) {
+                console.error('Error completing lesson:', error);
+                showNotification('Failed to save lesson progress', 'error');
+            }
+        };
+
+    </script>
+</head>
+<body>
+    <!-- Authentication Screen -->
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="loading-spinner"></div>
+            <h2>Welcome to Code with Morais</h2>
+            <p>Sign in with your Google account to access your personal dashboard</p>
+            <div id="google-signin-button" style="margin: 20px auto;"></div>
+            <p style="font-size: 0.9rem; color: #6b7280; margin-top: 15px;">
+                🔒 Secure authentication • 📊 Real-time progress tracking • 🏆 Achievement system
+            </p>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="header-content">
+                <div class="user-info">
+                    <h1>Welcome back, <span id="user-name">Student</span>! 👋</h1>
+                    <p id="user-email">Loading...</p>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-lessons">0</span>
+                        <span class="stat-label">Lessons</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-coins">0</span>
+                        <span class="stat-label">Coins</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-points">0</span>
+                        <span class="stat-label">Points</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="overall-progress">0%</span>
+                        <span class="stat-label">Progress</span>
+                    </div>
+                    <button id="logout-btn" class="logout-btn">Logout</button>
+                </div>
+            </div>
+            <div style="margin-top: 20px;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="overall-progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Progress Overview -->
+            <div class="dashboard-card">
+                <h2 class="card-title">📊 Progress Overview</h2>
+                <div class="progress-section">
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span class="progress-text">Section 1: Data Types</span>
+                            <span class="progress-percentage" id="section-1-progress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="section-1-bar"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span class="progress-text">Section 2: Operators</span>
+                            <span class="progress-percentage" id="section-2-progress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="section-2-bar"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span class="progress-text">Section 3: Control Flow</span>
+                            <span class="progress-percentage" id="section-3-progress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="section-3-bar"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span class="progress-text">Section 4: Advanced</span>
+                            <span class="progress-percentage" id="section-4-progress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="section-4-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="dashboard-card">
+                <h2 class="card-title">🏆 Achievements</h2>
+                <div class="achievements-grid">
+                    <div class="achievement-item locked" id="achievement-first_steps">
+                        <span class="achievement-icon">👶</span>
+                        <div class="achievement-title">First Steps</div>
+                    </div>
+                    <div class="achievement-item locked" id="achievement-getting_started">
+                        <span class="achievement-icon">🚀</span>
+                        <div class="achievement-title">Getting Started</div>
+                    </div>
+                    <div class="achievement-item locked" id="achievement-halfway_there">
+                        <span class="achievement-icon">🎯</span>
+                        <div class="achievement-title">Halfway There</div>
+                    </div>
+                    <div class="achievement-item locked" id="achievement-almost_done">
+                        <span class="achievement-icon">🏃</span>
+                        <div class="achievement-title">Almost Done</div>
+                    </div>
+                    <div class="achievement-item locked" id="achievement-course_master">
+                        <span class="achievement-icon">🏆</span>
+                        <div class="achievement-title">Course Master</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Grid -->
+        <div class="dashboard-grid">
+            <!-- Recent Activity -->
+            <div class="dashboard-card">
+                <h2 class="card-title">📝 Recent Activity</h2>
+                <div class="activity-feed" id="activity-feed">
+                    <div class="activity-item">
+                        <div class="activity-description">Loading your activity...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Path -->
+            <div class="dashboard-card">
+                <h2 class="card-title">🎯 Learning Path</h2>
+                <div class="learning-path">
+                    <div class="path-section current" id="path-section-1">
+                        <div class="section-number">1</div>
+                        <div class="section-title">Data Types</div>
+                        <div class="section-lessons">4 lessons</div>
+                    </div>
+                    <div class="path-section locked" id="path-section-2">
+                        <div class="section-number">2</div>
+                        <div class="section-title">Operators</div>
+                        <div class="section-lessons">2 lessons</div>
+                    </div>
+                    <div class="path-section locked" id="path-section-3">
+                        <div class="section-number">3</div>
+                        <div class="section-title">Control Flow</div>
+                        <div class="section-lessons">2 lessons</div>
+                    </div>
+                    <div class="path-section locked" id="path-section-4">
+                        <div class="section-number">4</div>
+                        <div class="section-title">Advanced</div>
+                        <div class="section-lessons">4 lessons</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator">
+        📡 You're offline. Data will sync when connection is restored.
+    </div>
+
+</body>
+</html>

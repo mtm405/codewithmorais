@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Exception Handling: The Safety Net 🐍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin: 25px 0 15px 0;
+        }
+
+        .goal-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 6px solid #f39c12;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .problem-table {
+            width: 100%;
+            margin: 30px 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .problem-table th {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-size: 1.2em;
+        }
+
+        .problem-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.1em;
+        }
+
+        .problem-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .code-block {
+            background: #2d3436;
+            color: #00ff00;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .keyword {
+            color: #ff79c6;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #f1fa8c;
+        }
+
+        .comment {
+            color: #6272a4;
+        }
+
+        .function {
+            color: #50fa7b;
+        }
+
+        .error {
+            color: #ff5555;
+            font-weight: bold;
+        }
+
+        .flow-table {
+            width: 100%;
+            margin: 30px 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .flow-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .flow-table td {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.1em;
+        }
+
+        .flow-table tr:hover {
+            background-color: #f0f0f0;
+            transition: background-color 0.3s;
+        }
+
+        .yes {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .no {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .partially {
+            color: #f39c12;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .exception-table {
+            width: 100%;
+            margin: 30px 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .exception-table th {
+            background: #e74c3c;
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-size: 1.2em;
+        }
+
+        .exception-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.05em;
+        }
+
+        .exception-table tr:nth-child(even) {
+            background-color: #fff5f5;
+        }
+
+        .solution-box {
+            background: linear-gradient(135deg, #81ecec 0%, #00cec9 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 6px solid #00b894;
+        }
+
+        .solution-box h4 {
+            color: #2d3436;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+
+        .solution-item {
+            margin: 12px 0;
+            font-size: 1.15em;
+            line-height: 1.6;
+        }
+
+        .task-box {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .task-box h3 {
+            color: white;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .task-box ol {
+            margin-left: 25px;
+            font-size: 1.15em;
+            line-height: 2;
+        }
+
+        .scenario-box {
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 1.15em;
+            font-weight: bold;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 5px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #667eea;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: #667eea;
+            color: white;
+        }
+
+        .intro-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-slide::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        .intro-slide h1 {
+            color: white;
+            font-size: 4.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .intro-slide .subtitle {
+            font-size: 2.5em;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 300;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        .intro-slide .decorative-line {
+            width: 200px;
+            height: 4px;
+            background: white;
+            margin: 30px auto;
+            border-radius: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight {
+            background: #ffeaa7;
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #2d3436;
+        }
+
+        /* Quiz Modal Styles */
+        .quiz-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h2 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .quiz-progress {
+            background: #f0f0f0;
+            border-radius: 20px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .quiz-question {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 6px solid #667eea;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .quiz-question h3 {
+            color: #2d3436;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .quiz-code {
+            background: #2d3436;
+            color: #00ff00;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            line-height: 1.6;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .quiz-code .keyword {
+            color: #ff79c6;
+        }
+
+        .quiz-code .string {
+            color: #f1fa8c;
+        }
+
+        .quiz-code .comment {
+            color: #6272a4;
+        }
+
+        .quiz-code .function {
+            color: #50fa7b;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 3px solid #dfe6e9;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .quiz-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+        }
+
+        .quiz-option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .quiz-option.selected {
+            border-color: #667eea;
+            background: #e8eaff;
+        }
+
+        .quiz-option.correct {
+            border-color: #27ae60;
+            background: #d4edda;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #e74c3c;
+            background: #f8d7da;
+        }
+
+        .quiz-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .quiz-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .quiz-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .quiz-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quiz-btn.secondary {
+            background: #95a5a6;
+        }
+
+        .quiz-btn.secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .quiz-results {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .quiz-results h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .quiz-results.pass h2 {
+            color: #27ae60;
+        }
+
+        .quiz-results.fail h2 {
+            color: #e74c3c;
+        }
+
+        .score-display {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 30px 0;
+        }
+
+        .score-display.pass {
+            color: #27ae60;
+        }
+
+        .score-display.fail {
+            color: #e74c3c;
+        }
+
+        .pass-message {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 3px solid #27ae60;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            font-size: 1.3em;
+        }
+
+        .fail-message {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 3px solid #e74c3c;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            font-size: 1.3em;
+        }
+
+        .close-quiz {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-quiz:hover {
+            background: #c0392b;
+            transform: rotate(90deg);
+        }
+
+        @media print {
+            .slide {
+                page-break-after: always;
+                margin-bottom: 0;
+            }
+            .navigation {
+                display: none;
+            }
+            .quiz-modal {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+                min-height: auto;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            .code-block {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Title Slide -->
+        <div class="slide intro-slide">
+            <h1>🐍 Python Exception Handling</h1>
+            <div class="decorative-line"></div>
+            <div class="subtitle">The Safety Net</div>
+        </div>
+
+        <!-- Slide 1: Introduction - Why Programs Crash -->
+        <div class="slide">
+            <div class="slide-number">Slide 1</div>
+            <h2>Introduction - Why Programs Crash 💥</h2>
+            
+            <!-- Bell Ringer -->
+            <div class="bell-ringer">
+                <div class="bell-ringer-header" onclick="toggleBellRinger()">
+                    <h3>🔔 Bell Ringer - Do Now!</h3>
+                    <span class="bell-ringer-toggle" id="bellRingerToggle">▼</span>
+                </div>
+                <div class="bell-ringer-content" id="bellRingerContent">
+                    <div class="bell-ringer-instructions">
+                        📝 <strong>Look at the code below and think about these questions:</strong>
+                    </div>
+                    
+                    <div class="code-block">
+<span class="function">print</span>(<span class="string">"Welcome to Python!"</span>)<br>
+result = <span class="string">10</span> + <span class="string">"5"</span><br>
+<span class="function">print</span>(result)
+                    </div>
+
+                    <div class="bell-ringer-question">
+                        ❓ Question 1: Will this code run successfully? Why or why not?
+                    </div>
+
+                    <div class="bell-ringer-question">
+                        ❓ Question 2: What do you think will happen when Python tries to run line 2?
+                    </div>
+
+                    <div class="bell-ringer-question">
+                        ❓ Question 3: Will line 1 print before the program crashes?
+                    </div>
+
+                    <div class="bell-ringer-question">
+                        ❓ Question 4: How could we fix this code to avoid an error?
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 10px; margin-top: 25px; border: 3px dashed #e67e22;">
+                        <strong>💡 Think-Pair-Share:</strong> Discuss your answers with a partner. Be ready to share!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="goal-box">
+                🎯 Our Goal: Learn how to handle errors so our program doesn't stop.
+            </div>
+
+            <table class="problem-table">
+                <thead>
+                    <tr>
+                        <th>Program Code</th>
+                        <th>Result</th>
+                        <th>Problem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="code-block">
+<span class="function">print</span>(x)<br><span class="function">print</span>(<span class="string">"Never runs"</span>)
+                            </div>
+                        </td>
+                        <td><span class="error">NameError</span></td>
+                        <td>The variable <code>x</code> is not defined. The program stops on the first line.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="solution-box">
+                <h4>🛠️ The Solution: try and except</h4>
+                <div class="solution-item"><strong>try:</strong> Block of code you want to test for errors (the risky operation).</div>
+                <div class="solution-item"><strong>except:</strong> The safety net that runs only if an error occurs in the try block.</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Flow Control - Success Path -->
+        <div class="slide">
+            <div class="slide-number">Slide 2</div>
+            <h2>Flow Control: The Success Path ✅</h2>
+            
+            <div class="scenario-box">
+                📌 Scenario: The code in the try block works perfectly.
+            </div>
+
+            <table class="flow-table">
+                <thead>
+                    <tr>
+                        <th>Keyword</th>
+                        <th>Function</th>
+                        <th>Runs?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>try</strong></td>
+                        <td>Tests the code.</td>
+                        <td><span class="yes">YES</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>except</strong></td>
+                        <td>Skips the error handler.</td>
+                        <td><span class="no">NO</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>else</strong></td>
+                        <td>Code runs ONLY if try succeeds.</td>
+                        <td><span class="yes">YES</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>finally</strong></td>
+                        <td>Code runs NO MATTER WHAT.</td>
+                        <td><span class="yes">YES</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Code Example: Success Flow</h3>
+            <div class="code-block">
+y = <span class="string">10</span><br>
+<span class="keyword">try</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Try: Success!"</span>)<br>
+<span class="keyword">except</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Except: An error occurred."</span>)<br>
+<span class="keyword">else</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Else: Success code runs."</span>)<br>
+<span class="keyword">finally</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Finally: Cleanup always runs."</span>)
+            </div>
+
+            <h3>📤 Output:</h3>
+            <div class="code-block" style="background: #f8f9fa; color: #2d3436; border-left: 5px solid #27ae60;">
+Try: Success!<br>
+Else: Success code runs.<br>
+Finally: Cleanup always runs.
+            </div>
+        </div>
+
+        <!-- Slide 3: Flow Control - Failure Path -->
+        <div class="slide">
+            <div class="slide-number">Slide 3</div>
+            <h2>Flow Control: The Failure Path 🛑</h2>
+            
+            <div class="scenario-box">
+                📌 Scenario: The code in the try block fails (an exception is raised).
+            </div>
+
+            <table class="flow-table">
+                <thead>
+                    <tr>
+                        <th>Keyword</th>
+                        <th>Function</th>
+                        <th>Runs?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>try</strong></td>
+                        <td>Fails and raises the error.</td>
+                        <td><span class="partially">PARTIALLY</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>except</strong></td>
+                        <td>Catches the error and handles it.</td>
+                        <td><span class="yes">YES</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>else</strong></td>
+                        <td>Skips the success code.</td>
+                        <td><span class="no">NO</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>finally</strong></td>
+                        <td>Code runs NO MATTER WHAT.</td>
+                        <td><span class="yes">YES</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Code Example: Failure Flow</h3>
+            <div class="code-block">
+<span class="keyword">try</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Try: Trying to print undefined 'z'"</span>)<br>
+&nbsp;&nbsp;<span class="function">print</span>(z)&nbsp;&nbsp;<span class="comment"># &lt;-- Fails here!</span><br>
+<span class="keyword">except</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Except: Error was caught."</span>)<br>
+<span class="keyword">else</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Else: Success code runs."</span>)<br>
+<span class="keyword">finally</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Finally: Cleanup always runs."</span>)
+            </div>
+
+            <h3>📤 Output:</h3>
+            <div class="code-block" style="background: #fff5f5; color: #2d3436; border-left: 5px solid #e74c3c;">
+Try: Trying to print undefined 'z'<br>
+Except: Error was caught.<br>
+Finally: Cleanup always runs.
+            </div>
+        </div>
+
+        <!-- Slide 4: Specific Exception Types -->
+        <div class="slide">
+            <div class="slide-number">Slide 4</div>
+            <h2>Specific Exception Types 🧐</h2>
+            
+            <div class="goal-box">
+                🎯 Goal: Don't just catch any error; catch the right error.
+            </div>
+
+            <table class="exception-table">
+                <thead>
+                    <tr>
+                        <th>Exception Type</th>
+                        <th>When It Happens</th>
+                        <th>Example Code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>NameError</strong></td>
+                        <td>Variable or function name is not defined.</td>
+                        <td><code>print(my_pet)</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>TypeError</strong></td>
+                        <td>Operation uses the wrong data types.</td>
+                        <td><code>5 + "text"</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>ValueError</strong></td>
+                        <td>Correct type, but an invalid value.</td>
+                        <td><code>int("hello")</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>ZeroDivisionError</strong></td>
+                        <td>Trying to divide any number by zero.</td>
+                        <td><code>10 / 0</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Code Example: Multiple Exceptions</h3>
+            <div class="code-block">
+a = <span class="string">10</span><br>
+b = <span class="string">0</span><br>
+c = <span class="string">"text"</span><br>
+<br>
+<span class="keyword">try</span>:<br>
+&nbsp;&nbsp;<span class="comment"># Rerun: What if b=1? (It causes the TypeError next)</span><br>
+&nbsp;&nbsp;result = a / b<br>
+&nbsp;&nbsp;result_sum = a + c<br>
+<br>
+<span class="keyword">except</span> <span class="error">ZeroDivisionError</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"🛑 Error: Cannot divide by zero."</span>)<br>
+<br>
+<span class="keyword">except</span> <span class="error">TypeError</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"🔠 Error: Cannot mix numbers and text."</span>)
+            </div>
+
+            <h3>📤 Output (with b=0):</h3>
+            <div class="code-block" style="background: #fff5f5; color: #2d3436; border-left: 5px solid #e74c3c;">
+🛑 Error: Cannot divide by zero.
+            </div>
+
+            <h3>📤 Output (if b=1):</h3>
+            <div class="code-block" style="background: #fff5f5; color: #2d3436; border-left: 5px solid #e74c3c;">
+🔠 Error: Cannot mix numbers and text.
+            </div>
+        </div>
+
+        <!-- Slide 5: Raising Exceptions -->
+        <div class="slide">
+            <div class="slide-number">Slide 5</div>
+            <h2>Raising Exceptions 🚨</h2>
+            
+            <div class="goal-box">
+                🎯 Goal: Learn how to intentionally throw (raise) exceptions in your code.
+            </div>
+
+            <div class="solution-box">
+                <h4>What is raise?</h4>
+                <div class="solution-item">As a Python developer, you can choose to <strong>throw an exception</strong> if a condition occurs.</div>
+                <div class="solution-item">To throw (or raise) an exception, use the <span class="highlight">raise</span> keyword.</div>
+                <div class="solution-item">You can define what kind of error to raise and the text to print to the user.</div>
+            </div>
+
+            <h3>Example 1: Raise a Generic Exception</h3>
+            <div class="code-block">
+x = <span class="string">-1</span><br>
+<br>
+<span class="keyword">if</span> x &lt; <span class="string">0</span>:<br>
+&nbsp;&nbsp;<span class="keyword">raise</span> <span class="error">Exception</span>(<span class="string">"Sorry, no numbers below zero"</span>)
+            </div>
+
+            <h3>📤 Output:</h3>
+            <div class="code-block" style="background: #fff5f5; color: #2d3436; border-left: 5px solid #e74c3c;">
+Exception: Sorry, no numbers below zero
+            </div>
+
+            <h3>Example 2: Raise a Specific Exception Type</h3>
+            <div class="code-block">
+x = <span class="string">"hello"</span><br>
+<br>
+<span class="keyword">if not</span> <span class="function">type</span>(x) <span class="keyword">is</span> <span class="function">int</span>:<br>
+&nbsp;&nbsp;<span class="keyword">raise</span> <span class="error">TypeError</span>(<span class="string">"Only integers are allowed"</span>)
+            </div>
+
+            <h3>📤 Output:</h3>
+            <div class="code-block" style="background: #fff5f5; color: #2d3436; border-left: 5px solid #e74c3c;">
+TypeError: Only integers are allowed
+            </div>
+
+            <div class="scenario-box" style="margin-top: 30px;">
+                💡 <strong>When to use raise:</strong> Input validation, enforcing business rules, custom error messages for users
+            </div>
+        </div>
+
+        <!-- Slide 6: Student Task -->
+        <div class="slide">
+            <div class="slide-number">Slide 6</div>
+            <h2>Student Task: Specific Handling Challenge 📝</h2>
+            
+            <div class="task-box">
+                <h3>Activity 1: Catch the TypeError</h3>
+                <ol>
+                    <li>Use the structure below.</li>
+                    <li>Write the line of code in the <code>try</code> block that causes a <strong>TypeError</strong> (use <code>num_a</code> and <code>text_c</code>).</li>
+                    <li>The goal is to see the TypeError message print.</li>
+                </ol>
+            </div>
+
+            <h3>Code Structure to Complete:</h3>
+            <div class="code-block">
+num_a = <span class="string">5</span><br>
+text_c = <span class="string">"data"</span><br>
+<br>
+<span class="keyword">try</span>:<br>
+&nbsp;&nbsp;<span class="comment"># 🎯 YOUR CODE HERE: Cause a TypeError</span><br>
+&nbsp;&nbsp;<span class="comment"># (e.g., try adding a number to the string text_c)</span><br>
+&nbsp;&nbsp;<br>
+<span class="keyword">except</span> <span class="error">TypeError</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"SUCCESS: You caught the TypeError!"</span>)<br>
+&nbsp;&nbsp;<br>
+<span class="keyword">except</span> <span class="error">ZeroDivisionError</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"FAIL: Wrong error type caught."</span>)<br>
+&nbsp;&nbsp;<br>
+<span class="keyword">except</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Unexpected error. Check your variables!"</span>)
+            </div>
+
+            <h3>📤 Expected Output:</h3>
+            <div class="code-block" style="background: #d4edda; color: #2d3436; border-left: 5px solid #27ae60;">
+SUCCESS: You caught the TypeError!
+            </div>
+        </div>
+
+        <!-- Slide 7: More Activities -->
+        <div class="slide">
+            <div class="slide-number">Slide 7</div>
+            <h2>More Practice Activities 🎯</h2>
+            
+            <div class="task-box">
+                <h3>Activity 2: Catch the ValueError</h3>
+                <p>Fix this code by adding exception handling. The code tries to convert invalid text to an integer.</p>
+            </div>
+
+            <div class="code-block">
+user_age = <span class="string">"twenty"</span><br>
+<br>
+<span class="comment"># 🎯 YOUR CODE: Wrap this in try/except to catch ValueError</span><br>
+age = <span class="function">int</span>(user_age)<br>
+<span class="function">print</span>(<span class="string">"Age is:"</span>, age)
+            </div>
+
+            <h3>📤 Expected Output:</h3>
+            <div class="code-block" style="background: #d4edda; color: #2d3436; border-left: 5px solid #27ae60;">
+ERROR: Invalid age format. Please enter a number.
+            </div>
+
+            <div class="task-box" style="margin-top: 40px;">
+                <h3>Activity 3: Use else and finally</h3>
+                <p>Complete this code to divide two numbers safely:</p>
+                <ol>
+                    <li>Add code in <code>try</code> to divide <code>x</code> by <code>y</code></li>
+                    <li>Add <code>else</code> block to print "Division successful!"</li>
+                    <li>Add <code>finally</code> block to print "Calculation complete."</li>
+                </ol>
+            </div>
+
+            <div class="code-block">
+x = <span class="string">20</span><br>
+y = <span class="string">4</span><br>
+<br>
+<span class="keyword">try</span>:<br>
+&nbsp;&nbsp;<span class="comment"># 🎯 YOUR CODE: Divide x by y and store in result</span><br>
+&nbsp;&nbsp;<br>
+<span class="keyword">except</span> <span class="error">ZeroDivisionError</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"ERROR: Cannot divide by zero!"</span>)<br>
+<span class="comment"># 🎯 YOUR CODE: Add else block</span><br>
+<br>
+<span class="comment"># 🎯 YOUR CODE: Add finally block</span>
+            </div>
+
+            <h3>📤 Expected Output:</h3>
+            <div class="code-block" style="background: #d4edda; color: #2d3436; border-left: 5px solid #27ae60;">
+Division successful!<br>
+Calculation complete.
+            </div>
+        </div>
+
+        <!-- Slide 8: Challenge Activity -->
+        <div class="slide">
+            <div class="slide-number">Slide 8</div>
+            <h2>Challenge Activity 🏆</h2>
+            
+            <div class="task-box">
+                <h3>Activity 4: Multiple Exception Handler</h3>
+                <p>Create a program that handles THREE different error types:</p>
+                <ol>
+                    <li><strong>NameError:</strong> Trying to use undefined variable <code>undefined_var</code></li>
+                    <li><strong>ZeroDivisionError:</strong> Dividing 100 by 0</li>
+                    <li><strong>TypeError:</strong> Adding a number to a string</li>
+                </ol>
+                <p>Write separate <code>except</code> blocks for each error with a specific message!</p>
+            </div>
+
+            <div class="code-block">
+<span class="comment"># Test Case 1: Uncomment to test NameError</span><br>
+<span class="comment"># error_type = "name"</span><br>
+<br>
+<span class="comment"># Test Case 2: Uncomment to test ZeroDivisionError</span><br>
+<span class="comment"># error_type = "zero"</span><br>
+<br>
+<span class="comment"># Test Case 3: Uncomment to test TypeError</span><br>
+error_type = <span class="string">"type"</span><br>
+<br>
+<span class="keyword">try</span>:<br>
+&nbsp;&nbsp;<span class="keyword">if</span> error_type == <span class="string">"name"</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="function">print</span>(undefined_var)<br>
+&nbsp;&nbsp;<span class="keyword">elif</span> error_type == <span class="string">"zero"</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result = <span class="string">100</span> / <span class="string">0</span><br>
+&nbsp;&nbsp;<span class="keyword">elif</span> error_type == <span class="string">"type"</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result = <span class="string">5</span> + <span class="string">"text"</span><br>
+<br>
+<span class="comment"># 🎯 YOUR CODE: Add except blocks for each error type</span><br>
+<span class="comment"># Hint: except NameError, except ZeroDivisionError, except TypeError</span>
+            </div>
+
+            <h3>📤 Expected Output (for TypeError):</h3>
+            <div class="code-block" style="background: #d4edda; color: #2d3436; border-left: 5px solid #27ae60;">
+🔠 TypeError caught: Cannot mix different data types!
+            </div>
+
+            <div class="task-box" style="margin-top: 40px; background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);">
+                <h3>Bonus Challenge 🌟</h3>
+                <p>Add an <code>else</code> block that prints "No errors occurred!" and a <code>finally</code> block that prints "Error handling complete!"</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Raise Exception Activity -->
+        <div class="slide">
+            <div class="slide-number">Slide 9</div>
+            <h2>Raise Exception Activity 🚨</h2>
+            
+            <div class="task-box">
+                <h3>Activity 5: Age Validator</h3>
+                <p>Create a program that validates a user's age:</p>
+                <ol>
+                    <li>If age is less than 0, raise a <code>ValueError</code> with message "Age cannot be negative!"</li>
+                    <li>If age is greater than 120, raise a <code>ValueError</code> with message "Invalid age!"</li>
+                    <li>If age is valid, print "Valid age: [age]"</li>
+                </ol>
+            </div>
+
+            <div class="code-block">
+age = <span class="string">-5</span>&nbsp;&nbsp;<span class="comment"># Try changing this value!</span><br>
+<br>
+<span class="comment"># 🎯 YOUR CODE: Add if statements to check age</span><br>
+<span class="comment"># Use raise ValueError("message") for invalid ages</span><br>
+<br>
+<br>
+<span class="function">print</span>(<span class="string">f"Valid age: {age}"</span>)
+            </div>
+
+            <h3>📤 Expected Output (age = -5):</h3>
+            <div class="code-block" style="background: #fff5f5; color: #2d3436; border-left: 5px solid #e74c3c;">
+ValueError: Age cannot be negative!
+            </div>
+
+            <h3>📤 Expected Output (age = 25):</h3>
+            <div class="code-block" style="background: #d4edda; color: #2d3436; border-left: 5px solid #27ae60;">
+Valid age: 25
+            </div>
+
+            <div class="task-box" style="margin-top: 40px;">
+                <h3>Activity 6: Type Checker</h3>
+                <p>Write code that raises a <code>TypeError</code> if the variable <code>score</code> is not an integer or float.</p>
+            </div>
+
+            <div class="code-block">
+score = <span class="string">"ninety"</span>&nbsp;&nbsp;<span class="comment"># Try: 90, 90.5, "ninety"</span><br>
+<br>
+<span class="comment"># 🎯 YOUR CODE: Check if score is int or float</span><br>
+<span class="comment"># If not, raise TypeError("Score must be a number!")</span><br>
+<br>
+<br>
+<span class="function">print</span>(<span class="string">f"Score recorded: {score}"</span>)
+            </div>
+
+            <h3>📤 Expected Output (score = "ninety"):</h3>
+            <div class="code-block" style="background: #fff5f5; color: #2d3436; border-left: 5px solid #e74c3c;">
+TypeError: Score must be a number!
+            </div>
+        </div>
+
+        <!-- Slide 10: Summary & Key Takeaways -->
+        <div class="slide">
+            <div class="slide-number">Slide 10</div>
+            <h2>Summary & Key Takeaways 🎓</h2>
+            
+            <div class="solution-box">
+                <h4>✨ What We Learned:</h4>
+                <div class="solution-item">✅ <strong>try</strong> - Tests code that might fail</div>
+                <div class="solution-item">✅ <strong>except</strong> - Catches and handles errors</div>
+                <div class="solution-item">✅ <strong>else</strong> - Runs only when no errors occur</div>
+                <div class="solution-item">✅ <strong>finally</strong> - Always runs for cleanup</div>
+                <div class="solution-item">✅ <strong>Specific exceptions</strong> - Catch the right error type (NameError, TypeError, ValueError, ZeroDivisionError)</div>
+                <div class="solution-item">✅ <strong>raise</strong> - Intentionally throw exceptions for validation</div>
+            </div>
+
+            <div class="goal-box" style="margin-top: 40px;">
+                💡 <strong>Remember:</strong> Exception handling keeps your program running smoothly even when unexpected errors occur. It's like having a safety net for your code!
+            </div>
+
+            <h3 style="text-align: center; margin-top: 50px; color: #667eea; font-size: 2.5em;">
+                Questions? 🤔
+            </h3>
+        </div>
+
+    </div>
+
+    <div class="navigation">
+        <button class="nav-button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆️ Top</button>
+        <button class="nav-button" onclick="openQuiz()">📝 Take Quiz</button>
+        <button class="nav-button" onclick="window.print()">🖨️ Print</button>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quizModal" class="quiz-modal">
+        <div class="quiz-container">
+            <button class="close-quiz" onclick="closeQuiz()">×</button>
+            
+            <div id="quizContent">
+                <div class="quiz-header">
+                    <h2>🐍 Exception Handling Quiz</h2>
+                    <p style="font-size: 1.2em; color: #666;">You need 80% (8/10) to pass. Good luck!</p>
+                </div>
+
+                <div class="quiz-progress">
+                    <span id="questionNumber">Question 1 of 10</span>
+                    <span id="currentScore">Score: 0/10</span>
+                </div>
+
+                <div id="questionContainer"></div>
+
+                <div class="quiz-buttons">
+                    <button id="nextBtn" class="quiz-btn" onclick="nextQuestion()" disabled>Next Question</button>
+                </div>
+            </div>
+
+            <div id="resultsContent" style="display: none;">
+                <!-- Results will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Question Bank (30 questions)
+        const questionBank = [
+            {
+                question: "Which keyword is used to test a block of code for errors?",
+                options: ["try", "except", "catch", "test"],
+                correct: 0
+            },
+            {
+                question: "Which keyword catches and handles errors in Python?",
+                options: ["catch", "except", "error", "handle"],
+                correct: 1
+            },
+            {
+                question: "When does the 'else' block run in exception handling?",
+                options: ["Always", "When an error occurs", "When NO error occurs", "Never"],
+                correct: 2
+            },
+            {
+                question: "When does the 'finally' block execute?",
+                options: ["Only on success", "Only on failure", "Always, no matter what", "Never"],
+                correct: 2
+            },
+            {
+                question: "What error occurs when you use an undefined variable?",
+                options: ["TypeError", "ValueError", "NameError", "SyntaxError"],
+                correct: 2
+            },
+            {
+                question: "What error occurs when you try to add a number and a string?",
+                options: ["NameError", "TypeError", "ValueError", "AttributeError"],
+                correct: 1
+            },
+            {
+                question: "What error occurs when dividing by zero?",
+                options: ["MathError", "DivisionError", "ZeroDivisionError", "ValueError"],
+                correct: 2
+            },
+            {
+                question: "What keyword is used to intentionally raise an exception?",
+                options: ["throw", "raise", "error", "exception"],
+                correct: 1
+            },
+            {
+                question: "What is the output if the try block succeeds?",
+                code: `<span class="keyword">try</span>:\n  <span class="function">print</span>(<span class="string">'A'</span>)\n<span class="keyword">except</span>:\n  <span class="function">print</span>(<span class="string">'B'</span>)\n<span class="keyword">else</span>:\n  <span class="function">print</span>(<span class="string">'C'</span>)\n<span class="keyword">finally</span>:\n  <span class="function">print</span>(<span class="string">'D'</span>)`,
+                options: ["A B C D", "A C D", "A B D", "A D"],
+                correct: 1
+            },
+            {
+                question: "What is the output if the try block fails?",
+                code: `<span class="keyword">try</span>:\n  <span class="function">print</span>(<span class="string">'A'</span>)\n  <span class="function">print</span>(x)  <span class="comment"># x is not defined</span>\n<span class="keyword">except</span>:\n  <span class="function">print</span>(<span class="string">'B'</span>)\n<span class="keyword">else</span>:\n  <span class="function">print</span>(<span class="string">'C'</span>)\n<span class="keyword">finally</span>:\n  <span class="function">print</span>(<span class="string">'D'</span>)`,
+                options: ["A B C D", "A C D", "A B D", "B D"],
+                correct: 2
+            },
+            {
+                question: "Which exception is raised by int('hello')?",
+                options: ["TypeError", "ValueError", "NameError", "SyntaxError"],
+                correct: 1
+            },
+            {
+                question: "What happens if no exception handler matches the error?",
+                options: ["Program continues", "Program crashes", "Error is ignored", "Finally runs then crashes"],
+                correct: 3
+            },
+            {
+                question: "Can you have multiple except blocks for different errors?",
+                options: ["Yes", "No", "Only two", "Only with finally"],
+                correct: 0
+            },
+            {
+                question: "What does this code do?",
+                code: `<span class="keyword">if</span> x &lt; <span class="string">0</span>:\n  <span class="keyword">raise</span> <span class="function">ValueError</span>(<span class="string">'Negative!'</span>)`,
+                options: ["Prints an error", "Catches an error", "Throws an error", "Ignores the error"],
+                correct: 2
+            },
+            {
+                question: "Which block is optional in exception handling?",
+                options: ["try", "except", "else", "All blocks are required"],
+                correct: 2
+            },
+            {
+                question: "What is the purpose of the 'finally' block?",
+                options: ["Handle errors", "Test code", "Cleanup resources", "Raise errors"],
+                correct: 2
+            },
+            {
+                question: "Can you use 'else' without 'finally'?",
+                options: ["Yes", "No", "Only with except", "Only without except"],
+                correct: 0
+            },
+            {
+                question: "What happens in this code?",
+                code: `<span class="keyword">try</span>:\n  result = <span class="string">10</span> / <span class="string">2</span>\n<span class="keyword">except</span> ZeroDivisionError:\n  <span class="function">print</span>(<span class="string">'Error'</span>)\n<span class="keyword">else</span>:\n  <span class="function">print</span>(<span class="string">'Success'</span>)`,
+                options: ["Prints 'Error'", "Prints 'Success'", "Prints both", "No output"],
+                correct: 1
+            },
+            {
+                question: "Which is NOT a valid Python exception?",
+                options: ["NameError", "TypeError", "DivideError", "ValueError"],
+                correct: 2
+            },
+            {
+                question: "What does 'raise Exception('Custom')' do?",
+                options: ["Catches custom errors", "Creates a custom error message", "Ignores errors", "Prints a message"],
+                correct: 1
+            },
+            {
+                question: "In exception handling, what does 'except:' (without a type) catch?",
+                options: ["Nothing", "Only NameError", "All exceptions", "Only TypeError"],
+                correct: 2
+            },
+            {
+                question: "What is the correct order of exception handling blocks?",
+                options: ["try, else, except, finally", "try, except, else, finally", "except, try, else, finally", "try, finally, except, else"],
+                correct: 1
+            },
+            {
+                question: "What error occurs with this code?",
+                code: `x = <span class="string">'5'</span>\nresult = x + <span class="string">5</span>`,
+                options: ["NameError", "ValueError", "TypeError", "No error"],
+                correct: 2
+            },
+            {
+                question: "Can you raise a specific exception type like TypeError?",
+                options: ["Yes", "No", "Only ValueError", "Only Exception"],
+                correct: 0
+            },
+            {
+                question: "What is printed?",
+                code: `<span class="keyword">try</span>:\n  <span class="function">print</span>(<span class="string">'Start'</span>)\n<span class="keyword">except</span>:\n  <span class="function">print</span>(<span class="string">'Error'</span>)\n<span class="keyword">finally</span>:\n  <span class="function">print</span>(<span class="string">'End'</span>)`,
+                options: ["Start", "Start End", "Error End", "End"],
+                correct: 1
+            },
+            {
+                question: "Which exception type should you use for invalid function arguments?",
+                options: ["NameError", "TypeError", "ValueError", "AttributeError"],
+                correct: 2
+            },
+            {
+                question: "What happens if you don't handle an exception?",
+                options: ["Warning appears", "Program stops with error", "Exception is ignored", "Program continues"],
+                correct: 1
+            },
+            {
+                question: "Can the 'finally' block contain a 'return' statement?",
+                options: ["Yes, but not recommended", "No, syntax error", "Yes, always recommended", "Only with try"],
+                correct: 0
+            },
+            {
+                question: "What is the output?",
+                code: `<span class="keyword">try</span>:\n  <span class="function">print</span>(<span class="string">5</span>/<span class="string">0</span>)\n<span class="keyword">except</span> ZeroDivisionError:\n  <span class="function">print</span>(<span class="string">'Cannot divide by zero'</span>)\n<span class="keyword">else</span>:\n  <span class="function">print</span>(<span class="string">'Division successful'</span>)`,
+                options: ["Cannot divide by zero", "Division successful", "Both messages", "Error message"],
+                correct: 0
+            },
+            {
+                question: "Which statement is true about exception handling?",
+                options: ["except must come before try", "finally always executes", "else runs when errors occur", "try is optional"],
+                correct: 1
+            }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedAnswer = null;
+
+        function openQuiz() {
+            // Select 10 random questions
+            currentQuestions = getRandomQuestions(10);
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedAnswer = null;
+            
+            document.getElementById('quizModal').style.display = 'block';
+            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('resultsContent').style.display = 'none';
+            document.body.style.overflow = 'hidden';
+            
+            displayQuestion();
+        }
+
+        function closeQuiz() {
+            document.getElementById('quizModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function getRandomQuestions(count) {
+            const shuffled = [...questionBank].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, count);
+        }
+
+        function displayQuestion() {
+            const question = currentQuestions[currentQuestionIndex];
+            selectedAnswer = null;
+            
+            // Update progress
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestionIndex + 1} of ${currentQuestions.length}`;
+            document.getElementById('currentScore').textContent = `Score: ${score}/${currentQuestions.length}`;
+            
+            // Build question HTML
+            let questionHTML = `<div class="quiz-question"><h3>${question.question}</h3>`;
+            
+            if (question.code) {
+                questionHTML += `<div class="quiz-code">${question.code.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            questionHTML += `</div>`;
+            
+            let optionsHTML = '';
+            question.options.forEach((option, index) => {
+                optionsHTML += `
+                    <label class="quiz-option" onclick="selectAnswer(${index})">
+                        <input type="radio" name="answer" value="${index}">
+                        <span>${option}</span>
+                    </label>
+                `;
+            });
+            
+            document.getElementById('questionContainer').innerHTML = `
+                ${questionHTML}
+                <div class="quiz-options">
+                    ${optionsHTML}
+                </div>
+            `;
+            
+            // Reset next button
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function selectAnswer(answerIndex) {
+            selectedAnswer = answerIndex;
+            
+            // Remove previous selections
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Mark selected
+            document.querySelectorAll('.quiz-option')[answerIndex].classList.add('selected');
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (selectedAnswer === null) return;
+            
+            const question = currentQuestions[currentQuestionIndex];
+            
+            // Check if answer is correct
+            if (selectedAnswer === question.correct) {
+                score++;
+                // Visual feedback
+                document.querySelectorAll('.quiz-option')[selectedAnswer].classList.add('correct');
+            } else {
+                // Show incorrect and correct answers
+                document.querySelectorAll('.quiz-option')[selectedAnswer].classList.add('incorrect');
+                document.querySelectorAll('.quiz-option')[question.correct].classList.add('correct');
+            }
+            
+            // Disable further selection
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Change button to continue
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.textContent = currentQuestionIndex < currentQuestions.length - 1 ? 'Continue' : 'See Results';
+            nextBtn.onclick = () => {
+                if (currentQuestionIndex < currentQuestions.length - 1) {
+                    currentQuestionIndex++;
+                    nextBtn.textContent = 'Next Question';
+                    nextBtn.onclick = nextQuestion;
+                    displayQuestion();
+                } else {
+                    showResults();
+                }
+            };
+        }
+
+        function showResults() {
+            const percentage = (score / currentQuestions.length) * 100;
+            const passed = percentage >= 80;
+            
+            document.getElementById('quizContent').style.display = 'none';
+            
+            let resultHTML = `
+                <div class="quiz-results ${passed ? 'pass' : 'fail'}">
+                    <h2>${passed ? '🎉 Congratulations!' : '📚 Keep Studying!'}</h2>
+                    <div class="score-display ${passed ? 'pass' : 'fail'}">
+                        ${score}/${currentQuestions.length}
+                    </div>
+                    <div style="font-size: 2em; margin: 20px 0; font-weight: bold;">
+                        ${percentage}%
+                    </div>
+            `;
+            
+            if (passed) {
+                resultHTML += `
+                    <div class="pass-message">
+                        <strong>✅ Quiz Passed!</strong><br><br>
+                        Excellent work! You've demonstrated a strong understanding of Python exception handling.
+                        You're ready to write robust, error-resistant code!
+                    </div>
+                    <div class="quiz-buttons">
+                        <button class="quiz-btn" onclick="closeQuiz()">Close Quiz</button>
+                        <button class="quiz-btn secondary" onclick="openQuiz()">Retake Quiz</button>
+                    </div>
+                `;
+            } else {
+                resultHTML += `
+                    <div class="fail-message">
+                        <strong>❌ Not Quite There Yet</strong><br><br>
+                        You need 80% to pass. Review the lesson materials and try again!
+                        Each attempt uses different randomized questions.
+                    </div>
+                    <div class="quiz-buttons">
+                        <button class="quiz-btn" onclick="openQuiz()">Try Again</button>
+                        <button class="quiz-btn secondary" onclick="closeQuiz()">Review Lesson</button>
+                    </div>
+                `;
+            }
+            
+            resultHTML += `</div>`;
+            
+            document.getElementById('resultsContent').innerHTML = resultHTML;
+            document.getElementById('resultsContent').style.display = 'block';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('quizModal');
+            if (event.target === modal) {
+                closeQuiz();
+            }
+        }
+
+        // Close with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeQuiz();
+            }
+        });
+
+        // Bell Ringer Toggle
+        function toggleBellRinger() {
+            const content = document.getElementById('bellRingerContent');
+            const toggle = document.getElementById('bellRingerToggle');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                toggle.classList.remove('open');
+            } else {
+                content.classList.add('show');
+                toggle.classList.add('open');
+            }
+        }
+    </script>
+
+</body>
+</html>

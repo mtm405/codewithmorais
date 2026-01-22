@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 Practice Activities | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --python-blue: #3776ab;
+            --python-yellow: #ffd43b;
+            --dark-bg: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent-green: #238636;
+            --accent-purple: #8957e5;
+            --hover-bg: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+        }
+
+        .logo-text h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            background: linear-gradient(45deg, var(--python-blue), var(--python-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .back-btn {
+            padding: 12px 28px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--hover-bg);
+            border-color: var(--python-blue);
+        }
+
+        .intro {
+            background: rgba(55, 118, 171, 0.1);
+            border: 2px solid var(--python-blue);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .intro h2 {
+            color: var(--python-blue);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .intro p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--python-yellow);
+            margin: 40px 0 25px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: all 0.2s ease;
+        }
+
+        .activity-card:hover {
+            border-color: var(--python-blue);
+            box-shadow: 0 5px 20px rgba(55, 118, 171, 0.2);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .activity-number {
+            background: linear-gradient(135deg, var(--python-blue), var(--accent-purple));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .activity-title {
+            font-size: 1.6rem;
+            color: var(--python-yellow);
+            font-weight: 700;
+        }
+
+        .data-section {
+            background: var(--dark-bg);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .data-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .data-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-green);
+            font-size: 1.1rem;
+        }
+
+        .task-section {
+            margin: 20px 0;
+        }
+
+        .task-label {
+            color: var(--python-blue);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .task-text {
+            color: var(--text-primary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .analysis-section {
+            background: rgba(255, 212, 59, 0.1);
+            border-left: 4px solid var(--python-yellow);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .analysis-label {
+            color: var(--python-yellow);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .analysis-text {
+            color: var(--text-primary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: #0a0e14;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #e0e0e0;
+            font-size: 1rem;
+            overflow-x: auto;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .code-block .keyword {
+            color: #ff79c6;
+            font-weight: 600;
+        }
+
+        .code-block .function {
+            color: #50fa7b;
+        }
+
+        .code-block .string {
+            color: #f1fa8c;
+        }
+
+        .code-block .number {
+            color: #bd93f9;
+        }
+
+        .code-block .comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .code-block .operator {
+            color: #ff79c6;
+        }
+
+        .code-block .variable {
+            color: #8be9fd;
+        }
+
+        .math-formula {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: var(--accent-green);
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .activity-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.5rem;
+            }
+
+            .activity-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🐍</div>
+                <div class="logo-text">
+                    <h1>10 Practice Activities</h1>
+                    <p>Slicing, Loops, Testing & Debugging</p>
+                </div>
+            </div>
+            <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        </div>
+
+        <div class="intro">
+            <h2>📚 About These Activities</h2>
+            <p>Complete 10 hands-on Python programming activities that test your skills with slicing, loops, testing, and debugging. Each activity provides starter data and a coding challenge. Write your code in your Python IDE or editor, test it with the given data, then answer the analysis questions to demonstrate your understanding of core concepts.</p>
+        </div>
+
+        <!-- Slicing & Sequence Manipulation -->
+        <h2 class="section-title">🔪 Slicing & Sequence Manipulation (Activities 1-3)</h2>
+
+        <!-- Activity 1 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #1</div>
+                <div class="activity-title">Reverse Order</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">letters = ['A', 'B', 'C', 'D', 'E']</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Write Python code to print the list elements in reverse order using a single slice operation. Your output should display: ['E', 'D', 'C', 'B', 'A']</div>
+                <div class="task-text" style="margin-top: 10px;"><strong>Hint:</strong> Use negative step values in slicing to reverse sequences.</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text">What is the general format for using a negative step size in slicing? Explain the syntax: list[start:end:step]</div>
+            </div>
+        </div>
+
+        <!-- Activity 2 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #2</div>
+                <div class="activity-title">Middle Section</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">text = "Python Programming is Fun"</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Extract and print only the word "Programming" from the text variable using string slicing with positive indices. Find the starting index (where 'P' begins) and the ending index (where 'g' ends) to slice out just this word.</div>
+                <div class="task-text" style="margin-top: 10px;"><strong>Hint:</strong> Count the character positions starting from 0. The word starts at index 7.</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text">If you change the text to "Python Coding is Fun", will your current slice indices still extract the middle word correctly? Why or why not? Explain how hard-coded indices can break when strings change.</div>
+            </div>
+        </div>
+
+        <!-- Activity 3 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #3</div>
+                <div class="activity-title">Filtering Data</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">ids = [10, 20, 30, 40, 50, 60]</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Use list slicing to create a new list containing only the elements at odd-numbered indices (positions 1, 3, 5). Your result should be: [20, 40, 60]</div>
+                <div class="task-text" style="margin-top: 10px;"><strong>Hint:</strong> Remember that index 0 is even, index 1 is odd. Use a step value of 2 and start at the right position.</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text">If you try to access a single element outside the list's range (e.g., ids[10]), what specific type of error will Python raise? Compare this to what happens when you slice beyond the range (e.g., ids[1:100]).</div>
+            </div>
+        </div>
+
+        <!-- for Loop Debugging & Analysis -->
+        <h2 class="section-title">🔁 for Loop Debugging & Analysis (Activities 4-6)</h2>
+
+        <!-- Activity 4 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #4</div>
+                <div class="activity-title">Sum Bug</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">data = [1, 2, 3] and total = 0</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Debug the code:</div>
+                <div class="code-block"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="function">len</span>(<span class="variable">data</span>)):
+    <span class="variable">total</span> <span class="operator">=</span> <span class="variable">total</span> <span class="operator">+</span> <span class="variable">data</span>[<span class="variable">i</span>] <span class="operator">*</span> <span class="number">2</span></div>
+                <div class="task-text" style="margin-top: 10px;">The goal was to find the sum of numbers doubled. The output is 12.</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text">
+                    <strong>Test the code:</strong> If the goal was to find the sum of numbers doubled <span class="math-formula">(1 × 2) + (2 × 2) + (3 × 2) = 12</span>, is the current code correct? Now, if the requirement changes and you only need the sum of the original numbers without doubling (which should be 6), what would you modify in the loop to fix it?
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity 5 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #5</div>
+                <div class="activity-title">String Search</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">phrase = "banana split"</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Write a for loop that counts how many times the letter 'a' appears in the phrase. Initialize a counter variable to 0, loop through each character, and increment the counter when you find an 'a'. Print the final count (answer should be 4).</div>
+                <div class="task-text" style="margin-top: 10px;"><strong>Hint:</strong> You can loop directly over a string: for char in phrase</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text">If you changed your for loop to use range(len(phrase)) instead of iterating directly over the string, how would you need to modify the loop body to access each character? Explain the difference between these two approaches.</div>
+            </div>
+        </div>
+
+        <!-- Activity 6 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #6</div>
+                <div class="activity-title">Nested Loop</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">rows = 3</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Write code using a nested for loop (a loop inside another loop) to print a 3×3 square of asterisks. The output should look like:</div>
+                <div class="code-block"><span class="string">***</span>
+<span class="string">***</span>
+<span class="string">***</span></div>
+                <div class="task-text" style="margin-top: 10px;"><strong>Hint:</strong> The outer loop controls rows, the inner loop prints asterisks for each row.</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text">What is the time complexity (Big O notation) of a nested loop compared to a single loop if both iterate N times? Compare <span class="math-formula">O(N)</span> vs <span class="math-formula">O(N²)</span> and explain why nested loops are slower.</div>
+            </div>
+        </div>
+
+        <!-- while Loop Logic & Error Handling -->
+        <h2 class="section-title">⚡ while Loop Logic & Error Handling (Activities 7-10)</h2>
+
+        <!-- Activity 7 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #7</div>
+                <div class="activity-title">Infinite Loop</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">count = 10</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Debug the following code which runs infinitely and never stops:</div>
+                <div class="code-block"><span class="keyword">while</span> <span class="variable">count</span> <span class="operator">></span> <span class="number">0</span>:
+    <span class="function">print</span>(<span class="variable">count</span>)</div>
+                <div class="task-text" style="margin-top: 10px;">The problem is that count never changes, so the condition stays true forever. Fix the code so it counts down from 10 to 1, printing each number, then stops.</div>
+                <div class="task-text" style="margin-top: 10px;"><strong>Hint:</strong> You need to modify the count variable inside the loop.</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text">What is the essential requirement that must be met in every while loop to guarantee it eventually terminates? Explain what happens if this condition is never met.</div>
+            </div>
+        </div>
+
+        <!-- Activity 8 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #8</div>
+                <div class="activity-title">Guessing Game</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">secret = 7</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Create a number guessing game using a while loop. The program should:</div>
+                <div class="task-text" style="margin-left: 20px;">1. Use while True to create an infinite loop<br>2. Ask the user to input a guess<br>3. Check if the guess equals the secret number (7)<br>4. If correct, print "Correct!" and use break to exit the loop<br>5. If wrong, print "Try again" and continue looping</div>
+                <div class="task-text" style="margin-top: 10px;"><strong>Hint:</strong> Use input() to get user input and int() to convert it to a number.</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text">Why is a while loop generally better suited than a for loop for scenarios where the number of iterations is unknown in advance (like a guessing game where the user might guess correctly on the 1st try or the 100th try)?</div>
+            </div>
+        </div>
+
+        <!-- Activity 9 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #9</div>
+                <div class="activity-title">Factorial</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">n = 5 and result = 1</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Write a while loop to calculate the factorial of n. Remember that factorial means multiplying all positive integers up to that number: <span class="math-formula">5! = 5 × 4 × 3 × 2 × 1 = 120</span></div>
+                <div class="task-text" style="margin-top: 10px;">Your program should:</div>
+                <div class="task-text" style="margin-left: 20px;">1. Start with result = 1<br>2. Use a while loop that runs while n > 1<br>3. Multiply result by n<br>4. Decrease n by 1<br>5. Print the final result (120)</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text"><strong>Edge Case Test:</strong> Run your code with n=1. The output should be 1 (since 1! = 1). Does your loop handle this edge case correctly, or does it skip the multiplication? Explain why edge case testing is important.</div>
+            </div>
+        </div>
+
+        <!-- Activity 10 -->
+        <div class="activity-card">
+            <div class="activity-header">
+                <div class="activity-number">Activity #10</div>
+                <div class="activity-title">Input Validation</div>
+            </div>
+
+            <div class="data-section">
+                <div class="data-label">Given Data</div>
+                <div class="data-value">None</div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-label">📝 Task</div>
+                <div class="task-text">Create an input validation program using a while loop and the continue keyword. The program should:</div>
+                <div class="task-text" style="margin-left: 20px;">1. Use while True to create an infinite loop<br>2. Ask the user to enter an even number<br>3. Check if the number is odd using the modulo operator (num % 2 != 0)<br>4. If odd, print "That's odd! Try again" and use continue to skip to the next iteration<br>5. If even, print "Thank you!" and use break to exit</div>
+                <div class="task-text" style="margin-top: 10px;"><strong>Hint:</strong> The continue keyword jumps back to the start of the loop without executing remaining code.</div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-label">🤔 Analysis Question</div>
+                <div class="analysis-text">Explain the key difference between the continue keyword and the break keyword in loops. When would you use each one? Provide a scenario where continue is better than break.</div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

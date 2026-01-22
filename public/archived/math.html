@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classifying Numbers Activity</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .question {
+            background-color: #f5f5f5;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #007acc;
+        }
+        .number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007acc;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .classification {
+            margin-bottom: 10px;
+        }
+        .reasoning {
+            margin-top: 10px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin: 5px 0;
+        }
+        input[type="text"] {
+            border: none;
+            border-bottom: 2px solid #ccc;
+            background: transparent;
+            padding: 5px;
+            font-size: 16px;
+            width: 150px;
+        }
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+        .instructions {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .submit-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .submit-btn {
+            background-color: #007acc;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #005999;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Activity Title: Classifying Numbers</h1>
+    </div>
+    
+    <div class="instructions">
+        <strong>Instructions:</strong> Classify each number as either Rational or Irrational. Then, circle the best reason for your classification.
+    </div>
+
+    <form id="mathForm">
+        <div class="question">
+            <div class="number">3.14</div>
+            <div class="classification">
+                Classification: <input type="text" name="q1_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q1_reason" id="q1a" value="a">
+                        <label for="q1a">a) Integer</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1_reason" id="q1b" value="b">
+                        <label for="q1b">b) Repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1_reason" id="q1c" value="c">
+                        <label for="q1c">c) Terminating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1_reason" id="q1d" value="d">
+                        <label for="q1d">d) Not a perfect square</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">√16</div>
+            <div class="classification">
+                Classification: <input type="text" name="q2_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q2_reason" id="q2a" value="a">
+                        <label for="q2a">a) Non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2_reason" id="q2b" value="b">
+                        <label for="q2b">b) Not a perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2_reason" id="q2c" value="c">
+                        <label for="q2c">c) Perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2_reason" id="q2d" value="d">
+                        <label for="q2d">d) Fraction of integers</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">π</div>
+            <div class="classification">
+                Classification: <input type="text" name="q3_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q3_reason" id="q3a" value="a">
+                        <label for="q3a">a) Integer</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3_reason" id="q3b" value="b">
+                        <label for="q3b">b) Terminating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3_reason" id="q3c" value="c">
+                        <label for="q3c">c) Non-terminating, non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3_reason" id="q3d" value="d">
+                        <label for="q3d">d) Repeating decimal</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">1/3</div>
+            <div class="classification">
+                Classification: <input type="text" name="q4_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q4_reason" id="q4a" value="a">
+                        <label for="q4a">a) Not a perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4_reason" id="q4b" value="b">
+                        <label for="q4b">b) Fraction of integers</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4_reason" id="q4c" value="c">
+                        <label for="q4c">c) Non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4_reason" id="q4d" value="d">
+                        <label for="q4d">d) Perfect square</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">√7</div>
+            <div class="classification">
+                Classification: <input type="text" name="q5_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q5_reason" id="q5a" value="a">
+                        <label for="q5a">a) Not a perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5_reason" id="q5b" value="b">
+                        <label for="q5b">b) Terminating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5_reason" id="q5c" value="c">
+                        <label for="q5c">c) Repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5_reason" id="q5d" value="d">
+                        <label for="q5d">d) Integer</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">-5</div>
+            <div class="classification">
+                Classification: <input type="text" name="q6_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q6_reason" id="q6a" value="a">
+                        <label for="q6a">a) Non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6_reason" id="q6b" value="b">
+                        <label for="q6b">b) Integer</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6_reason" id="q6c" value="c">
+                        <label for="q6c">c) Not a perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6_reason" id="q6d" value="d">
+                        <label for="q6d">d) Repeating decimal</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">0.121212...</div>
+            <div class="classification">
+                Classification: <input type="text" name="q7_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q7_reason" id="q7a" value="a">
+                        <label for="q7a">a) Non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7_reason" id="q7b" value="b">
+                        <label for="q7b">b) Repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7_reason" id="q7c" value="c">
+                        <label for="q7c">c) Terminating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7_reason" id="q7d" value="d">
+                        <label for="q7d">d) Not a perfect square</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">√81</div>
+            <div class="classification">
+                Classification: <input type="text" name="q8_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q8_reason" id="q8a" value="a">
+                        <label for="q8a">a) Not a perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8_reason" id="q8b" value="b">
+                        <label for="q8b">b) Non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8_reason" id="q8c" value="c">
+                        <label for="q8c">c) Perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8_reason" id="q8d" value="d">
+                        <label for="q8d">d) Integer</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">0.25</div>
+            <div class="classification">
+                Classification: <input type="text" name="q9_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q9_reason" id="q9a" value="a">
+                        <label for="q9a">a) Non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9_reason" id="q9b" value="b">
+                        <label for="q9b">b) Terminating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9_reason" id="q9c" value="c">
+                        <label for="q9c">c) Repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9_reason" id="q9d" value="d">
+                        <label for="q9d">d) Not a perfect square</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">2π</div>
+            <div class="classification">
+                Classification: <input type="text" name="q10_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q10_reason" id="q10a" value="a">
+                        <label for="q10a">a) Product of a rational and irrational number</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10_reason" id="q10b" value="b">
+                        <label for="q10b">b) Non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10_reason" id="q10c" value="c">
+                        <label for="q10c">c) Not a perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10_reason" id="q10d" value="d">
+                        <label for="q10d">d) Repeating decimal</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">√24</div>
+            <div class="classification">
+                Classification: <input type="text" name="q11_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q11_reason" id="q11a" value="a">
+                        <label for="q11a">a) Not a perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11_reason" id="q11b" value="b">
+                        <label for="q11b">b) Terminating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11_reason" id="q11c" value="c">
+                        <label for="q11c">c) Integer</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q11_reason" id="q11d" value="d">
+                        <label for="q11d">d) Repeating decimal</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">10</div>
+            <div class="classification">
+                Classification: <input type="text" name="q12_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q12_reason" id="q12a" value="a">
+                        <label for="q12a">a) Non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12_reason" id="q12b" value="b">
+                        <label for="q12b">b) Not a perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12_reason" id="q12c" value="c">
+                        <label for="q12c">c) Integer</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q12_reason" id="q12d" value="d">
+                        <label for="q12d">d) Terminating decimal</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">0.10110111...</div>
+            <div class="classification">
+                Classification: <input type="text" name="q13_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q13_reason" id="q13a" value="a">
+                        <label for="q13a">a) Repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13_reason" id="q13b" value="b">
+                        <label for="q13b">b) Terminating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13_reason" id="q13c" value="c">
+                        <label for="q13c">c) Non-terminating, non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q13_reason" id="q13d" value="d">
+                        <label for="q13d">d) Fraction of integers</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="number">3/8</div>
+            <div class="classification">
+                Classification: <input type="text" name="q14_classification">
+            </div>
+            <div class="reasoning">
+                <strong>Reasoning:</strong>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="q14_reason" id="q14a" value="a">
+                        <label for="q14a">a) Not a perfect square</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14_reason" id="q14b" value="b">
+                        <label for="q14b">b) Non-repeating decimal</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14_reason" id="q14c" value="c">
+                        <label for="q14c">c) Integer</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q14_reason" id="q14d" value="d">
+                        <label for="q14d">d) Terminating decimal</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit-section">
+            <button type="submit" class="submit-btn">Submit Answers</button>
+        </div>
+    </form>
+
+    <script>
+        document.getElementById('mathForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Great work! Your answers have been recorded.');
+        });
+    </script>
+</body>
+</html>

@@ -14,23 +14,29 @@ This platform includes:
 ## 📁 Project Structure
 
 ```
-cwm/
-├── public/                     # Main web application
+codewithmorais/
+├── public/                     # Static web application
 │   ├── lessons/               # Complete Python course curriculum
-│   │   ├── index.html        # Course overview and navigation
-│   │   ├── section1-data-types-operators/    # Python basics
-│   │   ├── section2-control-flow/            # If/else, conditions
-│   │   ├── section3-loops/                   # For/while loops
-│   │   ├── section4-functions/               # Functions and scope
-│   │   ├── section5-data-structures/         # Lists, dicts, sets
-│   │   └── section6-file-handling/           # File I/O and modules
-│   ├── ide.html              # Full-featured Python IDE
+│   ├── ide.html              # Full-featured Python IDE  
 │   ├── dashboard.html         # Student progress dashboard
-│   ├── index.html            # Main landing page
+│   ├── projects.html          # Python practice projects
+│   ├── test.html             # Assessment interface
 │   └── firebase-config.js    # Firebase configuration
+├── src/                       # Flask backend (optional)
+│   ├── auth.py               # Authentication routes
+│   ├── routes.py             # Main Flask routes
+│   ├── config.py             # Configuration settings
+│   └── components/           # React-like components
+├── templates/                 # Flask HTML templates
+├── static/                    # CSS, JS, images
+├── scripts/                   # Setup and deployment
+│   └── utilities/            # Data upload scripts
+├── lessons/                   # Course content (JSON)
+├── data/                     # JSON data files
+├── temp/                     # Temporary files (gitignored)
+├── app.py                    # Flask application entry
 ├── firebase.json             # Firebase hosting settings
-├── .gitignore               # Git exclusions for multi-device dev
-└── README.md               # This documentation
+└── README.md                # This documentation
 
 ## 🚀 Multi-Device Development Setup
 

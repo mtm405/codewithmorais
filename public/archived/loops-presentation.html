@@ -1,0 +1,3606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Loops Presentation - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Firebase SDK for progress tracking -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/pyodide@0.24.1/pyodide.js"></script>
+  
+  <!-- Monaco Editor -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Enable text selection for content areas */
+    p, span, div, code, pre, li, h1, h2, h3, h4, h5, h6 {
+      user-select: text;
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+    }
+
+    /* Ensure buttons and interactive elements work properly */
+    button, .nav-btn, .quiz-option, .quiz-option-btn, .quiz-launch-btn {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    
+    .presentation-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Header */
+    .presentation-header {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(10px);
+    }
+    
+    .presentation-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .slide-counter {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    
+    /* Main Content */
+    .slides-wrapper {
+      flex: 1;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      min-height: 100%;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      opacity: 0;
+      transform: translateX(100px) scale(0.95);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow-y: auto;
+      box-sizing: border-box;
+      filter: blur(2px);
+      /* Inactive slides should NOT intercept mouse events */
+      pointer-events: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+    }
+    
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      filter: blur(0px);
+      /* Only active slide should be interactive */
+      pointer-events: auto !important;
+      user-select: text !important;
+      -webkit-user-select: text !important;
+    }
+    
+    .slide.prev {
+      transform: translateX(-100px) scale(0.95);
+      filter: blur(2px);
+    }
+    
+    /* Slide Content */
+    .slide-title {
+      font-size: 3.5rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 2rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(45deg, #fff, #f0f8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .slide-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      max-width: 1200px;
+      margin: 2rem auto;
+      width: 100%;
+      min-height: calc(100vh - 8rem);
+    }
+    
+    /* Visual Elements */
+    .visual-section {
+      text-align: center;
+      margin: 2rem 0;
+    }
+    
+    .visual-icon {
+      font-size: 6rem;
+      margin-bottom: 1rem;
+      opacity: 0.9;
+    }
+    
+    .question-box {
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    
+    .question-text {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .key-concept {
+      background: rgba(0, 255, 150, 0.2);
+      border-left: 5px solid #00ff96;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 10px 10px 0;
+    }
+    
+    .key-concept h3 {
+      color: #00ff96;
+      margin-bottom: 1rem;
+    }
+    
+    /* Code Examples */
+    .code-section {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 2rem 0;
+      backdrop-filter: blur(10px);
+    }
+    
+    .code-block {
+      background: #0d1117;
+      border-radius: 12px;
+      padding: 2rem;
+      font-family: 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border: 1px solid #30363d;
+      position: relative;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      tab-size: 4;
+      -moz-tab-size: 4;
+    }
+    
+    .code-block span {
+      white-space: pre-wrap;
+    }
+    
+    .code-block::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(90deg, #f85149 0%, #ffa500 25%, #00d4aa 50%, #1f6feb 75%);
+      border-radius: 12px 12px 0 0;
+      opacity: 0.1;
+    }
+    
+    .code-block::after {
+      content: "⚫ ⚫ ⚫";
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      font-size: 0.8rem;
+      color: #6e7681;
+      letter-spacing: 4px;
+    }
+    
+    .code-comment {
+      color: #7c7c7c;
+      font-style: italic;
+      font-weight: 400;
+    }
+    
+    .code-keyword {
+      color: #ff7b72;
+      font-weight: 600;
+    }
+    
+    .code-string {
+      color: #a5d6ff;
+    }
+    
+    .code-number {
+      color: #79c0ff;
+    }
+    
+    .code-function {
+      color: #d2a8ff;
+      font-weight: 500;
+    }
+    
+    .code-operator {
+      color: #ff7b72;
+      font-weight: 500;
+    }
+    
+    .code-variable {
+      color: #ffa657;
+    }
+    
+    /* Interactive Elements */
+    .activity-section {
+      background: rgba(255, 165, 0, 0.2);
+      border-left: 5px solid #ffa500;
+      border-radius: 0 15px 15px 0;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .activity-title {
+      color: #ffa500;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .quiz-scenarios {
+      display: grid;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .quiz-scenario {
+      background: rgba(0, 255, 150, 0.05);
+      border: 1px solid rgba(0, 255, 150, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .quiz-scenario p {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      color: #00ff96;
+    }
+    
+    .quiz-option {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      margin: 0.5rem 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      font-weight: 500;
+      display: inline-block;
+      margin-right: 1rem;
+    }
+    
+    .quiz-option:hover {
+      background: rgba(0, 255, 150, 0.2);
+      transform: scale(1.05);
+      border-color: #00ff96;
+    }
+    
+    .quiz-option.correct {
+      background: rgba(0, 255, 0, 0.3);
+      border-color: #00ff00;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+    }
+    
+    .quiz-option.incorrect {
+      background: rgba(255, 0, 0, 0.3);
+      border-color: #ff0000;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+    }
+
+    /* Activity Cards */
+    .activity-card {
+      background: linear-gradient(145deg, #1a1a2e, #16213e);
+      border: 2px solid rgba(0, 255, 150, 0.3);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 1rem 0;
+      transition: all 0.3s ease;
+    }
+
+    .activity-card:hover {
+      border-color: #00ff96;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 255, 150, 0.2);
+    }
+
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .activity-header h3 {
+      color: #00ff96;
+      font-size: 1.3rem;
+      margin: 0;
+    }
+
+    .activity-header i {
+      margin-right: 0.5rem;
+    }
+
+    .difficulty-badge {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .difficulty-badge.beginner {
+      background: rgba(40, 167, 69, 0.3);
+      border: 2px solid #28a745;
+      color: #28a745;
+    }
+
+    .difficulty-badge.intermediate {
+      background: rgba(255, 193, 7, 0.3);
+      border: 2px solid #ffc107;
+      color: #ffc107;
+    }
+
+    .difficulty-badge.advanced {
+      background: rgba(220, 53, 69, 0.3);
+      border: 2px solid #dc3545;
+      color: #dc3545;
+    }
+
+    .activity-goal {
+      background: rgba(0, 255, 150, 0.1);
+      border-left: 4px solid #00ff96;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+    }
+
+    .activity-instructions {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .activity-instructions ol {
+      margin: 0.5rem 0 0 1.5rem;
+      padding: 0;
+    }
+
+    .activity-instructions li {
+      margin: 0.8rem 0;
+      line-height: 1.6;
+    }
+
+    .activity-instructions code {
+      background: rgba(0, 255, 150, 0.2);
+      color: #00ff96;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .expected-output {
+      background: rgba(0, 123, 255, 0.1);
+      border-left: 4px solid #007bff;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .expected-output code {
+      background: rgba(0, 0, 0, 0.6);
+      color: #c9d1d9;
+      padding: 0.8rem;
+      border-radius: 6px;
+      display: block;
+      margin-top: 0.5rem;
+      line-height: 1.5;
+      font-size: 0.9rem;
+    }
+
+    /* Comparison Table */
+    .comparison-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .comparison-column {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    
+    .comparison-header {
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .comparison-item {
+      margin: 1rem 0;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+    
+    .comparison-label {
+      font-weight: 600;
+      color: #ffa500;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Navigation */
+    .navigation {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 10000;
+      /* Ensure navigation is always above slides */
+      pointer-events: auto !important;
+    }
+    
+    .slide-numbers {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      /* Ensure navigation is always interactive */
+      pointer-events: auto !important;
+      position: relative;
+      z-index: 10001;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .nav-btn.active {
+      background: rgba(0, 255, 150, 0.8) !important;
+      color: #000 !important;
+      font-weight: 600 !important;
+      border-color: #00ff96;
+    }
+    
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Interactive Code Runner */
+    .code-runner {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .code-input {
+      width: 100% !important;
+      background: #1e1e1e !important;
+      border: 1px solid #444 !important;
+      border-radius: 8px !important;
+      padding: 1rem !important;
+      color: white !important;
+      font-family: 'Courier New', monospace !important;
+      font-size: 1rem !important;
+      resize: vertical !important;
+      min-height: 120px !important;
+      position: relative !important;
+      z-index: 100 !important;
+      pointer-events: auto !important;
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+    }
+    
+    /* Monaco Editor container */
+    .monaco-editor-container {
+      width: 100%;
+      height: 200px !important;
+      border: 2px solid #444;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+      background: #1e1e1e !important;
+      position: relative;
+      cursor: text;
+    }
+    
+    .monaco-editor-container:focus-within {
+      border-color: #00ff96;
+    }
+    
+    .monaco-editor-container:hover {
+      border-color: #666;
+    }
+    
+    /* Ensure Monaco Editor content is properly sized */
+    .monaco-editor-container .monaco-editor {
+      height: 100% !important;
+      width: 100% !important;
+    }
+    
+    .monaco-editor-container .monaco-editor .monaco-editor-background {
+      background-color: #1e1e1e !important;
+    }
+    
+    /* Code runner enhancements */
+    .code-runner-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .template-btn, .clear-btn {
+      padding: 6px 12px;
+      background: #2d333b;
+      color: #c9d1d9;
+      border: 1px solid #444;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s ease;
+    }
+    
+    .template-btn:hover, .clear-btn:hover {
+      background: #00ff96;
+      color: #000;
+      border-color: #00ff96;
+    }
+    
+    .code-hint {
+      color: #7d8590;
+      font-size: 11px;
+      margin-left: auto;
+    }
+    
+    .run-btn {
+      background: #00ff96;
+      color: #000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .run-btn:hover {
+      background: #00e085;
+    }
+    
+    .output-area {
+      background: #000;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      min-height: 60px;
+      font-family: 'Courier New', monospace;
+      color: #00ff96;
+    }
+    
+    /* Instructions-only format (replacement for IDE) */
+    .instructions-only {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-left: 4px solid #00ff96;
+    }
+    
+    .instructions-only h4 {
+      color: #00ff96;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    
+    .instructions-only .code-hint {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border-left: 3px solid #4fd1c7;
+    }
+    
+    .instructions-only .expected-output {
+      background: rgba(0, 255, 150, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border-left: 3px solid #00ff96;
+    }
+    
+    .instructions-only code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: #c9d1d9;
+    }
+
+    /* Quiz Launch Button */
+    .quiz-launch-btn {
+      background: linear-gradient(45deg, #00ff96, #00cc7a);
+      color: #000;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 255, 150, 0.3);
+    }
+
+    .quiz-launch-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 255, 150, 0.4);
+    }
+
+    /* Quiz Modal */
+    .quiz-modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .quiz-modal-content {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border-radius: 15px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(0, 255, 150, 0.3);
+    }
+
+    .quiz-header h2 {
+      color: #00ff96;
+      margin: 0;
+    }
+
+    .close-modal {
+      font-size: 2rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close-modal:hover {
+      color: #ff4757;
+    }
+
+    .quiz-progress {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #00ff96;
+      font-weight: 600;
+    }
+
+    .quiz-question h3 {
+      color: #fff;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .scenario {
+      background: rgba(0, 123, 255, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid #007bff;
+      color: #ccc;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-option-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      text-align: left;
+    }
+
+    .quiz-option-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #00ff96;
+      transform: translateY(-2px);
+    }
+
+    .quiz-option-btn:disabled {
+      cursor: not-allowed;
+    }
+
+    .quiz-option-btn.correct {
+      background: rgba(40, 167, 69, 0.3);
+      border-color: #28a745;
+      color: #28a745;
+    }
+
+    .quiz-option-btn.incorrect {
+      background: rgba(220, 53, 69, 0.3);
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+
+    .quiz-feedback {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .quiz-feedback.correct {
+      background: rgba(40, 167, 69, 0.2);
+      border-left: 4px solid #28a745;
+      color: #28a745;
+    }
+
+    .quiz-feedback.incorrect {
+      background: rgba(220, 53, 69, 0.2);
+      border-left: 4px solid #dc3545;
+      color: #dc3545;
+    }
+
+    .feedback-icon {
+      font-size: 1.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .quiz-actions {
+      text-align: center;
+    }
+
+    .next-btn, .finish-btn, .retry-btn, .close-btn {
+      background: #00ff96;
+      color: #000;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin: 0 0.5rem;
+    }
+
+    .next-btn:hover, .finish-btn:hover, .retry-btn:hover, .close-btn:hover {
+      background: #00cc7a;
+      transform: translateY(-2px);
+    }
+
+    .quiz-results {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .results-emoji {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .quiz-results h3 {
+      color: #00ff96;
+      margin-bottom: 1rem;
+    }
+
+    .score {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .message {
+      color: #ccc;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .results-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes slideInCode {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .animate-in {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    
+    .code-block {
+      animation: slideInCode 0.8s ease-out;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes glow {
+      0%, 100% { 
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+      50% { 
+        box-shadow: 0 8px 32px rgba(0, 212, 170, 0.1), 
+                    0 0 20px rgba(0, 212, 170, 0.1);
+      }
+    }
+    
+    .code-block:hover {
+      animation: glow 2s ease-in-out infinite;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .slide {
+        padding: 2rem 1rem;
+        justify-content: flex-start;
+      }
+      
+      .slide-content {
+        min-height: calc(100vh - 6rem);
+      }
+      
+      .slide-title {
+        font-size: 2.5rem;
+      }
+      
+      .comparison-table {
+        grid-template-columns: 1fr;
+      }
+      
+      .visual-icon {
+        font-size: 4rem;
+      }
+      
+      .presentation-container {
+        height: auto;
+        min-height: 100vh;
+      }
+      
+      .slides-wrapper {
+        position: relative;
+        min-height: calc(100vh - 120px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-container">
+    <!-- Header -->
+    <div class="presentation-header">
+      <div class="presentation-title">
+        <i class="fab fa-python"></i> Python Loops: The Power of Repetition
+      </div>
+      <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">7</span>
+      </div>
+    </div>
+    
+    <!-- Slides -->
+    <div class="slides-wrapper">
+      <!-- Slide 1: Introduction to Iteration -->
+      <div class="slide active" id="slide-1">
+        <div class="slide-content">
+          <h1 class="slide-title">The Power of Repetition</h1>
+          <h2 style="text-align: center; font-size: 2rem; margin-bottom: 3rem; opacity: 0.9;">
+            An Introduction to Loops
+          </h2>
+          
+          <div class="visual-section">
+            <div class="visual-icon pulse">
+              <i class="fas fa-sync-alt"></i>
+            </div>
+          </div>
+          
+          <div class="question-box animate-in">
+            <div class="question-text">
+              💭 "Imagine you have to print your name 100 times. What's the fastest way to do it?"
+            </div>
+            <p style="font-style: italic; opacity: 0.8;">Think about it for a moment...</p>
+          </div>
+          
+          <div class="key-concept animate-in">
+            <h3><i class="fas fa-lightbulb"></i> Key Concept</h3>
+            <p>Loops are our way of telling the computer to repeat a task without us having to write the code multiple times. This is the core concept of <strong>iteration</strong> - the power of repetition in programming!</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 2: Learning Objectives -->
+      <div class="slide" id="slide-2">
+        <div class="slide-content">
+          <h1 class="slide-title">Today's Learning Objectives</h1>
+          
+          <div class="objective-section" style="background: linear-gradient(145deg, #1a1a2e, #16213e); border: 2px solid #00ff96; border-radius: 15px; padding: 3rem; margin: 2rem 0; text-align: center;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;">
+              <div class="objective-item" style="background: rgba(0, 255, 150, 0.1); border-radius: 15px; padding: 2rem; transition: all 0.3s ease;">
+                <i class="fas fa-sync-alt" style="color: #00ff96; font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                <h3 style="color: #00ff96; margin-bottom: 1rem;">Master While Loops</h3>
+                <p style="font-size: 1.1rem; opacity: 0.9; line-height: 1.6;">Understand how while loops work and when to use them for repeating tasks</p>
+              </div>
+              <div class="objective-item" style="background: rgba(0, 255, 150, 0.1); border-radius: 15px; padding: 2rem; transition: all 0.3s ease;">
+                <i class="fas fa-list" style="color: #00ff96; font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                <h3 style="color: #00ff96; margin-bottom: 1rem;">Master For Loops</h3>
+                <p style="font-size: 1.1rem; opacity: 0.9; line-height: 1.6;">Learn to iterate through lists and ranges efficiently</p>
+              </div>
+              <div class="objective-item" style="background: rgba(0, 255, 150, 0.1); border-radius: 15px; padding: 2rem; transition: all 0.3s ease;">
+                <i class="fas fa-code" style="color: #00ff96; font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                <h3 style="color: #00ff96; margin-bottom: 1rem;">Practice Real Examples</h3>
+                <p style="font-size: 1.1rem; opacity: 0.9; line-height: 1.6;">Build practical programs using loops in real scenarios</p>
+              </div>
+            </div>
+            
+            <div style="margin-top: 3rem; padding: 1.5rem; background: rgba(255, 193, 7, 0.1); border-radius: 10px; border-left: 4px solid #ffc107;">
+              <h4 style="color: #ffc107; margin-bottom: 0.5rem;"><i class="fas fa-lightbulb"></i> By the end of this lesson, you'll be able to:</h4>
+              <p style="opacity: 0.9; font-size: 1.05rem;">Write loops that solve real-world problems, avoid infinite loops, and choose between while and for loops based on the situation!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 3: Meet the while Loop -->
+      <div class="slide" id="slide-3">
+        <div class="slide-content">
+          <h1 class="slide-title">The "While I Can" Loop</h1>
+          
+          <div class="visual-section">
+            <div class="visual-icon">
+              <i class="fas fa-car"></i> <i class="fas fa-gas-pump"></i>
+            </div>
+            <p style="font-size: 1.3rem; opacity: 0.9;">A car can keep driving while it still has gas!</p>
+          </div>
+
+          <div class="key-concept" style="background: rgba(0, 255, 150, 0.1); border-left: 4px solid #00ff96; padding: 1.5rem; margin: 2rem 0; border-radius: 8px;">
+            <h3><i class="fas fa-question-circle"></i> What is a While Loop?</h3>
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;"><strong>A while loop is like giving your computer instructions to "keep doing something as long as a condition is true."</strong></p>
+            
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+              <p><strong>Think of it like this:</strong></p>
+              <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><strong>"While I have homework to do, keep studying"</strong></li>
+                <li><strong>"While there are dishes in the sink, keep washing"</strong></li>
+                <li><strong>"While the game isn't over, keep playing"</strong></li>
+              </ul>
+            </div>
+            
+            <p>In programming, we write: <code>while condition_is_true:</code> and then the computer repeats the instructions until the condition becomes false.</p>
+          </div>
+          
+          <div class="key-concept">
+            <h3><i class="fas fa-cogs"></i> How While Loops Work - Step by Step</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1rem 0;">
+              <div style="background: rgba(255, 235, 59, 0.15); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ffeb3b; border: 1px solid rgba(255, 235, 59, 0.3);">
+                <h4 style="color: #fff176; font-weight: 600; margin-bottom: 0.8rem;">Step 1: Check the Condition</h4>
+                <p style="color: #ffffff; opacity: 0.9; line-height: 1.5;">Is the condition still true?</p>
+              </div>
+              <div style="background: rgba(76, 175, 80, 0.15); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #4caf50; border: 1px solid rgba(76, 175, 80, 0.3);">
+                <h4 style="color: #81c784; font-weight: 600; margin-bottom: 0.8rem;">Step 2: Execute the Code</h4>
+                <p style="color: #ffffff; opacity: 0.9; line-height: 1.5;">If yes, run the code inside the loop</p>
+              </div>
+              <div style="background: rgba(33, 150, 243, 0.15); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #2196f3; border: 1px solid rgba(33, 150, 243, 0.3);">
+                <h4 style="color: #64b5f6; font-weight: 600; margin-bottom: 0.8rem;">Step 3: Update Variables</h4>
+                <p style="color: #ffffff; opacity: 0.9; line-height: 1.5;">Change something that affects the condition</p>
+              </div>
+              <div style="background: rgba(255, 87, 34, 0.15); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ff5722; border: 1px solid rgba(255, 87, 34, 0.3);">
+                <h4 style="color: #ff8a65; font-weight: 600; margin-bottom: 0.8rem;">Step 4: Repeat or Stop</h4>
+                <p style="color: #ffffff; opacity: 0.9; line-height: 1.5;">Go back to Step 1, or stop if condition is false</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="key-concept">
+            <h3><i class="fas fa-car"></i> The Car Analogy (Detailed)</h3>
+            <p>"A car can keep driving <strong>while</strong> it still has gas. Once the gas runs out, it stops."</p>
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+              <p><strong>Real Life:</strong> While fuel > 0 liters → Keep driving</p>
+              <p><strong>In Code:</strong> <code>while fuel_level > 0:</code> → Keep executing code</p>
+            </div>
+            <p>This directly translates to code: a <strong>while loop</strong> continues to run while its condition is <code>True</code>.</p>
+          </div>
+          
+          <div class="code-section">
+            <h3 style="color: #00ff96; margin-bottom: 1rem;"><i class="fas fa-code"></i> Your First While Loop - Step by Step!</h3>
+            
+            <div style="background: rgba(0, 123, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #007bff; margin-bottom: 1.5rem;">
+              <h4 style="color: #007bff;"><i class="fas fa-info-circle"></i> Before We Code - Understanding the Parts</h4>
+              <p><strong>Every while loop has 3 essential parts:</strong></p>
+              <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><strong>Setup:</strong> Create a variable to track our condition</li>
+                <li><strong>Condition:</strong> Write the test that keeps the loop running</li>
+                <li><strong>Update:</strong> Change the variable so the loop eventually stops</li>
+              </ol>
+              <p><span style="color: #ff4757;">⚠️ Forget the update step = infinite loop!</span></p>
+            </div>
+            
+            <div class="code-block">
+<span class="code-comment"># Example 1: Your first while loop - Counting to 5</span>
+<span class="code-comment"># Step 1: Setup - Create our tracking variable</span>
+<span class="code-variable">count</span> <span class="code-operator">=</span> <span class="code-number">1</span>  <span class="code-comment"># Start counting from 1</span>
+
+<span class="code-comment"># Step 2: Condition - Keep going while count is 5 or less</span>
+<span class="code-keyword">while</span> <span class="code-variable">count</span> <span class="code-operator"><=</span> <span class="code-number">5</span>:  <span class="code-comment"># "<= means "less than or equal to"</span>
+    <span class="code-function">print</span>(<span class="code-string">"Count is now:"</span>, <span class="code-variable">count</span>)  <span class="code-comment"># Do something with count</span>
+    
+    <span class="code-comment"># Step 3: Update - VERY IMPORTANT! Change count so loop can end</span>
+    <span class="code-variable">count</span> <span class="code-operator">+=</span> <span class="code-number">1</span>  <span class="code-comment"># Same as: count = count + 1</span>
+
+<span class="code-function">print</span>(<span class="code-string">"All done! Final count:"</span>, <span class="code-variable">count</span>)  <span class="code-comment"># This runs AFTER the loop</span>
+
+<span class="code-comment"># Output: Count is now: 1</span>
+<span class="code-comment">#         Count is now: 2</span>
+<span class="code-comment">#         Count is now: 3</span>
+<span class="code-comment">#         Count is now: 4</span>
+<span class="code-comment">#         Count is now: 5</span>
+<span class="code-comment">#         All done! Final count: 6</span>
+            </div>
+            
+            <div class="code-block">
+<span class="code-comment"># Example 2: Car driving simulation</span>
+<span class="code-variable">fuel_level</span> <span class="code-operator">=</span> <span class="code-number">5</span>
+<span class="code-variable">distance</span> <span class="code-operator">=</span> <span class="code-number">0</span>
+
+<span class="code-keyword">while</span> <span class="code-variable">fuel_level</span> <span class="code-operator">></span> <span class="code-number">0</span>:
+    <span class="code-function">print</span>(<span class="code-string">"Driving... Fuel remaining:"</span>, <span class="code-variable">fuel_level</span>, <span class="code-string">"liters"</span>)
+    <span class="code-variable">fuel_level</span> <span class="code-operator">-=</span> <span class="code-number">1</span>
+    <span class="code-variable">distance</span> <span class="code-operator">+=</span> <span class="code-number">10</span>
+
+<span class="code-function">print</span>(<span class="code-string">"Out of gas! Traveled"</span>, <span class="code-variable">distance</span>, <span class="code-string">"km total."</span>)
+            </div>
+            
+            <div class="code-block">
+<span class="code-comment"># Example 3: Rocket launch countdown</span>
+<span class="code-variable">countdown_seconds</span> <span class="code-operator">=</span> <span class="code-number">10</span>
+
+<span class="code-function">print</span>(<span class="code-string">"Rocket Launch Countdown:"</span>)
+<span class="code-keyword">while</span> <span class="code-variable">countdown_seconds</span> <span class="code-operator">></span> <span class="code-number">0</span>:
+    <span class="code-function">print</span>(<span class="code-string">"T-minus"</span>, <span class="code-variable">countdown_seconds</span>, <span class="code-string">"seconds..."</span>)
+    <span class="code-variable">countdown_seconds</span> <span class="code-operator">-=</span> <span class="code-number">1</span>
+
+<span class="code-function">print</span>(<span class="code-string">"BLASTOFF!"</span>)
+            </div>
+          </div>
+          
+          <div class="activity-section">
+            <div class="activity-title">
+              <i class="fas fa-hands-on"></i> While Loop Coding Project
+            </div>
+            <p><strong>Your Turn:</strong> Create a simple countdown timer using a while loop!</p>
+            
+            <div class="instructions-only">
+              <h4>🎯 Your Mission: Build a Launch Countdown!</h4>
+              <p>Create a program that counts down from any number the user chooses and then says "Blastoff!"</p>
+              
+              <div class="code-hint">
+                <strong>Step-by-Step Instructions:</strong><br>
+                <ol style="margin: 0.5rem 0 0 1.5rem; line-height: 1.8;">
+                  <li>Ask the user for a starting number using <code>input()</code></li>
+                  <li>Convert their input to an integer with <code>int()</code></li>
+                  <li>Create a while loop that runs while the number is greater than 0</li>
+                  <li>Inside the loop, print the current number</li>
+                  <li>Decrease the number by 1 each time through the loop</li>
+                  <li>After the loop ends, print "Blastoff!"</li>
+                </ol>
+              </div>
+              
+              <div style="background: rgba(255, 193, 7, 0.1); padding: 1rem; border-radius: 8px; border-left: 3px solid #ffc107; margin: 1rem 0;">
+                <strong>💡 Helpful Code Structure:</strong><br>
+                <code>countdown = int(input("Enter countdown start: "))<br>
+                while countdown > 0:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;print(countdown)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;countdown -= 1<br>
+                print("Blastoff!")</code>
+              </div>
+              
+              <div class="expected-output">
+                <strong>📤 Expected Output (if user enters 5):</strong><br>
+                <code>Enter countdown start: 5<br>
+                5<br>
+                4<br>
+                3<br>
+                2<br>
+                1<br>
+                Blastoff!</code>
+              </div>
+              
+              <div style="background: rgba(220, 53, 69, 0.1); padding: 1rem; border-radius: 8px; border-left: 3px solid #dc3545; margin: 1rem 0;">
+                <strong>⚠️ Common Mistakes to Avoid:</strong>
+                <ul style="margin: 0.5rem 0 0 1.5rem; line-height: 1.6;">
+                  <li>Forgetting to decrease the countdown variable (creates infinite loop!)</li>
+                  <li>Using <code>=</code> instead of <code>></code> in the while condition</li>
+                  <li>Forgetting to convert input() to int()</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 4: The for Loop -->
+      <div class="slide" id="slide-4">
+        <div class="slide-content">
+          <h1 class="slide-title">The "For Every Item" Loop</h1>
+          
+          <div class="visual-section">
+            <div class="visual-icon">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+            <p style="font-size: 1.3rem; opacity: 0.9;">🍌 🍎 🥤</p>
+            <p>A cashier processes every single item in your cart, one by one!</p>
+          </div>
+
+          <div class="key-concept" style="background: rgba(0, 255, 150, 0.1); border-left: 4px solid #00ff96; padding: 1.5rem; margin: 2rem 0; border-radius: 8px;">
+            <h3><i class="fas fa-question-circle"></i> What is a For Loop?</h3>
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;"><strong>A for loop is like telling your computer: "For each item in this collection, do something specific with it."</strong></p>
+            
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+              <p><strong>Think of it like this:</strong></p>
+              <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><strong>"For each friend in my contact list, send a birthday message"</strong></li>
+                <li><strong>"For each item in my shopping cart, scan the barcode"</strong></li>
+                <li><strong>"For each page in this book, read it out loud"</strong></li>
+              </ul>
+            </div>
+            
+            <p>The computer automatically goes through each item one by one, and you don't have to keep track of where you are!</p>
+          </div>
+
+          <div class="key-concept">
+            <h3><i class="fas fa-list"></i> What's a List in Programming?</h3>
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+              <p><strong>A list is like a container that holds multiple items in order.</strong></p>
+              <p>Examples in Python:</p>
+              <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><code>fruits = ["apple", "banana", "orange"]</code></li>
+                <li><code>numbers = [1, 2, 3, 4, 5]</code></li>
+                <li><code>names = ["Alice", "Bob", "Charlie"]</code></li>
+              </ul>
+              <p>The square brackets <code>[ ]</code> create a list, and commas separate each item.</p>
+            </div>
+          </div>
+
+          <div class="key-concept">
+            <h3><i class="fas fa-cogs"></i> How For Loops Work - Step by Step</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1rem 0;">
+              <div style="background: rgba(255, 235, 59, 0.15); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ffeb3b; border: 1px solid rgba(255, 235, 59, 0.3);">
+                <h4 style="color: #fff176; font-weight: 600; margin-bottom: 0.8rem;">Step 1: Start with First Item</h4>
+                <p style="color: #ffffff; opacity: 0.9; line-height: 1.5;">Python takes the first item from your list</p>
+              </div>
+              <div style="background: rgba(76, 175, 80, 0.15); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #4caf50; border: 1px solid rgba(76, 175, 80, 0.3);">
+                <h4 style="color: #81c784; font-weight: 600; margin-bottom: 0.8rem;">Step 2: Do Something</h4>
+                <p style="color: #ffffff; opacity: 0.9; line-height: 1.5;">Execute your code using that item</p>
+              </div>
+              <div style="background: rgba(33, 150, 243, 0.15); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #2196f3; border: 1px solid rgba(33, 150, 243, 0.3);">
+                <h4 style="color: #64b5f6; font-weight: 600; margin-bottom: 0.8rem;">Step 3: Move to Next Item</h4>
+                <p style="color: #ffffff; opacity: 0.9; line-height: 1.5;">Automatically move to the next item in the list</p>
+              </div>
+              <div style="background: rgba(255, 87, 34, 0.15); padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ff5722; border: 1px solid rgba(255, 87, 34, 0.3);">
+                <h4 style="color: #ff8a65; font-weight: 600; margin-bottom: 0.8rem;">Step 4: Repeat Until Done</h4>
+                <p style="color: #ffffff; opacity: 0.9; line-height: 1.5;">Continue until all items are processed</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="key-concept">
+            <h3><i class="fas fa-shopping-cart"></i> The Shopping Cart Analogy (Detailed)</h3>
+            <p>"A cashier processes <strong>for every single item</strong> in your cart, one by one, until the cart is empty."</p>
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+              <p><strong>Real Life:</strong> For each item in shopping_cart → Scan item, add to total</p>
+              <p><strong>In Code:</strong> <code>for item in shopping_cart:</code> → Do something with each item</p>
+            </div>
+            <p>Python automatically handles moving from one item to the next - you just focus on what to do with each item!</p>
+          </div>
+          
+          <div class="code-section">
+            <h3 style="color: #00ff96; margin-bottom: 1rem;"><i class="fas fa-code"></i> Your First For Loop - Step by Step!</h3>
+            
+            <div style="background: rgba(0, 123, 255, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #007bff; margin-bottom: 1.5rem;">
+              <h4 style="color: #007bff;"><i class="fas fa-info-circle"></i> Before We Code - Understanding For Loop Syntax</h4>
+              <p><strong>The for loop pattern:</strong></p>
+              <div style="background: rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 4px; margin: 0.5rem 0;">
+                <code style="font-size: 1.1rem;">for <span style="color: #ffc107;">variable_name</span> in <span style="color: #28a745;">list_name</span>:</code>
+              </div>
+              <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><strong style="color: #ffc107;">variable_name:</strong> The name you give to each item as you process it</li>
+                <li><strong style="color: #28a745;">list_name:</strong> The collection of items you want to go through</li>
+                <li><strong>Colon (:):</strong> Tells Python "here comes the code to repeat"</li>
+                <li><strong>Indentation:</strong> The code inside the loop must be indented (4 spaces or 1 tab)</li>
+              </ul>
+            </div>
+            
+            <div class="code-block">
+<span class="code-comment"># Example 1: Your first for loop - Going through a simple list</span>
+<span class="code-comment"># Step 1: Create a list (collection of items)</span>
+<span class="code-variable">my_pets</span> <span class="code-operator">=</span> [<span class="code-string">"cat"</span>, <span class="code-string">"dog"</span>, <span class="code-string">"bird"</span>]  <span class="code-comment"># A list with 3 pet names</span>
+
+<span class="code-comment"># Step 2: Use for loop to go through each pet</span>
+<span class="code-function">print</span>(<span class="code-string">"My pets are:"</span>)
+<span class="code-keyword">for</span> <span class="code-variable">pet</span> <span class="code-keyword">in</span> <span class="code-variable">my_pets</span>:  <span class="code-comment"># "pet" is our chosen variable name</span>
+    <span class="code-function">print</span>(<span class="code-string">"  - I have a"</span>, <span class="code-variable">pet</span>)  <span class="code-comment"># This runs once for each item</span>
+
+<span class="code-function">print</span>(<span class="code-string">"That's all my pets!"</span>)  <span class="code-comment"># This runs AFTER the loop</span>
+
+<span class="code-comment"># Output: My pets are:</span>
+<span class="code-comment">#           - I have a cat</span>
+<span class="code-comment">#           - I have a dog</span>
+<span class="code-comment">#           - I have a bird</span>
+<span class="code-comment">#         That's all my pets!</span>
+            </div>
+            
+            <div style="background: rgba(40, 167, 69, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #28a745; margin: 1rem 0;">
+              <h4 style="color: #28a745;"><i class="fas fa-lightbulb"></i> Magic Happening Behind the Scenes</h4>
+              <p>When Python runs this loop, it's like it's doing this:</p>
+              <ol style="margin-left: 1.5rem; line-height: 1.6;">
+                <li>Take first item ("cat"), put it in variable <code>pet</code>, run the indented code</li>
+                <li>Take second item ("dog"), put it in variable <code>pet</code>, run the indented code</li>
+                <li>Take third item ("bird"), put it in variable <code>pet</code>, run the indented code</li>
+                <li>No more items? Stop the loop and continue with rest of program</li>
+              </ol>
+            </div>
+            
+            <div class="code-block">
+<span class="code-comment"># Example 2: More realistic - Processing a shopping list</span>
+<span class="code-variable">shopping_list</span> <span class="code-operator">=</span> [<span class="code-string">"bread"</span>, <span class="code-string">"milk"</span>, <span class="code-string">"eggs"</span>, <span class="code-string">"apples"</span>]
+
+<span class="code-function">print</span>(<span class="code-string">"Processing your shopping list..."</span>)
+<span class="code-keyword">for</span> <span class="code-variable">item</span> <span class="code-keyword">in</span> <span class="code-variable">shopping_list</span>:
+    <span class="code-function">print</span>(<span class="code-string">"✓ Found"</span>, <span class="code-variable">item</span>, <span class="code-string">"- adding to cart!"</span>)
+
+<span class="code-function">print</span>(<span class="code-string">"Shopping complete! Total items:"</span>, <span class="code-function">len</span>(<span class="code-variable">shopping_list</span>))
+
+<span class="code-comment"># len() tells us how many items are in the list</span>
+            </div>
+            
+            <div class="code-block">
+<span class="code-comment"># Example 2: Checkout system processing</span>
+<span class="code-variable">shopping_cart</span> <span class="code-operator">=</span> [
+    <span class="code-string">"organic apples"</span>,
+    <span class="code-string">"whole grain bread"</span>,
+    <span class="code-string">"fresh bananas"</span>,
+    <span class="code-string">"milk (2%)"</span>
+]
+<span class="code-variable">total_price</span> <span class="code-operator">=</span> <span class="code-number">0.00</span>
+
+<span class="code-function">print</span>(<span class="code-string">"Processing your checkout..."</span>)
+<span class="code-keyword">for</span> <span class="code-variable">item_number</span>, <span class="code-variable">item</span> <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(<span class="code-variable">shopping_cart</span>, <span class="code-number">1</span>):
+    <span class="code-function">print</span>(<span class="code-string">"  "</span>, <span class="code-variable">item_number</span>, <span class="code-string">". Scanning"</span>, <span class="code-variable">item</span>, <span class="code-string">"..."</span>)
+    <span class="code-variable">total_price</span> <span class="code-operator">+=</span> <span class="code-number">3.50</span>  <span class="code-comment"># Simplified pricing</span>
+
+<span class="code-function">print</span>(<span class="code-string">"All"</span>, <span class="code-function">len</span>(<span class="code-variable">shopping_cart</span>), <span class="code-string">"items processed!"</span>)
+<span class="code-function">print</span>(<span class="code-string">"Total: $"</span>, <span class="code-function">round</span>(<span class="code-variable">total_price</span>, <span class="code-number">2</span>))
+            </div>
+            
+            <div class="code-block">
+<span class="code-comment"># Example 3: Student grade calculator using range()</span>
+<span class="code-variable">num_students</span> <span class="code-operator">=</span> <span class="code-number">5</span>
+<span class="code-variable">total_score</span> <span class="code-operator">=</span> <span class="code-number">0</span>
+
+<span class="code-function">print</span>(<span class="code-string">"Calculating class average..."</span>)
+<span class="code-keyword">for</span> <span class="code-variable">student_id</span> <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-variable">num_students</span> <span class="code-operator">+</span> <span class="code-number">1</span>):
+    <span class="code-comment"># Simulate getting a grade (in real code, this would be user input)</span>
+    <span class="code-variable">grade</span> <span class="code-operator">=</span> <span class="code-number">85</span> <span class="code-operator">+</span> <span class="code-variable">student_id</span> <span class="code-operator">*</span> <span class="code-number">2</span>  <span class="code-comment"># Sample grades: 87, 89, 91, 93, 95</span>
+    <span class="code-function">print</span>(<span class="code-string">"  Student"</span>, <span class="code-variable">student_id</span>, <span class="code-string">":"</span>, <span class="code-variable">grade</span>, <span class="code-string">"%"</span>)
+    <span class="code-variable">total_score</span> <span class="code-operator">+=</span> <span class="code-variable">grade</span>
+
+<span class="code-variable">class_average</span> <span class="code-operator">=</span> <span class="code-variable">total_score</span> <span class="code-operator">/</span> <span class="code-variable">num_students</span>
+<span class="code-function">print</span>(<span class="code-string">"Class average:"</span>, <span class="code-function">round</span>(<span class="code-variable">class_average</span>, <span class="code-number">1</span>), <span class="code-string">"%"</span>)
+            </div>
+          </div>
+          
+          <div class="activity-section">
+            <div class="activity-title">
+              <i class="fas fa-hands-helping"></i> List Looping Activity
+            </div>
+            <p><strong>Your Turn:</strong> Create a list of your favorite video games, movies, or foods, then write a for loop to print each item!</p>
+            
+            <div class="instructions-only">
+              <h4>🎯 Your Mission:</h4>
+              <p>Create a list of your favorite video games, movies, or foods, then write a for loop to print each item!</p>
+              <div class="code-hint">
+                <strong>Example structure:</strong><br>
+                <code>my_list = ["item1", "item2", "item3"]<br>
+                for item in my_list:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;print(item)</code>
+              </div>
+              <div class="expected-output">
+                <strong>Expected Output:</strong><br>
+                <code>item1<br>item2<br>item3</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 5: while vs for -->
+      <div class="slide" id="slide-5">
+        <div class="slide-content">
+          <h1 class="slide-title">When to Use Which?</h1>
+          
+          <div class="comparison-table">
+            <div class="comparison-column">
+              <div class="comparison-header" style="color: #ff6b6b;">
+                <i class="fas fa-clock"></i> while
+              </div>
+              
+              <div class="comparison-item">
+                <div class="comparison-label">When to use:</div>
+                <p>When you don't know exactly how many times you need to repeat</p>
+              </div>
+              
+              <div class="comparison-item">
+                <div class="comparison-label">Analogy:</div>
+                <p>🎮 A video game where you keep fighting while you still have health points</p>
+              </div>
+              
+              <div class="comparison-item">
+                <div class="comparison-label">Example:</div>
+                <div class="code-block" style="font-size: 0.9rem;">
+<span class="code-comment"># Game battle system</span>
+<span class="code-variable">player_health</span> <span class="code-operator">=</span> <span class="code-number">100</span>
+<span class="code-variable">monsters_defeated</span> <span class="code-operator">=</span> <span class="code-number">0</span>
+
+<span class="code-keyword">while</span> <span class="code-variable">player_health</span> <span class="code-operator">></span> <span class="code-number">0</span>:
+    <span class="code-function">print</span>(<span class="code-string">"Fighting! HP:"</span>, <span class="code-variable">player_health</span>)
+    <span class="code-variable">monsters_defeated</span> <span class="code-operator">+=</span> <span class="code-number">1</span>
+    <span class="code-variable">player_health</span> <span class="code-operator">-=</span> <span class="code-number">15</span>
+
+<span class="code-function">print</span>(<span class="code-string">"Game Over! Defeated"</span>, <span class="code-variable">monsters_defeated</span>, <span class="code-string">"monsters"</span>)
+                </div>
+              </div>
+            </div>
+            
+            <div class="comparison-column">
+              <div class="comparison-header" style="color: #4ecdc4;">
+                <i class="fas fa-list"></i> for
+              </div>
+              
+              <div class="comparison-item">
+                <div class="comparison-label">When to use:</div>
+                <p>When iterating over a specific sequence or a known number of times</p>
+              </div>
+              
+              <div class="comparison-item">
+                <div class="comparison-label">Analogy:</div>
+                <p>🎵 Playing a song with 10 beats: you loop for each beat</p>
+              </div>
+              
+              <div class="comparison-item">
+                <div class="comparison-label">Example:</div>
+                <div class="code-block" style="font-size: 0.9rem;">
+<span class="code-comment"># Music beat generator</span>
+<span class="code-variable">song_beats</span> <span class="code-operator">=</span> [<span class="code-string">"kick"</span>, <span class="code-string">"snare"</span>, <span class="code-string">"hi-hat"</span>, <span class="code-string">"kick"</span>]
+
+<span class="code-function">print</span>(<span class="code-string">"Playing song..."</span>)
+<span class="code-keyword">for</span> <span class="code-variable">beat_num</span>, <span class="code-variable">sound</span> <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(<span class="code-variable">song_beats</span>, <span class="code-number">1</span>):
+    <span class="code-function">print</span>(<span class="code-string">"Beat"</span>, <span class="code-variable">beat_num</span>, <span class="code-string">":"</span>, <span class="code-variable">sound</span>)
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="activity-section">
+            <div class="activity-title">
+              <i class="fas fa-brain"></i> Interactive Quiz Challenge
+            </div>
+            <p><strong>Test your understanding! Click the button to start the quiz:</strong></p>
+            
+            <div style="text-align: center; margin: 2rem 0;">
+              <button onclick="openQuizModal()" class="quiz-launch-btn">
+                <i class="fas fa-play-circle"></i> Start Quiz: While vs For Loops
+              </button>
+            </div>
+            
+            <div style="background: rgba(0, 255, 150, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #00ff96;">
+              <p><strong>🎯 What you'll practice:</strong></p>
+              <ul style="margin: 0.5rem 0 0 1.5rem; line-height: 1.8;">
+                <li>Choosing between while and for loops</li>
+                <li>Understanding when each loop type is best</li>
+                <li>Real-world programming scenarios</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 6: break and continue -->
+      <div class="slide" id="slide-6">
+        <div class="slide-content">
+          <h1 class="slide-title">Breaking the Rules (and the Loop)</h1>
+          
+          <div class="visual-section">
+            <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0;">
+              <div style="text-align: center;">
+                <div style="font-size: 4rem; color: #ff4757;">🛑</div>
+                <h3>break</h3>
+                <p>Emergency Stop</p>
+              </div>
+              <div style="text-align: center;">
+                <div style="font-size: 4rem; color: #ffa502;">⏭️</div>
+                <h3>continue</h3>
+                <p>Skip Turn</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="comparison-table">
+            <div class="comparison-column">
+              <div class="comparison-header" style="color: #ff4757;">
+                <i class="fas fa-stop"></i> break
+              </div>
+              
+              <div class="comparison-item">
+                <div class="comparison-label">What it does:</div>
+                <p>Immediately stops the loop, no matter what</p>
+              </div>
+              
+              <div class="code-block" style="font-size: 0.9rem;">
+<span class="code-comment"># Password login system with attempts limit</span>
+<span class="code-keyword">import</span> <span class="code-variable">random</span>
+
+<span class="code-variable">correct_password</span> <span class="code-operator">=</span> <span class="code-string">"python123"</span>
+<span class="code-variable">attempts</span> <span class="code-operator">=</span> <span class="code-number">0</span>
+<span class="code-variable">max_attempts</span> <span class="code-operator">=</span> <span class="code-number">3</span>
+
+<span class="code-function">print</span>(<span class="code-string">"🔐 Login System"</span>)
+<span class="code-keyword">while</span> <span class="code-keyword">True</span>:
+    <span class="code-variable">password</span> <span class="code-operator">=</span> <span class="code-function">input</span>(<span class="code-string">"Enter password: "</span>)
+    <span class="code-variable">attempts</span> <span class="code-operator">+=</span> <span class="code-number">1</span>
+    
+    <span class="code-keyword">if</span> <span class="code-variable">password</span> <span class="code-operator">==</span> <span class="code-variable">correct_password</span>:
+        <span class="code-function">print</span>(<span class="code-string">"Access granted!"</span>)
+        <span class="code-keyword">break</span>  <span class="code-comment"># Exit loop on success</span>
+    
+    <span class="code-keyword">if</span> <span class="code-variable">attempts</span> <span class="code-operator">>=</span> <span class="code-variable">max_attempts</span>:
+        <span class="code-function">print</span>(<span class="code-string">"Account locked!"</span>)
+        <span class="code-keyword">break</span>  <span class="code-comment"># Exit loop after max attempts</span>
+        
+    <span class="code-function">print</span>(<span class="code-string">"Wrong!"</span>, <span class="code-variable">max_attempts</span> <span class="code-operator">-</span> <span class="code-variable">attempts</span>, <span class="code-string">"attempts left"</span>)
+              </div>
+            </div>
+            
+            <div class="comparison-column">
+              <div class="comparison-header" style="color: #ffa502;">
+                <i class="fas fa-forward"></i> continue
+              </div>
+              
+              <div class="comparison-item">
+                <div class="comparison-label">What it does:</div>
+                <p>Skips the rest of the current iteration and jumps to the next one</p>
+              </div>
+              
+              <div class="code-block" style="font-size: 0.9rem;">
+<span class="code-comment"># Grade report system - skip failed students</span>
+<span class="code-variable">student_grades</span> <span class="code-operator">=</span> [<span class="code-number">95</span>, <span class="code-number">45</span>, <span class="code-number">87</span>, <span class="code-number">32</span>, <span class="code-number">91</span>, <span class="code-number">78</span>, <span class="code-number">29</span>]
+<span class="code-variable">passing_grade</span> <span class="code-operator">=</span> <span class="code-number">60</span>
+<span class="code-variable">honor_students</span> <span class="code-operator">=</span> []
+
+<span class="code-function">print</span>(<span class="code-string">"🎓 Honor Roll (90+ grades only):"</span>)
+<span class="code-keyword">for</span> <span class="code-variable">student_id</span>, <span class="code-variable">grade</span> <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(<span class="code-variable">student_grades</span>, <span class="code-number">1</span>):
+    <span class="code-keyword">if</span> <span class="code-variable">grade</span> <span class="code-operator"><</span> <span class="code-number">90</span>:  <span class="code-comment"># Skip non-honor students</span>
+        <span class="code-keyword">continue</span>  <span class="code-comment"># Jump to next iteration</span>
+    
+    <span class="code-function">print</span>(<span class="code-string">"  Student"</span>, <span class="code-variable">student_id</span>, <span class="code-string">":"</span>, <span class="code-variable">grade</span>, <span class="code-string">"%"</span>)
+    <span class="code-variable">honor_students</span>.<span class="code-function">append</span>(<span class="code-variable">student_id</span>)
+
+<span class="code-function">print</span>(<span class="code-string">"Total honor students:"</span>, <span class="code-function">len</span>(<span class="code-variable">honor_students</span>))
+              </div>
+            </div>
+          </div>
+          
+          <div class="activity-section">
+            <div class="activity-title">
+              <i class="fas fa-question-circle"></i> Quick Quiz: Break vs Continue
+            </div>
+            <p><strong>What happens when this code runs?</strong></p>
+            
+            <div class="quiz-scenarios">
+              <div class="quiz-scenario">
+                <div class="code-block" style="font-size: 0.9rem; margin-bottom: 1rem;">
+<span class="code-keyword">for</span> <span class="code-variable">i</span> <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-number">6</span>):
+    <span class="code-keyword">if</span> <span class="code-variable">i</span> <span class="code-operator">==</span> <span class="code-number">3</span>:
+        <span class="code-keyword">break</span>
+    <span class="code-function">print</span>(<span class="code-variable">i</span>)
+                </div>
+                <p><strong>What numbers get printed?</strong></p>
+                <div class="quiz-option" onclick="selectAnswer(this, true, 'break', 'Correct! Break stops the entire loop when i equals 3.')">1, 2</div>
+                <div class="quiz-option" onclick="selectAnswer(this, false, 'break', 'Not quite. Break exits the loop completely, so only 1 and 2 are printed.')">1, 2, 4, 5</div>
+                <div class="quiz-option" onclick="selectAnswer(this, false, 'break', 'Incorrect. Break stops the loop, it doesn\'t skip just one iteration.')">1, 2, 3, 4, 5</div>
+              </div>
+              
+              <div class="quiz-scenario">
+                <div class="code-block" style="font-size: 0.9rem; margin-bottom: 1rem;">
+<span class="code-keyword">for</span> <span class="code-variable">i</span> <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-number">6</span>):
+    <span class="code-keyword">if</span> <span class="code-variable">i</span> <span class="code-operator">==</span> <span class="code-number">3</span>:
+        <span class="code-keyword">continue</span>
+    <span class="code-function">print</span>(<span class="code-variable">i</span>)
+                </div>
+                <p><strong>What numbers get printed?</strong></p>
+                <div class="quiz-option" onclick="selectAnswer(this, false, 'continue', 'Not quite. Continue only skips the current iteration, the loop continues.')">1, 2</div>
+                <div class="quiz-option" onclick="selectAnswer(this, true, 'continue', 'Perfect! Continue skips printing 3 but the loop continues with 4 and 5.')">1, 2, 4, 5</div>
+                <div class="quiz-option" onclick="selectAnswer(this, false, 'continue', 'Incorrect. Continue skips the rest of the current iteration, so 3 won\'t be printed.')">1, 2, 3, 4, 5</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="activity-section">
+            <div class="activity-title">
+              <i class="fas fa-code"></i> Code Challenge
+            </div>
+            <p><strong>Challenge:</strong> Print all numbers from 1 to 10, but if the number is 7, stop the loop entirely!</p>
+            
+            <div style="background: rgba(0, 255, 150, 0.1); border: 2px solid #00ff96; border-radius: 12px; padding: 2rem; margin-top: 1rem;">
+              <h4 style="color: #00ff96; margin-bottom: 1rem;"><i class="fas fa-lightbulb"></i> Instructions:</h4>
+              <ol style="line-height: 1.8; margin-left: 1.5rem;">
+                <li>Use your external IDE or coding environment</li>
+                <li>Create a <code>for</code> loop that iterates from 1 to 10</li>
+                <li>Add an <code>if</code> statement to check if the number equals 7</li>
+                <li>Use <code>break</code> to stop the loop when you hit 7</li>
+                <li>Remember to <code>print()</code> each number before checking</li>
+              </ol>
+              
+              <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 193, 7, 0.1); border-radius: 8px; border-left: 4px solid #ffc107;">
+                <strong style="color: #ffc107;"><i class="fas fa-target"></i> Expected Output:</strong><br>
+                <code style="color: #ffffff; background: #2d3748; padding: 0.5rem; border-radius: 4px; display: block; margin-top: 0.5rem;">
+                1<br>2<br>3<br>4<br>5<br>6
+                </code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 7: Project Time -->
+      <div class="slide" id="slide-7">
+        <div class="slide-content">
+          <h1 class="slide-title">Loop Lab!</h1>
+          <h2 style="text-align: center; font-size: 1.5rem; margin-bottom: 3rem; opacity: 0.9;">
+            Let's Put It All Together
+          </h2>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div class="activity-section">
+              <div class="activity-title">
+                <i class="fas fa-calculator"></i> Project 1: Simple Counter
+              </div>
+              <ul style="margin-left: 2rem; line-height: 1.8;">
+                <li>Use a <strong>while loop</strong> to count from 1 to 10</li>
+                <li>Print each number with a message like "Count: 1"</li>
+                <li>After the loop, print "Finished counting!"</li>
+                <li>Practice basic while loop structure and incrementing</li>
+              </ul>
+              <div style="margin-top: 1rem; padding: 1rem; background: rgba(0, 255, 150, 0.1); border-radius: 8px; border-left: 4px solid #00ff96;">
+                <strong>Bonus:</strong> Try changing it to count backwards from 10 to 1!
+              </div>
+            </div>
+            
+            <div class="activity-section">
+              <div class="activity-title">
+                <i class="fas fa-search"></i> Project 2: List Sorter
+              </div>
+              <ul style="margin-left: 2rem; line-height: 1.8;">
+                <li>Create a list of strings (like favorite movies)</li>
+                <li>Use a <strong>for loop</strong> to check each item</li>
+                <li>Search if a specific word is in the list</li>
+                <li>Practice both <strong>lists</strong> and <strong>iteration</strong></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="code-section" style="margin-top: 2rem;">
+            <h3 style="color: #00ff96; margin-bottom: 1rem;"><i class="fas fa-rocket"></i> Time to Code!</h3>
+            <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #00ff96; border-radius: 15px; padding: 2rem;">
+              <h4 style="color: #00ff96; margin-bottom: 1.5rem;"><i class="fas fa-external-link-alt"></i> Use Your Coding Environment</h4>
+              <p style="font-size: 1.1rem; margin-bottom: 1.5rem; opacity: 0.9;">
+                Open your preferred IDE or coding platform and try implementing one of the projects above. 
+                Start with Project 1 (Simple Counter) and work your way up!
+              </p>
+              
+              <div style="background: rgba(0, 255, 150, 0.1); border-radius: 10px; padding: 1.5rem; margin-top: 1rem;">
+                <h5 style="color: #00ff96; margin-bottom: 1rem;"><i class="fas fa-laptop-code"></i> Recommended Coding Platforms:</h5>
+                <ul style="line-height: 1.8; margin-left: 1.5rem;">
+                  <li><strong>Replit</strong> - Great for beginners, runs in browser</li>
+                  <li><strong>VS Code</strong> - Professional IDE for serious coding</li>
+                  <li><strong>Python IDLE</strong> - Simple and comes with Python</li>
+                  <li><strong>Jupyter Notebooks</strong> - Perfect for learning and experimenting</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 8: Practice Activities - Beginner -->
+      <div class="slide" id="slide-8">
+        <div class="slide-content">
+          <h1 class="slide-title">Practice Activities - Beginner</h1>
+          <h2 style="text-align: center; font-size: 1.3rem; margin-bottom: 2rem; opacity: 0.9;">
+            Master the Basics with These Hands-On Challenges
+          </h2>
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+            <!-- Activity 1: Countdown Creator -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-rocket"></i> Activity 1: The Countdown Creator</h3>
+                <span class="difficulty-badge beginner">Beginner</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Create a simple countdown timer using a while loop.
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Ask the user for a number to count down from using <code>input()</code></li>
+                  <li>Convert the input to an integer</li>
+                  <li>Create a while loop that continues while the number is greater than 0</li>
+                  <li>Print the current number inside the loop</li>
+                  <li>Subtract 1 from the number each time</li>
+                  <li>After the loop, print "Blastoff!"</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output (if user enters 5):</strong><br>
+                <code>Enter a number to count down from: 5<br>
+                5<br>
+                4<br>
+                3<br>
+                2<br>
+                1<br>
+                Blastoff!</code>
+              </div>
+            </div>
+
+            <!-- Activity 2: List Looper -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-shopping-cart"></i> Activity 2: The List Looper</h3>
+                <span class="difficulty-badge beginner">Beginner</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Iterate through a shopping list and print each item.
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Create a list with 5 shopping items: <code>["milk", "bread", "eggs", "cheese", "yogurt"]</code></li>
+                  <li>Use a for loop to go through each item</li>
+                  <li>Print "Don't forget to buy:" followed by each item</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output:</strong><br>
+                <code>Don't forget to buy: milk<br>
+                Don't forget to buy: bread<br>
+                Don't forget to buy: eggs<br>
+                Don't forget to buy: cheese<br>
+                Don't forget to buy: yogurt</code>
+              </div>
+            </div>
+
+            <!-- Activity 3: I Can Count Robot -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-robot"></i> Activity 3: The "I Can Count!" Robot</h3>
+                <span class="difficulty-badge beginner">Beginner</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Use a for loop with range() to count in different ways.
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Use <code>range(1, 11)</code> to count from 1 to 10</li>
+                  <li>Use <code>range(5, 11)</code> to count from 5 to 10</li>
+                  <li>Use <code>range(2, 11, 2)</code> to count only even numbers</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output:</strong><br>
+                <code><u>Part 1 (1 to 10):</u> 1 2 3 4 5 6 7 8 9 10<br>
+                <u>Part 2 (5 to 10):</u> 5 6 7 8 9 10<br>
+                <u>Part 3 (even numbers):</u> 2 4 6 8 10</code>
+              </div>
+            </div>
+
+            <!-- Activity 4: Number Guessing Game -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-dice"></i> Activity 4: The Number Guessing Game</h3>
+                <span class="difficulty-badge beginner">Beginner</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Build a simple guessing game using a while loop.
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Import random module: <code>import random</code></li>
+                  <li>Create <code>secret_number = random.randint(1, 10)</code></li>
+                  <li>Use <code>while True</code> loop for continuous guessing</li>
+                  <li>Ask user for input and convert to integer</li>
+                  <li>Compare guess with secret_number and give feedback</li>
+                  <li>Use <code>break</code> when they guess correctly</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output (if secret number is 7):</strong><br>
+                <code>I'm thinking of a number between 1 and 10.<br>
+                What's your guess? 5<br>
+                Too low! Try again.<br>
+                What's your guess? 9<br>
+                Too high! Try again.<br>
+                What's your guess? 7<br>
+                You got it! You win!</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 9: Practice Activities - Intermediate -->
+      <div class="slide" id="slide-9">
+        <div class="slide-content">
+          <h1 class="slide-title">Practice Activities - Intermediate</h1>
+          <h2 style="text-align: center; font-size: 1.3rem; margin-bottom: 2rem; opacity: 0.9;">
+            Level Up Your Loop Skills
+          </h2>
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+            <!-- Activity 5: Vowel Counter -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-spell-check"></i> Activity 5: The Vowel Counter</h3>
+                <span class="difficulty-badge intermediate">Intermediate</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Count how many vowels are in a user-provided word.
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Create a variable <code>vowel_count = 0</code></li>
+                  <li>Ask the user to enter a word</li>
+                  <li>Use a for loop to check each character</li>
+                  <li>If the character is in "aeiou", increment the count</li>
+                  <li>Print the total number of vowels found</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output (if user enters "python"):</strong><br>
+                <code>Enter a word: python<br>
+                The word "python" has 1 vowels.</code>
+              </div>
+            </div>
+
+            <!-- Activity 6: Limited Guesses Game -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-brain"></i> Activity 6: The "I'm Thinking Of..." Game</h3>
+                <span class="difficulty-badge intermediate">Intermediate</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Number guessing game with limited attempts.
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Import random module and choose a number 1-10</li>
+                  <li>Give the player 3 guesses</li>
+                  <li>Use a while loop that runs while guesses remain</li>
+                  <li>Provide "too high" or "too low" feedback</li>
+                  <li>Use break if they guess correctly</li>
+                  <li>Show "out of guesses" message if they fail</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output (if secret is 4, player fails):</strong><br>
+                <code>I'm thinking of a number between 1 and 10. You have 3 guesses!<br>
+                Guess #1: 7<br>
+                Too high! Try again.<br>
+                Guess #2: 2<br>
+                Too low! Try again.<br>
+                Guess #3: 6<br>
+                Too high! Sorry, you're out of guesses! The number was 4.</code>
+              </div>
+            </div>
+
+            <!-- Activity 7: List Organizer -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-list"></i> Activity 7: The List Organizer</h3>
+                <span class="difficulty-badge intermediate">Intermediate</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Filter a list based on word length.
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Create: <code>words = ["cat", "elephant", "dog", "ant", "giraffe"]</code></li>
+                  <li>Create an empty list called <code>long_words</code></li>
+                  <li>Use a for loop to check each word</li>
+                  <li>If <code>len(word) > 5</code>, add it to long_words</li>
+                  <li>Print the final long_words list</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output:</strong><br>
+                <code>Original words: ['cat', 'elephant', 'dog', 'ant', 'giraffe']<br>
+                Long words (more than 5 characters): ['elephant', 'giraffe']</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 10: Practice Activities - Advanced -->
+      <div class="slide" id="slide-10">
+        <div class="slide-content">
+          <h1 class="slide-title">Practice Activities - Advanced</h1>
+          <h2 style="text-align: center; font-size: 1.3rem; margin-bottom: 2rem; opacity: 0.9;">
+            Master Advanced Loop Concepts
+          </h2>
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+            <!-- Activity 7: No Skip Challenge -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-forward"></i> Activity 7: The "No Skip" Challenge</h3>
+                <span class="difficulty-badge advanced">Advanced</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Use the continue statement to skip specific items.
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Create a for loop with <code>range(1, 11)</code></li>
+                  <li>Use an if statement to check if the number equals 5</li>
+                  <li>If it's 5, use <code>continue</code> to skip</li>
+                  <li>Print all other numbers</li>
+                  <li>Result should be 1, 2, 3, 4, 6, 7, 8, 9, 10</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output:</strong><br>
+                <code>1<br>
+                2<br>
+                3<br>
+                4<br>
+                6<br>
+                7<br>
+                8<br>
+                9<br>
+                10</code>
+              </div>
+            </div>
+
+            <!-- Activity 8: Grid Maker -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-th"></i> Activity 8: The Grid Maker</h3>
+                <span class="difficulty-badge advanced">Advanced</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Create a simple grid using nested loops.
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Use a for loop with <code>range(3)</code> for rows</li>
+                  <li>Inside, use another for loop with <code>range(3)</code> for columns</li>
+                  <li>Print " O " with <code>end=""</code> to stay on same line</li>
+                  <li>After inner loop, use <code>print()</code> for new line</li>
+                  <li>Result: 3x3 grid of O's</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output:</strong><br>
+                <code> O  O  O <br>
+                 O  O  O <br>
+                 O  O  O </code>
+              </div>
+            </div>
+
+            <!-- Activity 9: Secret Exit -->
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3><i class="fas fa-door-open"></i> Activity 9: The while Loop with a "Secret Exit"</h3>
+                <span class="difficulty-badge advanced">Advanced</span>
+              </div>
+              <div class="activity-goal">
+                <strong>🎯 Goal:</strong> Create a program that runs until user types "exit".
+              </div>
+              <div class="activity-instructions">
+                <strong>📋 Instructions:</strong>
+                <ol>
+                  <li>Create a <code>while True</code> loop</li>
+                  <li>Ask user to type a message or "exit"</li>
+                  <li>If message equals "exit", print "Goodbye!" and break</li>
+                  <li>Otherwise, print "You said:" followed by their message</li>
+                </ol>
+              </div>
+              <div class="expected-output">
+                <strong>📤 Expected Output:</strong><br>
+                <code>Type a message (or 'exit' to quit): Hello world<br>
+                You said: Hello world<br>
+                Type a message (or 'exit' to quit): Python is fun<br>
+                You said: Python is fun<br>
+                Type a message (or 'exit' to quit): exit<br>
+                Goodbye!</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Slide 11: Review and Wrap-up -->
+      <div class="slide" id="slide-11">
+        <div class="slide-content">
+          <h1 class="slide-title">Today's Takeaways</h1>
+          
+          <div class="visual-section">
+            <div class="visual-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 3rem 0;">
+            <div class="key-concept">
+              <h3><i class="fas fa-sync-alt"></i> Iteration</h3>
+              <p>Iteration is about <strong>repetition</strong> - making computers do the boring, repetitive work for us!</p>
+            </div>
+            
+            <div class="key-concept">
+              <h3><i class="fas fa-clock"></i> while Loops</h3>
+              <p><strong>while loops</strong> are condition-based - they keep going while something is true.</p>
+            </div>
+            
+            <div class="key-concept">
+              <h3><i class="fas fa-list"></i> for Loops</h3>
+              <p><strong>for loops</strong> are for sequences - perfect for lists and known repetitions.</p>
+            </div>
+            
+            <div class="key-concept">
+              <h3><i class="fas fa-stop-circle"></i> Loop Control</h3>
+              <p><strong>break</strong> stops a loop, <strong>continue</strong> skips an iteration.</p>
+            </div>
+          </div>
+          
+          <div class="question-box" style="margin-top: 3rem;">
+            <div class="question-text">
+              Ready to loop like a pro?
+            </div>
+            <p style="font-size: 1.2rem; margin-top: 1rem;">
+              Remember: Loops are your friends! They make your code shorter, cleaner, and more powerful. 
+              The key is knowing <em>when</em> to use <strong>while</strong> vs <strong>for</strong>.
+            </p>
+          </div>
+          
+          <div style="text-align: center; margin-top: 3rem;">
+            <h3 style="color: #ffa500; margin-bottom: 1rem;">
+              <i class="fas fa-questions"></i> Questions & Discussion
+            </h3>
+            <p style="font-size: 1.1rem;">What questions do you have about loops? Let's discuss!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="navigation">
+      <button class="nav-btn" id="prev-btn" onclick="previousSlide()">
+        <i class="fas fa-chevron-left"></i> Previous
+      </button>
+      <div class="slide-numbers">
+        <button class="nav-btn" onclick="goToSlide(1)">1</button>
+        <button class="nav-btn" onclick="goToSlide(2)">2</button>
+        <button class="nav-btn" onclick="goToSlide(3)">3</button>
+        <button class="nav-btn" onclick="goToSlide(4)">4</button>
+        <button class="nav-btn" onclick="goToSlide(5)">5</button>
+        <button class="nav-btn" onclick="goToSlide(6)">6</button>
+        <button class="nav-btn" onclick="goToSlide(7)">7</button>
+        <button class="nav-btn" onclick="goToSlide(8)">8</button>
+        <button class="nav-btn" onclick="goToSlide(9)">9</button>
+        <button class="nav-btn" onclick="goToSlide(10)">10</button>
+        <button class="nav-btn" onclick="goToSlide(11)">11</button>
+      </div>
+      <button class="nav-btn" id="next-btn" onclick="nextSlide()">
+        Next <i class="fas fa-chevron-right"></i>
+      </button>
+      <button class="nav-btn" onclick="window.open('/buggy-code-exercises.html', '_blank')" style="background: linear-gradient(45deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b;">
+        <i class="fas fa-bug"></i> Debug Exercises
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Clean loops presentation script
+    console.log('✅ Loops presentation loading...');
+    
+    // Global variables
+    let currentSlide = 1;
+    const totalSlides = 11;
+    
+    // Navigation functions - defined immediately for onclick handlers
+    function goToSlide(slideNumber) {
+      console.log('🎯 Navigating to slide:', slideNumber);
+      if (slideNumber >= 1 && slideNumber <= totalSlides) {
+        showSlide(slideNumber);
+      }
+    }
+    
+    function showSlide(slideNumber) {
+      console.log('📺 Showing slide:', slideNumber);
+      
+      // Hide all slides
+      document.querySelectorAll('.slide').forEach(slide => {
+        slide.classList.remove('active');
+        slide.style.pointerEvents = 'none';
+      });
+      
+      // Show target slide
+      const targetSlide = document.getElementById(`slide-${slideNumber}`);
+      if (targetSlide) {
+        targetSlide.classList.add('active');
+        targetSlide.style.pointerEvents = 'auto';
+        currentSlide = slideNumber;
+        
+        // Update navigation buttons
+        updateNavButtons();
+        console.log('✅ Successfully showed slide', slideNumber);
+      } else {
+        console.error('❌ Slide not found:', slideNumber);
+      }
+    }
+    
+    function nextSlide() {
+      console.log('➡️ Next slide requested');
+      if (currentSlide < totalSlides) {
+        goToSlide(currentSlide + 1);
+      }
+    }
+    
+    function previousSlide() {
+      console.log('⬅️ Previous slide requested');
+      if (currentSlide > 1) {
+        goToSlide(currentSlide - 1);
+      }
+    }
+    
+    function updateNavButtons() {
+      // Update numbered buttons
+      document.querySelectorAll('.slide-numbers .nav-btn').forEach((btn, index) => {
+        btn.classList.toggle('active', index + 1 === currentSlide);
+      });
+      
+      // Update prev/next buttons
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      if (prevBtn) prevBtn.disabled = currentSlide === 1;
+      if (nextBtn) nextBtn.disabled = currentSlide === totalSlides;
+    }
+    
+    // Make functions globally accessible immediately
+    window.goToSlide = goToSlide;
+    window.nextSlide = nextSlide; 
+    window.previousSlide = previousSlide;
+    
+    console.log('🔧 Navigation functions loaded:', {
+      goToSlide: typeof window.goToSlide,
+      nextSlide: typeof window.nextSlide,
+      previousSlide: typeof window.previousSlide
+    });
+    
+    // Initialize when DOM is ready
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🎯 DOM ready, initializing presentation...');
+      showSlide(1);
+      console.log('✅ Clean loops presentation ready!');
+    });
+  </script>
+
+  <!-- Quiz Modal -->
+  <div id="quizModal" class="quiz-modal">
+    <div class="quiz-modal-content">
+      <span class="quiz-close">&times;</span>
+      <div id="quiz-content"></div>
+    </div>
+  </div>
+  
+  <script>
+    // Simple quiz modal functions
+    function openQuizModal() {
+      console.log('Quiz modal opened');
+      // Simple modal implementation can go here
+    }
+    
+    function closeQuizModal() {
+      console.log('Quiz modal closed');
+    }
+    
+    function selectAnswer(element, isCorrect, topic, feedback) {
+      console.log('Answer selected:', { isCorrect, topic, feedback });
+    }
+    let db = null;
+    
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-UdcMvZ5I_r7I_VJ9FbJgtGdnCJO9pLI",
+      authDomain: "code-with-morais-405.firebaseapp.com",
+      projectId: "code-with-morais-405",
+      storageBucket: "code-with-morais-405.appspot.com",
+      messagingSenderId: "134403693484",
+      appId: "1:134403693484:web:e5c81e7e43e5e5b983420d"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    
+    // Generate or get student ID
+    function getStudentId() {
+      let stored = localStorage.getItem('loops_student_id');
+      if (!stored) {
+        stored = 'student_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('loops_student_id', stored);
+      }
+      return stored;
+    }
+    
+    // Save student progress
+    async function saveProgress(slideNumber, code, editorId) {
+      if (!studentId) studentId = getStudentId();
+      
+      try {
+        const progressData = {
+          studentId: studentId,
+          slideNumber: slideNumber,
+          editorId: editorId,
+          code: code,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          lesson: 'loops'
+        };
+        
+        await db.collection('student_progress').doc(`${studentId}_${slideNumber}_${editorId}`).set(progressData);
+        console.log('Progress saved for student:', studentId);
+      } catch (error) {
+        console.error('Error saving progress:', error);
+      }
+    }
+    
+    // Load student progress
+    async function loadProgress() {
+      if (!studentId) studentId = getStudentId();
+      
+      try {
+        const snapshot = await db.collection('student_progress')
+          .where('studentId', '==', studentId)
+          .where('lesson', '==', 'loops')
+          .get();
+        
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const editor = monacoEditors.get(data.editorId);
+          if (editor && data.code) {
+            editor.setValue(data.code);
+          }
+        });
+        console.log('Progress loaded for student:', studentId);
+      } catch (error) {
+        console.error('Error loading progress:', error);
+      }
+    }
+    
+    // Skip Monaco Editor for now and use enhanced textareas directly
+    window.addEventListener('load', function() {
+      console.log('Window loaded, using enhanced textareas for reliable interaction...');
+      
+      // Use fallback editors immediately for guaranteed functionality
+      setTimeout(() => {
+        useFallbackEditors();
+      }, 500);
+      
+      // Keep Monaco code commented for future use
+      /*
+      // Load Monaco Editor
+      require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' }});
+      
+      require(['vs/editor/editor.main'], function() {
+        console.log('Monaco Editor library loaded successfully');
+        setTimeout(() => {
+          initializeMonacoEditors();
+        }, 1000);
+      });
+      */
+    });
+    
+    // Initialize Pyodide
+    async function initPyodide() {
+      if (!pyodideInstance) {
+        pyodideInstance = await loadPyodide();
+        console.log("Python environment ready!");
+      }
+      return pyodideInstance;
+    }
+    
+    // Initialize Monaco editors for all code inputs
+    function initializeMonacoEditors() {
+      console.log('Initializing Monaco Editors...');
+      const textareas = document.querySelectorAll('.code-input');
+      console.log(`Found ${textareas.length} code input areas`);
+      
+      textareas.forEach((textarea, index) => {
+        try {
+          console.log(`Processing textarea ${index}:`, textarea.id);
+          
+          // Create container for Monaco
+          const container = document.createElement('div');
+          container.className = 'monaco-editor-container';
+          container.id = `monaco-container-${index}`;
+          
+          // Set explicit dimensions and styles
+          container.style.cssText = `
+            width: 100%;
+            height: 200px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background: #1e1e1e;
+            position: relative;
+            overflow: hidden;
+          `;
+          
+          // Get initial content - keep empty for "Your Turn" sections
+          let initialValue = '';
+          if (textarea.value) {
+            initialValue = textarea.value;
+          } else if (textarea.placeholder && 
+                     !textarea.placeholder.includes('Write your') && 
+                     !textarea.placeholder.includes('Try it here') && 
+                     !textarea.placeholder.includes('Choose a project')) {
+            const cleanPlaceholder = textarea.placeholder.replace(/^# /, '').trim();
+            if (cleanPlaceholder.length > 10 && (cleanPlaceholder.includes('for ') || cleanPlaceholder.includes('while ') || cleanPlaceholder.includes('print'))) {
+              initialValue = cleanPlaceholder;
+            }
+          }
+          
+          console.log(`Initial value for editor ${index}:`, initialValue.substring(0, 50) + '...');
+          
+          // Replace textarea with container
+          textarea.parentNode.insertBefore(container, textarea);
+          textarea.style.display = 'none';
+          
+          // Create Monaco editor with proper options
+          const editor = monaco.editor.create(container, {
+            value: initialValue,
+            language: 'python',
+            theme: 'vs-dark',
+            minimap: { enabled: false },
+            fontSize: 14,
+            fontFamily: 'Consolas, "Courier New", monospace',
+            lineNumbers: 'on',
+            roundedSelection: false,
+            scrollBeyondLastLine: false,
+            automaticLayout: true, // Enable automatic layout
+            tabSize: 4,
+            insertSpaces: true,
+            wordWrap: 'on',
+            contextmenu: true,
+            selectOnLineNumbers: true,
+            readOnly: false,
+            domReadOnly: false,
+            mouseWheelZoom: false,
+            find: {
+              addExtraSpaceOnTop: false
+            },
+            bracketPairColorization: { enabled: true },
+            suggest: {
+              showKeywords: true,
+              showSnippets: true
+            },
+            scrollbar: {
+              verticalScrollbarSize: 10,
+              horizontalScrollbarSize: 10,
+              useShadows: false,
+              verticalHasArrows: false,
+              horizontalHasArrows: false
+            }
+          });
+          
+          // Store editor instance with proper ID
+          const editorId = textarea.id || `editor-${index}`;
+          monacoEditors.set(editorId, editor);
+          console.log(`✅ Created Monaco editor: ${editorId}`);
+          
+          // Force layout immediately
+          editor.layout({
+            width: container.offsetWidth,
+            height: 200
+          });
+          
+          // Sync with original textarea for compatibility
+          editor.onDidChangeModelContent(() => {
+            textarea.value = editor.getValue();
+            console.log(`Content changed in editor ${editorId}`);
+            
+            // Auto-save progress with debouncing
+            clearTimeout(editor._saveTimeout);
+            editor._saveTimeout = setTimeout(() => {
+              const code = editor.getValue();
+              if (code.trim()) {
+                saveProgress(currentSlide, code, editorId);
+              }
+            }, 2000);
+          });
+          
+          // Add keyboard shortcuts
+          editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, function() {
+            console.log('Ctrl+Enter pressed in editor');
+            const codeRunner = container.closest('.code-runner');
+            const runBtn = codeRunner.querySelector('.run-btn');
+            if (runBtn) {
+              runBtn.click();
+            }
+          });
+          
+          // Remove aggressive event handlers - they were blocking page interaction
+          
+          // Ensure editor gets focus when clicked
+          editor.onDidFocusEditorText(() => {
+            console.log(`✅ Editor ${editorId} focused and ready for typing`);
+          });
+          
+          // Add focus on creation
+          setTimeout(() => {
+            try {
+              editor.focus();
+              console.log(`Attempting to focus editor ${editorId}`);
+            } catch (e) {
+              console.log(`Focus failed for ${editorId}:`, e);
+            }
+          }, 200);
+          
+          // Force layout on window resize
+          const resizeObserver = new ResizeObserver(() => {
+            editor.layout();
+          });
+          resizeObserver.observe(container);
+          
+          // Additional layout after creation
+          setTimeout(() => {
+            editor.layout({
+              width: container.offsetWidth,
+              height: 200
+            });
+            console.log(`Layout applied to editor ${editorId}`);
+          }, 100);
+          
+        } catch (error) {
+          console.error(`❌ Error creating Monaco editor ${index}:`, error);
+          // Fallback: keep the textarea visible
+          textarea.style.display = 'block';
+          textarea.style.background = '#1e1e1e';
+          textarea.style.color = 'white';
+          textarea.style.border = '2px solid #444';
+          textarea.style.borderRadius = '8px';
+          textarea.style.padding = '10px';
+          textarea.style.fontFamily = 'Consolas, "Courier New", monospace';
+          textarea.style.fontSize = '14px';
+        }
+      });
+      
+      console.log('✅ Monaco Editor initialization completed');
+      
+      // Additional check after all editors are created
+      setTimeout(() => {
+        console.log(`Created ${monacoEditors.size} Monaco editors total`);
+        monacoEditors.forEach((editor, id) => {
+          console.log(`Editor ${id} is ${editor.hasTextFocus() ? 'focused' : 'not focused'}`);
+        });
+      }, 500);
+    }
+    
+    // Slide navigation
+    function showSlide(slideNumber) {
+      console.log('🎬 showSlide function called with:', slideNumber, typeof slideNumber);
+      
+      // Validate input
+      if (!slideNumber || slideNumber < 1 || slideNumber > 11) {
+        console.error('❌ Invalid slide number:', slideNumber);
+        return;
+      }
+      
+      console.log('📊 Before change - Active slides:', document.querySelectorAll('.slide.active').length);
+      
+      // Hide all slides
+      const allSlides = document.querySelectorAll('.slide');
+      console.log('📊 Total slides found:', allSlides.length);
+      
+      allSlides.forEach((slide, index) => {
+        const wasActive = slide.classList.contains('active');
+        slide.classList.remove('active', 'prev');
+        if (wasActive) console.log('🔄 Deactivated slide:', slide.id);
+      });
+
+      // Show current slide
+      const targetSlide = document.getElementById(`slide-${slideNumber}`);
+      console.log('🎯 Target slide element:', targetSlide?.id || 'NOT FOUND');
+      
+      if (targetSlide) {
+        targetSlide.classList.add('active');
+        console.log('✅ Successfully activated slide:', slideNumber);
+        
+        // Update current slide variable
+        window.currentSlide = slideNumber;
+        
+        // Verify the change
+        setTimeout(() => {
+          const activeSlide = document.querySelector('.slide.active');
+          console.log('✔️ Verification - Active slide is now:', activeSlide?.id || 'NONE');
+        }, 100);
+      } else {
+        console.error('❌ Could not find slide element: slide-' + slideNumber);
+        console.log('📋 Available slides:', Array.from(document.querySelectorAll('.slide')).map(s => s.id));
+      }      // Add previous class to slides before current
+      for (let i = 1; i < slideNumber; i++) {
+        document.getElementById(`slide-${i}`).classList.add('prev');
+      }
+      
+      // Update active state for numbered buttons
+      document.querySelectorAll('.slide-numbers .nav-btn').forEach((btn, index) => {
+        if (index + 1 === slideNumber) {
+          btn.style.background = 'rgba(0, 255, 150, 0.8)';
+          btn.style.color = '#000';
+          btn.style.fontWeight = '600';
+        } else {
+          btn.style.background = 'rgba(255, 255, 255, 0.2)';
+          btn.style.color = 'white';
+          btn.style.fontWeight = 'normal';
+        }
+      });
+      
+      // Update navigation buttons
+      document.getElementById('prev-btn').disabled = slideNumber === 1;
+      document.getElementById('next-btn').disabled = slideNumber === totalSlides;
+      
+      currentSlide = slideNumber;
+    }
+    
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+    
+    function previousSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+    
+    // Global debugging function accessible from console
+    window.debugNavigation = function() {
+      console.log('🔍 NAVIGATION DEBUG REPORT:');
+      console.log('- goToSlide function exists:', typeof window.goToSlide);
+      console.log('- showSlide function exists:', typeof window.showSlide);
+      
+      const navButtons = document.querySelectorAll('.nav-btn');
+      console.log('- Number of nav buttons found:', navButtons.length);
+      
+      navButtons.forEach((btn, i) => {
+        console.log(`  Button ${i+1}: "${btn.textContent}" onclick="${btn.getAttribute('onclick')}"`);
+      });
+      
+      console.log('- Current slide:', document.querySelector('.slide.active')?.id);
+      console.log('Call debugNavigation() anytime to run this report');
+    };
+
+    function goToSlide(slideNumber) {
+      console.log('🎯 goToSlide called with:', slideNumber);
+      console.log('🎯 showSlide function type:', typeof showSlide);
+      
+      if (typeof showSlide === 'function') {
+        showSlide(slideNumber);
+        console.log('✅ showSlide executed successfully');
+      } else {
+        console.error('❌ showSlide function not found!');
+      }
+    }
+
+    // Make functions globally accessible for debugging
+    window.goToSlide = goToSlide;
+    window.showSlide = showSlide;
+    
+    // Script loading detector
+    console.log('🚀 SCRIPT EXECUTION CHECKPOINT: Navigation functions defined');
+    console.log('🔧 Debug tools: Call debugNavigation() or goToSlide(5) from console');
+    
+    // Test if we can access DOM
+    if (document.readyState === 'loading') {
+      console.log('📄 DOM still loading...');
+    } else {
+      console.log('📄 DOM ready, functions should be accessible');
+    }
+    
+    // Quiz functionality
+    function selectAnswer(element, isCorrect, loopType = 'for', customMessage = null) {
+      // Remove previous selections in this scenario
+      element.parentNode.querySelectorAll('.quiz-option').forEach(option => {
+        option.classList.remove('correct', 'incorrect');
+      });
+      
+      // Add appropriate class
+      element.classList.add(isCorrect ? 'correct' : 'incorrect');
+      
+      // Show feedback
+      setTimeout(() => {
+        if (customMessage) {
+          alert(isCorrect ? '🎉 ' + customMessage : '❌ ' + customMessage);
+        } else {
+          // Default messages
+          if (isCorrect) {
+            alert('🎉 Correct! Good thinking about which loop to use.');
+          } else {
+            alert('❌ Not quite. Think about whether you know how many iterations you need.');
+          }
+        }
+      }, 500);
+    }
+    
+    // Enhanced code runner with Monaco Editor support
+    async function runCode(button) {
+      const codeRunner = button.closest('.code-runner');
+      const outputArea = codeRunner.querySelector('.output-area');
+      
+      // Get code from Monaco editor or fallback to textarea
+      let code = '';
+      const monacoContainer = codeRunner.querySelector('.monaco-editor-container');
+      const textarea = codeRunner.querySelector('.code-input');
+      
+      if (monacoContainer) {
+        // Find Monaco editor instance
+        const editorId = Array.from(monacoEditors.keys()).find(id => {
+          const editor = monacoEditors.get(id);
+          return editor.getContainerDomNode() === monacoContainer;
+        });
+        
+        if (editorId) {
+          const editor = monacoEditors.get(editorId);
+          code = editor.getValue();
+        }
+      } else if (textarea) {
+        code = textarea.value;
+      }
+      
+      if (!code.trim()) {
+        outputArea.innerHTML = '<span style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> Please enter some Python code to run!</span>';
+        return;
+      }
+      
+      try {
+        // Update button to show loading state
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
+        button.disabled = true;
+        
+        outputArea.innerHTML = '<span style="color: #58a6ff;"><i class="fas fa-cogs"></i> Executing Python code...</span>';
+        
+        const pyodide = await initPyodide();
+        
+        // Setup clean environment for each run
+        pyodide.runPython(`
+          import sys
+          from io import StringIO
+          import builtins
+          
+          # Capture stdout
+          sys.stdout = StringIO()
+          
+          # Clear any previous variables (except builtins)
+          for name in list(globals().keys()):
+              if not name.startswith('__') and name not in dir(builtins):
+                  del globals()[name]
+        `);
+        
+        // Enhanced input function with better prompting
+        let inputCount = 0;
+        pyodide.globals.set("input", function(prompt = "") {
+          inputCount++;
+          const displayPrompt = prompt || `Input #${inputCount}:`;
+          const value = window.prompt(displayPrompt);
+          
+          if (value === null) {
+            throw new Error("Input cancelled by user");
+          }
+          
+          return value || "";
+        });
+        
+        // Setup random module if used
+        pyodide.runPython(`
+          import random
+          import time
+          import math
+        `);
+        
+        // Run the user's code
+        try {
+          pyodide.runPython(code);
+          
+          // Get output
+          const output = pyodide.runPython("sys.stdout.getvalue()");
+          
+          if (output.trim()) {
+            // Format output with line numbers for better readability
+            const lines = output.split('\n').filter(line => line.trim());
+            const formattedOutput = lines.map((line, index) => 
+              `<span style="color: #00ff96;">${line}</span>`
+            ).join('<br>');
+            
+            outputArea.innerHTML = `
+              <div style="border-left: 3px solid #00ff96; padding-left: 10px;">
+                <div style="color: #00ff96; font-weight: bold; margin-bottom: 5px;">
+                  <i class="fas fa-terminal"></i> Output:
+                </div>
+                ${formattedOutput}
+              </div>
+            `;
+          } else {
+            outputArea.innerHTML = `
+              <span style="color: #00ff96;">
+                <i class="fas fa-check-circle"></i> Code executed successfully! (No output to display)
+              </span>
+            `;
+          }
+        } catch (pythonError) {
+          // Format Python errors nicely
+          const errorMessage = pythonError.message.replace(/\n/g, '<br>');
+          outputArea.innerHTML = `
+            <div style="border-left: 3px solid #ff6b6b; padding-left: 10px;">
+              <div style="color: #ff6b6b; font-weight: bold; margin-bottom: 5px;">
+                <i class="fas fa-exclamation-circle"></i> Python Error:
+              </div>
+              <span style="color: #ff9999;">${errorMessage}</span>
+            </div>
+          `;
+        }
+        
+      } catch (error) {
+        outputArea.innerHTML = `
+          <div style="border-left: 3px solid #ffa500; padding-left: 10px;">
+            <div style="color: #ffa500; font-weight: bold; margin-bottom: 5px;">
+              <i class="fas fa-exclamation-triangle"></i> System Error:
+            </div>
+            <span style="color: #ffcc99;">${error.message}</span>
+          </div>
+        `;
+        console.error('Code execution error:', error);
+      } finally {
+        // Reset button state
+        button.innerHTML = originalText;
+        button.disabled = false;
+      }
+    }
+    
+    // Code templates library
+    const codeTemplates = {
+      for_list: `# Create your favorite list
+my_favorites = ['Pizza', 'Ice Cream', 'Chocolate']
+for item in my_favorites:
+    print(f'I love {item}!')`,
+      
+      for_range: `# Count with for loop
+for i in range(10):
+    print(f'Count: {i}')`,
+    
+      while_basic: `# Basic while loop
+count = 0
+while count < 5:
+    print(f'Count is: {count}')
+    count += 1`,
+    
+      challenge_guess: `# Number guessing game
+import random
+secret = random.randint(1, 10)
+guess = 0
+
+while guess != secret:
+    guess = int(input("Guess a number (1-10): "))
+    if guess < secret:
+        print("Too low!")
+    elif guess > secret:
+        print("Too high!")
+    else:
+        print("You got it!")`,
+        
+      challenge_pattern: `# Pattern maker
+rows = int(input("How many rows? "))
+for i in range(rows):
+    for j in range(i + 1):
+        print("*", end="")
+    print()  # New line`
+    };
+    
+    // Load template function - Works with Monaco Editor
+    function loadTemplate(button) {
+      const targetId = button.getAttribute('data-target');
+      const templateName = button.getAttribute('data-template');
+      
+      if (codeTemplates[templateName]) {
+        // Try to find Monaco editor first
+        const editor = monacoEditors.get(targetId);
+        if (editor) {
+          editor.setValue(codeTemplates[templateName]);
+          editor.focus();
+        } else {
+          // Fallback to textarea
+          const codeInput = document.getElementById(targetId);
+          if (codeInput) {
+            codeInput.value = codeTemplates[templateName];
+            codeInput.focus();
+          }
+        }
+        
+        // Add visual feedback
+        button.style.background = '#00ff96';
+        button.style.color = '#000';
+        setTimeout(() => {
+          button.style.background = '';
+          button.style.color = '';
+        }, 200);
+      }
+    }
+    
+    // Clear code function - Works with Monaco Editor
+    function clearCode(codeInputId) {
+      // Try Monaco editor first
+      const editor = monacoEditors.get(codeInputId);
+      if (editor) {
+        editor.setValue('');
+        editor.focus();
+        
+        // Clear output area too
+        const container = editor.getContainerDomNode();
+        const codeRunner = container.closest('.code-runner');
+        const outputArea = codeRunner.querySelector('.output-area');
+        if (outputArea) {
+          outputArea.innerHTML = '';
+        }
+      } else {
+        // Fallback to textarea
+        const codeInput = document.getElementById(codeInputId);
+        if (codeInput) {
+          codeInput.value = '';
+          codeInput.focus();
+          
+          // Clear output area too
+          const codeRunner = codeInput.closest('.code-runner');
+          const outputArea = codeRunner.querySelector('.output-area');
+          if (outputArea) {
+            outputArea.innerHTML = '';
+          }
+        }
+      }
+    }
+    
+    // Add keyboard shortcuts for all code inputs
+    document.addEventListener('DOMContentLoaded', function() {
+      const codeInputs = document.querySelectorAll('.code-input');
+      
+      codeInputs.forEach(codeInput => {
+        codeInput.addEventListener('keydown', function(e) {
+          // Ctrl+Enter to run code
+          if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            const codeRunner = this.closest('.code-runner');
+            const runButton = codeRunner.querySelector('.run-btn');
+            if (runButton) {
+              runButton.click();
+            }
+          }
+          
+          // Tab for indentation (instead of switching focus)
+          if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            
+            // Insert 4 spaces for Python indentation
+            this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 4;
+          }
+        });
+      });
+    });
+    
+    // Keyboard navigation - only when not typing in inputs
+    document.addEventListener('keydown', function(e) {
+      // Don't interfere if user is typing in an input, textarea, or content editable
+      const activeElement = document.activeElement;
+      if (activeElement && (
+        activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.contentEditable === 'true' ||
+        activeElement.classList.contains('code-input')
+      )) {
+        return; // Let the user type normally
+      }
+      
+      if (e.key === 'ArrowRight' || (e.key === ' ' && !e.shiftKey)) {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        previousSlide();
+      } else if (e.key >= '1' && e.key <= '7') {
+        e.preventDefault();
+        goToSlide(parseInt(e.key));
+      }
+    });
+    
+    // Syntax highlighting function
+    function highlightPythonCode(code) {
+      return code
+        .replace(/\b(def|class|if|elif|else|while|for|in|import|from|as|try|except|finally|with|return|yield|pass|break|continue|and|or|not|is|True|False|None)\b/g, '<span class="code-keyword">$1</span>')
+        .replace(/\b(print|input|len|range|int|float|str|list|dict|set|tuple)\b/g, '<span class="code-function">$1</span>')
+        .replace(/\b(\d+)\b/g, '<span class="code-number">$1</span>')
+        .replace(/(["'].*?["'])/g, '<span class="code-string">$1</span>')
+        .replace(/(#.*$)/gm, '<span class="code-comment">$1</span>')
+        .replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\s*(?=\s*[=])/g, '<span class="code-variable">$1</span>')
+        .replace(/([+\-*/%=<>!&|]+)/g, '<span class="code-operator">$1</span>');
+    }
+
+    // Enhanced fallback editor function
+    function createFallbackEditor(textarea, index) {
+      console.log(`Creating enhanced fallback editor for textarea ${index}`);
+      
+      // Remove any Monaco containers that might be interfering
+      const monacoContainer = textarea.parentNode.querySelector('.monaco-editor-container');
+      if (monacoContainer) {
+        monacoContainer.remove();
+        console.log(`Removed Monaco container for textarea ${index}`);
+      }
+      
+      // Clear any existing styles and start fresh
+      textarea.removeAttribute('style');
+      textarea.style.cssText = '';
+      
+      // Apply comprehensive styles to ensure full functionality
+      textarea.style.display = 'block';
+      textarea.style.background = '#1e1e1e';
+      textarea.style.color = '#e1e1e1';
+      textarea.style.border = '2px solid #444';
+      textarea.style.borderRadius = '8px';
+      textarea.style.padding = '15px';
+      textarea.style.fontFamily = 'Consolas, "Courier New", monospace';
+      textarea.style.fontSize = '14px';
+      textarea.style.lineHeight = '1.6';
+      textarea.style.resize = 'vertical';
+      textarea.style.minHeight = '200px';
+      textarea.style.width = '100%';
+      textarea.style.outline = 'none';
+      textarea.style.transition = 'border-color 0.3s ease';
+      textarea.style.position = 'relative';
+      textarea.style.zIndex = '1000';
+      textarea.style.pointerEvents = 'auto';
+      textarea.style.userSelect = 'text';
+      textarea.style.webkitUserSelect = 'text';
+      textarea.style.mozUserSelect = 'text';
+      textarea.style.msUserSelect = 'text';
+      
+      // Remove any attributes that might interfere
+      textarea.removeAttribute('readonly');
+      textarea.removeAttribute('disabled');
+      textarea.disabled = false;
+      textarea.readOnly = false;
+      
+      console.log(`Textarea ${index} disabled: ${textarea.disabled}, readOnly: ${textarea.readOnly}`);
+      
+      // Add focus styling
+      textarea.addEventListener('focus', function() {
+        this.style.borderColor = '#00ff96';
+        console.log(`Fallback editor ${index} focused and ready!`);
+      });
+      
+      textarea.addEventListener('blur', function() {
+        this.style.borderColor = '#444';
+      });
+      
+      // Add enhanced functionality - only prevent default for specific keys
+      textarea.addEventListener('keydown', function(e) {
+        // Ctrl+Enter to run code
+        if (e.ctrlKey && e.key === 'Enter') {
+          e.preventDefault();
+          const codeRunner = this.closest('.code-runner');
+          const runBtn = codeRunner.querySelector('.run-btn');
+          if (runBtn) {
+            console.log('Running code via Ctrl+Enter in fallback editor');
+            runBtn.click();
+          }
+          return;
+        }
+        
+        // Tab for indentation
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          const start = this.selectionStart;
+          const end = this.selectionEnd;
+          this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+          this.selectionStart = this.selectionEnd = start + 4;
+          return;
+        }
+        
+        // Don't prevent default for other keys - let normal typing work
+        
+        // Auto-indent on Enter
+        if (e.key === 'Enter') {
+          const lines = this.value.substring(0, this.selectionStart).split('\n');
+          const currentLine = lines[lines.length - 1];
+          const indent = currentLine.match(/^(\s*)/)[1];
+          
+          // Add extra indent for colons
+          const extraIndent = currentLine.trim().endsWith(':') ? '    ' : '';
+          
+          setTimeout(() => {
+            const start = this.selectionStart;
+            this.value = this.value.substring(0, start) + indent + extraIndent + this.value.substring(start);
+            this.selectionStart = this.selectionEnd = start + indent.length + extraIndent.length;
+          }, 0);
+        }
+      });
+      
+      // Auto-save functionality
+      textarea.addEventListener('input', function() {
+        const editorId = this.id || `fallback-editor-${index}`;
+        clearTimeout(this._saveTimeout);
+        this._saveTimeout = setTimeout(() => {
+          const code = this.value;
+          if (code.trim()) {
+            saveProgress(currentSlide, code, editorId);
+          }
+        }, 2000);
+      });
+      
+      // Test and focus the textarea immediately
+      setTimeout(() => {
+        textarea.focus();
+        console.log(`✅ Fallback editor ${index} focused and ready for typing!`);
+        
+        // Test if we can actually type in it
+        const testValue = textarea.value;
+        textarea.value = testValue + ' ';
+        textarea.value = testValue;
+        console.log(`✅ Textarea ${index} input test successful`);
+        
+        // Add a visual indicator that it's ready
+        textarea.style.boxShadow = '0 0 5px rgba(0, 255, 150, 0.5)';
+        setTimeout(() => {
+          textarea.style.boxShadow = 'none';
+        }, 2000);
+        
+      }, 100);
+      
+      return textarea;
+    }
+    
+    // Function to force fallback mode immediately
+    function useFallbackEditors() {
+      console.log('🔄 Switching to fallback editors for better interaction...');
+      const textareas = document.querySelectorAll('.code-input');
+      textareas.forEach((textarea, index) => {
+        createFallbackEditor(textarea, index);
+      });
+    }
+    
+    // Test function to debug textarea
+    function testEditor(editorId) {
+      const textarea = document.getElementById(editorId);
+      if (textarea) {
+        console.log(`Testing textarea ${editorId}:`);
+        console.log(`- Display: ${getComputedStyle(textarea).display}`);
+        console.log(`- Pointer events: ${getComputedStyle(textarea).pointerEvents}`);
+        console.log(`- Z-index: ${getComputedStyle(textarea).zIndex}`);
+        console.log(`- Disabled: ${textarea.disabled}`);
+        console.log(`- ReadOnly: ${textarea.readOnly}`);
+        
+        // Try to focus and add text
+        textarea.focus();
+        textarea.value = 'print("Hello, World!")';
+        alert(`Test completed! Textarea ${editorId} should now have test code.`);
+      } else {
+        console.error(`Textarea ${editorId} not found!`);
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Loops presentation loaded!');
+      
+      // Ensure modal is hidden and no overlay is blocking interactions
+      const modal = document.getElementById('quizModal');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.style.visibility = 'hidden';
+        modal.style.pointerEvents = 'none';
+      }
+      
+      // Remove any potential invisible overlays
+      const overlays = document.querySelectorAll('div[style*="position: fixed"], div[style*="position: absolute"]');
+      overlays.forEach(overlay => {
+        if (overlay.id !== 'quizModal' && overlay.offsetHeight === window.innerHeight && overlay.offsetWidth === window.innerWidth) {
+          console.warn('Removing potential blocking overlay:', overlay);
+          overlay.style.display = 'none';
+        }
+      });
+      
+      // Ensure all interactive elements are clickable
+      setTimeout(() => {
+        const interactiveElements = document.querySelectorAll('button, .quiz-launch-btn, .nav-btn');
+        interactiveElements.forEach(element => {
+          element.style.pointerEvents = 'auto';
+          element.style.zIndex = '9999';
+          element.style.position = 'relative';
+        });
+        
+        // Add backup event listener for quiz button specifically
+        const quizButton = document.querySelector('.quiz-launch-btn');
+        if (quizButton) {
+          quizButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Quiz button clicked via event listener');
+            openQuizModal();
+          });
+          console.log('Added backup event listener to quiz button');
+        }
+        
+        console.log('Enhanced interactivity for', interactiveElements.length, 'elements');
+        
+        console.log('✅ Slide interaction system initialized');
+          console.log('System ready');
+          console.log('🔍 DEBUGGING NAVIGATION SYSTEM...');
+          
+          // Check if navigation buttons exist and are visible
+          const navButtons = document.querySelectorAll('.nav-btn');
+          console.log(`📊 Found ${navButtons.length} navigation buttons`);
+          
+          navButtons.forEach((btn, index) => {
+            const rect = btn.getBoundingClientRect();
+            const styles = window.getComputedStyle(btn);
+            console.log(`🔢 Nav Button ${index + 1}:`, {
+              text: btn.textContent,
+              visible: rect.width > 0 && rect.height > 0,
+              position: `${Math.round(rect.left)}, ${Math.round(rect.top)}`,
+              zIndex: styles.zIndex,
+              pointerEvents: styles.pointerEvents,
+              display: styles.display
+            });
+            
+            // Test if button is clickable at its center
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const elementAtCenter = document.elementFromPoint(centerX, centerY);
+            
+            if (elementAtCenter === btn) {
+              console.log(`✅ Button ${index + 1} is accessible`);
+            } else {
+              console.log(`❌ Button ${index + 1} BLOCKED by:`, elementAtCenter?.tagName, elementAtCenter?.className);
+            }
+          });
+          
+          // Add click event listeners for debugging
+          navButtons.forEach((btn, index) => {
+            btn.addEventListener('click', function(e) {
+              console.log(`🖱️ NAVIGATION CLICK DETECTED on button ${index + 1}:`, btn.textContent);
+              console.log('📍 Click event details:', {
+                target: e.target.tagName,
+                currentTarget: e.currentTarget.tagName,
+                onclick: btn.getAttribute('onclick'),
+                clientX: e.clientX,
+                clientY: e.clientY
+              });
+            });
+            
+            // Test mouseover detection
+            btn.addEventListener('mouseover', function() {
+              console.log(`🖱️ Mouse over nav button ${index + 1}: ${btn.textContent}`);
+            });
+          });
+          
+          console.log('Navigation debugging ready');
+      
+      showSlide(1);
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            console.log('🎯 Quiz button position:', {
+              left: rect.left,
+              top: rect.top,
+              width: rect.width,
+              height: rect.height,
+              centerX: centerX,
+              centerY: centerY
+            });
+            
+            const elementAtCenter = document.elementFromPoint(centerX, centerY);
+            console.log('🔍 Element at quiz button center:', elementAtCenter);
+            
+            if (!elementAtCenter || elementAtCenter === null) {
+              console.log('🚨 NULL ELEMENT DETECTED! This indicates a blocking overlay.');
+              
+              // Find elements that are covering the quiz button area
+              const blockingElements = [];
+              const allEls = document.querySelectorAll('*');
+              
+              allEls.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const styles = window.getComputedStyle(el);
+                
+                // Check if element overlaps quiz button center and could be blocking
+                if (rect.left <= centerX && rect.right >= centerX && 
+                    rect.top <= centerY && rect.bottom >= centerY &&
+                    el !== quizBtn &&
+                    (styles.position === 'fixed' || styles.position === 'absolute' || 
+                     parseInt(styles.zIndex) > 1000)) {
+                  
+                  blockingElements.push({
+                    element: el,
+                    tag: el.tagName,
+                    id: el.id,
+                    className: el.className,
+                    reason: 'Overlaps quiz button center'
+                  });
+                }
+              });
+              
+              console.log('� FOUND BLOCKING ELEMENTS:', blockingElements);
+              
+              // Instead of workaround, let's identify what to delete
+              blockingElements.forEach(blocker => {
+                console.log(`�️ CANDIDATE FOR DELETION: ${blocker.tag} id="${blocker.id}" class="${blocker.className}"`);
+              });
+              
+            } else if (elementAtCenter !== quizBtn) {
+              console.log('🚫 QUIZ BUTTON BLOCKED! Blocking element details:');
+              console.log('� Blocker:', {
+                tag: elementAtCenter.tagName,
+                id: elementAtCenter.id,
+                className: elementAtCenter.className,
+                innerHTML: elementAtCenter.innerHTML.substring(0, 100) + '...'
+              });
+            }
+      
+      showSlide(1);
+    });
+  </script>
+
+  <!-- Quiz Modal -->
+  <div id="quizModal" class="quiz-modal">
+    <div class="quiz-modal-content">
+      <span class="quiz-close">&times;</span>
+      <div id="quiz-content"></div>
+    </div>
+  </div>
+  
+  <script>
+    // Simple quiz modal functions
+    function openQuizModal() {
+      console.log('Quiz modal opened');
+    }
+    
+    function closeQuizModal() {
+      console.log('Quiz modal closed');
+    }
+    
+    function selectAnswer(element, isCorrect, topic, feedback) {
+      console.log('Answer selected:', { isCorrect, topic, feedback });
+    }
+  </script>
+
+</body>
+</html>
+          useFallbackEditors();
+        } else {
+          // Check if any Monaco editor has focus
+          let anyFocused = false;
+          monacoEditors.forEach((editor, id) => {
+            if (editor.hasTextFocus()) {
+              anyFocused = true;
+            }
+          });
+          
+          if (!anyFocused) {
+            console.warn('Monaco editors created but not interactive, switching to fallback');
+            useFallbackEditors();
+          }
+        }
+      }, 3000);
+      
+      // Additional fallback after 8 seconds regardless
+      setTimeout(() => {
+        const firstTextarea = document.querySelector('.code-input');
+        if (firstTextarea && firstTextarea.style.display === 'none') {
+          console.log('🔧 Monaco editors still hidden, forcing fallback for better user experience');
+          useFallbackEditors();
+        }
+      }, 8000);
+      
+      // Load saved progress after editors are initialized
+      setTimeout(() => {
+        loadProgress();
+      }, 3000);
+      
+      // Add animation classes to elements as they come into view
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+      
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      }, observerOptions);
+      
+      // Observe all activity sections and key concepts
+      document.querySelectorAll('.activity-section, .key-concept, .question-box').forEach(el => {
+        observer.observe(el);
+      });
+    });
+
+    // Modal Quiz System
+    const quizQuestions = [
+      {
+        id: 1,
+        question: "You need to print every student's name from a class roster.",
+        scenario: "The teacher has a list of 25 students and wants to print each name for attendance.",
+        options: [
+          { text: "🔄 for loop", correct: true, explanation: "Perfect! A for loop is ideal for iterating through a known list of students." },
+          { text: "⏰ while loop", correct: false, explanation: "While loops work, but for loops are more natural when you have a specific collection to iterate through." }
+        ]
+      },
+      {
+        id: 2,
+        question: "Keep asking for a password until the user enters the correct one.",
+        scenario: "A login system that should keep prompting until the right password is entered.",
+        options: [
+          { text: "🔄 for loop", correct: false, explanation: "For loops are for known iterations. We don't know how many attempts the user will need." },
+          { text: "⏰ while loop", correct: true, explanation: "Excellent! While loops are perfect when you don't know how many iterations you'll need." }
+        ]
+      },
+      {
+        id: 3,
+        question: "Process each item in an online shopping cart for checkout.",
+        scenario: "An e-commerce site needs to calculate the total price by going through each item in the cart.",
+        options: [
+          { text: "🔄 for loop", correct: true, explanation: "Great choice! For loops excel at processing each item in a collection like a shopping cart." },
+          { text: "⏰ while loop", correct: false, explanation: "While this could work, for loops are more straightforward for processing known collections." }
+        ]
+      },
+      {
+        id: 4,
+        question: "A game where enemies keep spawning until the player's health reaches zero.",
+        scenario: "In this survival game, enemies appear randomly and the game continues until the player dies.",
+        options: [
+          { text: "🔄 for loop", correct: false, explanation: "For loops are for known sequences. We don't know when the player will lose all health." },
+          { text: "⏰ while loop", correct: true, explanation: "Perfect! While loops are ideal for conditions that could change at any time, like health > 0." }
+        ]
+      },
+      {
+        id: 5,
+        question: "Display a countdown from 10 to 1 for a rocket launch.",
+        scenario: "NASA needs a countdown timer that shows 10, 9, 8, 7... down to 1, then 'Liftoff!'",
+        options: [
+          { text: "🔄 for loop", correct: true, explanation: "Excellent! For loops with range(10, 0, -1) are perfect for counting down a known sequence." },
+          { text: "⏰ while loop", correct: true, explanation: "This works too! Both loops can handle counting, but for loops with range() are more common." }
+        ]
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+
+    function openQuizModal() {
+      currentQuestionIndex = 0;
+      correctAnswers = 0;
+      document.getElementById('quizModal').style.display = 'flex';
+      showQuestion();
+    }
+
+    function closeQuizModal() {
+      document.getElementById('quizModal').style.display = 'none';
+    }
+
+    function showQuestion() {
+      const question = quizQuestions[currentQuestionIndex];
+      document.getElementById('questionNumber').textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+      document.getElementById('questionText').textContent = question.question;
+      document.getElementById('scenarioText').textContent = question.scenario;
+      
+      const optionsContainer = document.getElementById('quizOptions');
+      optionsContainer.innerHTML = '';
+      
+      question.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'quiz-option-btn';
+        button.innerHTML = option.text;
+        button.onclick = () => selectQuizAnswer(index);
+        optionsContainer.appendChild(button);
+      });
+
+      document.getElementById('quizFeedback').style.display = 'none';
+      document.getElementById('nextQuestionBtn').style.display = 'none';
+      document.getElementById('finishQuizBtn').style.display = 'none';
+    }
+
+    function selectQuizAnswer(optionIndex) {
+      const question = quizQuestions[currentQuestionIndex];
+      const selectedOption = question.options[optionIndex];
+      const buttons = document.querySelectorAll('.quiz-option-btn');
+      
+      // Disable all buttons
+      buttons.forEach(btn => btn.disabled = true);
+      
+      // Highlight correct/incorrect
+      buttons.forEach((btn, index) => {
+        if (question.options[index].correct) {
+          btn.classList.add('correct');
+        } else if (index === optionIndex && !selectedOption.correct) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      // Show feedback
+      const feedbackDiv = document.getElementById('quizFeedback');
+      feedbackDiv.innerHTML = `
+        <div class="feedback-icon">${selectedOption.correct ? '✅' : '❌'}</div>
+        <p>${selectedOption.explanation}</p>
+      `;
+      feedbackDiv.className = `quiz-feedback ${selectedOption.correct ? 'correct' : 'incorrect'}`;
+      feedbackDiv.style.display = 'block';
+
+      if (selectedOption.correct) {
+        correctAnswers++;
+      }
+
+      // Show next button
+      if (currentQuestionIndex < quizQuestions.length - 1) {
+        document.getElementById('nextQuestionBtn').style.display = 'block';
+      } else {
+        document.getElementById('finishQuizBtn').style.display = 'block';
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      showQuestion();
+    }
+
+    function finishQuiz() {
+      const percentage = Math.round((correctAnswers / quizQuestions.length) * 100);
+      let message = '';
+      let emoji = '';
+
+      if (percentage >= 80) {
+        message = "Outstanding! You've mastered when to use while vs for loops!";
+        emoji = "🎉";
+      } else if (percentage >= 60) {
+        message = "Good job! You're getting the hang of choosing the right loop type.";
+        emoji = "👍";
+      } else {
+        message = "Keep practicing! Review the comparison section and try again.";
+        emoji = "📚";
+      }
+
+      document.getElementById('quizContent').innerHTML = `
+        <div class="quiz-results">
+          <div class="results-emoji">${emoji}</div>
+          <h3>Quiz Complete!</h3>
+          <p class="score">You got ${correctAnswers} out of ${quizQuestions.length} correct (${percentage}%)</p>
+          <p class="message">${message}</p>
+          <div class="results-actions">
+            <button onclick="openQuizModal()" class="retry-btn">🔄 Try Again</button>
+            <button onclick="closeQuizModal()" class="close-btn">✅ Continue Learning</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(event) {
+      const modal = document.getElementById('quizModal');
+      if (event.target === modal) {
+        closeQuizModal();
+      }
+    });
+  </script>
+
+  <!-- Quiz Modal -->
+  <div id="quizModal" class="quiz-modal">
+    <div class="quiz-modal-content">
+      <div class="quiz-header">
+        <h2>While vs For Loop Quiz</h2>
+        <span class="close-modal" onclick="closeQuizModal()">&times;</span>
+      </div>
+      
+      <div id="quizContent">
+        <div class="quiz-progress">
+          <span id="questionNumber">Question 1 of 5</span>
+        </div>
+        
+        <div class="quiz-question">
+          <h3 id="questionText"></h3>
+          <p class="scenario" id="scenarioText"></p>
+        </div>
+        
+        <div id="quizOptions" class="quiz-options">
+          <!-- Options will be populated by JavaScript -->
+        </div>
+        
+        <div id="quizFeedback" class="quiz-feedback">
+          <!-- Feedback will be shown here -->
+        </div>
+        
+        <div class="quiz-actions">
+          <button id="nextQuestionBtn" onclick="nextQuestion()" class="next-btn" style="display: none;">Next Question →</button>
+          <button id="finishQuizBtn" onclick="finishQuiz()" class="finish-btn" style="display: none;">See Results 🎯</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug #20: Variable Scope Confusion | Code With Morais</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .bug-header {
+            background: linear-gradient(135deg, #ff6b6b, #ff5722);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .bug-number {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .bug-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .bug-description {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .code-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 10;
+        }
+        
+        .copy-button:hover {
+            background: #2980b9;
+        }
+        
+        .copy-button.copied {
+            background: #27ae60;
+        }
+        
+        pre {
+            margin: 0;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .goal-highlight {
+            background: #e8f5e8;
+            padding: 15px;
+            border-left: 4px solid #27ae60;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .ide-link {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        .ide-link:hover {
+            background: #229954;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 2px solid #ecf0f1;
+        }
+        
+        .nav-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .nav-button:hover {
+            background: #2980b9;
+        }
+        
+        .nav-button.disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .bug-title {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="bug-header">
+            <div class="bug-number">Bug Challenge #20</div>
+            <div class="bug-title">Variable Scope Confusion</div>
+            <div class="bug-description">Misunderstanding loop variable final value</div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-bullseye"></i> How to Complete This Exercise</h2>
+            <div class="goal-highlight">
+                <strong>🎯 Goal:</strong> The final counter value (which should be 6) must be printed after the loop finishes.
+            </div>
+            <p><strong>Your Task:</strong></p>
+            <ul>
+                <li>Copy the buggy code below</li>
+                <li>Paste it into <a href="https://www.online-python.com" target="_blank" style="color: #27ae60; font-weight: bold;">Online Python</a></li>
+                <li>Run the code to see the NameError</li>
+                <li>Fix the variable scope issue</li>
+                <li>Test your solution to see the final counter value printed</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-bug"></i> Buggy Code</h2>
+            <div class="code-container">
+                <button class="copy-button" onclick="copyCode('buggy-code')">
+                    <i class="fas fa-copy"></i> Copy Code
+                </button>
+                <pre><code id="buggy-code" class="language-python">print("Counting from 1 to 5:")
+
+for counter in range(1, 6):
+    print(f"Count: {counter}")
+
+# Bug: trying to use loop variable after loop in some contexts
+print(f"Loop finished. Final counter was: {counter}")
+print("Done counting!")</code></pre>
+            </div>
+            <a href="https://www.online-python.com" target="_blank" class="ide-link">
+                <i class="fas fa-external-link-alt"></i> Open Online Python IDE
+            </a>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-search"></i> Debugging Tips</h2>
+            <ul>
+                <li><strong>Variable scope:</strong> In Python, loop variables persist after the loop ends</li>
+                <li><strong>This might work:</strong> But it's a common confusion point for beginners</li>
+                <li><strong>Best practice:</strong> Don't rely on loop variables after the loop</li>
+                <li><strong>Alternative:</strong> Use a separate variable to track the final value explicitly</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-lightbulb"></i> What You Should Learn</h2>
+            <ul>
+                <li>How variable scope works with for loops in Python</li>
+                <li>Understanding when loop variables are and aren't available</li>
+                <li>Best practices for tracking values outside of loops</li>
+                <li>The difference between Python and other languages' loop variable behavior</li>
+            </ul>
+        </div>
+
+        <div class="navigation">
+            <a href="/bug-19.html" class="nav-button">
+                <i class="fas fa-arrow-left"></i> Previous Bug
+            </a>
+            <a href="/bug-index.html" class="nav-button">
+                <i class="fas fa-home"></i> All Bugs
+            </a>
+            <a href="/bug-index.html" class="nav-button">
+                <i class="fas fa-trophy"></i> Complete!
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script>
+    <script>
+        function copyCode(elementId) {
+            const codeElement = document.getElementById(elementId);
+            const text = codeElement.textContent || codeElement.innerText;
+            
+            // Try modern clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess();
+                }).catch(err => {
+                    console.warn('Clipboard API failed, trying fallback:', err);
+                    fallbackCopy(text);
+                });
+            } else {
+                // Fallback for older browsers or non-HTTPS
+                fallbackCopy(text);
+            }
+        }
+        
+        function fallbackCopy(text) {
+            // Create a temporary textarea
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-999999px';
+            textarea.style.top = '-999999px';
+            document.body.appendChild(textarea);
+            
+            try {
+                textarea.select();
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopySuccess();
+                } else {
+                    showCopyError();
+                }
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                showCopyError();
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+        
+        function showCopySuccess() {
+            const button = event.target.closest('.copy-button');
+            if (button) {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }
+        }
+        
+        function showCopyError() {
+            alert('Unable to copy automatically. Please select the code and copy manually (Ctrl+C).');
+        }
+    </script>
+</body>
+</html>

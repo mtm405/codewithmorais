@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔢 Python Operator Hierarchy - Order of Operations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        h2 {
+            color: #ff6b6b;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 10px;
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        h3 {
+            color: #667eea;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .hierarchy-visual {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            margin-bottom: 30px;
+        }
+
+        .priority-level {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #ff6b6b;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .priority-level.highest {
+            border-left-color: #ff6b6b;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        }
+
+        .priority-level.medium {
+            border-left-color: #ff9800;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+        }
+
+        .priority-level.lowest {
+            border-left-color: #4caf50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        }
+
+        .priority-label {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .priority-badge.highest {
+            background: #ff6b6b;
+        }
+
+        .priority-badge.medium {
+            background: #ff9800;
+        }
+
+        .priority-badge.lowest {
+            background: #4caf50;
+        }
+
+        .operators-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .operator {
+            display: inline-block;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .example-section {
+            background: #f9fafb;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 25px;
+        }
+
+        .step-by-step {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .step {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .step-content {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        pre {
+            background: #282c34 !important;
+            padding: 20px !important;
+            border-radius: 5px !important;
+            margin: 15px 0 !important;
+            border-left: 4px solid #667eea !important;
+            overflow-x: auto !important;
+        }
+
+        code {
+            font-family: 'Courier New', monospace !important;
+            font-size: 0.95em !important;
+            line-height: 1.6 !important;
+        }
+
+        .hljs {
+            background: #282c34 !important;
+            color: #abb2bf !important;
+        }
+
+        .comparison-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-item {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 3px solid #667eea;
+        }
+
+        .comparison-item h4 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .comparison-item p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .comparison-item code {
+            background: #282c34;
+            color: #61dafb;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        /* WORKBOOK STYLING */
+        .workbook-section {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 5px solid #4caf50;
+            margin-top: 40px;
+            page-break-inside: avoid;
+        }
+
+        .workbook-section h2 {
+            color: #2e7d32;
+            border-color: #4caf50;
+        }
+
+        .workbook-section h3 {
+            color: #388e3c;
+        }
+
+        .question-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .answer-line {
+            border-bottom: 2px dotted #666;
+            display: inline-block;
+            width: 200px;
+            margin-top: 10px;
+        }
+
+        .true-false-group {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #4caf50;
+        }
+
+        .true-false-group p {
+            flex: 1;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .true-false-options {
+            display: flex;
+            gap: 20px;
+        }
+
+        .true-false-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .challenge-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .challenge-title {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .challenge-box p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .answer-key {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #fbc02d;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .answer-key.show {
+            display: block;
+        }
+
+        .answer-key h3 {
+            color: #f57f17;
+            margin-top: 0;
+        }
+
+        .answer-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #fbc02d;
+        }
+
+        .toggle-answers-btn {
+            background: #fbc02d;
+            color: #333;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .toggle-answers-btn:hover {
+            background: #f57f17;
+            color: white;
+        }
+
+        .cheatsheet-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #7b1fa2;
+            margin-top: 30px;
+        }
+
+        .cheatsheet-box h3 {
+            color: #7b1fa2;
+            margin-top: 0;
+        }
+
+        .cheatsheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cheatsheet-table th {
+            background: #7b1fa2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .cheatsheet-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cheatsheet-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            font-size: 0.95em;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .toggle-answers-btn {
+                display: none;
+            }
+            .answer-key {
+                display: block !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .comparison-box {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2em;
+            }
+
+            .true-false-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .true-false-options {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1>🔢 Python Operator Hierarchy</h1>
+            <p>Who Goes First? Understanding Order of Operations</p>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- INTRO -->
+            <div class="example-section">
+                <h3>Why This Matters</h3>
+                <p>Just like in math class with <strong>PEMDAS</strong>, Python follows a strict order of operations. When Python looks at a long line of code, it needs to know which part to calculate first. This is called <strong>operator precedence</strong> or <strong>operator hierarchy</strong>.</p>
+                <p style="margin-top: 10px;"><strong>Example:</strong> <code>10 + 4 * 2</code> gives <code>18</code>, not <code>28</code>, because multiplication happens before addition!</p>
+            </div>
+
+            <!-- HIERARCHY VISUAL -->
+            <h2>📊 The Hierarchy (Highest to Lowest Priority)</h2>
+            
+            <div class="hierarchy-visual">
+                <!-- LEVEL 1: ARITHMETIC -->
+                <div class="priority-level highest">
+                    <div class="priority-label">
+                        <span class="priority-badge highest">HIGHEST</span>
+                        1. Arithmetic (The Math)
+                    </div>
+                    <div class="operators-list">
+                        <div class="operator">** (Power)</div>
+                    </div>
+                    <p style="margin: 10px 0 0 0; color: #555; font-size: 0.95em;">Then:</p>
+                    <div class="operators-list">
+                        <div class="operator">*</div>
+                        <div class="operator">/</div>
+                        <div class="operator">//</div>
+                        <div class="operator">%</div>
+                    </div>
+                    <p style="margin: 10px 0 0 0; color: #555; font-size: 0.95em;">Finally:</p>
+                    <div class="operators-list">
+                        <div class="operator">+</div>
+                        <div class="operator">-</div>
+                    </div>
+                </div>
+
+                <!-- LEVEL 2: COMPARISON -->
+                <div class="priority-level medium">
+                    <div class="priority-label">
+                        <span class="priority-badge medium">MIDDLE</span>
+                        2. Comparison, Identity & Membership
+                    </div>
+                    <div class="operators-list">
+                        <div class="operator">==</div>
+                        <div class="operator">!=</div>
+                        <div class="operator">></div>
+                        <div class="operator"><</div>
+                        <div class="operator">>=</div>
+                        <div class="operator"><=</div>
+                        <div class="operator">is</div>
+                        <div class="operator">is not</div>
+                        <div class="operator">in</div>
+                        <div class="operator">not in</div>
+                    </div>
+                    <p style="margin: 10px 0 0 0; color: #555; font-size: 0.9em;"><em>Note: All comparison operators share the same precedence level.</em></p>
+                </div>
+
+                <!-- LEVEL 3: LOGICAL -->
+                <div class="priority-level lowest">
+                    <div class="priority-label">
+                        <span class="priority-badge lowest">LOWEST</span>
+                        3. Logical (The Decision Makers)
+                    </div>
+                    <div class="operators-list">
+                        <div class="operator">not</div>
+                    </div>
+                    <p style="margin: 10px 0 0 0; color: #555; font-size: 0.95em;">Then:</p>
+                    <div class="operators-list">
+                        <div class="operator">and</div>
+                    </div>
+                    <p style="margin: 10px 0 0 0; color: #555; font-size: 0.95em;">Finally:</p>
+                    <div class="operators-list">
+                        <div class="operator">or</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEEP DIVE -->
+            <h2>🔍 Deep Dive: Examples & Explanations</h2>
+
+            <!-- EXAMPLE A -->
+            <h3>A. Arithmetic Precedence (Powers → Multiply/Divide → Add/Subtract)</h3>
+            <div class="example-section">
+                <p><strong>Rule:</strong> Powers first, then multiplication/division, then addition/subtraction.</p>
+                <pre><code class="language-python">result = 10 + 4 * 2 ** 3</code></pre>
+
+                <div class="step-by-step">
+                    <strong>Step-by-Step Evaluation:</strong>
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <strong>Exponentiation (**):</strong> <code>2 ** 3</code> becomes <code>8</code><br>
+                            Current expression: <code>10 + 4 * 8</code>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <strong>Multiplication (*):</strong> <code>4 * 8</code> becomes <code>32</code><br>
+                            Current expression: <code>10 + 32</code>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <strong>Addition (+):</strong> <code>10 + 32</code> becomes <code>42</code><br>
+                            <strong>Final Result:</strong> <code>42</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXAMPLE B -->
+            <h3>B. Comparison & Logical Operators</h3>
+            <div class="example-section">
+                <p><strong>Rule:</strong> Comparisons happen BEFORE logical operators. <code>and</code> happens before <code>or</code>.</p>
+                <pre><code class="language-python">score = 85
+is_passing = score >= 70 and score <= 100</code></pre>
+
+                <div class="step-by-step">
+                    <strong>Step-by-Step Evaluation:</strong>
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <strong>Comparisons:</strong> Python checks <code>score >= 70</code> (becomes <code>True</code>) and <code>score <= 100</code> (becomes <code>True</code>)<br>
+                            Current expression: <code>True and True</code>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <strong>Logical and:</strong> <code>True and True</code> becomes <code>True</code><br>
+                            <strong>Final Result:</strong> <code>True</code> — The score IS passing!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXAMPLE C -->
+            <h3>C. A Complex Expression (Putting It All Together)</h3>
+            <div class="example-section">
+                <p><strong>Rule:</strong> Arithmetic → Comparisons → Logical operators</p>
+                <pre><code class="language-python">x = 5
+y = 10
+result = x + 2 * 3 > 10 and y == 10</code></pre>
+
+                <div class="step-by-step">
+                    <strong>Step-by-Step Evaluation:</strong>
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <strong>Exponentiation & Multiplication:</strong> <code>2 * 3</code> becomes <code>6</code><br>
+                            Current expression: <code>x + 6 > 10 and y == 10</code>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <strong>Addition:</strong> <code>5 + 6</code> becomes <code>11</code><br>
+                            Current expression: <code>11 > 10 and 10 == 10</code>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <strong>Comparisons:</strong> <code>11 > 10</code> becomes <code>True</code> and <code>10 == 10</code> becomes <code>True</code><br>
+                            Current expression: <code>True and True</code>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            <strong>Logical and:</strong> <code>True and True</code> becomes <code>True</code><br>
+                            <strong>Final Result:</strong> <code>True</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IDENTITY VS EQUALITY -->
+            <h3>D. Identity (is) vs. Equality (==)</h3>
+            <div class="comparison-box">
+                <div class="comparison-item">
+                    <h4>== (Equality)</h4>
+                    <p>Checks if the <strong>values</strong> look the same.</p>
+                    <p style="margin-top: 15px;"><strong>Example:</strong></p>
+                    <pre><code class="language-python">list1 = [1, 2, 3]
+list2 = [1, 2, 3]
+print(list1 == list2)
+# True!</code></pre>
+                    <p>Both lists contain 1, 2, 3</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>is (Identity)</h4>
+                    <p>Checks if they are the <strong>exact same object</strong> in computer memory.</p>
+                    <p style="margin-top: 15px;"><strong>Example:</strong></p>
+                    <pre><code class="language-python">list1 = [1, 2, 3]
+list2 = [1, 2, 3]
+print(list1 is list2)
+# False!</code></pre>
+                    <p>They are different lists in different memory locations</p>
+                </div>
+            </div>
+
+            <div class="example-section">
+                <h4>When to Use Each:</h4>
+                <ul style="margin-left: 20px; margin-top: 15px;">
+                    <li><code>==</code> for <strong>values:</strong> "Does this list contain [1, 2, 3]?"</li>
+                    <li><code>is</code> for <strong>objects:</strong> "Is this the exact same list object?"</li>
+                    <li>Common use: <code>if x is None:</code> (checking if something IS None, not just equals None)</li>
+                </ul>
+            </div>
+
+            <!-- CHEATSHEET -->
+            <div class="cheatsheet-box">
+                <h3>⚡ Quick Cheatsheet: When to Use What</h3>
+                <table class="cheatsheet-table">
+                    <thead>
+                        <tr>
+                            <th>Operator Type</th>
+                            <th>Examples</th>
+                            <th>What It Does</th>
+                            <th>Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Power</strong></td>
+                            <td><code>**</code></td>
+                            <td>Exponentiation: <code>2 ** 3 = 8</code></td>
+                            <td>🔴 Highest</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Multiply/Divide</strong></td>
+                            <td><code>*, /, //, %</code></td>
+                            <td>Math operations: <code>10 / 2 = 5</code></td>
+                            <td>🟠 High</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Add/Subtract</strong></td>
+                            <td><code>+, -</code></td>
+                            <td>Basic math: <code>5 + 3 = 8</code></td>
+                            <td>🟡 Medium-High</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Comparison</strong></td>
+                            <td><code>==, !=, >, <, >=, <=</code></td>
+                            <td>Compare values: <code>5 > 3 = True</code></td>
+                            <td>🟠 Medium</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Identity</strong></td>
+                            <td><code>is, is not</code></td>
+                            <td>Check if same object: <code>x is None</code></td>
+                            <td>🟠 Medium</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Membership</strong></td>
+                            <td><code>in, not in</code></td>
+                            <td>Check if in list: <code>"a" in "apple"</code></td>
+                            <td>🟠 Medium</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NOT</strong></td>
+                            <td><code>not</code></td>
+                            <td>Flip boolean: <code>not True = False</code></td>
+                            <td>🟢 Low</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AND</strong></td>
+                            <td><code>and</code></td>
+                            <td>Both must be true: <code>True and True = True</code></td>
+                            <td>🟢 Lower</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OR</strong></td>
+                            <td><code>or</code></td>
+                            <td>One must be true: <code>True or False = True</code></td>
+                            <td>🟢 Lowest</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- WORKBOOK -->
+            <div class="workbook-section">
+                <h2>📖 The Workbook</h2>
+                <p><strong>Now it's your turn to practice! Analyze each code sample and predict the output WITHOUT running it.</strong></p>
+
+                <!-- SECTION 1: PREDICT -->
+                <h3>Section 1: Predict the Output</h3>
+                <p style="margin-bottom: 20px; color: #555;"><em>Write your answer on the line. Try to explain WHY you think that's the answer.</em></p>
+
+                <!-- Q1 -->
+                <div class="question-box">
+                    <span class="question-number">1</span>
+                    <strong>Arithmetic Order</strong>
+                    <pre><code class="language-python">x = 5 + 10 * 2 - 3 ** 2
+print(x)</code></pre>
+                    <p style="margin-top: 15px;"><strong>Your Answer:</strong> <span class="answer-line"></span></p>
+                    <p style="font-size: 0.9em; color: #777; margin-top: 10px;"><em>Hint: Remember ** comes before *, which comes before +/-</em></p>
+                </div>
+
+                <!-- Q2 -->
+                <div class="question-box">
+                    <span class="question-number">2</span>
+                    <strong>Logical Grouping</strong>
+                    <pre><code class="language-python">a = True
+b = False
+c = True
+result = a or b and c
+print(result)</code></pre>
+                    <p style="margin-top: 15px;"><strong>Your Answer:</strong> <span class="answer-line"></span></p>
+                    <p style="font-size: 0.9em; color: #777; margin-top: 10px;"><em>Hint: 'and' binds tighter than 'or'. Evaluate 'b and c' first!</em></p>
+                </div>
+
+                <!-- Q3 -->
+                <div class="question-box">
+                    <span class="question-number">3</span>
+                    <strong>Modulus and Floor Division</strong>
+                    <pre><code class="language-python">val = 15 // 2 + 15 % 2
+print(val)</code></pre>
+                    <p style="margin-top: 15px;"><strong>Your Answer:</strong> <span class="answer-line"></span></p>
+                    <p style="font-size: 0.9em; color: #777; margin-top: 10px;"><em>Hint: // (floor division) and % (modulus) have same priority. Left to right!</em></p>
+                </div>
+
+                <!-- Q4 -->
+                <div class="question-box">
+                    <span class="question-number">4</span>
+                    <strong>Comparison Precedence</strong>
+                    <pre><code class="language-python">x = 10
+y = 5
+result = x > 5 and y < 10
+print(result)</code></pre>
+                    <p style="margin-top: 15px;"><strong>Your Answer:</strong> <span class="answer-line"></span></p>
+                    <p style="font-size: 0.9em; color: #777; margin-top: 10px;"><em>Hint: Comparisons happen before 'and'</em></p>
+                </div>
+
+                <!-- SECTION 2: TRUE/FALSE -->
+                <h3 style="margin-top: 30px;">Section 2: True or False?</h3>
+                <p style="margin-bottom: 20px; color: #555;"><em>Circle or check the correct answer.</em></p>
+
+                <div class="true-false-group">
+                    <p>The expression <code>x = 10</code> uses the comparison operator.</p>
+                    <div class="true-false-options">
+                        <label><input type="radio" name="q2_1"> True</label>
+                        <label><input type="radio" name="q2_1"> False</label>
+                    </div>
+                </div>
+
+                <div class="true-false-group">
+                    <p>In Python, <code>*</code> and <code>/</code> have higher precedence than <code>+</code> and <code>-</code>.</p>
+                    <div class="true-false-options">
+                        <label><input type="radio" name="q2_2"> True</label>
+                        <label><input type="radio" name="q2_2"> False</label>
+                    </div>
+                </div>
+
+                <div class="true-false-group">
+                    <p>If <code>list_a = [1]</code> and <code>list_b = [1]</code>, then <code>list_a is list_b</code> will be True.</p>
+                    <div class="true-false-options">
+                        <label><input type="radio" name="q2_3"> True</label>
+                        <label><input type="radio" name="q2_3"> False</label>
+                    </div>
+                </div>
+
+                <div class="true-false-group">
+                    <p>The operator <code>in</code> is used to check if a value exists inside a list or string.</p>
+                    <div class="true-false-options">
+                        <label><input type="radio" name="q2_4"> True</label>
+                        <label><input type="radio" name="q2_4"> False</label>
+                    </div>
+                </div>
+
+                <div class="true-false-group">
+                    <p><code>or</code> has higher precedence than <code>and</code>.</p>
+                    <div class="true-false-options">
+                        <label><input type="radio" name="q2_5"> True</label>
+                        <label><input type="radio" name="q2_5"> False</label>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: CODING CHALLENGES -->
+                <h3 style="margin-top: 30px;">Section 3: Coding Challenges</h3>
+
+                <!-- CHALLENGE A -->
+                <div class="challenge-box">
+                    <div class="challenge-title">Challenge A: The Bouncer</div>
+                    <p>Write a single line of code that sets a variable <code>can_enter</code> to True only if:</p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li><code>age</code> is greater than or equal to 21</li>
+                        <li><strong>AND</strong> <code>has_id</code> is True</li>
+                        <li><strong>AND</strong> <code>is_banned</code> is False</li>
+                    </ul>
+                    <pre><code class="language-python">age = 22
+has_id = True
+is_banned = False
+
+# Write your code here:
+can_enter = ________________________________________________
+
+print(can_enter)</code></pre>
+                    <p style="font-size: 0.9em; color: #777; margin-top: 10px;"><strong>Hint:</strong> Use <code>and</code> operators to connect all three conditions.</p>
+                </div>
+
+                <!-- CHALLENGE B -->
+                <div class="challenge-box">
+                    <div class="challenge-title">Challenge B: The List Checker</div>
+                    <p>Create a list called <code>groceries</code> containing "eggs", "milk", and "bread". Write a print statement that uses the containment operator to check if "bacon" is in the list.</p>
+                    <pre><code class="language-python"># Write your code here:
+groceries = _______________________________________________
+
+# Check if "bacon" is in the list:
+print(__________________________________________________________)</code></pre>
+                    <p style="font-size: 0.9em; color: #777; margin-top: 10px;"><strong>Hint:</strong> Use the <code>in</code> operator and create a string with <code>"bacon" in groceries</code></p>
+                </div>
+
+                <!-- CHALLENGE C -->
+                <div class="challenge-box">
+                    <div class="challenge-title">Challenge C: The Grade Checker</div>
+                    <p>Write code that checks if a student passes. A student passes if:</p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li>Their score is 70 or higher</li>
+                        <li><strong>AND</strong> they have attended at least 80% of classes</li>
+                    </ul>
+                    <pre><code class="language-python">score = 85
+attendance_percentage = 90
+
+# Write your code here:
+passes = ________________________________________________
+
+print(passes)</code></pre>
+                </div>
+
+                <!-- ANSWER KEY BUTTON -->
+                <button class="toggle-answers-btn" onclick="toggleAnswers()">👀 Show Answer Key</button>
+
+                <!-- ANSWER KEY -->
+                <div class="answer-key" id="answerKey">
+                    <h3>✅ Answer Key</h3>
+
+                    <div class="answer-item">
+                        <strong>Section 1 - Q1:</strong> <code>x = 5 + 10 * 2 - 3 ** 2</code>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li>3 ** 2 = 9</li>
+                            <li>10 * 2 = 20</li>
+                            <li>5 + 20 = 25</li>
+                            <li>25 - 9 = <strong>16</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Section 1 - Q2:</strong> <code>a or b and c</code> where a=True, b=False, c=True
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li><code>b and c</code> = <code>False and True</code> = False (evaluate first)</li>
+                            <li><code>a or False</code> = <code>True or False</code> = <strong>True</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Section 1 - Q3:</strong> <code>15 // 2 + 15 % 2</code>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li>15 // 2 = 7 (floor division)</li>
+                            <li>15 % 2 = 1 (remainder)</li>
+                            <li>7 + 1 = <strong>8</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Section 1 - Q4:</strong> <code>x > 5 and y < 10</code> where x=10, y=5
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li>10 > 5 = True</li>
+                            <li>5 < 10 = True</li>
+                            <li>True and True = <strong>True</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Section 2 - Q1:</strong> <code>x = 10</code> uses comparison? <strong>False</strong>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li>This is <code>=</code> (assignment), not <code>==</code> (comparison)</li>
+                        </ul>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Section 2 - Q2:</strong> <code>*</code> and <code>/</code> higher than <code>+</code> and <code>-</code>? <strong>True</strong>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Section 2 - Q3:</strong> <code>list_a is list_b</code> will be True? <strong>False</strong>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li>They have the same VALUE but are different OBJECTS in memory</li>
+                        </ul>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Section 2 - Q4:</strong> <code>in</code> checks if value exists? <strong>True</strong>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Section 2 - Q5:</strong> <code>or</code> higher precedence than <code>and</code>? <strong>False</strong>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li><code>and</code> has higher precedence. It evaluates first!</li>
+                        </ul>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Challenge A - The Bouncer:</strong>
+                        <pre><code class="language-python">can_enter = age >= 21 and has_id and not is_banned</code></pre>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Challenge B - The List Checker:</strong>
+                        <pre><code class="language-python">groceries = ["eggs", "milk", "bread"]
+print("bacon" in groceries)  # False</code></pre>
+                    </div>
+
+                    <div class="answer-item">
+                        <strong>Challenge C - The Grade Checker:</strong>
+                        <pre><code class="language-python">passes = score >= 70 and attendance_percentage >= 80
+print(passes)  # True</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>🔢 Python Operator Hierarchy | Master the order of operations!</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">💡 Tip: When unsure, use parentheses! <code>(10 + 5) * 2</code> is always clearer than <code>10 + 5 * 2</code></p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleAnswers() {
+            const answerKey = document.getElementById('answerKey');
+            const btn = event.target;
+            
+            if (answerKey.classList.contains('show')) {
+                answerKey.classList.remove('show');
+                btn.textContent = '👀 Show Answer Key';
+            } else {
+                answerKey.classList.add('show');
+                btn.textContent = '🙈 Hide Answer Key';
+            }
+        }
+
+        // Highlight code blocks on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightElement(block);
+            });
+        });
+    </script>
+</body>
+</html>

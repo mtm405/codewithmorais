@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File I/O Review: Simple Guide | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+        }
+
+        .bell-ringer {
+            background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+            border-left-color: #f39c12;
+        }
+
+        .notes {
+            background: linear-gradient(145deg, #d1ecf1, #74b9ff);
+            border-left-color: #0984e3;
+        }
+
+        .activity {
+            background: linear-gradient(145deg, #d4edda, #a3d9a5);
+            border-left-color: #28a745;
+        }
+
+        .section h2 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #636e72;
+            margin: 20px 0 15px 0;
+            font-size: 1.4rem;
+        }
+
+        .section h4 {
+            color: #636e72;
+            margin: 15px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .question-box {
+            background: white;
+            border: 2px solid #f39c12;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .question-box p {
+            margin: 10px 0;
+        }
+
+        .code-container {
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-container pre {
+            margin: 0;
+            color: #e2e8f0;
+        }
+
+        .code-container code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        details {
+            background: #f0fff4;
+            border: 2px solid #38a169;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: #38a169;
+            font-size: 1.1rem;
+            padding: 5px;
+            user-select: none;
+        }
+
+        summary:hover {
+            color: #2f855a;
+        }
+
+        details[open] summary {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #38a169;
+        }
+
+        .answer-content {
+            margin-top: 15px;
+        }
+
+        .answer-content p {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .answer-content strong {
+            color: #2d3436;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .highlight-box {
+            background: #fff5f5;
+            border: 2px solid #e53e3e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .highlight-box strong {
+            color: #e53e3e;
+        }
+
+        .tip-box {
+            background: #e6fffa;
+            border-left: 4px solid #319795;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip-box strong {
+            color: #319795;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="icon">📁</div>
+            <h1>File I/O Review</h1>
+            <p>Simple Guide to Reading and Writing Files</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Bell Ringer -->
+            <div class="section bell-ringer">
+                <h2>🔔 Bell Ringer: The Lost Data Problem (5 Minutes)</h2>
+                
+                <div class="question-box">
+                    <h4>Question:</h4>
+                    <p>A student wrote this code to save their high score. But every time they run it, their old score disappears!</p>
+                    
+                    <div class="code-container">
+                        <pre><code class="language-python"># File has: "Score: 500"
+
+score = 650
+with open('game.txt', 'w') as f:
+    f.write('Score: ' + str(score))
+
+# Result: File now only has "Score: 650"
+# The 500 is gone!
+
+# What went wrong?</code></pre>
+                    </div>
+                </div>
+
+                <details>
+                    <summary>Click to see the answer</summary>
+                    <div class="answer-content">
+                        <p><strong>The Problem:</strong> Using <code>'w'</code> mode erases everything in the file!</p>
+                        
+                        <p><strong>Why it happens:</strong> The <code>'w'</code> mode means "write from scratch" - it deletes the old content first.</p>
+                        
+                        <p><strong>The Fix:</strong> Use <code>'a'</code> mode to add to the end without erasing:
+                        <div class="code-container">
+                            <pre><code class="language-python">with open('game.txt', 'a') as f:
+    f.write('Score: ' + str(score) + '\n')</code></pre>
+                        </div>
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Section 1: The Three File Modes -->
+            <div class="section notes">
+                <h2>📝 Part 1: The Three File Modes</h2>
+
+                <p>When you open a file, you need to tell Python what you want to do. There are three simple modes:</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mode</th>
+                                <th>What It Does</th>
+                                <th>When to Use It</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>'w'</code></td>
+                                <td><strong>Write</strong> - Erases the file and starts fresh</td>
+                                <td>Creating a new file or completely replacing old content</td>
+                            </tr>
+                            <tr>
+                                <td><code>'a'</code></td>
+                                <td><strong>Append</strong> - Adds to the end of the file</td>
+                                <td>Adding new data without losing old data</td>
+                            </tr>
+                            <tr>
+                                <td><code>'r'</code></td>
+                                <td><strong>Read</strong> - Look at what's in the file</td>
+                                <td>Reading data from a file</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Simple Examples:</h3>
+
+                <h4>Example 1: Write Mode - Starting Fresh</h4>
+                <div class="code-container">
+                    <pre><code class="language-python"># Create a new file with a header
+with open('scores.txt', 'w') as f:
+    f.write('Game High Scores\n')
+    f.write('================\n')</code></pre>
+                </div>
+
+                <h4>Example 2: Append Mode - Adding More</h4>
+                <div class="code-container">
+                    <pre><code class="language-python"># Add a new score to the file
+with open('scores.txt', 'a') as f:
+    f.write('Player: Alice - Score: 1500\n')
+    f.write('Player: Bob - Score: 1200\n')</code></pre>
+                </div>
+
+                <h4>Example 3: Read Mode - Looking at Data</h4>
+                <div class="code-container">
+                    <pre><code class="language-python"># Read everything in the file
+with open('scores.txt', 'r') as f:
+    content = f.read()
+    print(content)</code></pre>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Remember:</strong> Always use <code>with open()</code> - it automatically closes the file when done!
+                </div>
+            </div>
+
+            <!-- Section 2: Reading Files Different Ways -->
+            <div class="section notes">
+                <h2>📖 Part 2: Reading Files Different Ways</h2>
+
+                <p>There are three ways to read data from a file:</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>What It Does</th>
+                                <th>Example Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>f.read()</code></td>
+                                <td>Reads the entire file as one string</td>
+                                <td>"Line 1\nLine 2\nLine 3"</td>
+                            </tr>
+                            <tr>
+                                <td><code>f.readline()</code></td>
+                                <td>Reads just one line</td>
+                                <td>"Line 1\n"</td>
+                            </tr>
+                            <tr>
+                                <td><code>f.readlines()</code></td>
+                                <td>Reads all lines into a list</td>
+                                <td>["Line 1\n", "Line 2\n", "Line 3"]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Complete Example:</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># Create a file with data
+with open('names.txt', 'w') as f:
+    f.write('Alice\n')
+    f.write('Bob\n')
+    f.write('Charlie\n')
+
+# Method 1: Read everything at once
+with open('names.txt', 'r') as f:
+    all_text = f.read()
+    print("All at once:")
+    print(all_text)
+
+# Method 2: Read line by line
+with open('names.txt', 'r') as f:
+    line1 = f.readline()
+    line2 = f.readline()
+    print("\nOne at a time:")
+    print("First:", line1.strip())
+    print("Second:", line2.strip())
+
+# Method 3: Read as a list
+with open('names.txt', 'r') as f:
+    all_lines = f.readlines()
+    print("\nAs a list:")
+    for name in all_lines:
+        print("-", name.strip())</code></pre>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Pro Tip:</strong> Use <code>.strip()</code> to remove the <code>\n</code> at the end of each line!
+                </div>
+            </div>
+
+            <!-- Section 3: Formatting Numbers -->
+            <div class="section notes">
+                <h2>🔢 Part 3: Formatting Numbers in Files</h2>
+
+                <p>When saving numbers (especially money), you need to format them properly:</p>
+
+                <h3>The Problem:</h3>
+                <div class="code-container">
+                    <pre><code class="language-python">price = 12.5
+print(price)  # Shows: 12.5
+# But we want: 12.50 (two decimal places)</code></pre>
+                </div>
+
+                <h3>The Solution: Use <code>:.2f</code></h3>
+                <div class="code-container">
+                    <pre><code class="language-python">price = 12.5
+formatted = f"{price:.2f}"
+print(formatted)  # Shows: 12.50
+
+# Another example
+price = 99.999
+formatted = f"{price:.2f}"
+print(formatted)  # Shows: 100.00 (rounds up!)</code></pre>
+                </div>
+
+                <h3>Real Example: Saving Prices to a File</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># Save prices with proper formatting
+with open('prices.txt', 'w') as f:
+    f.write('Product Prices\n')
+    f.write('==============\n')
+    
+    # Write each price with 2 decimal places
+    apple_price = 1.5
+    f.write(f'Apples: ${apple_price:.2f}\n')
+    
+    banana_price = 0.75
+    f.write(f'Bananas: ${banana_price:.2f}\n')
+    
+    orange_price = 2.0
+    f.write(f'Oranges: ${orange_price:.2f}\n')
+
+# File will contain:
+# Product Prices
+# ==============
+# Apples: $1.50
+# Bananas: $0.75
+# Oranges: $2.00</code></pre>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>Important:</strong> The <code>:.2f</code> means "format as a decimal number with exactly 2 digits after the decimal point"
+                </div>
+            </div>
+
+            <!-- Activity Section -->
+            <div class="section activity">
+                <h2>✏️ Practice Activity: Shopping List Manager</h2>
+
+                <p><strong>Your Task:</strong> Create a simple program that saves a shopping list to a file.</p>
+
+                <h3>Requirements:</h3>
+                <ul>
+                    <li>Create a file called <code>shopping.txt</code></li>
+                    <li>Add a header: "My Shopping List"</li>
+                    <li>Add three items to the list</li>
+                    <li>Read the file and print the contents</li>
+                </ul>
+
+                <h3>Starter Code:</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># Step 1: Create the file and add header
+with open('shopping.txt', 'w') as f:
+    f.write('My Shopping List\n')
+    f.write('================\n')
+
+# Step 2: Add items to the list
+with open('shopping.txt', 'a') as f:
+    f.write('1. Milk\n')
+    f.write('2. Bread\n')
+    f.write('3. Eggs\n')
+
+# Step 3: Read and display the list
+with open('shopping.txt', 'r') as f:
+    content = f.read()
+    print(content)</code></pre>
+                </div>
+
+                <details>
+                    <summary>Click to see the expected output</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code>My Shopping List
+================
+1. Milk
+2. Bread
+3. Eggs</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <h3>Challenge: Add Prices</h3>
+                <p>Modify the program to include prices with proper formatting:</p>
+                <div class="code-container">
+                    <pre><code class="language-python"># Create shopping list with prices
+with open('shopping.txt', 'w') as f:
+    f.write('My Shopping List\n')
+    f.write('================\n')
+
+# Add items with prices
+with open('shopping.txt', 'a') as f:
+    milk_price = 3.5
+    f.write(f'1. Milk - ${milk_price:.2f}\n')
+    
+    bread_price = 2.25
+    f.write(f'2. Bread - ${bread_price:.2f}\n')
+    
+    eggs_price = 4.0
+    f.write(f'3. Eggs - ${eggs_price:.2f}\n')
+
+# Read and display
+with open('shopping.txt', 'r') as f:
+    print(f.read())</code></pre>
+                </div>
+            </div>
+
+            <!-- Working with Lists and Files -->
+            <div class="section notes">
+                <h2>📝 Part 4: Working with Lists and Files</h2>
+
+                <p>You can combine lists with file operations to save and load data easily!</p>
+
+                <h3>Saving a List to a File:</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># Save student names to a file
+students = ['Alice', 'Bob', 'Charlie', 'Diana']
+
+with open('students.txt', 'w') as f:
+    for student in students:
+        f.write(student + '\n')
+
+print("Students saved!")</code></pre>
+                </div>
+
+                <h3>Loading a List from a File:</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># Read student names back into a list
+students = []
+
+with open('students.txt', 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        students.append(line.strip())
+
+print("Students loaded:", students)
+# Output: Students loaded: ['Alice', 'Bob', 'Charlie', 'Diana']</code></pre>
+                </div>
+
+                <h3>Shorter Way (Advanced Tip):</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># You can loop directly through the file!
+students = []
+
+with open('students.txt', 'r') as f:
+    for line in f:
+        students.append(line.strip())
+
+print(students)</code></pre>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Cool Trick:</strong> You can loop through a file object directly - each iteration gives you one line!
+                </div>
+            </div>
+
+            <!-- Real World Examples -->
+            <div class="section activity">
+                <h2>🌟 Part 5: Real-World Examples</h2>
+
+                <h3>Example 1: Grade Book</h3>
+                <p>Save student grades and calculate the average:</p>
+                <div class="code-container">
+                    <pre><code class="language-python"># Save grades to a file
+with open('grades.txt', 'w') as f:
+    f.write('Math: 85\n')
+    f.write('Science: 92\n')
+    f.write('English: 88\n')
+    f.write('History: 90\n')
+
+# Read grades and calculate average
+total = 0
+count = 0
+
+with open('grades.txt', 'r') as f:
+    for line in f:
+        # Split the line at the colon
+        parts = line.split(':')
+        grade = int(parts[1].strip())
+        total += grade
+        count += 1
+
+average = total / count
+print(f"Average grade: {average:.2f}")
+# Output: Average grade: 88.75</code></pre>
+                </div>
+
+                <h3>Example 2: Daily Journal</h3>
+                <p>Add entries to a journal file with dates:</p>
+                <div class="code-container">
+                    <pre><code class="language-python"># Add a journal entry
+date = "November 13, 2025"
+entry = "Today I learned about file I/O in Python!"
+
+with open('journal.txt', 'a') as f:
+    f.write(f"\n{date}\n")
+    f.write("=" * 30 + "\n")
+    f.write(entry + "\n")
+
+print("Journal entry added!")
+
+# Read and display all entries
+with open('journal.txt', 'r') as f:
+    print("\nMy Journal:")
+    print(f.read())</code></pre>
+                </div>
+
+                <h3>Example 3: Contact List</h3>
+                <p>Create a simple contact list with names and phone numbers:</p>
+                <div class="code-container">
+                    <pre><code class="language-python"># Create contact list
+with open('contacts.txt', 'w') as f:
+    f.write('My Contacts\n')
+    f.write('============\n\n')
+
+# Add contacts
+contacts = [
+    ('Alice Johnson', '555-1234'),
+    ('Bob Smith', '555-5678'),
+    ('Charlie Brown', '555-9012')
+]
+
+with open('contacts.txt', 'a') as f:
+    for name, phone in contacts:
+        f.write(f'Name: {name}\n')
+        f.write(f'Phone: {phone}\n')
+        f.write('-' * 25 + '\n')
+
+# Display contacts
+with open('contacts.txt', 'r') as f:
+    print(f.read())</code></pre>
+                </div>
+            </div>
+
+            <!-- Common Mistakes -->
+            <div class="section bell-ringer">
+                <h2>⚠️ Part 6: Common Mistakes to Avoid</h2>
+
+                <h3>Mistake #1: Forgetting the Newline</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># ❌ WRONG - Everything on one line!
+with open('data.txt', 'w') as f:
+    f.write('Line 1')
+    f.write('Line 2')
+    f.write('Line 3')
+# File contains: Line 1Line 2Line 3
+
+# ✅ CORRECT - Add \n for new lines
+with open('data.txt', 'w') as f:
+    f.write('Line 1\n')
+    f.write('Line 2\n')
+    f.write('Line 3\n')
+# File contains:
+# Line 1
+# Line 2
+# Line 3</code></pre>
+                </div>
+
+                <h3>Mistake #2: Using 'w' Instead of 'a'</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># ❌ WRONG - Erases old data every time!
+with open('log.txt', 'w') as f:
+    f.write('New entry\n')
+# Old entries are GONE!
+
+# ✅ CORRECT - Adds to the end
+with open('log.txt', 'a') as f:
+    f.write('New entry\n')
+# Old entries are kept!</code></pre>
+                </div>
+
+                <h3>Mistake #3: Not Closing Files (Fixed by 'with')</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># ❌ OLD WAY - Must remember to close!
+f = open('data.txt', 'w')
+f.write('Hello')
+f.close()  # Easy to forget!
+
+# ✅ BEST WAY - Automatically closes
+with open('data.txt', 'w') as f:
+    f.write('Hello')
+# File closes automatically!</code></pre>
+                </div>
+
+                <h3>Mistake #4: Forgetting to Convert Numbers</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># ❌ WRONG - Can't write numbers directly
+score = 100
+with open('score.txt', 'w') as f:
+    f.write(score)  # ERROR!
+
+# ✅ CORRECT - Convert to string
+score = 100
+with open('score.txt', 'w') as f:
+    f.write(str(score))  # Works!
+    # Or use f-string:
+    f.write(f'Score: {score}\n')  # Even better!</code></pre>
+                </div>
+            </div>
+
+            <!-- Practice Exercises -->
+            <div class="section activity">
+                <h2>🎯 Part 7: Practice Exercises</h2>
+
+                <h3>Exercise 1: Todo List</h3>
+                <p><strong>Challenge:</strong> Create a todo list manager</p>
+                <ul>
+                    <li>Create a file called <code>todo.txt</code></li>
+                    <li>Add a header "My Todo List"</li>
+                    <li>Add 3 tasks with checkboxes: <code>[ ]</code></li>
+                    <li>Read and display the list</li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Create todo list
+with open('todo.txt', 'w') as f:
+    f.write('My Todo List\n')
+    f.write('============\n\n')
+
+# Add tasks
+with open('todo.txt', 'a') as f:
+    f.write('[ ] Study for exam\n')
+    f.write('[ ] Complete homework\n')
+    f.write('[ ] Practice Python\n')
+
+# Display list
+with open('todo.txt', 'r') as f:
+    print(f.read())</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <h3>Exercise 2: Score Tracker</h3>
+                <p><strong>Challenge:</strong> Track game scores and find the highest</p>
+                <ul>
+                    <li>Save 5 game scores to a file</li>
+                    <li>Read the scores back</li>
+                    <li>Find and print the highest score</li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Save scores
+scores = [450, 520, 380, 600, 490]
+
+with open('scores.txt', 'w') as f:
+    for score in scores:
+        f.write(str(score) + '\n')
+
+# Read and find highest
+highest = 0
+
+with open('scores.txt', 'r') as f:
+    for line in f:
+        score = int(line.strip())
+        if score > highest:
+            highest = score
+
+print(f"Highest score: {highest}")
+# Output: Highest score: 600</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <h3>Exercise 3: Simple Calculator Log</h3>
+                <p><strong>Challenge:</strong> Create a calculator that logs all calculations</p>
+                <ul>
+                    <li>Do 3 math calculations (add, subtract, multiply)</li>
+                    <li>Save each calculation and result to a log file</li>
+                    <li>Display the log</li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Create calculator log
+with open('calc_log.txt', 'w') as f:
+    f.write('Calculator Log\n')
+    f.write('==============\n\n')
+
+# Perform calculations and log them
+with open('calc_log.txt', 'a') as f:
+    # Addition
+    result = 25 + 17
+    f.write(f'25 + 17 = {result}\n')
+    
+    # Subtraction
+    result = 50 - 23
+    f.write(f'50 - 23 = {result}\n')
+    
+    # Multiplication
+    result = 8 * 7
+    f.write(f'8 × 7 = {result}\n')
+
+# Display log
+print("Calculator Log:")
+with open('calc_log.txt', 'r') as f:
+    print(f.read())</code></pre>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Tips and Tricks -->
+            <div class="section notes">
+                <h2>💡 Part 8: Tips and Tricks</h2>
+
+                <h3>Tip 1: Checking if Text is in a File</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># Search for a word in a file
+search_word = "Python"
+found = False
+
+with open('notes.txt', 'r') as f:
+    content = f.read()
+    if search_word in content:
+        found = True
+        print(f"Found '{search_word}' in the file!")
+    else:
+        print(f"'{search_word}' not found.")</code></pre>
+                </div>
+
+                <h3>Tip 2: Counting Lines in a File</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># Count how many lines are in a file
+with open('data.txt', 'r') as f:
+    lines = f.readlines()
+    line_count = len(lines)
+    print(f"The file has {line_count} lines")</code></pre>
+                </div>
+
+                <h3>Tip 3: Combining Multiple Files</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># Combine two files into one
+with open('combined.txt', 'w') as output:
+    # Read first file
+    with open('file1.txt', 'r') as f1:
+        output.write(f1.read())
+    
+    output.write('\n--- End of File 1 ---\n\n')
+    
+    # Read second file
+    with open('file2.txt', 'r') as f2:
+        output.write(f2.read())
+
+print("Files combined!")</code></pre>
+                </div>
+
+                <h3>Tip 4: Creating a Table in a File</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># Create a nicely formatted table
+with open('table.txt', 'w') as f:
+    # Header
+    f.write('Name          Age    Grade\n')
+    f.write('-' * 30 + '\n')
+    
+    # Data rows
+    f.write('Alice         16     A\n')
+    f.write('Bob           15     B+\n')
+    f.write('Charlie       16     A-\n')
+
+# Display the table
+with open('table.txt', 'r') as f:
+    print(f.read())</code></pre>
+                </div>
+            </div>
+
+            <!-- Quick Reference -->
+            <div class="section notes">
+                <h2>📋 Quick Reference Card</h2>
+
+                <h3>File Modes:</h3>
+                <ul>
+                    <li><code>'w'</code> = Write (erases old content)</li>
+                    <li><code>'a'</code> = Append (adds to end)</li>
+                    <li><code>'r'</code> = Read (just look, don't change)</li>
+                </ul>
+
+                <h3>Reading Methods:</h3>
+                <ul>
+                    <li><code>f.read()</code> = Read entire file</li>
+                    <li><code>f.readline()</code> = Read one line</li>
+                    <li><code>f.readlines()</code> = Read all lines as a list</li>
+                </ul>
+
+                <h3>Important Tips:</h3>
+                <ul>
+                    <li>Always use <code>with open()</code> to open files</li>
+                    <li>Add <code>\n</code> at the end of each line when writing</li>
+                    <li>Use <code>.strip()</code> to remove <code>\n</code> when reading</li>
+                    <li>Format numbers with <code>{number:.2f}</code> for 2 decimal places</li>
+                    <li>Convert numbers to strings before writing: <code>str(number)</code></li>
+                    <li>You can loop directly through a file object</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>The Golden Rule:</strong> Think before you open! Are you creating something new (<code>'w'</code>), adding to existing (<code>'a'</code>), or just reading (<code>'r'</code>)?
+                </div>
+            </div>
+
+            <!-- Bonus Activities -->
+            <div class="section activity">
+                <h2>🎮 Bonus Activities (If Time Permits)</h2>
+
+                <h3>Activity 1: Password Vault</h3>
+                <p><strong>Difficulty:</strong> ⭐⭐ Easy</p>
+                <p><strong>Goal:</strong> Create a simple password vault that stores website names and passwords.</p>
+                
+                <h4>Requirements:</h4>
+                <ul>
+                    <li>Create a file called <code>passwords.txt</code></li>
+                    <li>Add a header "My Password Vault"</li>
+                    <li>Store at least 3 websites with their passwords</li>
+                    <li>Format: <code>Website: password123</code></li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Create password vault
+with open('passwords.txt', 'w') as f:
+                    f.write('🔐 My Password Vault\n')
+                    f.write('=' * 30 + '\n')
+                    f.write('⚠️ Keep this file secure!\n\n')
+
+# Add passwords
+passwords = [
+    ('Email', 'pass123'),
+    ('Social Media', 'secure456'),
+    ('School Portal', 'grade789')
+]
+
+with open('passwords.txt', 'a') as f:
+    for website, password in passwords:
+        f.write(f'{website}: {password}\n')
+
+# Display vault
+print("Password Vault Created!")
+with open('passwords.txt', 'r') as f:
+    print(f.read())</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <h3>Activity 2: Movie Rating System</h3>
+                <p><strong>Difficulty:</strong> ⭐⭐ Easy-Medium</p>
+                <p><strong>Goal:</strong> Create a movie rating tracker that saves movies with ratings and calculates the average.</p>
+                
+                <h4>Requirements:</h4>
+                <ul>
+                    <li>Save 5 movies with ratings (out of 10)</li>
+                    <li>Read the file and calculate average rating</li>
+                    <li>Display the average with 1 decimal place</li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Save movies and ratings
+movies = [
+    ('Avengers', 9),
+    ('Spider-Man', 8),
+    ('Batman', 7),
+    ('Superman', 8),
+    ('Wonder Woman', 9)
+]
+
+with open('movies.txt', 'w') as f:
+    f.write('🎬 Movie Ratings\n')
+    f.write('=' * 30 + '\n\n')
+    for movie, rating in movies:
+        f.write(f'{movie}: {rating}/10\n')
+
+# Calculate average
+total = 0
+count = 0
+
+with open('movies.txt', 'r') as f:
+    for line in f:
+        if ':' in line and '/' in line:
+            # Extract rating from "Movie: 8/10"
+            parts = line.split(':')
+            rating_part = parts[1].strip().split('/')[0]
+            rating = int(rating_part)
+            total += rating
+            count += 1
+
+average = total / count
+print(f'Average movie rating: {average:.1f}/10')</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <h3>Activity 3: Attendance Tracker</h3>
+                <p><strong>Difficulty:</strong> ⭐⭐ Easy-Medium</p>
+                <p><strong>Goal:</strong> Track student attendance and count how many students are present.</p>
+                
+                <h4>Requirements:</h4>
+                <ul>
+                    <li>Create a list of 8 students</li>
+                    <li>Mark each as "Present" or "Absent"</li>
+                    <li>Count and display how many are present</li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Student attendance data
+attendance = [
+    ('Alice', 'Present'),
+    ('Bob', 'Present'),
+    ('Charlie', 'Absent'),
+    ('Diana', 'Present'),
+    ('Eve', 'Present'),
+    ('Frank', 'Absent'),
+    ('Grace', 'Present'),
+    ('Henry', 'Present')
+]
+
+# Save to file
+with open('attendance.txt', 'w') as f:
+    f.write('📋 Class Attendance\n')
+    f.write('=' * 30 + '\n\n')
+    for name, status in attendance:
+        symbol = '✓' if status == 'Present' else '✗'
+        f.write(f'{symbol} {name}: {status}\n')
+
+# Count present students
+present_count = 0
+
+with open('attendance.txt', 'r') as f:
+    for line in f:
+        if 'Present' in line:
+            present_count += 1
+
+print(f'\n{present_count} students are present today!')
+
+# Display the file
+with open('attendance.txt', 'r') as f:
+    print('\n' + f.read())</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <h3>Activity 4: Recipe Book</h3>
+                <p><strong>Difficulty:</strong> ⭐⭐⭐ Medium</p>
+                <p><strong>Goal:</strong> Create a recipe book with ingredients and instructions.</p>
+                
+                <h4>Requirements:</h4>
+                <ul>
+                    <li>Store 2 recipes with ingredients and steps</li>
+                    <li>Format nicely with headers and separators</li>
+                    <li>Add serving size and prep time</li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Create recipe book
+with open('recipes.txt', 'w') as f:
+    f.write('👩‍🍳 My Recipe Book\n')
+    f.write('=' * 40 + '\n\n')
+
+# Recipe 1
+with open('recipes.txt', 'a') as f:
+    f.write('RECIPE 1: Chocolate Chip Cookies\n')
+    f.write('-' * 40 + '\n')
+    f.write('Prep Time: 15 minutes\n')
+    f.write('Servings: 24 cookies\n\n')
+    f.write('Ingredients:\n')
+    f.write('- 2 cups flour\n')
+    f.write('- 1 cup sugar\n')
+    f.write('- 1 cup chocolate chips\n')
+    f.write('- 2 eggs\n\n')
+    f.write('Instructions:\n')
+    f.write('1. Mix dry ingredients\n')
+    f.write('2. Add eggs and mix well\n')
+    f.write('3. Fold in chocolate chips\n')
+    f.write('4. Bake at 350°F for 12 minutes\n\n')
+    f.write('=' * 40 + '\n\n')
+
+# Recipe 2
+with open('recipes.txt', 'a') as f:
+    f.write('RECIPE 2: Fruit Smoothie\n')
+    f.write('-' * 40 + '\n')
+    f.write('Prep Time: 5 minutes\n')
+    f.write('Servings: 2 smoothies\n\n')
+    f.write('Ingredients:\n')
+    f.write('- 1 banana\n')
+    f.write('- 1 cup strawberries\n')
+    f.write('- 1 cup yogurt\n')
+    f.write('- 1/2 cup milk\n\n')
+    f.write('Instructions:\n')
+    f.write('1. Add all ingredients to blender\n')
+    f.write('2. Blend until smooth\n')
+    f.write('3. Pour into glasses\n')
+    f.write('4. Enjoy immediately!\n\n')
+
+# Display recipe book
+print('Recipe Book Created!\n')
+with open('recipes.txt', 'r') as f:
+    print(f.read())</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <h3>Activity 5: Word Counter</h3>
+                <p><strong>Difficulty:</strong> ⭐⭐⭐ Medium</p>
+                <p><strong>Goal:</strong> Count how many times each word appears in a text file.</p>
+                
+                <h4>Requirements:</h4>
+                <ul>
+                    <li>Create a text file with a short story (3-4 sentences)</li>
+                    <li>Read the file and count unique words</li>
+                    <li>Display the total word count</li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Create a story file
+story = """Python is fun. Learning Python is exciting. 
+I love programming with Python. Python makes coding easy."""
+
+with open('story.txt', 'w') as f:
+    f.write(story)
+
+# Count words
+with open('story.txt', 'r') as f:
+    text = f.read()
+    # Remove punctuation and convert to lowercase
+    text = text.replace('.', '').replace(',', '').lower()
+    words = text.split()
+    
+    word_count = len(words)
+    unique_words = len(set(words))
+
+print(f'Total words: {word_count}')
+print(f'Unique words: {unique_words}')
+
+# Count how many times 'python' appears
+python_count = words.count('python')
+print(f'"Python" appears {python_count} times')</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <h3>Activity 6: Leaderboard System</h3>
+                <p><strong>Difficulty:</strong> ⭐⭐⭐ Medium-Hard</p>
+                <p><strong>Goal:</strong> Create a game leaderboard that shows top players sorted by score.</p>
+                
+                <h4>Requirements:</h4>
+                <ul>
+                    <li>Store 6 players with their scores</li>
+                    <li>Read scores and find the top 3 players</li>
+                    <li>Display in order from highest to lowest</li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Save player scores
+players = [
+    ('Alex', 1500),
+    ('Blake', 2300),
+    ('Casey', 1800),
+    ('Drew', 2100),
+    ('Eli', 1200),
+    ('Finn', 1950)
+]
+
+with open('leaderboard.txt', 'w') as f:
+    f.write('🏆 Game Leaderboard\n')
+    f.write('=' * 30 + '\n\n')
+    for name, score in players:
+        f.write(f'{name}: {score} points\n')
+
+# Read and sort scores
+player_scores = []
+
+with open('leaderboard.txt', 'r') as f:
+    for line in f:
+        if ':' in line and 'points' in line:
+            parts = line.split(':')
+            name = parts[0].strip()
+            score = int(parts[1].replace('points', '').strip())
+            player_scores.append((name, score))
+
+# Sort by score (highest first)
+player_scores.sort(key=lambda x: x[1], reverse=True)
+
+# Display Top 3
+print('\n🥇 TOP 3 PLAYERS 🥇')
+print('=' * 30)
+medals = ['🥇', '🥈', '🥉']
+for i in range(3):
+    name, score = player_scores[i]
+    print(f'{medals[i]} {name}: {score} points')</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <h3>Activity 7: Daily Habit Tracker</h3>
+                <p><strong>Difficulty:</strong> ⭐⭐⭐ Medium-Hard</p>
+                <p><strong>Goal:</strong> Track daily habits over a week and calculate completion percentage.</p>
+                
+                <h4>Requirements:</h4>
+                <ul>
+                    <li>Track 3 habits (exercise, reading, coding) for 7 days</li>
+                    <li>Use ✓ for completed, ✗ for not completed</li>
+                    <li>Calculate and display percentage for each habit</li>
+                </ul>
+
+                <details>
+                    <summary>Click to see solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Daily habit data (True = completed, False = not done)
+habits = {
+    'Exercise': [True, True, False, True, True, True, False],
+    'Reading': [True, True, True, True, False, True, True],
+    'Coding': [True, False, True, True, True, False, True]
+}
+
+days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+# Save to file
+with open('habits.txt', 'w') as f:
+    f.write('📊 Weekly Habit Tracker\n')
+    f.write('=' * 45 + '\n\n')
+    
+    # Header
+    f.write('Habit        ')
+    for day in days:
+        f.write(f'{day}  ')
+    f.write('Rate\n')
+    f.write('-' * 45 + '\n')
+    
+    # Each habit
+    for habit, completed in habits.items():
+        f.write(f'{habit:12} ')
+        for done in completed:
+            symbol = '✓' if done else '✗'
+            f.write(f'{symbol}   ')
+        
+        # Calculate percentage
+        percentage = (sum(completed) / len(completed)) * 100
+        f.write(f' {percentage:.0f}%\n')
+
+# Display file
+with open('habits.txt', 'r') as f:
+    print(f.read())
+
+# Calculate overall statistics
+total_tasks = 0
+completed_tasks = 0
+
+for completed in habits.values():
+    total_tasks += len(completed)
+    completed_tasks += sum(completed)
+
+overall = (completed_tasks / total_tasks) * 100
+print(f'\n📈 Overall completion: {overall:.1f}%')</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <div class="tip-box">
+                    <strong>🎯 Challenge Yourself:</strong> Pick any activity above and try to solve it WITHOUT looking at the solution first. These activities combine everything you've learned!
+                </div>
+            </div>
+
+            <!-- Exit Ticket -->
+            <div class="section bell-ringer" style="background: linear-gradient(145deg, #e2e3e5, #dfe0e2); border-left-color: #2d3436;">
+                <h2>🎓 Exit Ticket: Show What You Know!</h2>
+
+                <p>Before you leave, complete this quick challenge to demonstrate your File I/O mastery:</p>
+
+                <h3>Final Challenge: Personal Score Card</h3>
+                <div class="question-box">
+                    <h4>Create a program that:</h4>
+                    <ol>
+                        <li>Creates a file called <code>scorecard.txt</code></li>
+                        <li>Adds your name and today's date as a header</li>
+                        <li>Saves 4 test scores (Math, Science, English, History)</li>
+                        <li>Reads the file back and calculates your average</li>
+                        <li>Displays the average with the message: "Your average is: XX.XX"</li>
+                    </ol>
+                    <p><strong>Bonus:</strong> Add a letter grade based on the average!</p>
+                </div>
+
+                <details>
+                    <summary>Click to see example solution</summary>
+                    <div class="answer-content">
+                        <div class="code-container">
+                            <pre><code class="language-python"># Personal Score Card
+name = "Your Name"
+date = "November 13, 2025"
+
+# Create scorecard
+with open('scorecard.txt', 'w') as f:
+    f.write(f'Score Card for {name}\n')
+    f.write(f'Date: {date}\n')
+    f.write('=' * 30 + '\n\n')
+
+# Add scores
+scores = {
+    'Math': 88,
+    'Science': 92,
+    'English': 85,
+    'History': 90
+}
+
+with open('scorecard.txt', 'a') as f:
+    for subject, score in scores.items():
+        f.write(f'{subject}: {score}\n')
+
+# Calculate average
+total = 0
+count = 0
+
+with open('scorecard.txt', 'r') as f:
+    for line in f:
+        if ':' in line and not 'Date' in line and not 'Card' in line:
+            score = int(line.split(':')[1].strip())
+            total += score
+            count += 1
+
+average = total / count
+
+# Determine letter grade (BONUS)
+if average >= 90:
+    grade = 'A'
+elif average >= 80:
+    grade = 'B'
+elif average >= 70:
+    grade = 'C'
+elif average >= 60:
+    grade = 'D'
+else:
+    grade = 'F'
+
+# Display results
+print(f'\nYour average is: {average:.2f}')
+print(f'Letter Grade: {grade}')
+
+# Show the scorecard
+print('\n--- Your Score Card ---')
+with open('scorecard.txt', 'r') as f:
+    print(f.read())</code></pre>
+                        </div>
+                    </div>
+                </details>
+
+                <div class="highlight-box">
+                    <strong>🎉 Congratulations!</strong> You've completed the File I/O Review! You now know how to save and load data like a pro. Keep practicing and you'll be a Python master in no time!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-python.min.js"></script>
+</body>
+</html>

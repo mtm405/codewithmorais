@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word 2019 Ribbon Presentation Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .intro-section {
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-bottom: 3px solid #667eea;
+        }
+
+        .intro-section h2 {
+            color: #2b5876;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .intro-section ul {
+            margin-left: 25px;
+            line-height: 2;
+            font-size: 1.1rem;
+        }
+
+        .intro-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .assignments-container {
+            padding: 40px;
+        }
+
+        .assignments-title {
+            text-align: center;
+            color: #2b5876;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .student-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            border-color: #764ba2;
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .student-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        .student-info h3 {
+            color: #2b5876;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .ribbon-tab {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-content h4 {
+            color: #4e4376;
+            margin: 20px 0 15px 0;
+            font-size: 1.2rem;
+        }
+
+        .card-content ul {
+            margin-left: 25px;
+            line-height: 2;
+        }
+
+        .card-content ul li {
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .presentation-tips {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 121, 198, 0.15) 100%);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px;
+        }
+
+        .presentation-tips h2 {
+            color: #d4a017;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tip-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .tip-box h3 {
+            color: #d4a017;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .tip-box ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .grading-rubric {
+            background: linear-gradient(135deg, rgba(80, 250, 123, 0.15) 0%, rgba(139, 233, 253, 0.15) 100%);
+            border: 2px solid #50fa7b;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px;
+        }
+
+        .grading-rubric h2 {
+            color: #00a86b;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #00a86b 0%, #50fa7b 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .rubric-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:hover {
+            background: rgba(80, 250, 123, 0.1);
+        }
+
+        .footer {
+            background: #2b5876;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .student-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .student-number {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Microsoft Word 2019 Ribbon Presentation Project</h1>
+            <p>Each student will become an expert on one section of the Word Ribbon and teach the class!</p>
+        </div>
+
+        <!-- Introduction Section -->
+        <div class="intro-section">
+            <h2>🎯 Project Overview</h2>
+            <p style="margin-bottom: 20px; font-size: 1.1rem; line-height: 1.8;">
+                The Microsoft Word Ribbon is the command center of Word 2019. Each tab contains powerful tools that help you create professional documents. 
+                In this project, your group of 4 students will become experts on assigned ribbon sections and teach the class together!
+            </p>
+
+            <h2 style="margin-top: 30px;">📋 Your Group Mission</h2>
+            <ul>
+                <li><strong>Collaborate:</strong> Work together as a team of 4 students</li>
+                <li><strong>Divide & Research:</strong> Each person becomes expert on their specific section</li>
+                <li><strong>Practice:</strong> Try out the tools and understand what they do</li>
+                <li><strong>Create Together:</strong> Make ONE cohesive group presentation</li>
+                <li><strong>Present as a Team:</strong> Each person presents their part (2-3 minutes each = 8-12 min total)</li>
+                <li><strong>Teach:</strong> Show live demonstrations and answer questions together</li>
+            </ul>
+
+            <div style="background: rgba(255, 215, 0, 0.2); padding: 20px; border-radius: 10px; margin-top: 25px; border-left: 4px solid #ffd700;">
+                <h3 style="color: #d4a017; margin-bottom: 10px;">👥 Group Structure: 3 Groups of 4 Students</h3>
+                <p style="font-size: 1.05rem; line-height: 1.8;">
+                    <strong>12 students total</strong> divided into <strong>3 groups</strong>. Each group covers related ribbon sections so your presentation flows naturally!
+                </p>
+            </div>
+        </div>
+
+        <!-- Student Assignments -->
+        <div class="assignments-container">
+            <h2 class="assignments-title">👥 Group Assignments (3 Groups × 4 Students)</h2>
+
+            <!-- GROUP 1 HEADER -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 2rem; margin-bottom: 15px;">🏠 GROUP 1: HOME Tab Masters</h2>
+                <p style="color: white; text-align: center; font-size: 1.2rem; opacity: 0.95;">The foundation of Word - text formatting and document basics</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.1rem;">
+                    <strong>Group Presentation Time: 8-12 minutes total</strong>
+                </p>
+            </div>
+
+            <!-- Student 1 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">1</div>
+                    <div class="student-info">
+                        <h3>Student 1 (Group 1)</h3>
+                        <div class="ribbon-tab">🏠 HOME Tab - Clipboard Group</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Cut, Copy, Paste</strong> - Different paste options (Keep formatting, Merge formatting, Text only)</li>
+                        <li><strong>Format Painter</strong> - How to copy formatting from one text to another</li>
+                        <li><strong>Clipboard Dialog Box</strong> - The hidden clipboard that stores multiple items</li>
+                        <li><strong>Paste Special</strong> - Advanced paste options</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Show how Format Painter saves time when styling documents</li>
+                        <li>Demonstrate the Office Clipboard storing multiple items</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Student 2 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">2</div>
+                    <div class="student-info">
+                        <h3>Student 2 (Group 1)</h3>
+                        <div class="ribbon-tab">🏠 HOME Tab - Font Group</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Font types and sizes</strong> - Choosing appropriate fonts</li>
+                        <li><strong>Bold, Italic, Underline</strong> - Text emphasis options</li>
+                        <li><strong>Strikethrough, Subscript, Superscript</strong> - Special text effects</li>
+                        <li><strong>Text effects</strong> - Shadows, reflections, glows</li>
+                        <li><strong>Highlight and Font Color</strong> - Making text stand out</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Show when to use different fonts (professional vs. creative)</li>
+                        <li>Demonstrate subscript/superscript for chemical formulas or math</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Student 3 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">3</div>
+                    <div class="student-info">
+                        <h3>Student 3 (Group 1)</h3>
+                        <div class="ribbon-tab">🏠 HOME Tab - Paragraph Group</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Bullets and Numbering</strong> - Creating lists and changing styles</li>
+                        <li><strong>Alignment</strong> - Left, center, right, justify</li>
+                        <li><strong>Line spacing</strong> - Single, 1.5, double spacing</li>
+                        <li><strong>Indentation</strong> - Increase/decrease indent</li>
+                        <li><strong>Shading and Borders</strong> - Adding background colors and borders to paragraphs</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Show how proper spacing makes documents look professional</li>
+                        <li>Create a document with multiple list styles</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Student 4 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">4</div>
+                    <div class="student-info">
+                        <h3>Student 4 (Group 1)</h3>
+                        <div class="ribbon-tab">🏠 HOME Tab - Styles & Editing Groups</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Styles Gallery</strong> - Applying heading styles (Heading 1, 2, 3)</li>
+                        <li><strong>Change Styles</strong> - Modifying style sets</li>
+                        <li><strong>Find & Replace</strong> - Searching and replacing text</li>
+                        <li><strong>Select</strong> - Selecting all text, objects, or similar formatting</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Show how styles create automatic table of contents</li>
+                        <li>Demonstrate Find & Replace to change repeated words quickly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- GROUP 2 HEADER -->
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 30px; border-radius: 15px; margin: 50px 0 30px 0; box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 2rem; margin-bottom: 15px;">📝 GROUP 2: INSERT Tab Experts</h2>
+                <p style="color: white; text-align: center; font-size: 1.2rem; opacity: 0.95;">Adding content - images, tables, headers, and media</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.1rem;">
+                    <strong>Group Presentation Time: 8-12 minutes total</strong>
+                </p>
+            </div>
+
+            <!-- Student 5 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">5</div>
+                    <div class="student-info">
+                        <h3>Student 5 (Group 2)</h3>
+                        <div class="ribbon-tab">📝 INSERT Tab - Pages & Tables Groups</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Cover Page</strong> - Adding professional cover pages</li>
+                        <li><strong>Blank Page</strong> - Inserting new pages</li>
+                        <li><strong>Page Break</strong> - Controlling where pages end</li>
+                        <li><strong>Tables</strong> - Creating and formatting tables</li>
+                        <li><strong>Quick Tables</strong> - Pre-designed table templates</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Create a professional report with a cover page</li>
+                        <li>Show how to format a table with alternating row colors</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Student 6 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">6</div>
+                    <div class="student-info">
+                        <h3>Student 6 (Group 2)</h3>
+                        <div class="ribbon-tab">📝 INSERT Tab - Illustrations Group</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Pictures</strong> - Inserting and formatting images</li>
+                        <li><strong>Online Pictures</strong> - Finding and inserting web images</li>
+                        <li><strong>Shapes</strong> - Drawing shapes and diagrams</li>
+                        <li><strong>Icons & 3D Models</strong> - Adding modern graphics</li>
+                        <li><strong>SmartArt</strong> - Creating professional diagrams and flowcharts</li>
+                        <li><strong>Charts</strong> - Inserting graphs and charts</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Create a flowchart using SmartArt</li>
+                        <li>Show how to wrap text around images</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Student 7 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">7</div>
+                    <div class="student-info">
+                        <h3>Student 7 (Group 2)</h3>
+                        <div class="ribbon-tab">📝 INSERT Tab - Add-ins, Media, Links & Comments</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Hyperlinks</strong> - Creating links to websites or files</li>
+                        <li><strong>Bookmarks</strong> - Marking locations in documents</li>
+                        <li><strong>Cross-references</strong> - Linking to other parts of document</li>
+                        <li><strong>Comments</strong> - Adding notes and feedback</li>
+                        <li><strong>Online Video</strong> - Embedding videos in documents</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Show how hyperlinks make interactive documents</li>
+                        <li>Demonstrate comments for collaboration</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Student 8 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">8</div>
+                    <div class="student-info">
+                        <h3>Student 8 (Group 2)</h3>
+                        <div class="ribbon-tab">📝 INSERT Tab - Header, Footer, Text & Symbols</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Header & Footer</strong> - Adding consistent headers/footers</li>
+                        <li><strong>Page Numbers</strong> - Numbering pages automatically</li>
+                        <li><strong>Text Box</strong> - Creating floating text containers</li>
+                        <li><strong>WordArt</strong> - Stylized decorative text</li>
+                        <li><strong>Drop Cap</strong> - Large decorative first letter</li>
+                        <li><strong>Symbols & Equations</strong> - Special characters and math formulas</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Create a professional document with headers and page numbers</li>
+                        <li>Show how to insert mathematical equations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- GROUP 3 HEADER -->
+            <div style="background: linear-gradient(135deg, #13547a 0%, #80d0c7 100%); padding: 30px; border-radius: 15px; margin: 50px 0 30px 0; box-shadow: 0 8px 20px rgba(19, 84, 122, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 2rem; margin-bottom: 15px;">🎨 GROUP 3: Design, Layout & Professional Tools</h2>
+                <p style="color: white; text-align: center; font-size: 1.2rem; opacity: 0.95;">Document appearance, page setup, and advanced features</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.1rem;">
+                    <strong>Group Presentation Time: 8-12 minutes total</strong>
+                </p>
+            </div>
+
+            <!-- Student 9 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">9</div>
+                    <div class="student-info">
+                        <h3>Student 9 (Group 3)</h3>
+                        <div class="ribbon-tab">🎨 DESIGN Tab</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Themes</strong> - Applying coordinated colors and fonts</li>
+                        <li><strong>Document Formatting</strong> - Setting overall document style</li>
+                        <li><strong>Page Color</strong> - Changing background color</li>
+                        <li><strong>Page Borders</strong> - Adding decorative borders to pages</li>
+                        <li><strong>Watermarks</strong> - Adding background text (Confidential, Draft, etc.)</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Transform a plain document using themes</li>
+                        <li>Create a document with a "DRAFT" watermark</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Student 10 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">10</div>
+                    <div class="student-info">
+                        <h3>Student 10 (Group 3)</h3>
+                        <div class="ribbon-tab">📄 LAYOUT Tab</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Margins</strong> - Setting page margins (Normal, Narrow, Wide)</li>
+                        <li><strong>Orientation</strong> - Portrait vs. Landscape</li>
+                        <li><strong>Size</strong> - Paper size options (Letter, Legal, A4)</li>
+                        <li><strong>Columns</strong> - Creating newspaper-style columns</li>
+                        <li><strong>Breaks</strong> - Page, section, and column breaks</li>
+                        <li><strong>Indentation & Spacing</strong> - Fine-tuning paragraph layout</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Create a newsletter with multiple columns</li>
+                        <li>Show how margins affect document appearance</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Student 11 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">11</div>
+                    <div class="student-info">
+                        <h3>Student 11 (Group 3)</h3>
+                        <div class="ribbon-tab">📚 REFERENCES Tab</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Table of Contents</strong> - Automatic ToC from headings</li>
+                        <li><strong>Footnotes & Endnotes</strong> - Adding citations and notes</li>
+                        <li><strong>Citations & Bibliography</strong> - Managing sources (APA, MLA)</li>
+                        <li><strong>Captions</strong> - Labeling figures and tables</li>
+                        <li><strong>Index</strong> - Creating an alphabetical index</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Create an automatic table of contents for a report</li>
+                        <li>Show how to add and format citations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Student 12 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">12</div>
+                    <div class="student-info">
+                        <h3>Student 12 (Group 3)</h3>
+                        <div class="ribbon-tab">📝 REVIEW Tab</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas:</h4>
+                    <ul>
+                        <li><strong>Spelling & Grammar</strong> - Checking for errors</li>
+                        <li><strong>Thesaurus</strong> - Finding synonyms</li>
+                        <li><strong>Word Count</strong> - Tracking document statistics</li>
+                        <li><strong>Track Changes</strong> - Monitoring edits in documents</li>
+                        <li><strong>Comments</strong> - Adding feedback and notes</li>
+                        <li><strong>Compare & Combine</strong> - Merging document versions</li>
+                        <li><strong>Protect Document</strong> - Restricting editing</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Show Track Changes for collaborative editing</li>
+                        <li>Demonstrate spell check catching different types of errors</li>
+                    </ul>
+                    <h4>💡 Group Connection Tip:</h4>
+                    <ul>
+                        <li>Show how <strong>REVIEW</strong> tools work with documents created by Groups 1 & 2</li>
+                        <li>Demonstrate reviewing a document that has DESIGN and LAYOUT already applied</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Presentation Tips -->
+        <div class="presentation-tips">
+            <h2>🎤 Group Presentation Tips for Success</h2>
+            <div class="tips-grid">
+                <div class="tip-box">
+                    <h3>� Collaborate as a Team</h3>
+                    <ul>
+                        <li><strong>Meet as a group</strong> to plan your presentation flow</li>
+                        <li>Decide who presents which section (2-3 min each)</li>
+                        <li>Create ONE cohesive slide deck together</li>
+                        <li>Practice transitions between speakers</li>
+                        <li>Support each other during Q&A</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>📊 Prepare Your Content</h3>
+                    <ul>
+                        <li>Each person researches their specific section deeply</li>
+                        <li>Practice using each tool multiple times</li>
+                        <li>Create examples BEFORE presenting</li>
+                        <li>Have a backup plan if technology fails</li>
+                        <li>Share a single Word document to demonstrate</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>🎯 Structure Your Group Presentation</h3>
+                    <ul>
+                        <li><strong>Intro (30 sec):</strong> Overview of your group's tab(s)</li>
+                        <li><strong>Person 1 (2-3 min):</strong> First section demo</li>
+                        <li><strong>Person 2 (2-3 min):</strong> Second section demo</li>
+                        <li><strong>Person 3 (2-3 min):</strong> Third section demo</li>
+                        <li><strong>Person 4 (2-3 min):</strong> Fourth section demo</li>
+                        <li><strong>Conclusion (30 sec):</strong> Summary & Q&A</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>💻 Live Demonstration</h3>
+                    <ul>
+                        <li>Open Word and show features in REAL-TIME</li>
+                        <li>Narrate what you're doing as you do it</li>
+                        <li>Each person builds on the previous person's work</li>
+                        <li>Zoom in so everyone can see</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>🗣️ Delivery Tips</h3>
+                    <ul>
+                        <li>Speak clearly and at a good pace</li>
+                        <li>Make eye contact with the class</li>
+                        <li>Explain WHY each feature is useful</li>
+                        <li>Stay within 8-12 minutes TOTAL as a group</li>
+                        <li>Smooth handoffs between group members</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>✨ Make It Flow</h3>
+                    <ul>
+                        <li>Show how your sections work TOGETHER</li>
+                        <li>Build one document progressively</li>
+                        <li>Example: Format text → Insert image → Add header → Review</li>
+                        <li>Tell a story with your presentation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grading Rubric -->
+        <div class="grading-rubric">
+            <h2>📊 Grading Rubric (100 Points Total)</h2>
+            <table class="rubric-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Points</th>
+                        <th>Criteria</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Content Knowledge</strong></td>
+                        <td>25 points</td>
+                        <td>Each group member demonstrates thorough understanding of their assigned ribbon section</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Live Demonstration</strong></td>
+                        <td>25 points</td>
+                        <td>Successfully demonstrates features with clear, step-by-step instructions (all 4 members)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Team Collaboration</strong></td>
+                        <td>15 points</td>
+                        <td>Cohesive presentation with smooth transitions, clear roles, and unified approach</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Real-World Application</strong></td>
+                        <td>10 points</td>
+                        <td>Explains when and why someone would use these features in actual work</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visual Aids/Presentation</strong></td>
+                        <td>10 points</td>
+                        <td>Uses slides or prepared materials to support group presentation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time Management</strong></td>
+                        <td>5 points</td>
+                        <td>Group presentation is 8-12 minutes total (approx. 2-3 min per person)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delivery & Clarity</strong></td>
+                        <td>5 points</td>
+                        <td>All members speak clearly, make eye contact, and engage the audience</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Q&A Handling</strong></td>
+                        <td>5 points</td>
+                        <td>Group answers classmate questions confidently and accurately (can help each other)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <h3 style="margin-bottom: 15px;">🎓 Project Timeline</h3>
+            <p><strong>Group Formation & Planning:</strong> Day 1</p>
+            <p><strong>Individual Research & Practice:</strong> 3-4 days</p>
+            <p><strong>Group Collaboration & Presentation Creation:</strong> 2-3 days</p>
+            <p><strong>Presentation Day:</strong> Each group presents 8-12 minutes total</p>
+            <p style="margin-top: 20px;"><strong>📊 Total Presentation Time:</strong> 3 groups × 10 min = ~30 minutes + Q&A</p>
+            <p style="margin-top: 20px; font-style: italic;">Remember: You're not just presenting—you're TEACHING your classmates as a TEAM!</p>
+            
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; margin-top: 30px;">
+                <h3 style="margin-bottom: 15px;">🎯 Quick Group Summary</h3>
+                <p><strong>GROUP 1 (Students 1-4):</strong> HOME Tab - The basics of text and paragraph formatting</p>
+                <p><strong>GROUP 2 (Students 5-8):</strong> INSERT Tab - Adding content like tables, images, and headers</p>
+                <p><strong>GROUP 3 (Students 9-12):</strong> DESIGN, LAYOUT, REFERENCES & REVIEW - Making documents professional</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

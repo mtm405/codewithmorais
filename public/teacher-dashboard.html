@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard - Python Learning Platform</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Teacher Dashboard - Python Exam Results | Code with Morais</title>
     <style>
         * {
             margin: 0;
@@ -13,360 +12,356 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
             color: #333;
-            margin: 0;
-            padding: 0;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .dashboard-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
         }
 
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+        .dashboard-header {
+            background: white;
             border-radius: 15px;
-            padding: 25px;
+            padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
-        .header h1 {
+        .dashboard-header h1 {
             color: #2c3e50;
+            font-size: 2rem;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 15px;
-            justify-content: center;
         }
 
-        .header h1 i {
-            color: #667eea;
-        }
-
-        .header p {
+        .dashboard-header p {
             color: #7f8c8d;
-            font-size: 1.1rem;
-            margin: 0;
-        }
-
-        /* Tab Navigation */
-        .tab-navigation {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 10px;
-            cursor: pointer;
             font-size: 1rem;
-            font-weight: 600;
-            color: #7f8c8d;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .tab-btn.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .tab-btn:hover {
-            color: #667eea;
-            transform: translateY(-2px);
-        }
-
-        .tab-btn.active:hover {
-            color: white;
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .tab-content h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Student Progress Styles */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
-            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #667eea;
         }
 
-        .stat-card i {
-            font-size: 2rem;
-            color: #667eea;
+        .stat-card h3 {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 10px;
         }
 
-        .stat-value {
-            font-size: 2rem;
+        .stat-card .stat-value {
+            font-size: 2.5rem;
             font-weight: bold;
-            color: #2c3e50;
             margin-bottom: 5px;
         }
 
-        .stat-label {
-            color: #7f8c8d;
+        .stat-card.total .stat-value { color: #3498db; }
+        .stat-card.passed .stat-value { color: #27ae60; }
+        .stat-card.failed .stat-value { color: #e74c3c; }
+        .stat-card.average .stat-value { color: #f39c12; }
+
+        .controls {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .controls input,
+        .controls select,
+        .controls button {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .controls input,
+        .controls select {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .controls button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .controls button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .results-table {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8f9fa;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
             font-size: 0.9rem;
         }
 
-        /* Student Cards */
-        .student-grid {
-            display: grid;
-            gap: 20px;
+        .pass {
+            background: #e8f8f0;
+            color: #27ae60;
         }
 
-        .student-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #4CAF50;
+        .fail {
+            background: #fdeaea;
+            color: #e74c3c;
         }
 
-        .student-header {
+        .view-btn {
+            padding: 8px 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .view-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            padding: 8px 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 5px;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 3% auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
         }
 
-        .student-info h3 {
+        .modal-header h2 {
             color: #2c3e50;
-            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .close-btn {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #95a5a6;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #2c3e50;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section h3 {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .detail-row {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f8f9fa;
         }
 
-        .student-info img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .progress-overview {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-
-        .progress-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-        }
-
-        .project-status {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-            border-left: 3px solid #ddd;
-        }
-
-        .project-status.completed {
-            border-left-color: #4CAF50;
-            background: #e8f5e8;
-        }
-
-        .project-status.in-progress {
-            border-left-color: #ff9800;
-            background: #fff3e0;
-        }
-
-        .project-status.not-started {
-            border-left-color: #ccc;
-            background: #f5f5f5;
-        }
-
-        .project-name {
+        .detail-label {
             font-weight: 600;
-            font-size: 0.85rem;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-
-        .project-time {
-            font-size: 0.75rem;
             color: #7f8c8d;
         }
 
-        /* Answer Key Styles */
-        .answer-key-grid {
-            display: grid;
-            gap: 25px;
-        }
-
-        .project-answer {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .project-answer-header {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 15px 20px;
-        }
-
-        .project-answer-header h3 {
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .project-answer-header small {
-            opacity: 0.8;
-            font-size: 0.85rem;
-        }
-
-        .project-answer-body {
-            padding: 20px;
-        }
-
-        .project-answer-body h4 {
+        .detail-value {
             color: #2c3e50;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 500;
         }
 
-        .code-block {
-            background: #2d3748;
-            color: #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            margin-bottom: 15px;
-        }
-
-        .validation-rules {
+        .domain-breakdown {
+            display: grid;
+            gap: 15px;
             margin-top: 15px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
         }
 
-        .validation-rules h4, .validation-rules h5 {
+        .domain-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .domain-name {
+            font-weight: 600;
             color: #2c3e50;
             margin-bottom: 8px;
         }
 
-        .rule-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .rule-list li {
-            padding: 5px 0;
+        .domain-score {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
         }
 
-        .rule-list li:before {
-            content: "•";
-            color: #667eea;
-            font-weight: bold;
+        .progress-bar-container {
+            flex: 1;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 0 15px;
+            overflow: hidden;
         }
 
-        .rule-list code {
-            background: #e9ecef;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            color: #d63384;
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-        }
-
-        .loading i {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .dashboard-container {
-                padding: 10px;
-            }
-            
-            .tab-navigation {
-                flex-direction: column;
-            }
-            
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .progress-grid {
-                grid-template-columns: 1fr;
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .controls input,
+            .controls select {
+                width: 100%;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 10px 8px;
             }
         }
     </style>
@@ -374,369 +369,93 @@
 <body>
     <div class="dashboard-container">
         <!-- Header -->
-        <div class="header">
-            <h1><i class="fas fa-chart-line"></i>Teacher Dashboard - Python Learning Platform</h1>
-            <p>Monitor student progress across all 20 Python projects</p>
+        <div class="dashboard-header">
+            <h1>
+                <span>📊</span>
+                Teacher Dashboard - Python Exam Results
+            </h1>
+            <p>Monitor student performance and track certification exam results</p>
         </div>
 
-        <!-- Tab Navigation -->
-        <div class="tab-navigation">
-            <button class="tab-btn active" onclick="switchTab('progress')">
-                <i class="fas fa-chart-bar"></i>Student Progress
-            </button>
-            <button class="tab-btn" onclick="switchTab('answers')">
-                <i class="fas fa-key"></i>Answer Key
-            </button>
-        </div>
-
-        <!-- Student Progress Tab -->
-        <div id="progress-tab" class="tab-content active">
-            <h2><i class="fas fa-users"></i>Student Progress Overview</h2>
-            
-            <!-- Statistics Overview -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <i class="fas fa-users"></i>
-                    <div class="stat-value" id="total-students">0</div>
-                    <div class="stat-label">Active Students</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-trophy"></i>
-                    <div class="stat-value" id="completed-students">0</div>
-                    <div class="stat-label">Completed All Projects</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-tasks"></i>
-                    <div class="stat-value" id="average-progress">0%</div>
-                    <div class="stat-label">Average Progress</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-clock"></i>
-                    <div class="stat-value" id="average-time">0m</div>
-                    <div class="stat-label">Average Session Time</div>
-                </div>
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <h3>Total Submissions</h3>
+                <div class="stat-value" id="total-count">0</div>
+                <p>All exam attempts</p>
             </div>
-
-            <!-- Student Progress Cards -->
-            <div class="student-grid" id="students-container">
-                <div class="loading">
-                    <i class="fas fa-spinner"></i>
-                    <h3>Loading student data...</h3>
-                    <p>Please wait while we fetch the latest progress information</p>
-                </div>
+            <div class="stat-card passed">
+                <h3>Passed (≥70%)</h3>
+                <div class="stat-value" id="passed-count">0</div>
+                <p>Certification ready</p>
+            </div>
+            <div class="stat-card failed">
+                <h3>Failed (<70%)</h3>
+                <div class="stat-value" id="failed-count">0</div>
+                <p>Need improvement</p>
+            </div>
+            <div class="stat-card average">
+                <h3>Average Score</h3>
+                <div class="stat-value" id="average-score">0%</div>
+                <p>Class average</p>
             </div>
         </div>
 
-        <!-- Answer Key Tab -->
-        <div id="answers-tab" class="tab-content">
-            <h2><i class="fas fa-key"></i>Complete Answer Key & Validation Rules</h2>
-            <p style="margin-bottom: 20px; color: #666;">Reference guide with correct solutions and validation rules for all 20 projects.</p>
-            
-            <div class="answer-key-grid" id="answer-key-container">
-                <div class="loading">
-                    <i class="fas fa-spinner"></i>
-                    <h3>Loading answer key...</h3>
-                    <p>Preparing complete solutions and validation rules</p>
-                </div>
+        <!-- Controls -->
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="🔍 Search by student name...">
+            <select id="filter-select">
+                <option value="all">All Results</option>
+                <option value="passed">Passed Only</option>
+                <option value="failed">Failed Only</option>
+            </select>
+            <select id="exam-type-filter">
+                <option value="all">All Exams</option>
+                <option value="practice">Practice (20Q)</option>
+                <option value="full">Full Simulation (40Q)</option>
+            </select>
+            <button onclick="exportToCSV()">📥 Export to CSV</button>
+            <button onclick="clearAllResults()" style="background: #e74c3c;">🗑️ Clear All</button>
+        </div>
+
+        <!-- Results Table -->
+        <div class="results-table">
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Exam Type</th>
+                        <th>Date & Time</th>
+                        <th>Score</th>
+                        <th>Result</th>
+                        <th>Time Spent</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body">
+                    <!-- Results will be populated here -->
+                </tbody>
+            </table>
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <h2>📚 No Exam Results Yet</h2>
+                <p>Student exam results will appear here once they complete an exam.</p>
             </div>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📄 Exam Details</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="modal-body">
+                <!-- Details will be populated here -->
+            </div>
+        </div>
+    </div>
 
-    <script>
-        // Tab switching functionality
-        function switchTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Remove active class from all tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected tab content
-            document.getElementById(tabName + '-tab').classList.add('active');
-            
-            // Add active class to clicked button
-            event.target.closest('.tab-btn').classList.add('active');
-            
-            // Load content if needed
-            if (tabName === 'progress' && !window.progressLoaded) {
-                loadStudentProgress();
-            } else if (tabName === 'answers' && !window.answersLoaded) {
-                loadAnswerKey();
-            }
-        }
-
-        // Firebase initialization
-        let db, auth;
-        window.progressLoaded = false;
-        window.answersLoaded = false;
-
-        // Project data structure
-        const projectTitles = {
-            'type-conversion-guided': 'Type Conversion - Guided Practice',
-            'type-conversion-challenge': 'Type Conversion - Independent Challenge',
-            'string-methods-guided': 'String Methods - Guided Practice',
-            'string-methods-challenge': 'String Methods - Independent Challenge',
-            'user-input-guided': 'User Input - Guided Practice',
-            'user-input-challenge': 'User Input - Independent Challenge',
-            'list-appending': 'List Appending - Guided Practice',
-            'list-removal-challenge': 'List Removal - Independent Challenge',
-            'sorting-numbers': 'Sorting Numbers - Guided Practice',
-            'sorting-strings-challenge': 'Sorting Strings - Independent Challenge',
-            'floor-division-modulus': 'Floor Division & Modulus - Guided Practice',
-            'floor-division-challenge': 'Floor Division Challenge - Independent Challenge',
-            'comparison-operators-guided': 'Comparison Operators - Guided Practice',
-            'comparison-challenge': 'Comparison Challenge - Independent Challenge',
-            'logical-and-or': 'Logical AND/OR - Guided Practice',
-            'logical-challenge': 'Logical Challenge - Independent Challenge',
-            'membership-operators': 'Membership Operators - Guided Practice',
-            'membership-challenge': 'Membership Challenge - Independent Challenge',
-            'assignment-operators': 'Assignment Operators - Guided Practice',
-            'assignment-challenge': 'Assignment Challenge - Independent Challenge'
-        };
-
-        // Load student progress data
-        async function loadStudentProgress() {
-            if (window.progressLoaded) return;
-            
-            try {
-                const container = document.getElementById('students-container');
-                
-                // Check if Firebase is initialized
-                if (!db) {
-                    container.innerHTML = '<div class="loading"><i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i><h3>Database Error</h3><p>Unable to connect to the database. Please refresh the page.</p></div>';
-                    return;
-                }
-                
-                // Show loading indicator
-                container.innerHTML = '<div class="loading-spinner">Loading student data...</div>';
-                
-                // Fetch real student data from Firebase
-                const snapshot = await db.collection('userProgress').get();
-                const students = [];
-                
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const studentId = doc.id;
-                    
-                    // Calculate completed projects and current project
-                    let completedProjects = 0;
-                    let currentProject = null;
-                    let inProgressProject = null;
-                    
-                    if (data.progress) {
-                        Object.entries(data.progress).forEach(([projectId, projectData]) => {
-                            if (projectData.status === 'completed') {
-                                completedProjects++;
-                            } else if (projectData.status === 'in-progress' || projectData.status === 'started') {
-                                if (!inProgressProject) {
-                                    inProgressProject = projectId;
-                                }
-                            }
-                        });
-                        currentProject = inProgressProject || 'Not started';
-                    }
-                    
-                    // Create student object with real data
-                    const student = {
-                        id: studentId,
-                        name: data.displayName || data.email?.split('@')[0] || 'Anonymous Student',
-                        email: data.email || 'No email',
-                        avatar: data.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${studentId}`,
-                        totalProjects: 20, // Total number of projects in the system
-                        completedProjects: completedProjects,
-                        currentProject: currentProject,
-                        lastActive: data.lastActive || data.updatedAt || 'Unknown',
-                        progress: data.progress || {}
-                    };
-                    
-                    students.push(student);
-                });
-                
-                // Check if we have any students
-                if (students.length === 0) {
-                    container.innerHTML = '<div class="loading"><i class="fas fa-users" style="color: #3498db;"></i><h3>No Student Data</h3><p>No students have started any projects yet. Students will appear here once they begin working on projects.</p></div>';
-                    return;
-                }
-                
-                displayStudents(students);
-                updateStats(students);
-                window.progressLoaded = true;
-                
-            } catch (error) {
-                console.error('Error loading student progress:', error);
-                container.innerHTML = '<div class="loading"><i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i><h3>Error Loading Data</h3><p>Unable to load student progress. Please check your connection.</p></div>';
-            }
-        }
-
-        // Display students in cards
-        function displayStudents(students) {
-            const container = document.getElementById('students-container');
-            
-            container.innerHTML = students.map(student => {
-                const progressPercentage = Math.round((student.completedProjects / student.totalProjects) * 100);
-                const averageScore = calculateAverageScore(student.progress);
-                
-                const projectCards = Object.entries(projectTitles).map(([projectId, title]) => {
-                    const progress = student.progress[projectId] || { status: 'not-started', timeSpent: 0, score: 0 };
-                    
-                    return '<div class="project-status ' + progress.status + '">' +
-                        '<div class="project-name">' + title + '</div>' +
-                        '<div class="project-time">' +
-                        (progress.status === 'completed' ? 
-                            '✅ ' + progress.score + '% (' + progress.timeSpent + 'm)' : 
-                            progress.status === 'in-progress' ? 
-                            '⏳ ' + progress.timeSpent + 'm' : 
-                            '⏸️ Not started'
-                        ) +
-                        '</div>' +
-                        '</div>';
-                }).join('');
-                
-                return '<div class="student-card">' +
-                    '<div class="student-header">' +
-                        '<div class="student-info">' +
-                            '<img src="' + student.avatar + '" alt="' + student.name + '">' +
-                            '<div>' +
-                                '<h3>' + student.name + '</h3>' +
-                                '<div class="progress-overview">' +
-                                    student.completedProjects + '/' + student.totalProjects + ' projects completed (' + progressPercentage + '%)' +
-                                    (averageScore > 0 ? ' • Average: ' + averageScore + '%' : '') +
-                                '</div>' +
-                            '</div>' +
-                        '</div>' +
-                        '<div style="text-align: right; color: #7f8c8d; font-size: 0.85rem;">' +
-                            'Last active: ' + new Date(student.lastActive).toLocaleDateString() +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="progress-grid">' +
-                        projectCards +
-                    '</div>' +
-                '</div>';
-            }).join('');
-        }
-
-        // Calculate average score for completed projects
-        function calculateAverageScore(progress) {
-            const completedProjects = Object.values(progress).filter(p => p.status === 'completed' && p.score > 0);
-            if (completedProjects.length === 0) return 0;
-            
-            const totalScore = completedProjects.reduce((sum, project) => sum + project.score, 0);
-            return Math.round(totalScore / completedProjects.length);
-        }
-
-        // Update dashboard statistics
-        function updateStats(students) {
-            const totalStudents = students.length;
-            const completedAllProjects = students.filter(s => s.completedProjects === s.totalProjects).length;
-            
-            const totalProgress = students.reduce((sum, student) => sum + student.completedProjects, 0);
-            const totalPossibleProgress = students.reduce((sum, student) => sum + student.totalProjects, 0);
-            const averageProgress = Math.round((totalProgress / totalPossibleProgress) * 100);
-            
-            const allCompletedProjects = students.flatMap(student => 
-                Object.values(student.progress || {}).filter(p => p.status === 'completed')
-            );
-            const averageTime = allCompletedProjects.length > 0 ? 
-                Math.round(allCompletedProjects.reduce((sum, p) => sum + p.timeSpent, 0) / allCompletedProjects.length) : 0;
-
-            document.getElementById('total-students').textContent = totalStudents;
-            document.getElementById('completed-students').textContent = completedAllProjects;
-            document.getElementById('average-progress').textContent = averageProgress + '%';
-            document.getElementById('average-time').textContent = averageTime + 'm';
-        }
-
-        // Load answer key with actual solutions
-        function loadAnswerKey() {
-            if (window.answersLoaded) return;
-            
-            const container = document.getElementById('answer-key-container');
-            
-            // Project solutions data
-            const solutions = {
-                'type-conversion-guided': {
-                    code: '# Convert string to number\ntotal_items = int("15")\nboxes = 5\nitems_per_box = total_items / boxes\nprint(f"Each box contains {items_per_box} items")',
-                    output: 'Each box contains 3.0 items',
-                    rules: ['Must use int() function', 'Must calculate division', 'Must print result']
-                },
-                'type-conversion-challenge': {
-                    code: '# Convert scores to numbers\nscore = float("87.5")\nmax_score = float("100")\npercentage = (score / max_score) * 100\nprint(f"Your percentage is {percentage}%")',
-                    output: 'Your percentage is 87.5%',
-                    rules: ['Must use float() function', 'Must calculate percentage', 'Must format output']
-                },
-                'list-appending': {
-                    code: '# Add item to list\ncolors = ["red", "blue"]\ncolors.append("green")\nprint("Project 5 Result:", colors)',
-                    output: 'Project 5 Result: [\'red\', \'blue\', \'green\']',
-                    rules: ['Must use append() method', 'Must add "green"', 'Must print result']
-                },
-                'list-removal-challenge': {
-                    code: '# Remove item from list\nplanets = ["Mercury", "Venus", "Earth", "Mars"]\nplanets.remove("Venus")\nprint(planets)',
-                    output: '[\'Mercury\', \'Earth\', \'Mars\']',
-                    rules: ['Must use remove() method', 'Must remove "Venus"', 'Must print updated list']
-                },
-                'sorting-numbers': {
-                    code: '# Sort numbers\nscores = [95, 78, 85, 92]\nscores.sort()\nprint("Project 7 Result:", scores)',
-                    output: 'Project 7 Result: [78, 85, 92, 95]',
-                    rules: ['Must use sort() method', 'Must sort in ascending order', 'Must print sorted result']
-                }
-            };
-            
-            // Generate answer key content
-            let htmlContent = '';
-            Object.entries(projectTitles).forEach(([projectId, title]) => {
-                const solution = solutions[projectId] || {
-                    code: '# Solution for ' + title.toLowerCase() + '\n# Complete implementation with proper Python syntax\n# Following all requirements and best practices',
-                    output: 'Expected output for ' + title,
-                    rules: ['Proper syntax and structure', 'Correct implementation', 'Expected output format']
-                };
-                
-                htmlContent += '<div class="project-answer">' +
-                    '<div class="project-answer-header">' +
-                        '<h3><i class="fas fa-code"></i>' + title + '</h3>' +
-                        '<small>Project ID: ' + projectId + '</small>' +
-                    '</div>' +
-                    '<div class="project-answer-body">' +
-                        '<h4><i class="fas fa-check-circle"></i>Complete Solution:</h4>' +
-                        '<div class="code-block">' + solution.code + '</div>' +
-                        '<h4><i class="fas fa-play-circle"></i>Expected Output:</h4>' +
-                        '<div class="code-block">' + solution.output + '</div>' +
-                        '<div class="validation-rules">' +
-                            '<h4><i class="fas fa-shield-alt"></i>Validation Requirements:</h4>' +
-                            '<ul class="rule-list">' +
-                                solution.rules.map(rule => '<li>' + rule + '</li>').join('') +
-                            '</ul>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>';
-            });
-            
-            container.innerHTML = htmlContent;
-            window.answersLoaded = true;
-        }
-
-        // Initialize Firebase
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                if (window.firebaseConfig) {
-                    firebase.initializeApp(window.firebaseConfig);
-                    db = firebase.firestore();
-                    auth = firebase.auth();
-                }
-            } catch (error) {
-                console.log('Firebase initialization skipped:', error.message);
-            }
-
-            // Load initial tab content
-            loadStudentProgress();
-        });
-    </script>
+    <script src="teacher-dashboard.js"></script>
 </body>
 </html>

@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐍 Python Functions Practice Hub</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            margin: 15px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .practice-intro {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 2px solid #2196f3;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0 40px 0;
+            text-align: center;
+        }
+
+        .practice-intro h2 {
+            color: #1976d2;
+            margin: 0 0 15px 0;
+        }
+
+        .activities-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 40px 0;
+        }
+        
+        .activity-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 80px;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .activity-card.beginner { 
+            border-left-color: #4caf50; 
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+        }
+        .activity-card.intermediate { 
+            border-left-color: #ff9800; 
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+        }
+        .activity-card.advanced { 
+            border-left-color: #f44336; 
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        }
+
+        .activity-main {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+        }
+
+        .activity-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .beginner .activity-number { background: linear-gradient(135deg, #4caf50, #8bc34a); }
+        .intermediate .activity-number { background: linear-gradient(135deg, #ff9800, #ffc107); }
+        .advanced .activity-number { background: linear-gradient(135deg, #f44336, #e91e63); }
+
+        .activity-title {
+            margin: 0;
+            color: #333;
+            font-size: 1.2em;
+            flex: 1;
+        }
+
+        .activity-description {
+            margin: 5px 0 0 0;
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.4;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .activity-description code {
+            background: rgba(0,0,0,0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+            color: #d73a49;
+            font-weight: 600;
+        }
+
+        .activity-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .activity-card .activity-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .function-signature {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85em;
+            color: #495057;
+            margin: 5px 0;
+            display: inline-block;
+        }
+
+        .beginner .difficulty-badge {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .intermediate .difficulty-badge {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .advanced .difficulty-badge {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .mission-box {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8f2ff 100%);
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .mission-box h4 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+            font-size: 1.1em;
+        }
+
+        .mission-box p {
+            margin: 0;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .requirements-list {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .requirements-list h4 {
+            color: #333;
+            margin: 0 0 15px 0;
+        }
+
+        .requirements-list ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .requirements-list li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .code-template {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            margin: 15px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .expected-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            white-space: pre-line;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn-solution, .btn-hint {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-hint {
+            background: linear-gradient(45deg, #ffc107, #ff8f00);
+        }
+
+        .btn-solution:hover, .btn-hint:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .hidden-content {
+            display: none;
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .solution-content {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .hint-content {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            padding: 20px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-timer {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 5px;
+        }
+
+        .btn-timer:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn-timer.active {
+            background: linear-gradient(45deg, #e17055, #fdcb6e);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .timer-display {
+            background: #2d3436;
+            color: #00b894;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 10px 0;
+            text-align: center;
+            display: none;
+            border: 2px solid #00b894;
+        }
+
+        .timer-display.active {
+            display: block;
+        }
+
+        .challenge-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .challenge-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .challenge-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3436;
+            margin: 0;
+        }
+
+        .challenge-description {
+            color: #636e72;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+
+        .challenge-specs {
+            background: #f1f3f4;
+            border-left: 4px solid #74b9ff;
+            padding: 12px 16px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .challenge-specs h5 {
+            margin: 0 0 8px 0;
+            color: #2d3436;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .challenge-specs ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .challenge-specs li {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #636e72;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #569cd6; font-weight: bold; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .number { color: #b5cea8; }
+        .function { color: #dcdcaa; }
+
+        @media (max-width: 768px) {
+            .activity-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .activity-main {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .activity-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .stats-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐍 Python Functions Practice Hub</h1>
+            <p>Master Python functions with hands-on practice! Complete activities, check solutions, and level up your coding skills.</p>
+        </div>
+
+        <div class="practice-intro">
+            <h2>🎯 Practice Makes Perfect!</h2>
+            <p>Welcome to your comprehensive Python functions practice zone! Each activity is designed to reinforce key concepts about creating and using functions with <code>def</code>, parameters, and return statements. Click "Show Solution" when you're ready to see the answer or need help!</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-number" id="total-activities">15</span>
+                <span class="stat-label">Total Activities</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="completed-activities">0</span>
+                <span class="stat-label">Completed</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="solutions-viewed">0</span>
+                <span class="stat-label">Solutions Viewed</span>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="activities-grid">
+            <!-- Activity 1: Basic Greeting -->
+            <div class="activity-card beginner" style="flex-direction: column; align-items: stretch;">
+                <div class="activity-main" style="width: 100%;">
+                    <div class="activity-header">
+                        <div class="activity-number">1</div>
+                        <div style="flex: 1;">
+                            <h3 class="activity-title">👋 Personal Greeting Function</h3>
+                            <p class="activity-description">Create your first Python function that greets users by name</p>
+                        </div>
+                    </div>
+                    <div class="activity-actions" style="margin-left: auto;">
+                        <span class="difficulty-badge">Beginner</span>
+                        <button class="btn-hint" onclick="toggleContent('hint-1')">💡 Hint</button>
+                        <button class="btn-solution" onclick="toggleSolution('solution-1')">🔍 Solution</button>
+                    </div>
+                </div>
+
+                <div class="mission-box" style="margin: 15px 0;">
+                    <h4>🎯 Your Mission</h4>
+                    <p>Create a function called <code>greet_user</code> that takes someone's name and prints a friendly, personalized greeting message.</p>
+                </div>
+
+                <div class="requirements-list">
+                    <h4>📋 Step-by-Step Instructions:</h4>
+                    <ol style="line-height: 1.8;">
+                        <li><strong>Define the function:</strong> Use <code>def greet_user(name):</code> to create your function</li>
+                        <li><strong>Add the parameter:</strong> The <code>name</code> parameter will hold the user's name</li>
+                        <li><strong>Create the greeting:</strong> Use <code>print()</code> to display a message with the name</li>
+                        <li><strong>Use f-strings:</strong> Format your message like <code>f"Hello {name}!"</code></li>
+                        <li><strong>Test your function:</strong> Call it with different names to make sure it works</li>
+                    </ol>
+                </div>
+
+                <div style="background: #f0f8ff; border: 2px solid #4169e1; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                    <h4 style="color: #4169e1; margin: 0 0 10px 0;">🔧 Template to Get You Started:</h4>
+                    <div class="code-template" style="margin: 10px 0; background: #f8f8f8; padding: 15px; border-radius: 5px; font-family: monospace;">
+def greet_user(name):
+    print(f"Hello {name}! Welcome to Python programming!")
+
+# Test your function here:
+greet_user("Alice")
+greet_user("Bob")</div>
+                </div>
+
+                <h4 style="color: #333; margin: 15px 0 10px 0;">✅ Expected Output:</h4>
+                <div class="expected-output">Hello Alice! Welcome to Python programming!
+Hello Bob! Welcome to Python programming!</div>
+
+                <div id="hint-1" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Key Concepts:</strong>
+                        <ul>
+                            <li><code>def</code> - keyword to define a function</li>
+                            <li><code>name</code> - the parameter (variable) that stores the input</li>
+                            <li><code>f"text {variable}"</code> - f-string formatting to include variables in text</li>
+                            <li><code>print()</code> - displays output to the screen</li>
+                        </ul>
+                        <strong>Remember:</strong> Don't forget the colon (:) after your function definition and indent your code inside the function!
+                    </div>
+                </div>
+
+                <div id="solution-1" class="hidden-content">
+                    <h4>🔍 Complete Solution with Explanation:</h4>
+                    <div class="solution-content">def greet_user(name):
+    # This function takes one parameter called 'name'
+    # We use an f-string to insert the name into our message
+    print(f"Hello {name}! Welcome to Python programming!")
+
+# Test the function with different names
+greet_user("Alice")    # Calls the function with "Alice"
+greet_user("Bob")      # Calls the function with "Bob"
+greet_user("Maria")    # Try with another name</div>
+                    <div style="background: #e8f5e8; padding: 10px; margin: 10px 0; border-radius: 5px;">
+                        <strong>🎓 What You Learned:</strong>
+                        <ul style="margin: 5px 0;">
+                            <li>How to define a function with <code>def</code></li>
+                            <li>How to use parameters in functions</li>
+                            <li>How to use f-string formatting</li>
+                            <li>How to call functions with different arguments</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 2: Simple Calculator -->
+            <div class="activity-card beginner" style="flex-direction: column; align-items: stretch;">
+                <div class="activity-main" style="width: 100%;">
+                    <div class="activity-header">
+                        <div class="activity-number">2</div>
+                        <div style="flex: 1;">
+                            <h3 class="activity-title">🧮 Addition Calculator</h3>
+                            <p class="activity-description">Learn the difference between <code>print()</code> and <code>return</code> by creating a calculator function</p>
+                        </div>
+                    </div>
+                    <div class="activity-actions" style="margin-left: auto;">
+                        <span class="difficulty-badge">Beginner</span>
+                        <button class="btn-hint" onclick="toggleContent('hint-2')">💡 Hint</button>
+                        <button class="btn-solution" onclick="toggleSolution('solution-2')">🔍 Solution</button>
+                    </div>
+                </div>
+
+                <div class="mission-box" style="margin: 15px 0;">
+                    <h4>🎯 Your Mission</h4>
+                    <p>Create a function called <code>add_numbers</code> that takes two numbers and <strong>returns</strong> their sum (not prints it). This introduces the important concept of returning values from functions.</p>
+                </div>
+
+                <div class="requirements-list">
+                    <h4>📋 Step-by-Step Instructions:</h4>
+                    <ol style="line-height: 1.8;">
+                        <li><strong>Define the function:</strong> Use <code>def add_numbers(num1, num2):</code></li>
+                        <li><strong>Add two parameters:</strong> <code>num1</code> and <code>num2</code> will hold the numbers to add</li>
+                        <li><strong>Calculate the sum:</strong> Add the two parameters together</li>
+                        <li><strong>Return the result:</strong> Use <code>return</code> instead of <code>print()</code></li>
+                        <li><strong>Store the result:</strong> Save the function's output in a variable</li>
+                        <li><strong>Display the result:</strong> Print the stored result with a message</li>
+                    </ol>
+                </div>
+
+                <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                    <h4 style="color: #856404; margin: 0 0 10px 0;">🔑 Key Concept: Return vs Print</h4>
+                    <p style="margin: 0; color: #856404;"><strong>return</strong> gives back a value you can use later. <strong>print()</strong> just shows something on screen. Functions that return values are more useful because you can store and reuse their results!</p>
+                </div>
+
+                <div style="background: #f0f8ff; border: 2px solid #4169e1; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                    <h4 style="color: #4169e1; margin: 0 0 10px 0;">🔧 Template to Get You Started:</h4>
+                    <div class="code-template" style="margin: 10px 0; background: #f8f8f8; padding: 15px; border-radius: 5px; font-family: monospace;">
+def add_numbers(num1, num2):
+    # Calculate the sum
+    result = num1 + num2
+    # Return the result (don't print it)
+    return result
+
+# Test your function by storing the results
+answer1 = add_numbers(5, 3)
+answer2 = add_numbers(10, 15)
+
+# Now print the results with nice messages
+print(f"5 + 3 = {answer1}")
+print(f"10 + 15 = {answer2}")</div>
+                </div>
+
+                <h4 style="color: #333; margin: 15px 0 10px 0;">✅ Expected Output:</h4>
+                <div class="expected-output">5 + 3 = 8
+10 + 15 = 25</div>
+
+                <div id="hint-2" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Understanding Return:</strong>
+                        <ul>
+                            <li><code>return num1 + num2</code> - sends the sum back to whoever called the function</li>
+                            <li><code>result = add_numbers(5, 3)</code> - stores the returned value in a variable</li>
+                            <li>Without <code>return</code>, the function would give back <code>None</code></li>
+                        </ul>
+                        <strong>Quick Test:</strong> Try <code>print(add_numbers(7, 2))</code> - this should show 9!
+                    </div>
+                </div>
+
+                <div id="solution-2" class="hidden-content">
+                    <h4>🔍 Complete Solution with Explanation:</h4>
+                    <div class="solution-content">def add_numbers(num1, num2):
+    """
+    This function adds two numbers and returns the result.
+    Parameters: num1 (number), num2 (number)
+    Returns: the sum of num1 and num2
+    """
+    return num1 + num2
+
+# Test the function by storing results in variables
+result1 = add_numbers(5, 3)      # result1 now contains 8
+result2 = add_numbers(10, 15)    # result2 now contains 25
+
+# Display the results with formatted messages
+print(f"5 + 3 = {result1}")
+print(f"10 + 15 = {result2}")
+
+# You can also use the function directly in print:
+print(f"7 + 2 = {add_numbers(7, 2)}")</div>
+                    <div style="background: #e8f5e8; padding: 10px; margin: 10px 0; border-radius: 5px;">
+                        <strong>🎓 What You Learned:</strong>
+                        <ul style="margin: 5px 0;">
+                            <li>The difference between <code>return</code> and <code>print()</code></li>
+                            <li>How to use multiple parameters in functions</li>
+                            <li>How to store function results in variables</li>
+                            <li>How to use returned values in other operations</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 3: Age Calculator -->
+            <div class="activity-card beginner" style="flex-direction: column; align-items: stretch;">
+                <div class="activity-main" style="width: 100%;">
+                    <div class="activity-header">
+                        <div class="activity-number">3</div>
+                        <div style="flex: 1;">
+                            <h3 class="activity-title">🎂 Age Calculator</h3>
+                            <p class="activity-description">Practice mathematical operations in functions by calculating someone's age</p>
+                        </div>
+                    </div>
+                    <div class="activity-actions" style="margin-left: auto;">
+                        <span class="difficulty-badge">Beginner</span>
+                        <button class="btn-hint" onclick="toggleContent('hint-3')">💡 Hint</button>
+                        <button class="btn-solution" onclick="toggleSolution('solution-3')">🔍 Solution</button>
+                    </div>
+                </div>
+
+                <div class="mission-box" style="margin: 15px 0;">
+                    <h4>🎯 Your Mission</h4>
+                    <p>Create a function called <code>calculate_age</code> that takes someone's birth year and the current year, then calculates and returns their age. This teaches you how to do math inside functions!</p>
+                </div>
+
+                <div class="requirements-list">
+                    <h4>📋 Step-by-Step Instructions:</h4>
+                    <ol style="line-height: 1.8;">
+                        <li><strong>Define the function:</strong> Use <code>def calculate_age(birth_year, current_year):</code></li>
+                        <li><strong>Understand the parameters:</strong> <code>birth_year</code> is when they were born, <code>current_year</code> is this year</li>
+                        <li><strong>Do the math:</strong> Age = current year minus birth year</li>
+                        <li><strong>Return the result:</strong> Give back the calculated age</li>
+                        <li><strong>Test with examples:</strong> Try different birth years to make sure it works</li>
+                        <li><strong>Display results:</strong> Print the ages with descriptive messages</li>
+                    </ol>
+                </div>
+
+                <div style="background: #e8f5e8; border: 2px solid #4caf50; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                    <h4 style="color: #2e7d32; margin: 0 0 10px 0;">🧮 Math in Programming</h4>
+                    <p style="margin: 0; color: #2e7d32;">Programming is great for automating calculations! The formula for age is simple: <strong>Age = Current Year - Birth Year</strong>. Your function will do this calculation automatically for any birth year.</p>
+                </div>
+
+                <div style="background: #f0f8ff; border: 2px solid #4169e1; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                    <h4 style="color: #4169e1; margin: 0 0 10px 0;">🔧 Template to Get You Started:</h4>
+                    <div class="code-template" style="margin: 10px 0; background: #f8f8f8; padding: 15px; border-radius: 5px; font-family: monospace;">
+def calculate_age(birth_year, current_year):
+    # Calculate the person's age
+    age = current_year - birth_year
+    # Return the calculated age
+    return age
+
+# Test with different birth years
+age_2005 = calculate_age(2005, 2024)
+age_2010 = calculate_age(2010, 2024)
+
+# Display the results
+print(f"Born in 2005: {age_2005} years old")
+print(f"Born in 2010: {age_2010} years old")</div>
+                </div>
+
+                <h4 style="color: #333; margin: 15px 0 10px 0;">✅ Expected Output:</h4>
+                <div class="expected-output">Born in 2005: 19 years old
+Born in 2010: 14 years old</div>
+
+                <div id="hint-3" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Mathematical Thinking:</strong>
+                        <ul>
+                            <li>If current year is 2024 and birth year is 2005, then 2024 - 2005 = 19</li>
+                            <li>You can do the calculation in one line: <code>return current_year - birth_year</code></li>
+                            <li>Or store it first: <code>age = current_year - birth_year</code>, then <code>return age</code></li>
+                        </ul>
+                        <strong>Try This:</strong> What happens if someone was born in 2025? The age would be negative!
+                    </div>
+                </div>
+
+                <div id="solution-3" class="hidden-content">
+                    <h4>🔍 Complete Solution with Explanation:</h4>
+                    <div class="solution-content">def calculate_age(birth_year, current_year):
+    """
+    Calculate a person's age based on their birth year
+    Parameters: birth_year (int), current_year (int)
+    Returns: age (int)
+    """
+    # Simple subtraction gives us the age
+    return current_year - birth_year
+
+# Test the function with different scenarios
+age1 = calculate_age(2005, 2024)  # Someone born in 2005
+age2 = calculate_age(2008, 2024)  # Someone born in 2008
+age3 = calculate_age(2000, 2024)  # Someone born in 2000
+
+# Display results with clear messages
+print(f"If you were born in 2005, you are {age1} years old.")
+print(f"If you were born in 2008, you are {age2} years old.")
+print(f"If you were born in 2000, you are {age3} years old.")
+
+# Bonus: Calculate your own age!
+my_age = calculate_age(2010, 2024)  # Change 2010 to your birth year
+print(f"My age: {my_age} years old")</div>
+                    <div style="background: #e8f5e8; padding: 10px; margin: 10px 0; border-radius: 5px;">
+                        <strong>🎓 What You Learned:</strong>
+                        <ul style="margin: 5px 0;">
+                            <li>How to perform mathematical operations in functions</li>
+                            <li>How parameters work with real-world data</li>
+                            <li>How to use descriptive variable names</li>
+                            <li>How to test functions with multiple examples</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 4: Rectangle Area -->
+            <div class="activity-card intermediate" style="flex-direction: column; align-items: stretch;">
+                <div class="activity-main" style="width: 100%;">
+                    <div class="activity-header">
+                        <div class="activity-number">4</div>
+                        <div style="flex: 1;">
+                            <h3 class="activity-title">📐 Rectangle Area Calculator</h3>
+                            <p class="activity-description">Combine math calculations with string formatting to create descriptive output</p>
+                        </div>
+                    </div>
+                    <div class="activity-actions" style="margin-left: auto;">
+                        <span class="difficulty-badge">Intermediate</span>
+                        <button class="btn-hint" onclick="toggleContent('hint-4')">💡 Hint</button>
+                        <button class="btn-solution" onclick="toggleSolution('solution-4')">🔍 Solution</button>
+                    </div>
+                </div>
+
+                <div class="mission-box" style="margin: 15px 0;">
+                    <h4>🎯 Your Mission</h4>
+                    <p>Create a function called <code>rectangle_area</code> that calculates the area of a rectangle AND returns a nicely formatted message with all the details. This combines math with string formatting!</p>
+                </div>
+
+                <div class="requirements-list">
+                    <h4>📋 Step-by-Step Instructions:</h4>
+                    <ol style="line-height: 1.8;">
+                        <li><strong>Define the function:</strong> Use <code>def rectangle_area(length, width):</code></li>
+                        <li><strong>Calculate the area:</strong> Area = length × width (use the * operator)</li>
+                        <li><strong>Create a detailed message:</strong> Include the length, width, AND calculated area</li>
+                        <li><strong>Use f-string formatting:</strong> Return a formatted string with all the information</li>
+                        <li><strong>Test with different rectangles:</strong> Try various sizes to verify your formula</li>
+                        <li><strong>Print the messages:</strong> Display the returned strings</li>
+                    </ol>
+                </div>
+
+                <div style="background: #f3e5f5; border: 2px solid #9c27b0; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                    <h4 style="color: #7b1fa2; margin: 0 0 10px 0;">📏 Geometry Reminder</h4>
+                    <p style="margin: 0; color: #7b1fa2;">The area of a rectangle is <strong>length × width</strong>. If a rectangle is 5 units long and 3 units wide, its area is 5 × 3 = 15 square units. Your function should calculate this and create a descriptive message!</p>
+                </div>
+
+                <div style="background: #f0f8ff; border: 2px solid #4169e1; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                    <h4 style="color: #4169e1; margin: 0 0 10px 0;">🔧 Template to Get You Started:</h4>
+                    <div class="code-template" style="margin: 10px 0; background: #f8f8f8; padding: 15px; border-radius: 5px; font-family: monospace;">
+def rectangle_area(length, width):
+    # Calculate the area using multiplication
+    area = length * width
+    
+    # Create a descriptive message with all the information
+    message = f"A rectangle with length {length} and width {width} has an area of {area} square units."
+    
+    # Return the complete message
+    return message
+
+# Test with different rectangle sizes
+result1 = rectangle_area(5, 3)
+result2 = rectangle_area(8, 4)
+
+# Print the descriptive messages
+print(result1)
+print(result2)</div>
+                </div>
+
+                <h4 style="color: #333; margin: 15px 0 10px 0;">✅ Expected Output:</h4>
+                <div class="expected-output">A rectangle with length 5 and width 3 has an area of 15 square units.
+A rectangle with length 8 and width 4 has an area of 32 square units.</div>
+
+                <div id="hint-4" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Breaking It Down:</strong>
+                        <ul>
+                            <li><strong>Step 1:</strong> Calculate: <code>area = length * width</code></li>
+                            <li><strong>Step 2:</strong> Format: <code>f"A rectangle with length {length}..."</code></li>
+                            <li><strong>Step 3:</strong> Include all three values: length, width, and calculated area</li>
+                        </ul>
+                        <strong>Pro Tip:</strong> You can do the calculation directly in the f-string: <code>f"...area of {length * width}..."</code>
+                    </div>
+                </div>
+
+                <div id="solution-4" class="hidden-content">
+                    <h4>🔍 Complete Solution with Explanation:</h4>
+                    <div class="solution-content">def rectangle_area(length, width):
+    """
+    Calculate rectangle area and return a descriptive message
+    Parameters: length (number), width (number)
+    Returns: formatted string with calculation results
+    """
+    # Calculate the area
+    area = length * width
+    
+    # Return a complete, descriptive message
+    return f"A rectangle with length {length} and width {width} has an area of {area} square units."
+
+# Test with various rectangle sizes
+message1 = rectangle_area(5, 3)      # Small rectangle
+message2 = rectangle_area(8, 4)      # Medium rectangle  
+message3 = rectangle_area(10, 2)     # Long, narrow rectangle
+
+# Display all the results
+print(message1)
+print(message2)
+print(message3)
+
+# Bonus: You can also print directly without storing
+print(rectangle_area(12, 7))</div>
+                    <div style="background: #e8f5e8; padding: 10px; margin: 10px 0; border-radius: 5px;">
+                        <strong>🎓 What You Learned:</strong>
+                        <ul style="margin: 5px 0;">
+                            <li>How to do multiplication in Python functions</li>
+                            <li>How to create detailed, formatted output messages</li>
+                            <li>How to combine calculations with string formatting</li>
+                            <li>How to make functions that are both useful and informative</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 5: Temperature Converter -->
+            <div class="challenge-card" id="activity-5">
+                <div class="challenge-header">
+                    <div class="activity-header">
+                        <div class="activity-number" style="background: linear-gradient(135deg, #ff9800, #ffc107);">5</div>
+                        <div>
+                            <h3 class="activity-title">�️ Temperature Converter</h3>
+                            <p class="activity-description">Create <code>celsius_to_fahrenheit(celsius)</code> using formula F = (C × 9/5) + 32</p>
+                        </div>
+                    </div>
+                </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="difficulty-badge" style="background: #fff3e0; color: #ef6c00;">Intermediate</span>
+                        <button class="btn-timer" onclick="startTimer(5)">⏱️ Start Timer</button>
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timer-5"></div>
+
+                <div class="challenge-specs">
+                    <h5>🎯 Challenge Requirements:</h5>
+                    <ul>
+                        <li>Function name: <code>celsius_to_fahrenheit(celsius)</code></li>
+                        <li>Apply formula: F = (C × 9/5) + 32</li>
+                        <li>Return the converted temperature</li>
+                        <li>Test with: 0°C → 32°F, 25°C → 77°F, 100°C → 212°F</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-hint" onclick="toggleContent('hint-5')">💡 Hint</button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-5')">🔍 Solution</button>
+                </div>
+
+                <div id="hint-5" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> The formula is F = (C × 9/5) + 32. In Python: <code>fahrenheit = (celsius * 9/5) + 32</code>
+                    </div>
+                </div>
+
+                <div id="solution-5" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def celsius_to_fahrenheit(celsius):
+    fahrenheit = (celsius * 9/5) + 32
+    return fahrenheit
+
+# Test the function
+temp1 = celsius_to_fahrenheit(0)
+temp2 = celsius_to_fahrenheit(25)
+temp3 = celsius_to_fahrenheit(100)
+
+print(f"0°C = {temp1}°F")
+print(f"25°C = {temp2}°F")
+print(f"100°C = {temp3}°F")</div>
+                </div>
+            </div>
+
+            <!-- Activity 6: Full Name Formatter -->
+            <div class="challenge-card" id="activity-6">
+                <div class="challenge-header">
+                    <div class="activity-header">
+                        <div class="activity-number" style="background: linear-gradient(135deg, #ff9800, #ffc107);">6</div>
+                        <div>
+                            <h3 class="challenge-title">📝 Full Name Formatter Challenge</h3>
+                            <p class="challenge-description">Create a function that formats names with proper capitalization</p>
+                        </div>
+                    </div>
+                </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="difficulty-badge" style="background: #fff3e0; color: #ef6c00;">Intermediate</span>
+                        <button class="btn-timer" onclick="startTimer(6)">⏱️ Start Timer</button>
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timer-6"></div>
+
+                <div class="challenge-specs">
+                    <h5>🎯 Challenge Requirements:</h5>
+                    <ul>
+                        <li>Function name: <code>format_full_name(first_name, last_name)</code></li>
+                        <li>Capitalize both names properly</li>
+                        <li>Return formatted full name with space</li>
+                        <li>Example: format_full_name("john", "smith") → "John Smith"</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-hint" onclick="toggleContent('hint-6')">💡 Hint</button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-6')">🔍 Solution</button>
+                </div>
+
+                <div id="hint-6" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> Use the <code>.title()</code> method to capitalize the first letter of each name: <code>first_name.title()</code>
+                    </div>
+                </div>
+
+                <div id="solution-6" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def format_full_name(first_name, last_name):
+    formatted_first = first_name.title()
+    formatted_last = last_name.title()
+    return f"{formatted_first} {formatted_last}"
+
+# Test the function
+name1 = format_full_name("john", "smith")
+name2 = format_full_name("maria", "garcia")
+
+print(f"Full name: {name1}")
+print(f"Full name: {name2}")</div>
+                </div>
+            </div>
+
+            <!-- Activity 7: Simple Grade Calculator -->
+            <div class="challenge-card" id="activity-7">
+                <div class="challenge-header">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="activity-number" style="background: linear-gradient(135deg, #ff9800, #ffc107);">7</div>
+                        <div>
+                            <h3 class="challenge-title">📊 Grade Calculator Challenge</h3>
+                            <p class="challenge-description">Calculate the average of three test scores with proper rounding</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="difficulty-badge" style="background: #fff3e0; color: #ef6c00;">Intermediate</span>
+                        <button class="btn-timer" onclick="startTimer(7)">⏱️ Start Timer</button>
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timer-7"></div>
+
+                <div class="challenge-specs">
+                    <h5>🎯 Challenge Requirements:</h5>
+                    <ul>
+                        <li>Function name: <code>calculate_average(score1, score2, score3)</code></li>
+                        <li>Calculate: (score1 + score2 + score3) / 3</li>
+                        <li>Round result to 2 decimal places</li>
+                        <li>Test: calculate_average(85, 92, 78) → 85.0</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-hint" onclick="toggleContent('hint-7')">💡 Hint</button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-7')">🔍 Solution</button>
+                </div>
+
+                <div id="hint-7" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> Average = (score1 + score2 + score3) / 3. Use <code>round(average, 2)</code> to round to 2 decimal places.
+                    </div>
+                </div>
+
+                <div id="solution-7" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def calculate_average(score1, score2, score3):
+    average = (score1 + score2 + score3) / 3
+    return round(average, 2)
+
+# Test the function
+avg1 = calculate_average(85, 92, 78)
+avg2 = calculate_average(90, 88, 94)
+
+print(f"Average of scores 85, 92, 78: {avg1}")
+print(f"Average of scores 90, 88, 94: {avg2}")</div>
+                </div>
+            </div>
+
+            <!-- Activity 8: Circle Area Calculator -->
+            <div class="challenge-card" id="activity-8">
+                <div class="challenge-header">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="activity-number" style="background: linear-gradient(135deg, #ff9800, #ffc107);">8</div>
+                        <div>
+                            <h3 class="challenge-title">⭕ Circle Area Calculator Challenge</h3>
+                            <p class="challenge-description">Calculate circle area using the mathematical formula π × radius²</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="difficulty-badge" style="background: #fff3e0; color: #ef6c00;">Intermediate</span>
+                        <button class="btn-timer" onclick="startTimer(8)">⏱️ Start Timer</button>
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timer-8"></div>
+
+                <div class="challenge-specs">
+                    <h5>🎯 Challenge Requirements:</h5>
+                    <ul>
+                        <li>Function name: <code>circle_area(radius)</code></li>
+                        <li>Formula: Area = π × radius² (use π = 3.14159)</li>
+                        <li>Round result to 2 decimal places</li>
+                        <li>Test: circle_area(5) → 78.54</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-hint" onclick="toggleContent('hint-8')">💡 Hint</button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-8')">🔍 Solution</button>
+                </div>
+
+                <div id="hint-8" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> Area = π × radius². In Python: <code>area = 3.14159 * radius * radius</code> or <code>area = 3.14159 * (radius ** 2)</code>
+                    </div>
+                </div>
+
+                <div id="solution-8" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def circle_area(radius):
+    pi = 3.14159
+    area = pi * radius * radius
+    return round(area, 2)
+
+# Test the function
+area1 = circle_area(5)
+area2 = circle_area(3)
+
+print(f"Circle with radius 5: Area = {area1}")
+print(f"Circle with radius 3: Area = {area2}")</div>
+                </div>
+            </div>
+
+            <!-- Activity 9: Password Validator -->
+            <div class="challenge-card" id="activity-9">
+                <div class="challenge-header">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="activity-number" style="background: linear-gradient(135deg, #9c27b0, #e91e63);">9</div>
+                        <div>
+                            <h3 class="challenge-title">🔒 Password Strength Checker Challenge</h3>
+                            <p class="challenge-description">Validate password strength by checking minimum length requirements</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="difficulty-badge" style="background: #fce4ec; color: #ad1457;">Advanced</span>
+                        <button class="btn-timer" onclick="startTimer(9)">⏱️ Start Timer</button>
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timer-9"></div>
+
+                <div class="challenge-specs">
+                    <h5>🎯 Challenge Requirements:</h5>
+                    <ul>
+                        <li>Function name: <code>is_strong_password(password)</code></li>
+                        <li>Check if password length ≥ 8 characters</li>
+                        <li>Return True for strong, False for weak</li>
+                        <li>Test: is_strong_password("hello123") → True</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-hint" onclick="toggleContent('hint-9')">💡 Hint</button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-9')">🔍 Solution</button>
+                </div>
+
+                <div id="hint-9" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> Use <code>len(password)</code> to get the length. Return <code>len(password) >= 8</code> for a one-line solution!
+                    </div>
+                </div>
+
+                <div id="solution-9" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def is_strong_password(password):
+    return len(password) >= 8
+
+# Test the function
+result1 = is_strong_password("hello123")
+result2 = is_strong_password("hi")
+
+print(f'Password "hello123" is strong: {result1}')
+print(f'Password "hi" is strong: {result2}')</div>
+                </div>
+            </div>
+
+            <!-- Activity 10: Shopping Cart Total -->
+            <div class="challenge-card" id="activity-10">
+                <div class="challenge-header">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="activity-number" style="background: linear-gradient(135deg, #9c27b0, #e91e63);">10</div>
+                        <div>
+                            <h3 class="challenge-title">🛒 Shopping Cart Calculator Challenge</h3>
+                            <p class="challenge-description">Calculate total cost with tax and provide detailed breakdown</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="difficulty-badge" style="background: #fce4ec; color: #ad1457;">Advanced</span>
+                        <button class="btn-timer" onclick="startTimer(10)">⏱️ Start Timer</button>
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timer-10"></div>
+
+                <div class="challenge-specs">
+                    <h5>🎯 Challenge Requirements:</h5>
+                    <ul>
+                        <li>Function name: <code>calculate_total_with_tax(subtotal, tax_rate)</code></li>
+                        <li>Calculate: tax = subtotal × tax_rate, total = subtotal + tax</li>
+                        <li>Return formatted string with breakdown</li>
+                        <li>Format: "Subtotal: $X.XX, Tax: $X.XX, Total: $X.XX"</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-hint" onclick="toggleContent('hint-10')">💡 Hint</button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-10')">🔍 Solution</button>
+                </div>
+
+                <div id="hint-10" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> Tax amount = subtotal × tax_rate. Total = subtotal + tax_amount. Use f-strings with :.2f for currency formatting.
+                    </div>
+                </div>
+
+                <div id="solution-10" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def calculate_total_with_tax(subtotal, tax_rate):
+    tax_amount = subtotal * tax_rate
+    total = subtotal + tax_amount
+    return f"Subtotal: ${subtotal:.2f}, Tax: ${tax_amount:.2f}, Total: ${total:.2f}"
+
+# Test the function
+receipt1 = calculate_total_with_tax(100.00, 0.085)
+receipt2 = calculate_total_with_tax(50.00, 0.085)
+
+print(receipt1)
+print(receipt2)</div>
+                </div>
+            </div>
+
+            <!-- Activity 11: BMI Calculator -->
+            <div class="challenge-card" id="activity-11">
+                <div class="challenge-header">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="activity-number" style="background: linear-gradient(135deg, #9c27b0, #e91e63);">11</div>
+                        <div>
+                            <h3 class="challenge-title">⚖️ BMI Calculator Challenge</h3>
+                            <p class="challenge-description">Calculate Body Mass Index using the medical formula BMI = weight / height²</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="difficulty-badge" style="background: #fce4ec; color: #ad1457;">Advanced</span>
+                        <button class="btn-timer" onclick="startTimer(11)">⏱️ Start Timer</button>
+                    </div>
+                </div>
+
+                <div class="timer-display" id="timer-11"></div>
+
+                <div class="challenge-specs">
+                    <h5>🎯 Challenge Requirements:</h5>
+                    <ul>
+                        <li>Function name: <code>calculate_bmi(weight_kg, height_m)</code></li>
+                        <li>Formula: BMI = weight / (height × height)</li>
+                        <li>Round result to 1 decimal place</li>
+                        <li>Test: calculate_bmi(70, 1.75) → 22.9</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-hint" onclick="toggleContent('hint-11')">💡 Hint</button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-11')">🔍 Solution</button>
+                </div>
+
+                <div id="hint-11" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> BMI = weight / (height * height) or weight / (height ** 2). Use <code>round(bmi, 1)</code> to round to 1 decimal place.
+                    </div>
+                </div>
+
+                <div id="solution-11" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def calculate_bmi(weight_kg, height_m):
+    bmi = weight_kg / (height_m * height_m)
+    return round(bmi, 1)
+
+# Test the function
+bmi1 = calculate_bmi(70, 1.75)
+bmi2 = calculate_bmi(80, 1.80)
+
+print(f"BMI for 70kg, 1.75m: {bmi1}")
+print(f"BMI for 80kg, 1.80m: {bmi2}")</div>
+                </div>
+            </div>
+
+            <!-- Activity 12: Time Converter -->
+            <div class="challenge-card" id="activity-12">
+                <div class="activity-header">
+                    <div class="activity-number">12</div>
+                    <h3 class="activity-title">⏰ Time Converter</h3>
+                    <span class="difficulty-badge">Advanced</span>
+                </div>
+
+                <div class="mission-box">
+                    <h4>🎯 Your Mission</h4>
+                    <p>Create a function that converts minutes into hours and remaining minutes format.</p>
+                </div>
+
+                <div class="requirements-list">
+                    <h4>📝 Requirements:</h4>
+                    <ol>
+                        <li>Function name: <code>convert_minutes</code></li>
+                        <li>Parameter: <code>total_minutes</code></li>
+                        <li>Calculate hours and remaining minutes</li>
+                        <li>Return formatted string "X hours and Y minutes"</li>
+                    </ol>
+                </div>
+
+                <h4>✅ Expected Output:</h4>
+                <div class="expected-output">150 minutes = 2 hours and 30 minutes
+75 minutes = 1 hours and 15 minutes</div>
+
+                <div class="action-buttons">
+                    <button class="btn-hint" onclick="toggleContent('hint-12')">
+                        💡 Show Hint
+                    </button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-12')">
+                        🔍 Show Solution
+                    </button>
+                </div>
+
+                <div id="hint-12" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> Use integer division (//) to get hours: <code>hours = total_minutes // 60</code>. Use modulo (%) for remaining minutes: <code>minutes = total_minutes % 60</code>
+                    </div>
+                </div>
+
+                <div id="solution-12" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def convert_minutes(total_minutes):
+    hours = total_minutes // 60
+    minutes = total_minutes % 60
+    return f"{hours} hours and {minutes} minutes"
+
+# Test the function
+time1 = convert_minutes(150)
+time2 = convert_minutes(75)
+
+print(f"150 minutes = {time1}")
+print(f"75 minutes = {time2}")</div>
+                </div>
+            </div>
+
+            <!-- Activity 13: Word Counter -->
+            <div class="challenge-card" id="activity-13">
+                <div class="activity-header">
+                    <div class="activity-number">13</div>
+                    <h3 class="activity-title">📝 Word Counter</h3>
+                    <span class="difficulty-badge">Advanced</span>
+                </div>
+
+                <div class="mission-box">
+                    <h4>🎯 Your Mission</h4>
+                    <p>Create a function that counts the number of words in a sentence.</p>
+                </div>
+
+                <div class="requirements-list">
+                    <h4>📝 Requirements:</h4>
+                    <ol>
+                        <li>Function name: <code>count_words</code></li>
+                        <li>Parameter: <code>sentence</code></li>
+                        <li>Count the number of words in the sentence</li>
+                        <li>Return the count as an integer</li>
+                    </ol>
+                </div>
+
+                <h4>✅ Expected Output:</h4>
+                <div class="expected-output">"Hello world" has 2 words
+"Python is awesome for beginners" has 5 words</div>
+
+                <div class="action-buttons">
+                    <button class="btn-hint" onclick="toggleContent('hint-13')">
+                        💡 Show Hint
+                    </button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-13')">
+                        🔍 Show Solution
+                    </button>
+                </div>
+
+                <div id="hint-13" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> Use the <code>.split()</code> method to split the sentence into words, then use <code>len()</code> to count them: <code>len(sentence.split())</code>
+                    </div>
+                </div>
+
+                <div id="solution-13" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def count_words(sentence):
+    words = sentence.split()
+    return len(words)
+
+# Test the function
+count1 = count_words("Hello world")
+count2 = count_words("Python is awesome for beginners")
+
+print(f'"Hello world" has {count1} words')
+print(f'"Python is awesome for beginners" has {count2} words')</div>
+                </div>
+            </div>
+
+            <!-- Activity 14: Compound Interest Calculator -->
+            <div class="challenge-card" id="activity-14">
+                <div class="activity-header">
+                    <div class="activity-number">14</div>
+                    <h3 class="activity-title">💰 Simple Interest Calculator</h3>
+                    <span class="difficulty-badge">Advanced</span>
+                </div>
+
+                <div class="mission-box">
+                    <h4>🎯 Your Mission</h4>
+                    <p>Create a function that calculates simple interest: Interest = Principal × Rate × Time</p>
+                </div>
+
+                <div class="requirements-list">
+                    <h4>📝 Requirements:</h4>
+                    <ol>
+                        <li>Function name: <code>simple_interest</code></li>
+                        <li>Parameters: <code>principal</code>, <code>rate</code>, <code>time_years</code></li>
+                        <li>Calculate interest and total amount</li>
+                        <li>Return both values as a formatted string</li>
+                    </ol>
+                </div>
+
+                <h4>✅ Expected Output:</h4>
+                <div class="expected-output">Principal: $1000, Interest: $150.0, Total: $1150.0
+Principal: $500, Interest: $60.0, Total: $560.0</div>
+
+                <div class="action-buttons">
+                    <button class="btn-hint" onclick="toggleContent('hint-14')">
+                        💡 Show Hint
+                    </button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-14')">
+                        🔍 Show Solution
+                    </button>
+                </div>
+
+                <div id="hint-14" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> Interest = principal × rate × time_years. Total = principal + interest. Remember to convert rate from percentage to decimal (divide by 100).
+                    </div>
+                </div>
+
+                <div id="solution-14" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def simple_interest(principal, rate, time_years):
+    interest = principal * (rate / 100) * time_years
+    total = principal + interest
+    return f"Principal: ${principal}, Interest: ${interest}, Total: ${total}"
+
+# Test the function
+result1 = simple_interest(1000, 5, 3)  # 5% for 3 years
+result2 = simple_interest(500, 4, 3)   # 4% for 3 years
+
+print(result1)
+print(result2)</div>
+                </div>
+            </div>
+
+            <!-- Activity 15: Student Grade Converter -->
+            <div class="challenge-card" id="activity-15">
+                <div class="activity-header">
+                    <div class="activity-number">15</div>
+                    <h3 class="activity-title">🎓 Grade Letter Converter</h3>
+                    <span class="difficulty-badge">Advanced</span>
+                </div>
+
+                <div class="mission-box">
+                    <h4>🎯 Your Mission</h4>
+                    <p>Create a function that converts numerical grades to letter grades (A: 90+, B: 80-89, C: 70-79, D: 60-69, F: <60).</p>
+                </div>
+
+                <div class="requirements-list">
+                    <h4>📝 Requirements:</h4>
+                    <ol>
+                        <li>Function name: <code>get_letter_grade</code></li>
+                        <li>Parameter: <code>score</code></li>
+                        <li>Use if-elif-else to determine letter grade</li>
+                        <li>Return the letter grade as a string</li>
+                    </ol>
+                </div>
+
+                <h4>✅ Expected Output:</h4>
+                <div class="expected-output">Score 95: Letter grade A
+Score 82: Letter grade B
+Score 67: Letter grade D</div>
+
+                <div class="action-buttons">
+                    <button class="btn-hint" onclick="toggleContent('hint-15')">
+                        💡 Show Hint
+                    </button>
+                    <button class="btn-solution" onclick="toggleSolution('solution-15')">
+                        🔍 Show Solution
+                    </button>
+                </div>
+
+                <div id="hint-15" class="hidden-content">
+                    <div class="hint-content">
+                        <strong>💡 Hint:</strong> Use if-elif-else: <code>if score >= 90: return "A"</code>, <code>elif score >= 80: return "B"</code>, etc. Order matters - start from highest grade!
+                    </div>
+                </div>
+
+                <div id="solution-15" class="hidden-content">
+                    <h4>🔍 Solution:</h4>
+                    <div class="solution-content">def get_letter_grade(score):
+    if score >= 90:
+        return "A"
+    elif score >= 80:
+        return "B"
+    elif score >= 70:
+        return "C"
+    elif score >= 60:
+        return "D"
+    else:
+        return "F"
+
+# Test the function
+grade1 = get_letter_grade(95)
+grade2 = get_letter_grade(82)
+grade3 = get_letter_grade(67)
+
+print(f"Score 95: Letter grade {grade1}")
+print(f"Score 82: Letter grade {grade2}")
+print(f"Score 67: Letter grade {grade3}")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-buttons">
+            <a href="python-functions-guide.html" class="nav-btn">
+                📚 Back to Functions Guide
+            </a>
+            <a href="index.html" class="nav-btn">
+                🏠 Home
+            </a>
+            <a href="dashboard.html" class="nav-btn">
+                📊 Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let solutionsViewed = 0;
+        let completedActivities = 0;
+        const totalActivities = 15;
+
+        function toggleContent(elementId) {
+            const element = document.getElementById(elementId);
+            if (element.style.display === 'none' || element.style.display === '') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+
+        function toggleSolution(elementId) {
+            const element = document.getElementById(elementId);
+            const isHidden = element.style.display === 'none' || element.style.display === '';
+            
+            if (isHidden) {
+                element.style.display = 'block';
+                solutionsViewed++;
+                updateStats();
+                
+                // Add animation
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    element.style.transition = 'all 0.3s ease';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, 10);
+            } else {
+                element.style.display = 'none';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('solutions-viewed').textContent = solutionsViewed;
+            document.getElementById('completed-activities').textContent = completedActivities;
+            
+            // Update progress bar
+            const progressPercentage = (completedActivities / totalActivities) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
+        }
+
+        function markCompleted(activityNumber) {
+            const card = document.querySelector(`.activity-card:nth-child(${activityNumber})`);
+            if (!card.classList.contains('completed')) {
+                card.classList.add('completed');
+                completedActivities++;
+                updateStats();
+                
+                // Add completion animation
+                card.style.transform = 'scale(1.02)';
+                card.style.boxShadow = '0 15px 40px rgba(76, 175, 80, 0.3)';
+                setTimeout(() => {
+                    card.style.transform = 'scale(1)';
+                    card.style.boxShadow = '';
+                }, 300);
+            }
+        }
+
+        // Add click event to activity cards to mark as completed
+        document.addEventListener('DOMContentLoaded', function() {
+            const activityCards = document.querySelectorAll('.activity-card');
+            activityCards.forEach((card, index) => {
+                card.addEventListener('click', () => {
+                    markCompleted(index + 1);
+                });
+            });
+        });
+
+        // Add CSS for completed activities
+        const style = document.createElement('style');
+        style.textContent = `
+            .activity-card.completed {
+                border-left-color: #4caf50 !important;
+                background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+            }
+            
+            .activity-card.completed .activity-number {
+                background: linear-gradient(135deg, #4caf50, #66bb6a) !important;
+            }
+            
+            .activity-card.completed::after {
+                content: '✅';
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                font-size: 20px;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize stats
+        updateStats();
+
+        // Countdown Timer functionality
+        let activeTimers = {};
+
+        function startTimer(activityId, minutes = 10) {
+            const timerDisplay = document.getElementById(`timer-${activityId}`);
+            const timerButton = document.querySelector(`[onclick="startTimer(${activityId})"]`);
+            
+            // Stop existing timer if running
+            if (activeTimers[activityId]) {
+                clearInterval(activeTimers[activityId]);
+            }
+            
+            let timeLeft = minutes * 60; // Convert to seconds
+            timerDisplay.classList.add('active');
+            timerButton.classList.add('active');
+            timerButton.innerHTML = '⏱️ Stop Timer';
+            timerButton.setAttribute('onclick', `stopTimer(${activityId})`);
+            
+            activeTimers[activityId] = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `⏰ Time Remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(activeTimers[activityId]);
+                    timerDisplay.textContent = '⏰ Time\'s Up! Great effort! 🎉';
+                    timerDisplay.style.background = '#e17055';
+                    timerDisplay.style.borderColor = '#e17055';
+                    timerButton.classList.remove('active');
+                    timerButton.innerHTML = '🔄 Start New Timer';
+                    timerButton.setAttribute('onclick', `startTimer(${activityId})`);
+                    
+                    // Show celebration animation
+                    const card = document.querySelector(`#activity-${activityId}`);
+                    if (card) {
+                        card.style.animation = 'pulse 0.5s ease-in-out 3';
+                    }
+                    
+                    setTimeout(() => {
+                        timerDisplay.style.background = '#2d3436';
+                        timerDisplay.style.borderColor = '#00b894';
+                    }, 3000);
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function stopTimer(activityId) {
+            if (activeTimers[activityId]) {
+                clearInterval(activeTimers[activityId]);
+                delete activeTimers[activityId];
+            }
+            
+            const timerDisplay = document.getElementById(`timer-${activityId}`);
+            const timerButton = document.querySelector(`[onclick="stopTimer(${activityId})"]`);
+            
+            timerDisplay.classList.remove('active');
+            timerButton.classList.remove('active');
+            timerButton.innerHTML = '⏱️ Start Timer';
+            timerButton.setAttribute('onclick', `startTimer(${activityId})`);
+        }
+    </script>
+</body>
+</html>

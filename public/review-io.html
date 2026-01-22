@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File I/O Review: Structure, Modes, and Safety | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+        }
+
+        .bell-ringer {
+            background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+            border-left-color: #f39c12;
+        }
+
+        .notes {
+            background: linear-gradient(145deg, #d1ecf1, #74b9ff);
+            border-left-color: #0984e3;
+        }
+
+        .section h2 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #636e72;
+            margin: 20px 0 15px 0;
+            font-size: 1.4rem;
+        }
+
+        .section h4 {
+            color: #636e72;
+            margin: 15px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .question-box {
+            background: white;
+            border: 2px solid #f39c12;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .question-box p {
+            margin: 10px 0;
+        }
+
+        .code-container {
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-container pre {
+            margin: 0;
+            color: #e2e8f0;
+        }
+
+        .code-container code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        details {
+            background: #f0fff4;
+            border: 2px solid #38a169;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: #38a169;
+            font-size: 1.1rem;
+            padding: 5px;
+            user-select: none;
+        }
+
+        summary:hover {
+            color: #2f855a;
+        }
+
+        details[open] summary {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #38a169;
+        }
+
+        .answer-content {
+            margin-top: 15px;
+        }
+
+        .answer-content p {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .answer-content strong {
+            color: #2d3436;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .highlight-box {
+            background: #fff5f5;
+            border: 2px solid #e53e3e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .highlight-box strong {
+            color: #e53e3e;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .example-note {
+            background: #e6fffa;
+            border-left: 4px solid #319795;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="icon">📁</div>
+            <h1>File I/O Review</h1>
+            <p>Structure, Modes, and Safety</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Bell Ringer -->
+            <div class="section bell-ringer">
+                <h2>🔔 Bell Ringer: The Dangers of File I/O (5 Minutes)</h2>
+                
+                <div class="question-box">
+                    <h4>Question:</h4>
+                    <p>A critical bug report states that every time a user saves a new high score, all previous high scores are erased. Analyze the code snippet below and identify the mistake and the correct solution.</p>
+                    
+                    <div class="code-container">
+                        <pre><code class="language-python"># File currently contains: "High Score: 500\n"
+
+# Programmer runs this code:
+new_score = 650
+with open('scores.txt', 'w') as f:
+    f.write(f'New High Score: {new_score}\n')
+
+# What is the mistake and the correct mode to prevent data loss?</code></pre>
+                    </div>
+                </div>
+
+                <details>
+                    <summary>Answer & Takeaway</summary>
+                    <div class="answer-content">
+                        <p><strong>The Mistake:</strong> The programmer used the <code>'w'</code> (write) mode.</p>
+                        
+                        <p><strong>The Consequence:</strong> The <code>'w'</code> mode's primary function is to create a new file. If the file already exists, it is immediately truncated (emptied), leading to total data loss.</p>
+                        
+                        <p><strong>The Solution:</strong> The programmer should have used the <code>'a'</code> (append) mode to add the new high score to the end of the existing file.</p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Section 1: Structure, Modes, and Reading Methods -->
+            <div class="section notes">
+                <h2>📝 Section 1: Structure, Modes, and Reading Methods</h2>
+
+                <h3>1.1 The Golden Rule: The Context Manager (with open())</h3>
+                <p>The most fundamental rule of File I/O is using the <code>with open()</code> structure.</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Element</th>
+                                <th>Purpose</th>
+                                <th>Why It's Mandatory (Q22)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>with</code></td>
+                                <td>Initiates the context manager.</td>
+                                <td>Guarantees the file operation is handled safely.</td>
+                            </tr>
+                            <tr>
+                                <td><code>open(...)</code></td>
+                                <td>Opens the file, specifying its path and mode.</td>
+                                <td>Required to establish the file connection.</td>
+                            </tr>
+                            <tr>
+                                <td><code>as f:</code></td>
+                                <td>Assigns the active file object to the variable f.</td>
+                                <td>Provides a reference to work with the file.</td>
+                            </tr>
+                            <tr>
+                                <td>Implicit Close</td>
+                                <td>Occurs automatically when the indented block ends.</td>
+                                <td>Prevents resource leaks and data corruption by ensuring <code>f.close()</code> is called, even if an error occurs.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>1.2 File Modes: The W-R-A System</h3>
+                <p>The mode argument is arguably the most dangerous aspect of File I/O. Choose the wrong one, and you risk losing data or crashing your program.</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mode</th>
+                                <th>Name</th>
+                                <th>Behavior</th>
+                                <th>Crucial Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>'w'</code></td>
+                                <td>Write</td>
+                                <td>Creates a file. If it exists, it is COMPLETELY ERASED (overwritten).</td>
+                                <td>Use ONLY when replacement is intended.</td>
+                            </tr>
+                            <tr>
+                                <td><code>'a'</code></td>
+                                <td>Append</td>
+                                <td>Adds new data to the very end of the existing file.</td>
+                                <td>You MUST manually add the newline character (<code>\n</code>) for neat records.</td>
+                            </tr>
+                            <tr>
+                                <td><code>'r'</code></td>
+                                <td>Read</td>
+                                <td>Opens file for reading only.</td>
+                                <td>RISK: Crashes with a FileNotFoundError if the path is wrong or the file is missing.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>1.3 Essential Reading Methods</h3>
+                <p>Once a file is open in <code>'r'</code> mode, the file pointer starts at the beginning. You choose how to move it to extract data.</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>What it Returns</th>
+                                <th>How it Affects the File Pointer</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>f.read()</code></td>
+                                <td>The entire file content as a single string.</td>
+                                <td>Moves the pointer to the end of the file.</td>
+                                <td>Configuration files, small documents.</td>
+                            </tr>
+                            <tr>
+                                <td><code>f.readline()</code></td>
+                                <td>Only the next line as a string (Q23).</td>
+                                <td>Moves the pointer to the start of the next line.</td>
+                                <td>Processing large logs one line at a time.</td>
+                            </tr>
+                            <tr>
+                                <td><code>f.readlines()</code></td>
+                                <td>A list of strings (one element per line).</td>
+                                <td>Moves the pointer to the end of the file.</td>
+                                <td>Iterating over all lines quickly.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Example:</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># 1. Writing (Overwrites the file)
+with open('log.txt', 'w') as f:
+    f.write('--- SESSION LOG ---\n')
+    f.write('App started successfully.\n')
+
+# 2. Appending (Adds to the end)
+with open('log.txt', 'a') as f:
+    # Always include '\n' in append mode
+    f.write('User logged in: Alice\n') 
+
+# 3. Reading (Demonstrates readline vs. read)
+with open('log.txt', 'r') as f:
+    # Reading the first line (Header)
+    header = f.readline().strip() 
+    print(f"Header Found: {header}")
+    
+    # Reading the rest of the file from the current pointer position
+    remaining_log = f.read()
+    print(f"\nRemaining Log Entries:\n{remaining_log}")</code></pre>
+                </div>
+            </div>
+
+            <!-- Section 2: File Safety and Formatted Output -->
+            <div class="section notes">
+                <h2>📝 Section 2: File Safety and Formatted Output</h2>
+
+                <h3>2.1 The Safety Routine: Preventing Crashes (Q23)</h3>
+                <p>Since <code>'r'</code> mode is fragile, we must use <code>os.path.exists()</code> to check if the file is present before attempting to read. This is crucial for graceful error handling.</p>
+
+                <p><strong>The Logic:</strong> If the file is missing, we use <code>'w'</code> mode to create it with a header. If it exists, we use <code>'a'</code> mode.</p>
+
+                <div class="code-container">
+                    <pre><code class="language-python">import os 
+import time
+
+def safe_database_update(filename, data_record):
+    # STEP 1: Check if the file exists to determine the correct mode
+    if os.path.exists(filename):
+        # PATH A: File exists - APPEND mode ('a') is safe for adding data.
+        mode = 'a'
+        entry = f"{data_record}\n"
+        print(f"Status: Appending to existing file '{filename}'")
+    else:
+        # PATH B: File missing - WRITE mode ('w') is used to CREATE the file.
+        mode = 'w'
+        header = "--- RECORD ID | DATA | TIMESTAMP ---\n"
+        entry = f"{header}{data_record}\n"
+        print(f"Status: Creating new file '{filename}'")
+
+    # STEP 2: Execute the I/O operation inside the Context Manager
+    try:
+        with open(filename, mode) as f:
+            f.write(entry)
+    except Exception as e:
+        print(f"FATAL ERROR during file write: {e}")
+
+# Example Usage (Run this script twice to see both paths executed):
+record_id = 1001
+data = "System check OK"
+timestamp = time.strftime('%H:%M:%S')
+
+safe_database_update('system_data.db', f"{record_id} | {data} | {timestamp}")</code></pre>
+                </div>
+
+                <h3>2.2 Advanced Output Formatting for Files</h3>
+                <p>When writing numerical data to a file (like an invoice), you must use F-string specifiers to maintain precision and professional alignment.</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Specifier</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>:.2f</code></td>
+                                <td>Fixed-point float, 2 decimal places. (Q39)</td>
+                                <td><code>f"{price:.2f}"</code></td>
+                                <td>12.56 (12.559 rounds up)</td>
+                            </tr>
+                            <tr>
+                                <td><code>:>15</code></td>
+                                <td>Right-alignment in a field of 15 characters.</td>
+                                <td><code>f"{total:>15.2f}"</code></td>
+                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12.56</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Example:</h3>
+                <div class="code-container">
+                    <pre><code class="language-python">import os
+import time
+
+filename = 'transactions.csv'
+
+# --- 1. Safety Check and Header Creation ---
+if not os.path.exists(filename):
+    with open(filename, 'w') as f:
+        f.write("Transaction,Amount,Time\n")
+    print(f"CREATED: New file '{filename}' initialized with header.")
+
+
+# --- 2. Data Capture and Formatting (Requires Casting) ---
+try:
+    transaction_name = input("Enter transaction description (e.g., Sale, Refund): ")
+    # CRITICAL: Must cast input to float for precise numerical handling
+    amount = float(input("Enter transaction amount (e.g., 50.75): ")) 
+    
+    timestamp = time.strftime('%H:%M:%S')
+
+    # Format the amount to two decimal places for financial reporting
+    formatted_amount = f"{amount:.2f}" 
+
+    # Prepare the line to be written (CSV format, ready to be appended)
+    new_record = f"{transaction_name},{formatted_amount},{timestamp}\n"
+
+    # --- 3. Append to File ---
+    with open(filename, 'a') as f:
+        f.write(new_record)
+        
+    print(f"\nSUCCESS: Added record to {filename}: {new_record.strip()}")
+
+except ValueError:
+    print("\nERROR: Invalid input. The amount must be a number.")
+except Exception as e:
+    print(f"\nAn unexpected error occurred: {e}")</code></pre>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>Key Takeaway:</strong> Always use <code>os.path.exists()</code> to check for file existence before reading, and always use proper formatting specifiers when writing numerical data to ensure precision and readability.
+                </div>
+            </div>
+
+            <!-- Section 3: Practical Application -->
+            <div class="section notes" style="background: linear-gradient(145deg, #d4edda, #a3d9a5); border-left-color: #28a745;">
+                <h2>💼 Section 3: Practical Application - Independent Financial Manager</h2>
+
+                <p><strong>Goal:</strong> Write a robust Python script that acts as a financial logger, combining all the safety features and formatting techniques we learned.</p>
+
+                <h3>Requirements:</h3>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                    <li>Use the <code>os</code> module to safely manage the <code>transactions.csv</code> file.</li>
+                    <li>If the file is missing, use <code>'w'</code> to create it with a CSV header: <code>"Transaction,Amount,Time\n"</code>.</li>
+                    <li>If the file exists, use <code>'a'</code> to append new data.</li>
+                    <li>Capture the amount input and ensure it is cast to <code>float</code> (handling potential errors with try/except).</li>
+                    <li>Format the final amount using the <code>{:.2f}</code> specifier before writing the line to the file.</li>
+                </ul>
+
+                <h3>Complete Solution:</h3>
+                <div class="code-container">
+                    <pre><code class="language-python">import os
+import time
+
+filename = 'transactions.csv'
+
+# --- 1. Safety Check and Header Creation ---
+if not os.path.exists(filename):
+    with open(filename, 'w') as f:
+        f.write("Transaction,Amount,Time\n")
+    print(f"CREATED: New file '{filename}' initialized with header.")
+
+
+# --- 2. Data Capture and Formatting (Requires Casting) ---
+try:
+    transaction_name = input("Enter transaction description (e.g., Sale, Refund): ")
+    # CRITICAL: Must cast input to float for precise numerical handling
+    amount = float(input("Enter transaction amount (e.g., 50.75): ")) 
+    
+    timestamp = time.strftime('%H:%M:%S')
+
+    # Format the amount to two decimal places for financial reporting
+    formatted_amount = f"{amount:.2f}" 
+
+    # Prepare the line to be written (CSV format, ready to be appended)
+    new_record = f"{transaction_name},{formatted_amount},{timestamp}\n"
+
+    # --- 3. Append to File ---
+    with open(filename, 'a') as f:
+        f.write(new_record)
+        
+    print(f"\nSUCCESS: Added record to {filename}: {new_record.strip()}")
+
+except ValueError:
+    print("\nERROR: Invalid input. The amount must be a number.")
+except Exception as e:
+    print(f"\nAn unexpected error occurred: {e}")</code></pre>
+                </div>
+
+                <div class="example-note">
+                    <h4>🎯 What This Script Demonstrates:</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Safety First:</strong> Uses <code>os.path.exists()</code> to prevent crashes</li>
+                        <li><strong>Smart Mode Selection:</strong> Creates file with header if missing, appends if exists</li>
+                        <li><strong>Error Handling:</strong> Catches invalid input with try/except blocks</li>
+                        <li><strong>Precise Formatting:</strong> Uses <code>{:.2f}</code> for financial accuracy</li>
+                        <li><strong>Context Manager:</strong> Guarantees proper file closure with <code>with</code> statement</li>
+                    </ul>
+                </div>
+
+                <h3>Expected Output:</h3>
+                <div class="code-container">
+                    <pre><code class="language-python"># First Run (File doesn't exist):
+CREATED: New file 'transactions.csv' initialized with header.
+Enter transaction description (e.g., Sale, Refund): Sale
+Enter transaction amount (e.g., 50.75): 125.5
+
+SUCCESS: Added record to transactions.csv: Sale,125.50,14:32:15
+
+# Second Run (File exists):
+Enter transaction description (e.g., Sale, Refund): Refund
+Enter transaction amount (e.g., 50.75): 42.999
+
+SUCCESS: Added record to transactions.csv: Refund,43.00,14:33:42
+
+# File Contents (transactions.csv):
+Transaction,Amount,Time
+Sale,125.50,14:32:15
+Refund,43.00,14:33:42</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-python.min.js"></script>
+</body>
+</html>

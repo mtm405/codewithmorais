@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Analytics Dashboard - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/firebase-config.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
+      color: #f0f6fc;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #21262d, #30363d);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #58a6ff, #79c0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .date-range {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .date-input {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.5rem;
+      color: #f0f6fc;
+    }
+    
+    .export-btn {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    
+    .export-btn:hover {
+      background: #2ea043;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    
+    .stat-card:hover {
+      border-color: #58a6ff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #58a6ff;
+    }
+    
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      color: #8b949e;
+      font-size: 0.9rem;
+    }
+    
+    .stat-trend {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+    }
+    
+    .trend-up {
+      color: #2ea043;
+    }
+    
+    .trend-down {
+      color: #f85149;
+    }
+    
+    /* Dashboard Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    /* Chart Containers */
+    .chart-section {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .chart-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #f0f6fc;
+    }
+    
+    .chart-filter {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.5rem;
+      color: #f0f6fc;
+      font-size: 0.9rem;
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 400px;
+    }
+    
+    .small-chart {
+      height: 200px;
+    }
+    
+    /* Student Table */
+    .student-table-section {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .search-box {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      color: #f0f6fc;
+      width: 300px;
+    }
+    
+    .student-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    
+    .student-table th,
+    .student-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #21262d;
+    }
+    
+    .student-table th {
+      background: #21262d;
+      color: #f0f6fc;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+    
+    .student-table tr:hover {
+      background: #21262d;
+    }
+    
+    .student-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #58a6ff, #79c0ff);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    
+    .progress-bar {
+      background: #21262d;
+      border-radius: 10px;
+      height: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2ea043, #56d364);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+    
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .status-active {
+      background: #2ea043;
+      color: white;
+    }
+    
+    .status-inactive {
+      background: #6e7681;
+      color: white;
+    }
+    
+    .status-struggling {
+      background: #f85149;
+      color: white;
+    }
+    
+    /* Learning Insights */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+    }
+    
+    .insight-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+    
+    .insight-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .insight-icon {
+      font-size: 1.5rem;
+      color: #58a6ff;
+    }
+    
+    .insight-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .insight-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #21262d;
+    }
+    
+    .insight-item:last-child {
+      border-bottom: none;
+    }
+    
+    .difficulty-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+    
+    .difficulty-easy { background: #2ea043; }
+    .difficulty-medium { background: #fb8500; }
+    .difficulty-hard { background: #f85149; }
+    
+    /* Recommendations */
+    .recommendation-card {
+      background: linear-gradient(135deg, #1f6feb, #388bfd);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      color: white;
+    }
+    
+    .recommendation-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .recommendation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .recommendation-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    
+    .recommendation-icon {
+      color: #ffd700;
+      margin-top: 0.2rem;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .student-table {
+        font-size: 0.9rem;
+      }
+      
+      .search-box {
+        width: 100%;
+      }
+    }
+    
+    /* Loading States */
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #30363d;
+      border-radius: 50%;
+      border-top-color: #58a6ff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .skeleton {
+      background: linear-gradient(90deg, #21262d 25%, #30363d 50%, #21262d 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+    }
+    
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1><i class="fas fa-chart-line"></i> Teacher Analytics Dashboard</h1>
+      <p>Comprehensive insights into student learning progress and performance</p>
+      
+      <div class="header-controls">
+        <div class="date-range">
+          <label>Date Range:</label>
+          <input type="date" class="date-input" id="start-date">
+          <span>to</span>
+          <input type="date" class="date-input" id="end-date">
+          <button onclick="updateDateRange()" class="export-btn" style="background: #1f6feb;">
+            <i class="fas fa-refresh"></i> Update
+          </button>
+        </div>
+        
+        <button onclick="exportReport()" class="export-btn">
+          <i class="fas fa-download"></i> Export Report
+        </button>
+      </div>
+    </header>
+    
+    <!-- Key Statistics -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-value" id="total-students">127</div>
+        <div class="stat-label">Total Students</div>
+        <div class="stat-trend trend-up">
+          <i class="fas fa-arrow-up"></i> +12 this month
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="stat-value" id="avg-completion">73%</div>
+        <div class="stat-label">Average Completion Rate</div>
+        <div class="stat-trend trend-up">
+          <i class="fas fa-arrow-up"></i> +5% this week
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-value" id="avg-time">4.2h</div>
+        <div class="stat-label">Average Study Time</div>
+        <div class="stat-trend trend-down">
+          <i class="fas fa-arrow-down"></i> -0.3h this week
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <div class="stat-value" id="active-students">89</div>
+        <div class="stat-label">Active This Week</div>
+        <div class="stat-trend trend-up">
+          <i class="fas fa-arrow-up"></i> +7 from last week
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Dashboard -->
+    <div class="dashboard-grid">
+      <div>
+        <!-- Progress Over Time Chart -->
+        <div class="chart-section">
+          <div class="chart-header">
+            <div class="chart-title">Progress Over Time</div>
+            <select class="chart-filter" onchange="updateProgressChart(this.value)">
+              <option value="week">Last 7 Days</option>
+              <option value="month">Last 30 Days</option>
+              <option value="quarter">Last 90 Days</option>
+            </select>
+          </div>
+          <div class="chart-container">
+            <canvas id="progressChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Lesson Difficulty Analysis -->
+        <div class="chart-section">
+          <div class="chart-header">
+            <div class="chart-title">Lesson Difficulty Analysis</div>
+            <select class="chart-filter" onchange="updateDifficultyChart(this.value)">
+              <option value="completion">Completion Rate</option>
+              <option value="time">Average Time</option>
+              <option value="attempts">Retry Attempts</option>
+            </select>
+          </div>
+          <div class="chart-container small-chart">
+            <canvas id="difficultyChart"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sidebar Analytics -->
+      <div>
+        <!-- Learning Patterns -->
+        <div class="chart-section">
+          <div class="chart-header">
+            <div class="chart-title">Learning Patterns</div>
+          </div>
+          <div class="chart-container small-chart">
+            <canvas id="patternsChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Common Struggles -->
+        <div class="insight-card">
+          <div class="insight-header">
+            <div class="insight-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="insight-title">Common Struggles</div>
+          </div>
+          
+          <div class="insight-item">
+            <div style="display: flex; align-items: center;">
+              <div class="difficulty-indicator difficulty-hard"></div>
+              <span>For Loops (Lesson 3.1)</span>
+            </div>
+            <span style="color: #f85149;">67% struggle</span>
+          </div>
+          
+          <div class="insight-item">
+            <div style="display: flex; align-items: center;">
+              <div class="difficulty-indicator difficulty-medium"></div>
+              <span>Function Parameters</span>
+            </div>
+            <span style="color: #fb8500;">45% struggle</span>
+          </div>
+          
+          <div class="insight-item">
+            <div style="display: flex; align-items: center;">
+              <div class="difficulty-indicator difficulty-medium"></div>
+              <span>List Comprehensions</span>
+            </div>
+            <span style="color: #fb8500;">38% struggle</span>
+          </div>
+          
+          <div class="insight-item">
+            <div style="display: flex; align-items: center;">
+              <div class="difficulty-indicator difficulty-easy"></div>
+              <span>Variable Assignment</span>
+            </div>
+            <span style="color: #2ea043;">12% struggle</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AI-Powered Recommendations -->
+    <div class="recommendation-card">
+      <div class="recommendation-title">
+        <i class="fas fa-robot"></i> AI-Powered Teaching Recommendations
+      </div>
+      
+      <div class="recommendation-list">
+        <div class="recommendation-item">
+          <div class="recommendation-icon">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div>
+            <strong>Focus on For Loops:</strong> 67% of students are struggling with Lesson 3.1. Consider adding more interactive examples and breaking down the concept into smaller steps.
+          </div>
+        </div>
+        
+        <div class="recommendation-item">
+          <div class="recommendation-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div>
+            <strong>Group Study Sessions:</strong> Students Alice Chen, Bob Wilson, and 5 others would benefit from collaborative learning on function concepts.
+          </div>
+        </div>
+        
+        <div class="recommendation-item">
+          <div class="recommendation-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div>
+            <strong>Optimal Learning Time:</strong> Most students are active between 2-4 PM and 7-9 PM. Schedule live sessions during these peak hours for maximum engagement.
+          </div>
+        </div>
+        
+        <div class="recommendation-item">
+          <div class="recommendation-icon">
+            <i class="fas fa-medal"></i>
+          </div>
+          <div>
+            <strong>Recognition Opportunity:</strong> Emma Parker and David Kim have completed 95% of exercises with high scores. Consider featuring their projects in the showcase.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Student Details Table -->
+    <div class="student-table-section">
+      <div class="table-header">
+        <div class="chart-title">Student Progress Details</div>
+        <input type="text" class="search-box" placeholder="Search students..." onkeyup="filterStudents(this.value)">
+      </div>
+      
+      <div style="overflow-x: auto;">
+        <table class="student-table" id="student-table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Overall Progress</th>
+              <th>Current Lesson</th>
+              <th>Time Spent</th>
+              <th>Last Active</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="student-avatar">AC</div>
+                  <div>
+                    <div style="font-weight: 600;">Alice Chen</div>
+                    <div style="font-size: 0.85rem; color: #8b949e;">alice.chen@school.edu</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <div class="progress-bar" style="width: 120px;">
+                    <div class="progress-fill" style="width: 95%;"></div>
+                  </div>
+                  <span style="font-weight: 600;">95%</span>
+                </div>
+              </td>
+              <td>Section 5: Data Structures</td>
+              <td>24.5 hours</td>
+              <td>2 hours ago</td>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td>
+                <button class="export-btn" style="padding: 0.5rem; font-size: 0.8rem;" onclick="viewStudentDetail('alice-chen')">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="student-avatar">BW</div>
+                  <div>
+                    <div style="font-weight: 600;">Bob Wilson</div>
+                    <div style="font-size: 0.85rem; color: #8b949e;">bob.wilson@school.edu</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <div class="progress-bar" style="width: 120px;">
+                    <div class="progress-fill" style="width: 43%;"></div>
+                  </div>
+                  <span style="font-weight: 600;">43%</span>
+                </div>
+              </td>
+              <td>Section 3: Loops</td>
+              <td>8.2 hours</td>
+              <td>1 day ago</td>
+              <td><span class="status-badge status-struggling">Struggling</span></td>
+              <td>
+                <button class="export-btn" style="padding: 0.5rem; font-size: 0.8rem;" onclick="viewStudentDetail('bob-wilson')">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="student-avatar">CJ</div>
+                  <div>
+                    <div style="font-weight: 600;">Carol Johnson</div>
+                    <div style="font-size: 0.85rem; color: #8b949e;">carol.j@school.edu</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <div class="progress-bar" style="width: 120px;">
+                    <div class="progress-fill" style="width: 78%;"></div>
+                  </div>
+                  <span style="font-weight: 600;">78%</span>
+                </div>
+              </td>
+              <td>Section 4: Functions</td>
+              <td>15.7 hours</td>
+              <td>5 hours ago</td>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td>
+                <button class="export-btn" style="padding: 0.5rem; font-size: 0.8rem;" onclick="viewStudentDetail('carol-johnson')">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="student-avatar">DK</div>
+                  <div>
+                    <div style="font-weight: 600;">David Kim</div>
+                    <div style="font-size: 0.85rem; color: #8b949e;">david.kim@school.edu</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <div class="progress-bar" style="width: 120px;">
+                    <div class="progress-fill" style="width: 92%;"></div>
+                  </div>
+                  <span style="font-weight: 600;">92%</span>
+                </div>
+              </td>
+              <td>Section 6: File I/O</td>
+              <td>22.1 hours</td>
+              <td>30 minutes ago</td>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td>
+                <button class="export-btn" style="padding: 0.5rem; font-size: 0.8rem;" onclick="viewStudentDetail('david-kim')">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <div class="student-avatar">EP</div>
+                  <div>
+                    <div style="font-weight: 600;">Emma Parker</div>
+                    <div style="font-size: 0.85rem; color: #8b949e;">emma.p@school.edu</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <div class="progress-bar" style="width: 120px;">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                  </div>
+                  <span style="font-weight: 600;">100%</span>
+                </div>
+              </td>
+              <td>Course Complete</td>
+              <td>28.3 hours</td>
+              <td>1 hour ago</td>
+              <td><span class="status-badge status-active">Complete</span></td>
+              <td>
+                <button class="export-btn" style="padding: 0.5rem; font-size: 0.8rem;" onclick="viewStudentDetail('emma-parker')">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Detailed Insights Grid -->
+    <div class="insights-grid">
+      <!-- Learning Speed Analysis -->
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon">
+            <i class="fas fa-tachometer-alt"></i>
+          </div>
+          <div class="insight-title">Learning Speed Analysis</div>
+        </div>
+        
+        <div class="insight-item">
+          <span>Fast Learners (>2 lessons/week)</span>
+          <span style="color: #2ea043; font-weight: 600;">23 students</span>
+        </div>
+        
+        <div class="insight-item">
+          <span>Average Pace (1 lesson/week)</span>
+          <span style="color: #58a6ff; font-weight: 600;">67 students</span>
+        </div>
+        
+        <div class="insight-item">
+          <span>Need Support (<1 lesson/week)</span>
+          <span style="color: #f85149; font-weight: 600;">37 students</span>
+        </div>
+      </div>
+      
+      <!-- Engagement Metrics -->
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          <div class="insight-title">Engagement Metrics</div>
+        </div>
+        
+        <div class="insight-item">
+          <span>High Engagement (daily activity)</span>
+          <span style="color: #2ea043; font-weight: 600;">45%</span>
+        </div>
+        
+        <div class="insight-item">
+          <span>Medium Engagement (3-4x/week)</span>
+          <span style="color: #fb8500; font-weight: 600;">32%</span>
+        </div>
+        
+        <div class="insight-item">
+          <span>Low Engagement (<2x/week)</span>
+          <span style="color: #f85149; font-weight: 600;">23%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Chart.js configuration
+    Chart.defaults.color = '#f0f6fc';
+    Chart.defaults.borderColor = '#21262d';
+    Chart.defaults.backgroundColor = '#161b22';
+    
+    // Initialize charts
+    let progressChart, difficultyChart, patternsChart;
+    
+    // Progress Over Time Chart
+    const progressCtx = document.getElementById('progressChart').getContext('2d');
+    progressChart = new Chart(progressCtx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Average Progress',
+          data: [65, 67, 70, 68, 73, 75, 78],
+          borderColor: '#58a6ff',
+          backgroundColor: 'rgba(88, 166, 255, 0.1)',
+          tension: 0.4,
+          fill: true
+        }, {
+          label: 'Active Students',
+          data: [45, 52, 48, 61, 55, 67, 73],
+          borderColor: '#2ea043',
+          backgroundColor: 'rgba(46, 160, 67, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#21262d' },
+            ticks: { color: '#8b949e' }
+          },
+          x: {
+            grid: { color: '#21262d' },
+            ticks: { color: '#8b949e' }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: { color: '#f0f6fc' }
+          }
+        }
+      }
+    });
+    
+    // Difficulty Analysis Chart
+    const difficultyCtx = document.getElementById('difficultyChart').getContext('2d');
+    difficultyChart = new Chart(difficultyCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Variables', 'Operators', 'If Statements', 'For Loops', 'Functions', 'Lists'],
+        datasets: [{
+          label: 'Completion Rate %',
+          data: [95, 88, 82, 67, 74, 79],
+          backgroundColor: ['#2ea043', '#2ea043', '#2ea043', '#f85149', '#fb8500', '#fb8500'],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            grid: { color: '#21262d' },
+            ticks: { color: '#8b949e' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: '#8b949e' }
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+    
+    // Learning Patterns Chart
+    const patternsCtx = document.getElementById('patternsChart').getContext('2d');
+    patternsChart = new Chart(patternsCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Morning (6-12)', 'Afternoon (12-18)', 'Evening (18-24)', 'Night (0-6)'],
+        datasets: [{
+          data: [25, 45, 28, 2],
+          backgroundColor: ['#58a6ff', '#2ea043', '#fb8500', '#6e7681'],
+          borderWidth: 2,
+          borderColor: '#0d1117'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { 
+              color: '#f0f6fc',
+              padding: 15,
+              usePointStyle: true
+            }
+          }
+        }
+      }
+    });
+    
+    // Chart update functions
+    function updateProgressChart(period) {
+      let newData, newLabels;
+      
+      switch(period) {
+        case 'week':
+          newLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+          newData = [65, 67, 70, 68, 73, 75, 78];
+          break;
+        case 'month':
+          newLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+          newData = [62, 68, 74, 78];
+          break;
+        case 'quarter':
+          newLabels = ['Month 1', 'Month 2', 'Month 3'];
+          newData = [58, 71, 78];
+          break;
+      }
+      
+      progressChart.data.labels = newLabels;
+      progressChart.data.datasets[0].data = newData;
+      progressChart.update();
+    }
+    
+    function updateDifficultyChart(metric) {
+      let newData, label;
+      
+      switch(metric) {
+        case 'completion':
+          newData = [95, 88, 82, 67, 74, 79];
+          label = 'Completion Rate %';
+          break;
+        case 'time':
+          newData = [1.2, 1.8, 2.3, 3.8, 2.9, 2.1];
+          label = 'Average Time (hours)';
+          break;
+        case 'attempts':
+          newData = [1.1, 1.3, 1.7, 2.8, 2.1, 1.9];
+          label = 'Average Attempts';
+          break;
+      }
+      
+      difficultyChart.data.datasets[0].data = newData;
+      difficultyChart.data.datasets[0].label = label;
+      difficultyChart.update();
+    }
+    
+    // Utility functions
+    function updateDateRange() {
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+      
+      if (startDate && endDate) {
+        console.log(`Updating data for range: ${startDate} to ${endDate}`);
+        // In a real implementation, this would fetch new data from Firebase
+        alert(`Data updated for ${startDate} to ${endDate}`);
+      }
+    }
+    
+    function exportReport() {
+      // In a real implementation, this would generate and download a comprehensive report
+      alert('Generating comprehensive analytics report... Download will start shortly.');
+    }
+    
+    function filterStudents(searchTerm) {
+      const table = document.getElementById('student-table');
+      const rows = table.querySelectorAll('tbody tr');
+      
+      rows.forEach(row => {
+        const studentName = row.querySelector('td').textContent.toLowerCase();
+        const email = row.querySelector('td div div').textContent.toLowerCase();
+        
+        if (studentName.includes(searchTerm.toLowerCase()) || email.includes(searchTerm.toLowerCase())) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+    
+    function viewStudentDetail(studentId) {
+      // In a real implementation, this would open a detailed student view
+      alert(`Opening detailed analytics for student: ${studentId}`);
+      // window.open(`/teacher/student-detail.html?id=${studentId}`, '_blank');
+    }
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Teacher Analytics Dashboard loaded successfully!');
+      
+      // Set default date range (last 30 days)
+      const endDate = new Date();
+      const startDate = new Date(endDate.getTime() - (30 * 24 * 60 * 60 * 1000));
+      
+      document.getElementById('end-date').value = endDate.toISOString().split('T')[0];
+      document.getElementById('start-date').value = startDate.toISOString().split('T')[0];
+      
+      // Simulate real-time updates
+      setInterval(updateRealTimeStats, 30000); // Update every 30 seconds
+    });
+    
+    function updateRealTimeStats() {
+      // Simulate live data updates
+      const activeStudents = document.getElementById('active-students');
+      const currentValue = parseInt(activeStudents.textContent);
+      const change = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+      activeStudents.textContent = Math.max(0, currentValue + change);
+    }
+  </script>
+</body>
+</html>

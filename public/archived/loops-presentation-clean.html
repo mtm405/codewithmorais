@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Loops - Interactive Presentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/pyodide@0.24.1/pyodide.js"></script>
+  
+  <!-- Monaco Editor -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+</head>
+<body>
+  <div class="presentation-container">
+    <!-- Navigation -->
+    <div class="navigation">
+      <button class="nav-btn" id="prev-btn" onclick="previousSlide()">
+        <i class="fas fa-chevron-left"></i> Previous
+      </button>
+      <div class="slide-numbers">
+        <button class="nav-btn" onclick="goToSlide(1)">1</button>
+        <button class="nav-btn" onclick="goToSlide(2)">2</button>
+        <button class="nav-btn" onclick="goToSlide(3)">3</button>
+        <button class="nav-btn" onclick="goToSlide(4)">4</button>
+        <button class="nav-btn" onclick="goToSlide(5)">5</button>
+        <button class="nav-btn" onclick="goToSlide(6)">6</button>
+        <button class="nav-btn" onclick="goToSlide(7)">7</button>
+        <button class="nav-btn" onclick="goToSlide(8)">8</button>
+        <button class="nav-btn" onclick="goToSlide(9)">9</button>
+        <button class="nav-btn" onclick="goToSlide(10)">10</button>
+        <button class="nav-btn" onclick="goToSlide(11)">11</button>
+      </div>
+      <button class="nav-btn" id="next-btn" onclick="nextSlide()">
+        Next <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let currentSlide = 1;
+    const totalSlides = 11;
+    
+    // Navigation functions - defined immediately for onclick handlers
+    function goToSlide(slideNumber) {
+      console.log('Navigating to slide:', slideNumber);
+      if (slideNumber >= 1 && slideNumber <= totalSlides) {
+        showSlide(slideNumber);
+      }
+    }
+    
+    function showSlide(slideNumber) {
+      // Hide all slides
+      document.querySelectorAll('.slide').forEach(slide => {
+        slide.classList.remove('active');
+        slide.style.pointerEvents = 'none';
+      });
+      
+      // Show target slide
+      const targetSlide = document.getElementById(`slide-${slideNumber}`);
+      if (targetSlide) {
+        targetSlide.classList.add('active');
+        targetSlide.style.pointerEvents = 'auto';
+        currentSlide = slideNumber;
+        
+        // Update navigation buttons
+        updateNavButtons();
+      }
+    }
+    
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        goToSlide(currentSlide + 1);
+      }
+    }
+    
+    function previousSlide() {
+      if (currentSlide > 1) {
+        goToSlide(currentSlide - 1);
+      }
+    }
+    
+    function updateNavButtons() {
+      // Update numbered buttons
+      document.querySelectorAll('.slide-numbers .nav-btn').forEach((btn, index) => {
+        btn.classList.toggle('active', index + 1 === currentSlide);
+      });
+      
+      // Update prev/next buttons
+      document.getElementById('prev-btn').disabled = currentSlide === 1;
+      document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+    }
+    
+    // Make functions globally accessible
+    window.goToSlide = goToSlide;
+    window.nextSlide = nextSlide;
+    window.previousSlide = previousSlide;
+    
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Loops presentation loaded');
+      showSlide(1);
+      
+      // Any additional initialization can go here
+    });
+  </script>
+</body>
+</html>

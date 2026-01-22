@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEF Teacher Solutions | Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .teacher-banner {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 3px solid #1e8449;
+        }
+
+        .teacher-banner .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .solution-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            border-left: 5px solid #e74c3c;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .solution-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .solution-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .code-solution {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .code-solution .comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .code-solution .keyword {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .code-solution .string {
+            color: #2ecc71;
+        }
+
+        .teaching-notes {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .teaching-notes h4 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .teaching-notes ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .teaching-notes li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .teaching-notes li::before {
+            content: '📝';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .bonus-solution {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .bonus-solution h5 {
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .explanation-box {
+            background: #e8f4fd;
+            border: 1px solid #74b9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #0984e3;
+        }
+
+        .explanation-box strong {
+            color: #2c3e50;
+        }
+
+        .back-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(116, 185, 255, 0.3);
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .solution-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .solution-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👩‍🏫 DEF Teacher Solutions</h1>
+            <p>Complete solutions and teaching notes for extra DEF practice activities</p>
+        </div>
+
+        <div class="teacher-banner">
+            <span class="icon">🔐</span>
+            <strong>TEACHER RESOURCE - COMPLETE SOLUTIONS INCLUDED</strong><br>
+            This page contains full solutions and teaching guidance for all DEF practice activities.
+        </div>
+
+        <div class="content">
+            <a href="def.html" class="back-button">← Back to Student Practice Page</a>
+
+            <div class="solution-grid">
+                <!-- Solution 1: Number Facts -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">1</div>
+                        <h2 class="solution-title">🔢 Number Facts - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">number_facts</span>(num):
+    <span class="comment"># Handle the special case of zero first</span>
+    <span class="keyword">if</span> num == 0:
+        <span class="keyword">return</span> <span class="string">"0 is neither positive nor negative!"</span>
+    
+    <span class="comment"># Determine if positive or negative</span>
+    <span class="keyword">if</span> num > 0:
+        sign = <span class="string">"positive"</span>
+    <span class="keyword">else</span>:
+        sign = <span class="string">"negative"</span>
+    
+    <span class="comment"># Determine if even or odd</span>
+    <span class="keyword">if</span> num % 2 == 0:
+        parity = <span class="string">"even"</span>
+    <span class="keyword">else</span>:
+        parity = <span class="string">"odd"</span>
+    
+    <span class="comment"># Build and return the message</span>
+    <span class="keyword">return</span> <span class="string">f"</span>{num}<span class="string"> is a </span>{sign} {parity}<span class="string"> number!"</span>
+
+<span class="comment"># Test the function</span>
+print(number_facts(8))   <span class="comment"># "8 is a positive even number!"</span>
+print(number_facts(-3))  <span class="comment"># "-3 is a negative odd number!"</span>
+print(number_facts(0))   <span class="comment"># "0 is neither positive nor negative!"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> This introduces conditional logic (if/elif/else), modulo operator (%), 
+                        and f-string formatting. Students learn to handle edge cases and build descriptive strings.
+                    </div>
+
+                    <div class="bonus-solution">
+                        <h5>🎁 Bonus Solution: Add Perfect Square and Multiple Checks</h5>
+                        <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">number_facts_bonus</span>(num):
+    facts = []
+    
+    <span class="keyword">if</span> num == 0:
+        <span class="keyword">return</span> <span class="string">"0 is neither positive nor negative!"</span>
+    
+    <span class="comment"># Basic facts</span>
+    <span class="keyword">if</span> num > 0:
+        facts.append(<span class="string">"positive"</span>)
+    <span class="keyword">else</span>:
+        facts.append(<span class="string">"negative"</span>)
+        num = abs(num)  <span class="comment"># Work with absolute value for other checks</span>
+    
+    <span class="keyword">if</span> num % 2 == 0:
+        facts.append(<span class="string">"even"</span>)
+    <span class="keyword">else</span>:
+        facts.append(<span class="string">"odd"</span>)
+    
+    <span class="comment"># Bonus checks</span>
+    <span class="keyword">if</span> int(num ** 0.5) ** 2 == num:
+        facts.append(<span class="string">"perfect square"</span>)
+    
+    <span class="keyword">if</span> num % 5 == 0:
+        facts.append(<span class="string">"multiple of 5"</span>)
+    
+    <span class="keyword">return</span> <span class="string">f"</span>{num}<span class="string"> is a </span>{<span class="string">', '</span>.join(facts)}<span class="string"> number!"</span>
+                        </div>
+                    </div>
+
+                    <div class="teaching-notes">
+                        <h4>📝 Teaching Notes:</h4>
+                        <ul>
+                            <li>Emphasize the importance of handling edge cases (like 0)</li>
+                            <li>Show how modulo (%) is used for divisibility tests</li>
+                            <li>Demonstrate f-string formatting for clean output</li>
+                            <li>Bonus: Introduce list operations and string joining</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Solution 2: Name Decorator -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">2</div>
+                        <h2 class="solution-title">✨ Name Decorator - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">decorate_name</span>(name, style):
+    <span class="comment"># Convert style to lowercase for case-insensitive matching</span>
+    style = style.lower()
+    
+    <span class="keyword">if</span> style == <span class="string">"stars"</span>:
+        <span class="keyword">return</span> <span class="string">f"⭐ </span>{name.upper()}<span class="string"> ⭐"</span>
+    <span class="keyword">elif</span> style == <span class="string">"hearts"</span>:
+        <span class="keyword">return</span> <span class="string">f"💖 </span>{name}<span class="string"> 💖"</span>
+    <span class="keyword">elif</span> style == <span class="string">"cool"</span>:
+        <span class="keyword">return</span> <span class="string">f"😎 </span>{name}<span class="string"> 😎"</span>
+    <span class="keyword">else</span>:
+        <span class="comment"># Default to stars for unknown styles</span>
+        <span class="keyword">return</span> <span class="string">f"⭐ </span>{name.upper()}<span class="string"> ⭐"</span>
+
+<span class="comment"># Test the function</span>
+print(decorate_name(<span class="string">"Alex"</span>, <span class="string">"stars"</span>))   <span class="comment"># "⭐ ALEX ⭐"</span>
+print(decorate_name(<span class="string">"Sam"</span>, <span class="string">"hearts"</span>))   <span class="comment"># "💖 Sam 💖"</span>
+print(decorate_name(<span class="string">"Jo"</span>, <span class="string">"cool"</span>))     <span class="comment"># "😎 Jo 😎"</span>
+print(decorate_name(<span class="string">"Max"</span>, <span class="string">"unknown"</span>)) <span class="comment"># "⭐ MAX ⭐" (default)</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> String methods (.upper(), .lower()), if/elif/else chains, 
+                        f-string formatting, and default behavior for invalid inputs.
+                    </div>
+
+                    <div class="bonus-solution">
+                        <h5>🎁 Bonus Solution: Rainbow and Fancy Styles</h5>
+                        <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">decorate_name_bonus</span>(name, style):
+    style = style.lower()
+    
+    <span class="keyword">if</span> style == <span class="string">"stars"</span>:
+        <span class="keyword">return</span> <span class="string">f"⭐ </span>{name.upper()}<span class="string"> ⭐"</span>
+    <span class="keyword">elif</span> style == <span class="string">"hearts"</span>:
+        <span class="keyword">return</span> <span class="string">f"💖 </span>{name}<span class="string"> 💖"</span>
+    <span class="keyword">elif</span> style == <span class="string">"cool"</span>:
+        <span class="keyword">return</span> <span class="string">f"😎 </span>{name}<span class="string"> 😎"</span>
+    <span class="keyword">elif</span> style == <span class="string">"rainbow"</span>:
+        <span class="keyword">return</span> <span class="string">f"🌈✨🦄 </span>{name}<span class="string"> 🦄✨🌈"</span>
+    <span class="keyword">elif</span> style == <span class="string">"fancy"</span>:
+        <span class="keyword">return</span> <span class="string">f"╔══ </span>{name.title()}<span class="string"> ══╗"</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">f"⭐ </span>{name.upper()}<span class="string"> ⭐"</span>
+                        </div>
+                    </div>
+
+                    <div class="teaching-notes">
+                        <h4>📝 Teaching Notes:</h4>
+                        <ul>
+                            <li>Show how .lower() helps with case-insensitive comparisons</li>
+                            <li>Demonstrate different string methods: .upper(), .title()</li>
+                            <li>Discuss the importance of default behavior</li>
+                            <li>Bonus: Introduce Unicode characters for fancy borders</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Solution 3: Quiz Grader -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">3</div>
+                        <h2 class="solution-title">📝 Quiz Grader - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">grade_quiz</span>(correct_answers, student_answers):
+    <span class="comment"># Count correct answers</span>
+    correct_count = 0
+    total_questions = len(correct_answers)
+    
+    <span class="comment"># Compare each answer</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> range(total_questions):
+        <span class="keyword">if</span> i < len(student_answers) <span class="keyword">and</span> correct_answers[i] == student_answers[i]:
+            correct_count += 1
+    
+    <span class="comment"># Calculate percentage</span>
+    percentage = round((correct_count / total_questions) * 100)
+    
+    <span class="comment"># Determine encouragement message</span>
+    <span class="keyword">if</span> percentage >= 90:
+        message = <span class="string">"Excellent work! You're a star!"</span>
+    <span class="keyword">elif</span> percentage >= 70:
+        message = <span class="string">"Good job! Keep practicing!"</span>
+    <span class="keyword">elif</span> percentage >= 50:
+        message = <span class="string">"Keep trying! You're getting there!"</span>
+    <span class="keyword">else</span>:
+        message = <span class="string">"Practice more! You can do it!"</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Score: </span>{percentage}<span class="string">% - </span>{message}<span class="string">"</span>
+
+<span class="comment"># Test the function</span>
+print(grade_quiz([<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'C'</span>], [<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'A'</span>]))  <span class="comment"># "Score: 67% - Good job! Keep practicing!"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> List iteration, comparison operations, percentage calculations, 
+                        conditional logic for different outcomes, and handling edge cases (different list lengths).
+                    </div>
+
+                    <div class="bonus-solution">
+                        <h5>🎁 Bonus Solution: Show Wrong Answers and Study Tips</h5>
+                        <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">grade_quiz_bonus</span>(correct_answers, student_answers):
+    correct_count = 0
+    wrong_questions = []
+    total_questions = len(correct_answers)
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> range(total_questions):
+        <span class="keyword">if</span> i < len(student_answers) <span class="keyword">and</span> correct_answers[i] == student_answers[i]:
+            correct_count += 1
+        <span class="keyword">else</span>:
+            wrong_questions.append(i + 1)  <span class="comment"># Store question number (1-based)</span>
+    
+    percentage = round((correct_count / total_questions) * 100)
+    
+    <span class="comment"># Build detailed feedback</span>
+    result = <span class="string">f"Score: </span>{percentage}<span class="string">% (</span>{correct_count}<span class="string">/</span>{total_questions}<span class="string">)"</span>
+    
+    <span class="keyword">if</span> wrong_questions:
+        result += <span class="string">f"\\nReview questions: </span>{<span class="string">', '</span>.join(map(str, wrong_questions))}<span class="string">"</span>
+    
+    <span class="keyword">if</span> percentage >= 90:
+        result += <span class="string">"\\nExcellent! You've mastered this topic!"</span>
+    <span class="keyword">elif</span> percentage >= 70:
+        result += <span class="string">"\\nGood work! Review the missed questions."</span>
+    <span class="keyword">else</span>:
+        result += <span class="string">"\\nStudy tip: Focus on the concepts from wrong answers."</span>
+    
+    <span class="keyword">return</span> result
+                        </div>
+                    </div>
+
+                    <div class="teaching-notes">
+                        <h4>📝 Teaching Notes:</h4>
+                        <ul>
+                            <li>Demonstrate list indexing and range() function</li>
+                            <li>Show how to handle lists of different lengths safely</li>
+                            <li>Teach percentage calculations and rounding</li>
+                            <li>Bonus: Introduce list comprehensions and string joining</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Solution 4: Word Game Helper -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">4</div>
+                        <h2 class="solution-title">🎮 Word Game Helper - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">import</span> random
+
+<span class="keyword">def</span> <span class="keyword">word_game_helper</span>(word, action):
+    action = action.lower()  <span class="comment"># Make case-insensitive</span>
+    
+    <span class="keyword">if</span> action == <span class="string">"reverse"</span>:
+        <span class="keyword">return</span> word[::-1]
+    
+    <span class="keyword">elif</span> action == <span class="string">"vowels"</span>:
+        vowels = <span class="string">"aeiouAEIOU"</span>
+        result = <span class="string">""</span>
+        <span class="keyword">for</span> char <span class="keyword">in</span> word:
+            <span class="keyword">if</span> char <span class="keyword">in</span> vowels:
+                result += char
+        <span class="keyword">return</span> result
+    
+    <span class="keyword">elif</span> action == <span class="string">"consonants"</span>:
+        vowels = <span class="string">"aeiouAEIOU"</span>
+        result = <span class="string">""</span>
+        <span class="keyword">for</span> char <span class="keyword">in</span> word:
+            <span class="keyword">if</span> char.isalpha() <span class="keyword">and</span> char <span class="keyword">not</span> <span class="keyword">in</span> vowels:
+                result += char
+        <span class="keyword">return</span> result
+    
+    <span class="keyword">elif</span> action == <span class="string">"scramble"</span>:
+        char_list = list(word)
+        random.shuffle(char_list)
+        <span class="keyword">return</span> <span class="string">""</span>.join(char_list)
+    
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">f"Sorry, '</span>{action}<span class="string">' is not a valid action. Try: reverse, vowels, consonants, scramble"</span>
+
+<span class="comment"># Test the function</span>
+print(word_game_helper(<span class="string">"hello"</span>, <span class="string">"reverse"</span>))     <span class="comment"># "olleh"</span>
+print(word_game_helper(<span class="string">"python"</span>, <span class="string">"vowels"</span>))     <span class="comment"># "yo"</span>
+print(word_game_helper(<span class="string">"code"</span>, <span class="string">"consonants"</span>))   <span class="comment"># "cd"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> String slicing, loops with string building, character checking 
+                        (.isalpha()), list operations, and the random module for shuffling.
+                    </div>
+
+                    <div class="bonus-solution">
+                        <h5>🎁 Bonus Solution: Pig Latin and First-Last Swap</h5>
+                        <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">word_game_helper_bonus</span>(word, action):
+    action = action.lower()
+    
+    <span class="comment"># ... (previous actions remain the same) ...</span>
+    
+    <span class="keyword">elif</span> action == <span class="string">"pig_latin"</span>:
+        <span class="keyword">if</span> len(word) == 0:
+            <span class="keyword">return</span> word
+        <span class="keyword">if</span> word[0].lower() <span class="keyword">in</span> <span class="string">"aeiou"</span>:
+            <span class="keyword">return</span> word + <span class="string">"way"</span>
+        <span class="keyword">else</span>:
+            <span class="keyword">return</span> word[1:] + word[0] + <span class="string">"ay"</span>
+    
+    <span class="keyword">elif</span> action == <span class="string">"first_last"</span>:
+        <span class="keyword">if</span> len(word) <= 1:
+            <span class="keyword">return</span> word
+        <span class="keyword">return</span> word[-1] + word[1:-1] + word[0]
+                        </div>
+                    </div>
+
+                    <div class="teaching-notes">
+                        <h4>📝 Teaching Notes:</h4>
+                        <ul>
+                            <li>Introduce string slicing with [::-1] for reversal</li>
+                            <li>Show how to use .isalpha() for character validation</li>
+                            <li>Demonstrate the random module and list operations</li>
+                            <li>Bonus: Advanced slicing techniques and string manipulation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Solution 5: Movie Recommender -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">5</div>
+                        <h2 class="solution-title">🎬 Movie Recommender - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">recommend_movie</span>(genre, mood):
+    <span class="comment"># Convert to lowercase for easier matching</span>
+    genre = genre.lower()
+    mood = mood.lower()
+    
+    <span class="comment"># Movie recommendations based on genre and mood</span>
+    <span class="keyword">if</span> genre == <span class="string">"comedy"</span>:
+        <span class="keyword">if</span> mood == <span class="string">"happy"</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'The Princess Bride' - perfect comedy for a happy mood!"</span>
+        <span class="keyword">elif</span> mood == <span class="string">"relaxed"</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'Finding Nemo' - light and fun for a relaxed evening!"</span>
+        <span class="keyword">else</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'Shrek' - a comedy that works for any mood!"</span>
+    
+    <span class="keyword">elif</span> genre == <span class="string">"action"</span>:
+        <span class="keyword">if</span> mood == <span class="string">"excited"</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'Mission: Impossible' - high-energy action for excitement!"</span>
+        <span class="keyword">elif</span> mood == <span class="string">"happy"</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'The Incredibles' - fun action for a good mood!"</span>
+        <span class="keyword">else</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'Marvel's Avengers' - action that lifts any mood!"</span>
+    
+    <span class="keyword">elif</span> genre == <span class="string">"drama"</span>:
+        <span class="keyword">if</span> mood == <span class="string">"thoughtful"</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'Good Will Hunting' - perfect drama for reflection!"</span>
+        <span class="keyword">elif</span> mood == <span class="string">"relaxed"</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'Forrest Gump' - heartwarming drama for a calm mood!"</span>
+        <span class="keyword">else</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'The Pursuit of Happyness' - inspiring drama!"</span>
+    
+    <span class="keyword">elif</span> genre == <span class="string">"sci-fi"</span>:
+        <span class="keyword">if</span> mood == <span class="string">"thoughtful"</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'Interstellar' - mind-bending sci-fi for deep thinking!"</span>
+        <span class="keyword">elif</span> mood == <span class="string">"excited"</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'Star Wars' - exciting space adventure!"</span>
+        <span class="keyword">else</span>:
+            <span class="keyword">return</span> <span class="string">"I recommend 'Wall-E' - charming sci-fi for any mood!"</span>
+    
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">f"I don't have recommendations for '</span>{genre}<span class="string">' yet, but try 'The Lion King' - it's great for any mood!"</span>
+
+<span class="comment"># Test the function</span>
+print(recommend_movie(<span class="string">"comedy"</span>, <span class="string">"happy"</span>))
+print(recommend_movie(<span class="string">"action"</span>, <span class="string">"excited"</span>))
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Nested conditionals, string methods (.lower()), 
+                        complex decision-making logic, and handling unknown inputs gracefully.
+                    </div>
+
+                    <div class="bonus-solution">
+                        <h5>🎁 Bonus Solution: Multiple Recommendations with Time Factor</h5>
+                        <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">recommend_movie_bonus</span>(genre, mood, time_of_day=<span class="string">"evening"</span>):
+    <span class="comment"># Movie database with multiple options</span>
+    movies = {
+        <span class="string">"comedy"</span>: {
+            <span class="string">"happy"</span>: [<span class="string">"The Princess Bride"</span>, <span class="string">"Toy Story"</span>, <span class="string">"Shrek"</span>],
+            <span class="string">"relaxed"</span>: [<span class="string">"Finding Nemo"</span>, <span class="string">"Paddington"</span>]
+        },
+        <span class="string">"action"</span>: {
+            <span class="string">"excited"</span>: [<span class="string">"Mission: Impossible"</span>, <span class="string">"Fast & Furious"</span>],
+            <span class="string">"happy"</span>: [<span class="string">"The Incredibles"</span>, <span class="string">"Spider-Man"</span>]
+        }
+    }
+    
+    genre = genre.lower()
+    mood = mood.lower()
+    
+    <span class="comment"># Time-based adjustments</span>
+    <span class="keyword">if</span> time_of_day == <span class="string">"morning"</span> <span class="keyword">and</span> genre == <span class="string">"action"</span>:
+        <span class="keyword">return</span> <span class="string">"Morning action? Try 'The Incredibles' - family-friendly energy!"</span>
+    
+    <span class="comment"># Get recommendations</span>
+    <span class="keyword">if</span> genre <span class="keyword">in</span> movies <span class="keyword">and</span> mood <span class="keyword">in</span> movies[genre]:
+        options = movies[genre][mood]
+        <span class="keyword">return</span> <span class="string">f"For </span>{genre}<span class="string"> + </span>{mood}<span class="string">, I recommend: </span>{<span class="string">', '</span>.join(options)}<span class="string">"</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">"Try 'The Lion King' - it works for any combination!"</span>
+                        </div>
+                    </div>
+
+                    <div class="teaching-notes">
+                        <h4>📝 Teaching Notes:</h4>
+                        <ul>
+                            <li>Show nested if statements for complex logic</li>
+                            <li>Demonstrate proper string formatting and concatenation</li>
+                            <li>Teach how to handle edge cases and unknown inputs</li>
+                            <li>Bonus: Introduce dictionaries and default parameters</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Solution 9: Inventory Manager -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">9</div>
+                        <h2 class="solution-title">📦 Inventory Manager - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">manage_inventory</span>(items, quantities, min_stock):
+    low_stock = []
+    critical_stock = []
+    total_items = 0
+    index = 0
+    
+    <span class="comment"># Process each item in inventory</span>
+    <span class="keyword">while</span> index < len(quantities):
+        current_qty = quantities[index]
+        item_name = items[index]
+        total_items += current_qty
+        
+        <span class="keyword">if</span> current_qty < 10:
+            critical_stock.append(item_name)
+        <span class="keyword">elif</span> current_qty < min_stock:
+            low_stock.append(item_name)
+        
+        index += 1
+    
+    <span class="comment"># Generate status report</span>
+    <span class="keyword">if</span> len(critical_stock) > 0:
+        status = <span class="string">"URGENT - Critical stock levels detected!"</span>
+    <span class="keyword">elif</span> len(low_stock) > 0:
+        status = <span class="string">"WARNING - Low stock items need restocking"</span>
+    <span class="keyword">else</span>:
+        status = <span class="string">"GOOD - All items adequately stocked"</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Status: </span>{status}<span class="string">. Critical: </span>{critical_stock}<span class="string">, Low: </span>{low_stock}<span class="string">, Total Items: </span>{total_items}<span class="string">"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> While loops with lists, multiple condition checking, 
+                        list operations (.append()), and building comprehensive reports.
+                    </div>
+                </div>
+
+                <!-- Solution 10: Banking System -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">10</div>
+                        <h2 class="solution-title">🏦 Banking System - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">process_transactions</span>(initial_balance, transactions):
+    balance = initial_balance
+    total_fees = 0
+    overdraft_count = 0
+    index = 0
+    
+    <span class="comment"># Process each transaction</span>
+    <span class="keyword">while</span> index < len(transactions):
+        transaction = transactions[index]
+        balance += transaction
+        
+        <span class="comment"># Check for overdraft</span>
+        <span class="keyword">if</span> balance < 0:
+            total_fees += 35  <span class="comment"># $35 overdraft fee</span>
+            overdraft_count += 1
+        
+        index += 1
+    
+    <span class="comment"># Apply monthly interest (0.5%)</span>
+    <span class="keyword">if</span> balance > 0:
+        interest = balance * 0.005
+        balance += interest
+    
+    <span class="comment"># Final balance calculation</span>
+    final_balance = balance - total_fees
+    
+    <span class="comment"># Determine account status</span>
+    <span class="keyword">if</span> final_balance < 0:
+        account_status = <span class="string">"OVERDRAWN"</span>
+    <span class="keyword">elif</span> final_balance < 100:
+        account_status = <span class="string">"LOW BALANCE"</span>
+    <span class="keyword">else</span>:
+        account_status = <span class="string">"GOOD STANDING"</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Final Balance: $</span>{final_balance:.2f}<span class="string">, Fees: $</span>{total_fees}<span class="string">, Overdrafts: </span>{overdraft_count}<span class="string">, Status: </span>{account_status}<span class="string">"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Financial calculations, accumulator variables, 
+                        rounding with :.2f formatting, and status classification logic.
+                    </div>
+                </div>
+
+                <!-- Solution 11: Recipe Analyzer -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">11</div>
+                        <h2 class="solution-title">👨‍🍳 Recipe Analyzer - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">analyze_recipe</span>(ingredients, costs, servings, target_servings):
+    total_cost = 0
+    index = 0
+    
+    <span class="comment"># Calculate total ingredient cost</span>
+    <span class="keyword">while</span> index < len(costs):
+        total_cost += costs[index]
+        index += 1
+    
+    <span class="comment"># Scale recipe for target servings</span>
+    scaling_factor = target_servings / servings
+    adjusted_cost = total_cost * scaling_factor
+    cost_per_serving = adjusted_cost / target_servings
+    
+    <span class="comment"># Determine budget category</span>
+    <span class="keyword">if</span> cost_per_serving < 2:
+        budget_category = <span class="string">"Budget-Friendly"</span>
+        recommendation = <span class="string">"Great for everyday meals!"</span>
+    <span class="keyword">elif</span> cost_per_serving <= 5:
+        budget_category = <span class="string">"Moderate"</span>
+        recommendation = <span class="string">"Perfect for weekend cooking!"</span>
+    <span class="keyword">else</span>:
+        budget_category = <span class="string">"Premium"</span>
+        recommendation = <span class="string">"Special occasion worthy!"</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Recipe for </span>{target_servings}<span class="string"> servings: $</span>{adjusted_cost:.2f}<span class="string"> total, $</span>{cost_per_serving:.2f}<span class="string"> per serving. Category: </span>{budget_category}<span class="string">. </span>{recommendation}<span class="string">"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Mathematical scaling, proportional calculations, 
+                        cost analysis, and budget categorization logic.
+                    </div>
+                </div>
+
+                <!-- Solution 12: Fitness Analytics -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">12</div>
+                        <h2 class="solution-title">🏃‍♂️ Fitness Analytics - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">analyze_fitness_data</span>(steps, calories, exercise_minutes):
+    total_steps = 0
+    total_calories = 0
+    total_exercise = 0
+    days_counted = 0
+    index = 0
+    
+    <span class="comment"># Process daily fitness data</span>
+    <span class="keyword">while</span> index < len(steps):
+        total_steps += steps[index]
+        total_calories += calories[index]
+        total_exercise += exercise_minutes[index]
+        days_counted += 1
+        index += 1
+    
+    <span class="comment"># Calculate averages</span>
+    avg_steps = total_steps / days_counted
+    avg_calories = total_calories / days_counted
+    avg_exercise = total_exercise / days_counted
+    
+    <span class="comment"># Determine fitness level</span>
+    <span class="keyword">if</span> avg_steps >= 12000 <span class="keyword">and</span> avg_exercise >= 30:
+        fitness_level = <span class="string">"Athletic"</span>
+        recommendation = <span class="string">"Outstanding! Keep up the excellent work!"</span>
+    <span class="keyword">elif</span> avg_steps >= 10000 <span class="keyword">and</span> avg_exercise >= 25:
+        fitness_level = <span class="string">"Very Active"</span>
+        recommendation = <span class="string">"Great job! You're meeting health goals!"</span>
+    <span class="keyword">elif</span> avg_steps >= 7500 <span class="keyword">and</span> avg_exercise >= 15:
+        fitness_level = <span class="string">"Active"</span>
+        recommendation = <span class="string">"Good progress! Try to increase activity slightly."</span>
+    <span class="keyword">else</span>:
+        fitness_level = <span class="string">"Sedentary"</span>
+        recommendation = <span class="string">"Start with small goals to build healthy habits!"</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Fitness Level: </span>{fitness_level}<span class="string">. Avg Steps: </span>{avg_steps:.0f}<span class="string">, Avg Exercise: </span>{avg_exercise:.1f}<span class="string"> min. </span>{recommendation}<span class="string">"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Multiple data arrays processing, average calculations, 
+                        complex conditional logic with AND operators, and health metric analysis.
+                    </div>
+                </div>
+
+                <!-- Solution 13: Social Analytics -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">13</div>
+                        <h2 class="solution-title">📱 Social Analytics - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">analyze_social_engagement</span>(likes, comments, shares, followers):
+    total_engagement = 0
+    post_count = 0
+    viral_posts = 0
+    index = 0
+    
+    <span class="comment"># Calculate total engagement</span>
+    <span class="keyword">while</span> index < len(likes):
+        post_engagement = likes[index] + comments[index] + shares[index]
+        total_engagement += post_engagement
+        post_count += 1
+        
+        <span class="comment"># Check for viral posts (>10% of followers engaged)</span>
+        <span class="keyword">if</span> post_engagement > (followers * 0.1):
+            viral_posts += 1
+        
+        index += 1
+    
+    <span class="comment"># Calculate engagement rate</span>
+    engagement_rate = (total_engagement / (followers * post_count)) * 100
+    
+    <span class="comment"># Determine performance category</span>
+    <span class="keyword">if</span> engagement_rate > 10:
+        performance = <span class="string">"Viral"</span>
+        advice = <span class="string">"Amazing! Your content is resonating perfectly!"</span>
+    <span class="keyword">elif</span> engagement_rate > 5:
+        performance = <span class="string">"High Engagement"</span>
+        advice = <span class="string">"Excellent engagement! Keep creating quality content!"</span>
+    <span class="keyword">elif</span> engagement_rate > 2:
+        performance = <span class="string">"Good Engagement"</span>
+        advice = <span class="string">"Solid performance! Try varying content types."</span>
+    <span class="keyword">else</span>:
+        performance = <span class="string">"Low Engagement"</span>
+        advice = <span class="string">"Focus on creating more engaging, relevant content."</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Performance: </span>{performance}<span class="string"> (</span>{engagement_rate:.2f}<span class="string">%). Viral Posts: </span>{viral_posts}<span class="string">. </span>{advice}<span class="string">"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Social media metrics, percentage calculations, 
+                        viral content detection, and performance categorization.
+                    </div>
+                </div>
+
+                <!-- Solution 14: Energy Tracker -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">14</div>
+                        <h2 class="solution-title">⚡ Energy Tracker - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">monitor_energy_usage</span>(daily_kwh, rates, appliances):
+    total_kwh = 0
+    high_usage_days = 0
+    index = 0
+    
+    <span class="comment"># Process daily energy consumption</span>
+    <span class="keyword">while</span> index < len(daily_kwh):
+        daily_usage = daily_kwh[index]
+        total_kwh += daily_usage
+        
+        <span class="keyword">if</span> daily_usage > 25:  <span class="comment"># High usage threshold</span>
+            high_usage_days += 1
+        
+        index += 1
+    
+    <span class="comment"># Calculate monthly statistics</span>
+    days_recorded = len(daily_kwh)
+    avg_daily_usage = total_kwh / days_recorded
+    monthly_cost = total_kwh * rates
+    carbon_footprint = total_kwh * 0.85  <span class="comment"># kg CO2 per kWh</span>
+    
+    <span class="comment"># Determine efficiency rating</span>
+    <span class="keyword">if</span> avg_daily_usage < 15:
+        efficiency = <span class="string">"Excellent"</span>
+        savings_tip = <span class="string">"You're already very energy efficient!"</span>
+    <span class="keyword">elif</span> avg_daily_usage < 25:
+        efficiency = <span class="string">"Good"</span>
+        savings_tip = <span class="string">"Consider LED bulbs and efficient appliances."</span>
+    <span class="keyword">else</span>:
+        efficiency = <span class="string">"High Usage"</span>
+        savings_tip = <span class="string">"Check for energy vampires and upgrade old appliances."</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Efficiency: </span>{efficiency}<span class="string">. Monthly: </span>{total_kwh:.1f}<span class="string"> kWh, $</span>{monthly_cost:.2f}<span class="string">, </span>{carbon_footprint:.1f}<span class="string"> kg CO2. High usage days: </span>{high_usage_days}<span class="string">. Tip: </span>{savings_tip}<span class="string">"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Environmental calculations, carbon footprint analysis, 
+                        energy efficiency metrics, and sustainability recommendations.
+                    </div>
+                </div>
+
+                <!-- Solution 15: Library System -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">15</div>
+                        <h2 class="solution-title">📚 Library System - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">manage_library_books</span>(books, checkout_dates, return_dates):
+    total_fines = 0
+    overdue_books = 0
+    total_loan_days = 0
+    index = 0
+    
+    <span class="comment"># Process each book return</span>
+    <span class="keyword">while</span> index < len(books):
+        loan_period = return_dates[index] - checkout_dates[index]
+        total_loan_days += loan_period
+        
+        <span class="comment"># Calculate overdue days (standard 14-day loan)</span>
+        <span class="keyword">if</span> loan_period > 14:
+            days_overdue = loan_period - 14
+            overdue_books += 1
+            
+            <span class="comment"># Fine calculation: $0.50 for 1-7 days, $1.00 for 8+ days</span>
+            <span class="keyword">if</span> days_overdue <= 7:
+                fine = days_overdue * 0.50
+            <span class="keyword">else</span>:
+                fine = (7 * 0.50) + ((days_overdue - 7) * 1.00)
+            
+            total_fines += fine
+        
+        index += 1
+    
+    <span class="comment"># Calculate library statistics</span>
+    books_processed = len(books)
+    avg_loan_period = total_loan_days / books_processed
+    overdue_rate = (overdue_books / books_processed) * 100
+    
+    <span class="comment"># Determine library performance</span>
+    <span class="keyword">if</span> overdue_rate < 5:
+        performance = <span class="string">"Excellent"</span>
+    <span class="keyword">elif</span> overdue_rate < 15:
+        performance = <span class="string">"Good"</span>
+    <span class="keyword">else</span>:
+        performance = <span class="string">"Needs Improvement"</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Library Performance: </span>{performance}<span class="string">. Fines: $</span>{total_fines:.2f}<span class="string">, Overdue: </span>{overdue_books}<span class="string">/</span>{books_processed}<span class="string"> books (</span>{overdue_rate:.1f}<span class="string">%), Avg loan: </span>{avg_loan_period:.1f}<span class="string"> days"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Date calculations, tiered fine structures, 
+                        library management systems, and performance metrics calculation.
+                    </div>
+                </div>
+
+                <!-- Solution 16: Movie Recommender -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">16</div>
+                        <h2 class="solution-title">🎬 Movie Recommender - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">recommend_movies</span>(user_ratings, movie_genres, preferences):
+    genre_scores = {}
+    total_movies = 0
+    high_rated_count = 0
+    index = 0
+    
+    <span class="comment"># Analyze user rating patterns</span>
+    <span class="keyword">while</span> index < len(user_ratings):
+        rating = user_ratings[index]
+        genre = movie_genres[index]
+        total_movies += 1
+        
+        <span class="comment"># Track genre preferences for high ratings</span>
+        <span class="keyword">if</span> rating >= 7:
+            high_rated_count += 1
+            <span class="keyword">if</span> genre <span class="keyword">in</span> genre_scores:
+                genre_scores[genre] += rating
+            <span class="keyword">else</span>:
+                genre_scores[genre] = rating
+        
+        index += 1
+    
+    <span class="comment"># Find preferred genre</span>
+    preferred_genre = <span class="string">"Action"</span>  <span class="comment"># Default</span>
+    highest_score = 0
+    
+    <span class="keyword">for</span> genre <span class="keyword">in</span> genre_scores:
+        <span class="keyword">if</span> genre_scores[genre] > highest_score:
+            highest_score = genre_scores[genre]
+            preferred_genre = genre
+    
+    <span class="comment"># Calculate compatibility percentage</span>
+    compatibility = (high_rated_count / total_movies) * 100
+    
+    <span class="comment"># Generate recommendations based on preferences</span>
+    <span class="keyword">if</span> compatibility > 70:
+        recommendation_quality = <span class="string">"Highly Compatible"</span>
+        recommendation = <span class="string">f"Perfect match! Try more </span>{preferred_genre}<span class="string"> movies."</span>
+    <span class="keyword">elif</span> compatibility > 50:
+        recommendation_quality = <span class="string">"Good Match"</span>
+        recommendation = <span class="string">f"You'll likely enjoy </span>{preferred_genre}<span class="string"> and similar genres."</span>
+    <span class="keyword">else</span>:
+        recommendation_quality = <span class="string">"Explore More"</span>
+        recommendation = <span class="string">"Try different genres to discover your preferences!"</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Recommendation: </span>{recommendation_quality}<span class="string"> (</span>{compatibility:.1f}<span class="string">% match). Preferred: </span>{preferred_genre}<span class="string">. </span>{recommendation}<span class="string">"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Recommendation algorithms, dictionary usage for tracking, 
+                        pattern recognition in user data, and personalization logic.
+                    </div>
+                </div>
+
+                <!-- Solution 17: Traffic Monitor -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">17</div>
+                        <h2 class="solution-title">🚦 Traffic Monitor - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">analyze_traffic_flow</span>(hourly_counts, peak_hours, accident_reports):
+    total_cars = 0
+    heavy_traffic_hours = 0
+    gridlock_hours = 0
+    max_hour_traffic = 0
+    index = 0
+    
+    <span class="comment"># Process hourly traffic data</span>
+    <span class="keyword">while</span> index < len(hourly_counts):
+        hour_traffic = hourly_counts[index]
+        total_cars += hour_traffic
+        
+        <span class="comment"># Track maximum traffic and congestion levels</span>
+        <span class="keyword">if</span> hour_traffic > max_hour_traffic:
+            max_hour_traffic = hour_traffic
+        
+        <span class="keyword">if</span> hour_traffic > 1500:
+            gridlock_hours += 1
+        <span class="keyword">elif</span> hour_traffic > 1000:
+            heavy_traffic_hours += 1
+        
+        index += 1
+    
+    <span class="comment"># Calculate traffic statistics</span>
+    hours_recorded = len(hourly_counts)
+    avg_hourly_traffic = total_cars / hours_recorded
+    congestion_rate = ((heavy_traffic_hours + gridlock_hours) / hours_recorded) * 100
+    
+    <span class="comment"># Determine traffic flow efficiency</span>
+    <span class="keyword">if</span> congestion_rate < 10:
+        traffic_rating = <span class="string">"Excellent Flow"</span>
+        recommendation = <span class="string">"Current signals are working well!"</span>
+    <span class="keyword">elif</span> congestion_rate < 25:
+        traffic_rating = <span class="string">"Moderate Congestion"</span>
+        recommendation = <span class="string">"Consider signal timing adjustments during peak hours."</span>
+    <span class="keyword">else</span>:
+        traffic_rating = <span class="string">"Heavy Congestion"</span>
+        recommendation = <span class="string">"Urgent: Implement traffic management solutions and longer signal cycles."</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Traffic Rating: </span>{traffic_rating}<span class="string">. Avg: </span>{avg_hourly_traffic:.0f}<span class="string"> cars/hour, Peak: </span>{max_hour_traffic}<span class="string">, Congestion: </span>{congestion_rate:.1f}<span class="string">%. </span>{recommendation}<span class="string">"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Urban planning data analysis, traffic flow optimization, 
+                        congestion level classification, and infrastructure recommendations.
+                    </div>
+                </div>
+
+                <!-- Solution 18: Crypto Analyzer -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-number">18</div>
+                        <h2 class="solution-title">₿ Crypto Analyzer - Solution</h2>
+                    </div>
+
+                    <div class="code-solution">
+<span class="keyword">def</span> <span class="keyword">track_crypto_portfolio</span>(coins, quantities, buy_prices, current_prices):
+    total_invested = 0
+    current_value = 0
+    winning_coins = 0
+    losing_coins = 0
+    best_performer = <span class="string">""</span>
+    best_gain = -100
+    index = 0
+    
+    <span class="comment"># Analyze each cryptocurrency</span>
+    <span class="keyword">while</span> index < len(coins):
+        coin_name = coins[index]
+        qty = quantities[index]
+        buy_price = buy_prices[index]
+        current_price = current_prices[index]
+        
+        <span class="comment"># Calculate investment and current value</span>
+        invested_amount = qty * buy_price
+        current_amount = qty * current_price
+        gain_loss_percent = ((current_price - buy_price) / buy_price) * 100
+        
+        total_invested += invested_amount
+        current_value += current_amount
+        
+        <span class="comment"># Track winners and losers</span>
+        <span class="keyword">if</span> gain_loss_percent > 0:
+            winning_coins += 1
+        <span class="keyword">else</span>:
+            losing_coins += 1
+        
+        <span class="comment"># Find best performer</span>
+        <span class="keyword">if</span> gain_loss_percent > best_gain:
+            best_gain = gain_loss_percent
+            best_performer = coin_name
+        
+        index += 1
+    
+    <span class="comment"># Calculate portfolio performance</span>
+    total_roi = ((current_value - total_invested) / total_invested) * 100
+    
+    <span class="comment"># Determine investment performance category</span>
+    <span class="keyword">if</span> total_roi > 50:
+        performance_rating = <span class="string">"Excellent"</span>
+        advice = <span class="string">"Outstanding returns! Consider taking some profits."</span>
+    <span class="keyword">elif</span> total_roi > 10:
+        performance_rating = <span class="string">"Good"</span>
+        advice = <span class="string">"Solid gains! Monitor market trends."</span>
+    <span class="keyword">elif</span> total_roi > -10:
+        performance_rating = <span class="string">"Break-even"</span>
+        advice = <span class="string">"Hold steady and avoid emotional trading."</span>
+    <span class="keyword">else</span>:
+        performance_rating = <span class="string">"Losses"</span>
+        advice = <span class="string">"Consider diversification and dollar-cost averaging."</span>
+    
+    <span class="keyword">return</span> <span class="string">f"Portfolio: </span>{performance_rating}<span class="string"> (</span>{total_roi:.1f}<span class="string">% ROI). Invested: $</span>{total_invested:.2f}<span class="string">, Current: $</span>{current_value:.2f}<span class="string">. Best: </span>{best_performer}<span class="string"> (+</span>{best_gain:.1f}<span class="string">%). Winners: </span>{winning_coins}<span class="string">, Losers: </span>{losing_coins}<span class="string">. </span>{advice}<span class="string">"</span>
+                    </div>
+
+                    <div class="explanation-box">
+                        <strong>Key Teaching Points:</strong> Financial technology applications, ROI calculations, 
+                        portfolio analysis, cryptocurrency mathematics, and investment strategy logic.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>👩‍🏫 <strong>DEF Teacher Solutions</strong> - Complete guidance for effective teaching!</p>
+            <p>Use these solutions to help students learn step-by-step problem solving.</p>
+        </div>
+    </div>
+</body>
+</html>

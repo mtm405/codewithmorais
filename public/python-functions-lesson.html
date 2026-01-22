@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Functions Lesson - Code With Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #764ba2;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 1.1em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .concept-box {
+            background: #f0f4ff;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .analogy {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #d63384;
+        }
+
+        pre code {
+            background: none;
+            color: #f8f8f2;
+            padding: 0;
+        }
+
+        .syntax-highlight {
+            color: #66d9ef;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .activity {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+
+        .activity h3 {
+            color: #2e7d32;
+        }
+
+        .mistake {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .checklist {
+            background: #f3e5f5;
+            border-left: 5px solid #9c27b0;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .checklist ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checklist li {
+            margin-bottom: 8px;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            font-weight: bold;
+            color: #9c27b0;
+            margin-right: 8px;
+        }
+
+        .challenge-box {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .challenge-box h2 {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        .challenge-box h3 {
+            color: white;
+        }
+
+        .challenge-box code {
+            color: #fff;
+        }
+
+        .output {
+            background: #263238;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 3px;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .comment {
+            color: #6a9955;
+        }
+
+        footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+
+        .btn-group {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 10px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+        }
+
+        .toc {
+            background: #f9f9f9;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .toc h3 {
+            color: #667eea;
+        }
+
+        .toc ol {
+            margin-left: 20px;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .answer-key {
+            display: none;
+            background: #f0f0f0;
+            border: 2px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .answer-key.visible {
+            display: block;
+            animation: slideDown 0.3s ease-in;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toggle-btn {
+            background: #4caf50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            margin: 15px 0;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: #45a049;
+        }
+
+        .toggle-btn.revealed {
+            background: #ff9800;
+        }
+
+        .toggle-btn.revealed:hover {
+            background: #e68900;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            pre {
+                padding: 15px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Python Functions Lesson</h1>
+            <p>Learn to Build Your Own "Mini-Machines"</p>
+        </header>
+
+        <div class="content">
+
+            <!-- Quick Question -->
+            <div class="concept-box" style="background: #e8f5e9; border-left-color: #4caf50; margin-bottom: 20px; padding: 20px;">
+                <h3 style="color: #2e7d32; margin-top: 0; margin-bottom: 15px;">🔔 1/15 Bell Ringer (PUT YOUR PHONES AWAY)</h3>
+                <p style="margin-bottom: 12px;"><strong>Write the Python code to do each of these:</strong></p>
+
+                <div style="margin: 0 0 10px 0; padding: 12px; background: white; border-radius: 5px; border: 1px solid #ddd;">
+                    <p style="margin: 0 0 8px 0;"><strong>Q1:</strong> Import the entire <code>random</code> module</p>
+                    <button class="toggle-btn" onclick="toggleAnswer(this)" style="width: 100%; margin: 8px 0 0 0; padding: 6px 12px; font-size: 0.9em;">👀 Show</button>
+                    <div class="answer-key">
+                        <pre style="margin: 8px 0 0 0; padding: 10px;"><code>import random</code></pre>
+                    </div>
+                </div>
+
+                <div style="margin: 0 0 10px 0; padding: 12px; background: white; border-radius: 5px; border: 1px solid #ddd;">
+                    <p style="margin: 0 0 8px 0;"><strong>Q2:</strong> Import the <code>random</code> module with nickname <code>r</code></p>
+                    <button class="toggle-btn" onclick="toggleAnswer(this)" style="width: 100%; margin: 8px 0 0 0; padding: 6px 12px; font-size: 0.9em;">👀 Show</button>
+                    <div class="answer-key">
+                        <pre style="margin: 8px 0 0 0; padding: 10px;"><code>import random as r</code></pre>
+                    </div>
+                </div>
+
+                <div style="margin: 0; padding: 12px; background: white; border-radius: 5px; border: 1px solid #ddd;">
+                    <p style="margin: 0 0 8px 0;"><strong>Q3:</strong> Import just the <code>sqrt</code> function from <code>math</code> module</p>
+                    <button class="toggle-btn" onclick="toggleAnswer(this)" style="width: 100%; margin: 8px 0 0 0; padding: 6px 12px; font-size: 0.9em;">👀 Show</button>
+                    <div class="answer-key">
+                        <pre style="margin: 8px 0 0 0; padding: 10px;"><code>from math import sqrt</code></pre>
+                    </div>
+                </div>
+
+                <div style="margin: 10px 0 0 0; padding: 12px; background: white; border-radius: 5px; border: 1px solid #ddd;">
+                    <p style="margin: 0 0 8px 0;"><strong>Q4:</strong> Write code to generate a random integer between 1 and 10 (hint: use <code>random.randint()</code>)</p>
+                    <button class="toggle-btn" onclick="toggleAnswer(this)" style="width: 100%; margin: 8px 0 0 0; padding: 6px 12px; font-size: 0.9em;">👀 Show</button>
+                    <div class="answer-key">
+                        <pre style="margin: 8px 0 0 0; padding: 10px;"><code>import random
+random.randint(1, 10)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goal Section -->
+            <h2>Goal</h2>
+            <p>Students will learn how to define their own commands, pass data into them, get results back, and write reusable code like a professional programmer.</p>
+
+            <!-- Part 1 -->
+            <h2>Part 1: The Concept (The Toaster Analogy)</h2>
+            <p><em>Explain this before showing code</em></p>
+
+            <div class="concept-box">
+                <p>Think of a function as a <strong>Machine</strong>, like a <strong>Toaster</strong>.</p>
+                <ul>
+                    <li><strong>Input (Parameters):</strong> You put something in (Bread).</li>
+                    <li><strong>The Function (The Black Box):</strong> The machine does work (Heats it up).</li>
+                    <li><strong>Output (Return):</strong> It pops something out (Toast).</li>
+                </ul>
+                <p><strong>Without functions</strong>, you have to build the toaster from scratch every time you want breakfast. <strong>With functions</strong>, you build it once (<code>def</code>) and just press the button (call) whenever you want.</p>
+            </div>
+
+            <!-- Quick Reflection -->
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p><strong>📝 Write This Down:</strong> In your own words, what is a function? Why is it called a "machine"?</p>
+            </div>
+
+            <!-- Part 2 -->
+            <h2>Part 2: The Syntax</h2>
+            <p>Here is the <strong>anatomy of a function</strong>:</p>
+
+            <pre><code><span class="syntax-highlight">#  1. Keyword    2. Name      3. Parameters
+#     ↓             ↓             ↓
+def make_sandwich(filling, bread_type):</span>
+    
+    <span class="comment"># 4. The Body (MUST BE INDENTED)</span>
+    result = f"A delicious {filling} on {bread_type} bread."
+    
+    <span class="comment"># 5. The Output</span>
+    <span class="syntax-highlight">return</span> result</code></pre>
+
+            <h3>The 4 Rules:</h3>
+            <ol>
+                <li><strong><code>def</code></strong>: Starts the definition.</li>
+                <li><strong><code>()</code></strong>: Parentheses hold the inputs (ingredients).</li>
+                <li><strong><code>:</code></strong>: The colon opens the door to the code block.</li>
+                <li><strong>Indentation:</strong> Everything inside the function must be tabbed over. If you un-indent, the function ends.</li>
+            </ol>
+
+            <!-- Quick Reflection -->
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p><strong>📝 Write This Down:</strong> What are the 4 rules of a function? Can you write them without looking?</p>
+            </div>
+
+            <!-- Part 3 -->
+            <h2>Part 3: Return vs. Print (⚠️ THE BIGGEST CONFUSION)</h2>
+            <p><strong>🚨 STOP & READ THIS CAREFULLY:</strong> This is where most students get tripped up. But once you understand it, you've got it! Read slowly and pay close attention.</p>
+
+            <div class="analogy">
+                <h4>Quick Difference:</h4>
+                <ul>
+                    <li><strong><code>print()</code></strong>: Displays a message to the Human. The computer forgets the value immediately after showing it.</li>
+                    <li><strong><code>return</code></strong>: Passes the value back to the Computer. The program can store it, do math with it, or save it for later.</li>
+                </ul>
+
+                <h4>The Analogy:</h4>
+                <ul>
+                    <li><strong><code>return</code></strong>: An employee calculates the profit, writes it on a report, and hands it to the Boss. The Boss can now file it or use it.</li>
+                    <li><strong><code>print()</code></strong>: An employee calculates the profit, shouts it out loud, and then throws the paper in the trash. The Boss heard it, but can't use the number later.</li>
+                </ul>
+            </div>
+
+            <h3>Code Example:</h3>
+            <pre><code><span class="syntax-highlight">def add_math(a, b):</span>
+    <span class="syntax-highlight">return</span> a + b  <span class="comment"># GOOD: Handing back the answer</span>
+
+<span class="syntax-highlight">def add_loud(a, b):</span>
+    print(a + b)  <span class="comment"># BAD: Just shouting, handing back nothing (None)</span>
+
+<span class="comment"># Why it matters:</span>
+x = add_math(5, 5)  <span class="comment"># x becomes 10</span>
+y = add_loud(5, 5)  <span class="comment"># Prints: 10, y becomes None</span>
+
+print(x + 5)  <span class="comment"># Works! (10 + 5 = 15)</span>
+<span class="syntax-highlight">print(y + 5)  # CRASH! TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'</span></code></pre>
+
+            <div class="output">
+                <strong>Output:</strong><br>
+                10<br>
+                15<br>
+                TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'
+            </div>
+
+            <!-- Quick Reflection -->
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p><strong>📝 Write This Down:</strong> What's the difference between <code>return</code> and <code>print()</code>? Why does <code>y = add_loud(5, 5)</code> make <code>y</code> equal to <code>None</code>?</p>
+            </div>
+
+            <!-- Part 4 -->
+            <h2>Part 4: Variable Scope (The "Vegas Rule")</h2>
+            <p>Variables created inside a function stay inside the function. This is called <strong>Local Scope</strong>.</p>
+
+            <div class="concept-box">
+                <h4>The Vegas Rule: "What happens in the function, stays in the function."</h4>
+            </div>
+
+            <pre><code><span class="syntax-highlight">def my_party():</span>
+    cake = "Chocolate"  <span class="comment"># 'cake' is born here</span>
+    print(cake)         <span class="comment"># Works fine inside</span>
+
+my_party()
+
+<span class="comment"># This will CRASH because 'cake' does not exist out here:</span>
+<span class="syntax-highlight">print(cake)  # NameError: name 'cake' is not defined</span></code></pre>
+
+            <h3>Global vs. Local Scope:</h3>
+            <pre><code>flavor = "Vanilla"  <span class="comment"># Global variable (exists everywhere)</span>
+
+<span class="syntax-highlight">def ice_cream_shop():</span>
+    flavor = "Strawberry"  <span class="comment"># Local variable (only exists in function)</span>
+    print(flavor)          <span class="comment"># Output: Strawberry</span>
+
+ice_cream_shop()
+print(flavor)              <span class="comment"># Output: Vanilla (unchanged!)</span></code></pre>
+
+            <p><strong>Key Takeaway:</strong> Variables inside functions don't affect the world outside.</p>
+
+            <!-- Quick Reflection -->
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p><strong>📝 Write This Down:</strong> What is the "Vegas Rule" in your own words? Why does a variable defined inside a function disappear after the function ends?</p>
+            </div>
+
+            <!-- Part 5 -->
+            <h2>Part 5: Default Parameters (Making Flexible Functions)</h2>
+            <p>You can give parameters <strong>default values</strong> so they're optional:</p>
+
+            <pre><code><span class="syntax-highlight">def greet_user(name, greeting="Hello"):</span>
+    <span class="syntax-highlight">return</span> f"{greeting}, {name}!"
+
+<span class="comment"># Use the default</span>
+print(greet_user("Alice"))  <span class="comment"># Output: Hello, Alice!</span>
+
+<span class="comment"># Override the default</span>
+print(greet_user("Bob", "Hey there"))  <span class="comment"># Output: Hey there, Bob!</span></code></pre>
+
+            <!-- Part 6 -->
+            <h2>Part 6: Multiple Return Values</h2>
+            <p>Functions can return multiple values as a <strong>tuple</strong>:</p>
+
+            <pre><code><span class="syntax-highlight">def calculate_stats(numbers):</span>
+    total = sum(numbers)
+    count = len(numbers)
+    average = total / count
+    <span class="syntax-highlight">return</span> total, count, average  <span class="comment"># Returns a tuple</span>
+
+total, count, average = calculate_stats([10, 20, 30])
+print(f"Total: {total}, Count: {count}, Average: {average}")
+<span class="comment"># Output: Total: 60, Count: 3, Average: 20.0</span></code></pre>
+
+            <!-- Quick Reflection -->
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p><strong>📝 Write This Down:</strong> If a function returns multiple values like <code>return a, b, c</code>, how do you catch all three values on the outside?</p>
+            </div>
+
+            <!-- Part 7 -->
+            <h2>Part 7: *args and **kwargs (Accepting "Any" Arguments)</h2>
+            <p>Sometimes you don't know HOW MANY arguments someone will pass to your function. That's where <code>*args</code> and <code>**kwargs</code> come in! These let your function be flexible.</p>
+
+            <h3>*args: "Star Args" (Accept ANY Number of Arguments)</h3>
+            <p><strong>The <code>*</code> means:</strong> "Collect all these arguments into a list called args (short for arguments)"</p>
+            <div class="concept-box">
+                <p><strong>Real World Example:</strong> Imagine a function that adds any number of grades together to find the average. With <code>*args</code>, you can pass 3 grades OR 10 grades, and the function handles it!</p>
+            </div>
+
+            <pre><code><span class="syntax-highlight">def add_all(*numbers):</span>
+    <span class="comment">"""Add ANY number of arguments together"""</span>
+    <span class="syntax-highlight">return</span> sum(numbers)  <span class="comment"># numbers is a tuple of all the values</span>
+
+print(add_all(1, 2, 3))        <span class="comment"># Output: 6</span>
+print(add_all(1, 2, 3, 4, 5))  <span class="comment"># Output: 15 (same function, more arguments!)</span>
+print(add_all(10, 20))         <span class="comment"># Output: 30 (works with ANY number)</span></code></pre>
+
+            <p><strong>Why This is Cool:</strong> The function doesn't care if you give it 2 arguments or 100. It just adds them all up!</p>
+
+            <!-- Quick Reflection -->
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p><strong>📝 Write This Down:</strong> What does the <code>*</code> symbol mean? Write an example of a function that would use <code>*args</code>.</p>
+            </div>
+
+            <h3>**kwargs: "Keyword Args" (Accept Key-Value Pairs)</h3>
+            <p><strong>The <code>**</code> means:</strong> "Collect all these key-value arguments (like name=Alice) into a dictionary called kwargs (short for keyword arguments)"</p>
+            <div class="concept-box">
+                <p><strong>Real World Example:</strong> A function that builds a description of a person. You might pass <code>name="Bob"</code>, <code>age=25</code>, <code>city="NYC"</code>, or just <code>name="Alice"</code>. Whatever info you have!</p>
+            </div>
+
+            <pre><code><span class="syntax-highlight">def print_info(**details):</span>
+    <span class="comment">"""Print any key-value pairs given to the function"""</span>
+    <span class="syntax-highlight">for</span> key, value <span class="syntax-highlight">in</span> details.items():
+        print(f"{key}: {value}")
+
+print_info(name="Alice", age=25, city="NYC")
+<span class="comment"># Output:
+# name: Alice
+# age: 25
+# city: NYC</span>
+
+print_info(name="Bob", pet="dog")  <span class="comment"># Different info, same function!</span>
+<span class="comment"># Output:
+# name: Bob
+# pet: dog</span></code></pre>
+
+            <p><strong>Why This is Cool:</strong> You can pass different information each time, and the function adapts. No need to define exactly which arguments it needs!</p>
+
+            <!-- Quick Reflection -->
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p><strong>📝 Write This Down:</strong> What's the difference between <code>*args</code> and <code>**kwargs</code>? When would you use each one?</p>
+            </div>
+
+            <!-- Part 8 -->
+            <h2>Part 8: Recursive Functions (Functions That Call Themselves)</h2>
+            <p>A <strong>recursive function</strong> solves a problem by breaking it into smaller versions of itself.</p>
+
+            <pre><code><span class="syntax-highlight">def countdown(n):</span>
+    <span class="comment">"""Count down from n to 1"""</span>
+    <span class="syntax-highlight">if</span> n == 0:  <span class="comment"># Base case (stop condition)</span>
+        print("Blastoff!")
+        <span class="syntax-highlight">return</span>
+    print(n)
+    countdown(n - 1)  <span class="comment"># Recursive call (smaller problem)</span>
+
+countdown(5)
+<span class="comment"># Output:
+# 5
+# 4
+# 3
+# 2
+# 1
+# Blastoff!</span></code></pre>
+
+            <!-- Quick Reflection -->
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                <p><strong>📝 Write This Down:</strong> In the countdown example, what's the "base case" and why do we need it? What would happen if we removed the <code>if n == 0</code> line?</p>
+            </div>
+
+            <!-- Part 9 -->
+            <h2>Part 9: Common Mistakes & How to Fix Them</h2>
+
+            <table>
+                <tr>
+                    <th>Mistake</th>
+                    <th>What Happens</th>
+                    <th>Fix</th>
+                </tr>
+                <tr>
+                    <td><strong>Forgetting parentheses</strong></td>
+                    <td><code>my_function</code> returns the function itself</td>
+                    <td>Use <code>my_function()</code> to call it</td>
+                </tr>
+                <tr>
+                    <td><strong>Mixing up <code>return</code> and <code>print</code></strong></td>
+                    <td>Can't use the result later</td>
+                    <td>Use <code>return</code> for values you need to keep</td>
+                </tr>
+                <tr>
+                    <td><strong>Wrong indentation</strong></td>
+                    <td>Code outside function or syntax error</td>
+                    <td>Tab code inside function consistently</td>
+                </tr>
+                <tr>
+                    <td><strong>Using undefined variables</strong></td>
+                    <td>NameError</td>
+                    <td>Define variables before using them</td>
+                </tr>
+                <tr>
+                    <td><strong>Forgetting parameters</strong></td>
+                    <td>Function doesn't know what to do</td>
+                    <td>Pass the arguments when calling</td>
+                </tr>
+            </table>
+
+            <h3>Example: The "Forgetting Parentheses" Mistake</h3>
+            <pre><code><span class="syntax-highlight">def greet():</span>
+    <span class="syntax-highlight">return</span> "Hello!"
+
+message = greet  <span class="comment"># WRONG: You got the function, not the result</span>
+print(message)   <span class="comment"># Output: &lt;function greet at 0x...&gt;</span>
+
+message = greet()  <span class="comment"># RIGHT: You got the result</span>
+print(message)     <span class="comment"># Output: Hello!</span></code></pre>
+
+            <!-- Part 10 - Activities -->
+            <h2>🛠️ Part 10: Student Activities</h2>
+
+            <div class="activity">
+                <h3>Activity 1: Fix & Run the Greeting Function</h3>
+                <p><strong>What You're Learning:</strong> The correct syntax for defining a function with the right indentation.</p>
+                <p><strong>What You'll Do:</strong> Fix the broken code, then run it to see it work.</p>
+
+                <h4>The Broken Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def greet_user(name)</span>
+print(f"Hello {name}")
+    <span class="syntax-highlight">return "Done"</span>
+
+greet_user("Alice")</code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>Look at the code above. Python is complaining! Can you spot the problems?</li>
+                    <li><strong>Hint 1:</strong> After <code>(name)</code>, is there a colon <code>:</code>?</li>
+                    <li><strong>Hint 2:</strong> Look at the indentation (spaces before each line). The <code>print</code> line should be indented the same as <code>return</code>.</li>
+                    <li>Fix the code and run it in Python.</li>
+                    <li>You should see: <span class="output">Hello Alice</span></li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Fixed Code</button>
+                <div class="answer-key">
+                    <h4>The Corrected Code:</h4>
+                    <pre><code><span class="syntax-highlight">def greet_user(name):</span>
+    print(f"Hello {name}")
+    <span class="syntax-highlight">return "Done"</span>
+
+greet_user("Alice")
+<span class="comment"># Output: Hello Alice</span></code></pre>
+                    <p><strong>What Changed?</strong></p>
+                    <ul>
+                        <li>Added <code>:</code> after <code>(name)</code></li>
+                        <li>Indented both <code>print</code> and <code>return</code> the same amount (4 spaces)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>Activity 2: Complete the Doubler Function</h3>
+                <p><strong>What You're Learning:</strong> How <code>return</code> lets you use a function's result in other code.</p>
+                <p><strong>What You'll Do:</strong> Fill in one missing line to complete the function, then use it in a chain.</p>
+
+                <h4>Your Starter Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def double_it(x):</span>
+    # TODO: Add ONE line here that returns x multiplied by 2
+    _______________
+
+# Now use the function twice in one line!
+final_score = double_it(double_it(5))
+print(final_score)</code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>Replace the <code>_______________</code> line with a <code>return</code> statement.</li>
+                    <li><strong>Hint:</strong> You want to return <code>x * 2</code>.</li>
+                    <li>Run the code. What number do you get?</li>
+                    <li><strong>Explain it:</strong> 5 is doubled to 10, then 10 is doubled to 20.</li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Answer</button>
+                <div class="answer-key">
+                    <h4>The Complete Code:</h4>
+                    <pre><code><span class="syntax-highlight">def double_it(x):</span>
+    <span class="syntax-highlight">return</span> x * 2
+
+<span class="comment"># Because we used return, we can chain them!</span>
+<span class="comment\"># 5 * 2 = 10. Then 10 * 2 = 20.</span>
+final_score = double_it(double_it(5))
+print(final_score)  <span class="comment\"># Output: 20</span></code></pre>
+                    <p><strong>Why This Works:</strong> Because we <code>return</code> the value, the computer can pass that result directly into the function again. Try changing the first 5 to a different number!</p>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>Activity 3: Build Your Currency Converter</h3>
+                <p><strong>What You're Learning:</strong> How to write a function from scratch that takes parameters and returns a value.</p>
+                <p><strong>What You'll Do:</strong> Complete the function by adding the conversion math, then test it with user input.</p>
+
+                <h4>Your Starter Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def usd_to_euro(dollars):</span>
+    <span class="comment">"""Convert dollars to euros (rate: 1 USD = 0.85 EUR)"""</span>
+    # TODO: Add one line that multiplies dollars by 0.85
+    _______________
+
+# Get money from the user
+amount = float(input("Enter amount in USD: "))
+
+# Call your function
+euros = usd_to_euro(amount)
+
+# Show the result
+print(f"${amount} USD = €{euros:.2f} EUR")</code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>Replace <code>_______________</code> with a <code>return</code> statement.</li>
+                    <li><strong>Hint:</strong> You want to return <code>dollars * 0.85</code>.</li>
+                    <li>Run the code and try it with different amounts (like 100, 50, 10).</li>
+                    <li><strong>Bonus:</strong> Can you create another function like <code>usd_to_pounds</code> that uses a different exchange rate?</li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Answer</button>
+                <div class="answer-key">
+                    <h4>The Complete Code:</h4>
+                    <pre><code><span class="syntax-highlight">def usd_to_euro(dollars):</span>
+    <span class="comment">"""Convert dollars to euros (rate: 1 USD = 0.85 EUR)"""</span>
+    <span class="syntax-highlight">return</span> dollars * 0.85
+
+<span class="comment"># Get money from the user</span>
+amount = float(input("Enter amount in USD: "))
+
+<span class="comment"># Call your function</span>
+euros = usd_to_euro(amount)
+
+<span class="comment"># Show the result</span>
+print(f"${amount} USD = €{euros:.2f} EUR")</code></pre>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>Activity 4: Create a Grade Calculator</h3>
+                <p><strong>What You're Learning:</strong> How to use <code>if/elif/else</code> statements inside a function to make decisions.</p>
+                <p><strong>What You'll Do:</strong> Fill in the grade ranges to complete a grading function.</p>
+
+                <h4>Your Starter Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def calculate_grade(score):</span>
+    <span class="comment">"""Convert a numeric score to a letter grade"""</span>
+    <span class="syntax-highlight">if</span> score >= ___:  <span class="comment"># A grade</span>
+        <span class="syntax-highlight">return</span> "A"
+    <span class="syntax-highlight">elif</span> score >= ___:  <span class="comment"># B grade</span>
+        <span class="syntax-highlight">return</span> "B"
+    <span class="syntax-highlight">elif</span> score >= ___:  <span class="comment"># C grade</span>
+        <span class="syntax-highlight">return</span> "C"
+    <span class="syntax-highlight">elif</span> score >= ___:  <span class="comment"># D grade</span>
+        <span class="syntax-highlight">return</span> "D"
+    <span class="syntax-highlight">else</span>:  <span class="comment"># F grade</span>
+        <span class="syntax-highlight">return</span> "F"
+
+<span class="comment"># Test your function with these scores</span>
+print(calculate_grade(95))  <span class="comment"># Should be: A</span>
+print(calculate_grade(85))  <span class="comment"># Should be: B</span>
+print(calculate_grade(75))  <span class="comment"># Should be: C</span></code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>Replace each <code>___</code> with the minimum score for that grade.</li>
+                    <li><strong>Hint:</strong> A = 90, B = 80, C = 70, D = 60.</li>
+                    <li>Run the code. You should get: A, B, C</li>
+                    <li><strong>Challenge:</strong> Add a line to test a failing grade (55). What do you get?</li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Answer</button>
+                <div class="answer-key">
+                    <h4>The Complete Code:</h4>
+                    <pre><code><span class="syntax-highlight">def calculate_grade(score):</span>
+    <span class="comment">"""Convert a numeric score to a letter grade"""</span>
+    <span class="syntax-highlight">if</span> score >= 90:
+        <span class="syntax-highlight">return</span> "A"
+    <span class="syntax-highlight">elif</span> score >= 80:
+        <span class="syntax-highlight">return</span> "B"
+    <span class="syntax-highlight">elif</span> score >= 70:
+        <span class="syntax-highlight">return</span> "C"
+    <span class="syntax-highlight">elif</span> score >= 60:
+        <span class="syntax-highlight">return</span> "D"
+    <span class="syntax-highlight">else</span>:
+        <span class="syntax-highlight">return</span> "F"
+
+<span class="comment"># Test it</span>
+print(calculate_grade(95))  <span class="comment"># Output: A</span>
+print(calculate_grade(85))  <span class="comment"># Output: B</span>
+print(calculate_grade(72))  <span class="comment"># Output: C</span>
+print(calculate_grade(55))  <span class="comment"># Output: F</span></code></pre>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>Activity 5: Build a Shopping Cart Calculator</h3>
+                <p><strong>What You're Learning:</strong> How to use multiple parameters and do math inside a function.</p>
+                <p><strong>What You'll Do:</strong> Complete a function that calculates the total cost with tax.</p>
+
+                <h4>Your Starter Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def calculate_total(price, quantity, tax_rate):</span>
+    <span class="comment">"""Calculate total cost including tax"""</span>
+    subtotal = price * quantity
+    <span class="comment"># TODO: Calculate the tax (subtotal × tax_rate)</span>
+    tax = _______________
+    <span class="comment"># TODO: Return the subtotal + tax</span>
+    _______________
+
+<span class="comment"># Example: Buying 3 items at $10 each, 8% tax</span>
+total = calculate_total(10, 3, 0.08)
+print(f"Total: ${total:.2f}")  <span class="comment"># Should be: Total: $32.40</span></code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>First blank: Calculate the tax by multiplying <code>subtotal * tax_rate</code></li>
+                    <li>Second blank: Return the sum of <code>subtotal + tax</code></li>
+                    <li>Run the code. You should see: <span class="output">Total: $32.40</span></li>
+                    <li><strong>Try it yourself:</strong> What if someone buys 5 items at $20 each with 10% tax?</li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Answer</button>
+                <div class="answer-key">
+                    <h4>The Complete Code:</h4>
+                    <pre><code><span class="syntax-highlight">def calculate_total(price, quantity, tax_rate):</span>
+    <span class="comment">"""Calculate total cost including tax"""</span>
+    subtotal = price * quantity
+    tax = subtotal * tax_rate
+    <span class="syntax-highlight">return</span> subtotal + tax
+
+<span class="comment"># Buying 3 items at $10 each with 8% tax</span>
+total = calculate_total(10, 3, 0.08)
+print(f"Total: ${total:.2f}")  <span class="comment"># Output: Total: $32.40</span></code></pre>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>Activity 6: Make Pizza with Default Parameters</h3>
+                <p><strong>What You're Learning:</strong> How default parameters make functions more flexible and easier to use.</p>
+                <p><strong>What You'll Do:</strong> Create a function with default values, then call it different ways.</p>
+
+                <h4>Your Starter Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def make_pizza(size="medium", topping="pepperoni"):</span>
+    <span class="comment">"""Create a pizza description"""</span>
+    return f"A {size} pizza with {topping}!"
+
+<span class="comment"># Test 1: Use all defaults</span>
+print(make_pizza())  <span class="comment"># What do you think this prints?</span>
+
+<span class="comment"># Test 2: Change one parameter</span>
+print(make_pizza("large"))  <span class="comment"># What changes?</span>
+
+<span class="comment"># Test 3: Change both parameters</span>
+print(make_pizza("small", "mushroom"))  <span class="comment"># Make your own pizza!</span></code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>Copy and run this code as-is.</li>
+                    <li>Notice how the function can be called three different ways!</li>
+                    <li><strong>Try this:</strong> Add a new line: <code>print(make_pizza("extra large", "sausage"))</code></li>
+                    <li><strong>Challenge:</strong> Can you change the default topping to "cheese" instead?</li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Answer</button>
+                <div class="answer-key">
+                    <h4>The Complete Code:</h4>
+                    <pre><code><span class="syntax-highlight">def make_pizza(size="medium", topping="pepperoni"):</span>
+    <span class="comment">"""Create a pizza description"""</span>
+    <span class="syntax-highlight">return</span> f"A {size} pizza with {topping}!"
+
+<span class="comment"># Use defaults</span>
+print(make_pizza())  <span class="comment"># Output: A medium pizza with pepperoni!</span>
+
+<span class="comment"># Override one parameter</span>
+print(make_pizza("large"))  <span class="comment"># Output: A large pizza with pepperoni!</span>
+
+<span class="comment"># Override both parameters</span>
+print(make_pizza("small", "mushroom"))  <span class="comment"># Output: A small pizza with mushroom!</span></code></pre>
+                    <p><strong>Why Defaults Are Cool:</strong> You don't HAVE to provide arguments every time. They're optional!</p>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>Activity 7: Understand Variable Scope (The Vegas Rule)</h3>
+                <p><strong>What You're Learning:</strong> Variables inside functions stay inside. "What happens in the function stays in the function."</p>
+                <p><strong>What You'll Do:</strong> Run code and see what happens when you try to use a variable outside a function.</p>
+
+                <h4>Your Starter Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def my_function():</span>
+    secret = "I'm inside the function"
+    print(secret)  <span class="comment"># This works</span>
+
+my_function()
+
+<span class="comment"># Now try to print secret outside:</span>
+print(secret)  <span class="comment"># What happens?</span></code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>Run this code. What happens?</li>
+                    <li><strong>Expected result:</strong> It will crash! <code>NameError: name 'secret' is not defined</code></li>
+                    <li>Why? Because <code>secret</code> was born and died inside the function.</li>
+                    <li><strong>Remember:</strong> To use a value outside a function, you must <code>return</code> it!</li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Answer</button>
+                <div class="answer-key">
+                    <h4>The Fixed Code:</h4>
+                    <pre><code><span class="syntax-highlight">def my_function():</span>
+    secret = "I'm inside the function"
+    print(secret)  <span class="comment"># This works</span>
+    <span class="syntax-highlight">return</span> secret  <span class="comment"># NOW we can use it outside!</span>
+
+result = my_function()
+print(result)  <span class="comment"># This works now!</span></code></pre>
+                    <p><strong>Key Learning:</strong> Use <code>return</code> if you want to bring a value OUT of a function.</p>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>Activity 8: Calculate the Average of Any Number of Grades</h3>
+                <p><strong>What You're Learning:</strong> How <code>*args</code> lets you pass as many arguments as you want to a function.</p>
+                <p><strong>What You'll Do:</strong> Complete a function that can average any number of grades.</p>
+
+                <h4>Your Starter Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def average_grades(*grades):</span>
+    <span class="comment">"""Average any number of grades"""</span>
+    <span class="comment"># TODO: Calculate the average by dividing sum(grades) by len(grades)</span>
+    _______________
+
+<span class="comment"># Test with 3 grades</span>
+print(average_grades(90, 85, 92))
+
+<span class="comment"># Test with 4 grades</span>
+print(average_grades(100, 95, 88, 76))</code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>The <code>*grades</code> means: "Accept any number of arguments and put them in a tuple called grades"</li>
+                    <li>Replace <code>_______________</code> with: <code>return sum(grades) / len(grades)</code></li>
+                    <li>Run the code. You should get something close to 89 and 89.75</li>
+                    <li><strong>Try it:</strong> Add your own test with 5 grades!</li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Answer</button>
+                <div class="answer-key">
+                    <h4>The Complete Code:</h4>
+                    <pre><code><span class="syntax-highlight">def average_grades(*grades):</span>
+    <span class="comment">"""Average any number of grades"""</span>
+    <span class="syntax-highlight">return</span> sum(grades) / len(grades)
+
+print(average_grades(90, 85, 92))  <span class="comment"># Output: 89.0</span>
+print(average_grades(100, 95, 88, 76))  <span class="comment"># Output: 89.75</span></code></pre>
+                    <p><strong>Why *args Is Cool:</strong> You don't have to decide ahead of time HOW MANY grades you're averaging. The function handles it!</p>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>Activity 9: Return Multiple Values at Once</h3>
+                <p><strong>What You're Learning:</strong> How to return multiple values from a function by returning a tuple.</p>
+                <p><strong>What You'll Do:</strong> Complete a function that analyzes a list and returns three values.</p>
+
+                <h4>Your Starter Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def analyze_list(numbers):</span>
+    <span class="comment">"""Analyze a list and return sum, average, and max"""</span>
+    total = sum(numbers)
+    average = total / len(numbers)
+    maximum = max(numbers)
+    <span class="comment"># TODO: Return all three values separated by commas</span>
+    _______________
+
+<span class="comment"># Get all three values at once!</span>
+total, avg, max_val = analyze_list([10, 20, 30, 40, 50])
+print(f"Sum: {total}, Average: {avg}, Max: {max_val}")</code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>Replace <code>_______________</code> with: <code>return total, average, maximum</code></li>
+                    <li>Run the code. It should print all three values!</li>
+                    <li>Notice the line: <code>total, avg, max_val = analyze_list(...)</code> - this is called "unpacking"</li>
+                    <li><strong>Try it:</strong> Change the list to [5, 15, 25, 35, 45] and see what happens</li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Answer</button>
+                <div class="answer-key">
+                    <h4>The Complete Code:</h4>
+                    <pre><code><span class="syntax-highlight">def analyze_list(numbers):</span>
+    <span class="comment">"""Return sum, average, and max"""</span>
+    total = sum(numbers)
+    average = total / len(numbers)
+    maximum = max(numbers)
+    <span class="syntax-highlight">return</span> total, average, maximum
+
+<span class="comment"># Use the results</span>
+total, avg, max_val = analyze_list([10, 20, 30, 40, 50])
+print(f"Sum: {total}, Average: {avg}, Max: {max_val}")
+<span class="comment"># Output: Sum: 150, Average: 30.0, Max: 50</span></code></pre>
+                    <p><strong>Why This is Powerful:</strong> You can get multiple answers from one function call!</p>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3>Activity 10: Create a Countdown Function (Recursion)</h3>
+                <p><strong>What You're Learning:</strong> How a function can call itself! (This is called recursion)</p>
+                <p><strong>What You'll Do:</strong> Complete a countdown function that counts down from a number to 1.</p>
+
+                <h4>Your Starter Code (Copy & Paste This):</h4>
+                <pre><code><span class="syntax-highlight">def countdown(n):</span>
+    <span class="comment">"""Count down from n to 1"""</span>
+    if n == 0:  <span class="comment"># Base case: Stop here!</span>
+        print("Blastoff!")
+        <span class="syntax-highlight">return</span>
+    print(n)
+    countdown(n - 1)  <span class="comment"># Call itself with a smaller number</span>
+
+<span class="comment"># Test it</span>
+countdown(5)</code></pre>
+
+                <h4>Step-by-Step Instructions:</h4>
+                <ol>
+                    <li>Copy and run this code exactly as-is.</li>
+                    <li>Watch what happens! The function calls itself with smaller numbers.</li>
+                    <li><strong>Trace through it:</strong>
+                        <ul>
+                            <li>countdown(5) prints 5, then calls countdown(4)</li>
+                            <li>countdown(4) prints 4, then calls countdown(3)</li>
+                            <li>...and so on until countdown(0) which prints "Blastoff!"</li>
+                        </ul>
+                    </li>
+                    <li><strong>Try it:</strong> Change 5 to 3 or 10 and see what happens.</li>
+                    <li><strong>Challenge:</strong> Can you create a function that counts UP instead of down?</li>
+                </ol>
+
+                <button class="toggle-btn" onclick="toggleAnswer(this)">👀 Show Answer</button>
+                <div class="answer-key">
+                    <h4>The Complete Code:</h4>
+                    <pre><code><span class="syntax-highlight">def countdown(n):</span>
+    <span class="comment">"""Count down from n to 1"""</span>
+    <span class="syntax-highlight">if</span> n == 0:  <span class="comment"># Base case (stop condition)</span>
+        print("Blastoff!")
+        <span class="syntax-highlight">return</span>
+    print(n)
+    countdown(n - 1)  <span class="comment"># Recursive call (smaller problem)</span>
+
+countdown(5)
+<span class="comment"># Output:
+# 5
+# 4
+# 3
+# 2
+# 1
+# Blastoff!</span></code></pre>
+                    <p><strong>How Recursion Works:</strong> A function breaks a big problem into smaller versions of itself until it hits the "base case" (the stop condition).</p>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <h2>📋 Best Practices for Writing Functions</h2>
+            <ol>
+                <li><strong>Keep functions small</strong> - One job per function</li>
+                <li><strong>Use meaningful names</strong> - <code>calculate_total()</code> not <code>calc()</code></li>
+                <li><strong>Document your function</strong> - Use docstrings:
+                    <pre><code><span class="syntax-highlight">def add(a, b):</span>
+    <span class="comment">"""Add two numbers and return the result."""</span>
+    <span class="syntax-highlight">return</span> a + b</code></pre>
+                </li>
+                <li><strong>Use default parameters wisely</strong> - Make common cases easy</li>
+                <li><strong>Return values, don't just print</strong> - More flexible</li>
+                <li><strong>Avoid changing global variables</strong> - Use parameters instead</li>
+                <li><strong>Test your function</strong> - Call it with different inputs</li>
+            </ol>
+
+            <!-- Checklist -->
+            <div class="checklist">
+                <h2>🎯 Quick Reference Checklist</h2>
+                <ul>
+                    <li>I can define a function with <code>def</code></li>
+                    <li>I understand parameters and arguments</li>
+                    <li>I know the difference between <code>return</code> and <code>print()</code></li>
+                    <li>I understand variable scope (the Vegas Rule)</li>
+                    <li>I can use default parameters</li>
+                    <li>I can return multiple values</li>
+                    <li>I understand *args and **kwargs (advanced)</li>
+                    <li>I can write and understand recursive functions</li>
+                    <li>I can fix common function errors</li>
+                    <li>I can write clean, readable functions</li>
+                </ul>
+            </div>
+
+            <!-- Challenge Project -->
+            <div class="challenge-box">
+                <h2>🏆 Challenge Project: Build a Simple Calculator</h2>
+                <p><strong>Goal:</strong> Use functions to create a working calculator.</p>
+
+                <pre><code><span class="syntax-highlight">def add(a, b):</span>
+    <span class="syntax-highlight">return</span> a + b
+
+<span class="syntax-highlight">def subtract(a, b):</span>
+    <span class="syntax-highlight">return</span> a - b
+
+<span class="syntax-highlight">def multiply(a, b):</span>
+    <span class="syntax-highlight">return</span> a * b
+
+<span class="syntax-highlight">def divide(a, b):</span>
+    <span class="syntax-highlight">if</span> b == 0:
+        <span class="syntax-highlight">return</span> "Error: Cannot divide by zero"
+    <span class="syntax-highlight">return</span> a / b
+
+<span class="syntax-highlight">def calculator():</span>
+    <span class="comment">"""Main calculator function"""</span>
+    print("=== Simple Calculator ===")
+    print("1. Add")
+    print("2. Subtract")
+    print("3. Multiply")
+    print("4. Divide")
+    print("5. Exit")
+    
+    choice = input("\nChoose operation (1-5): ")
+    
+    <span class="syntax-highlight">if</span> choice == "5":
+        print("Goodbye!")
+        <span class="syntax-highlight">return</span>
+    
+    num1 = float(input("Enter first number: "))
+    num2 = float(input("Enter second number: "))
+    
+    <span class="syntax-highlight">if</span> choice == "1":
+        print(f"Result: {add(num1, num2)}")
+    <span class="syntax-highlight">elif</span> choice == "2":
+        print(f"Result: {subtract(num1, num2)}")
+    <span class="syntax-highlight">elif</span> choice == "3":
+        print(f"Result: {multiply(num1, num2)}")
+    <span class="syntax-highlight">elif</span> choice == "4":
+        print(f"Result: {divide(num1, num2)}")
+    <span class="syntax-highlight">else</span>:
+        print("Invalid choice")
+
+<span class="comment"># Run the calculator</span>
+calculator()</code></pre>
+            </div>
+
+            <!-- Summary -->
+            <h2>Summary</h2>
+            <div class="concept-box">
+                <p><strong>Functions are the building blocks of programming.</strong> They let you:</p>
+                <ul>
+                    <li>✅ Write code once, use it many times</li>
+                    <li>✅ Keep code organized and readable</li>
+                    <li>✅ Reuse code across projects</li>
+                    <li>✅ Test pieces of code independently</li>
+                    <li>✅ Work with other programmers more easily</li>
+                </ul>
+                <p><strong>Master functions, and you master programming! 🚀</strong></p>
+            </div>
+
+            <div class="btn-group">
+                <a href="index.html" class="btn">← Back to Home</a>
+                <a href="python-functions-lesson.html" class="btn">Print This Page</a>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Code With Morais - Making Programming Fun! 🎓</p>
+            <p>This lesson is interactive. Type along with the examples and experiment!</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleAnswer(button) {
+            const answerKey = button.nextElementSibling;
+            answerKey.classList.toggle('visible');
+            button.classList.toggle('revealed');
+            
+            if (answerKey.classList.contains('visible')) {
+                button.textContent = '✓ Hide Answer';
+            } else {
+                button.textContent = '👀 Show Answer';
+            }
+        }
+    </script>
+</body>
+</html>

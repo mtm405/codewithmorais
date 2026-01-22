@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .api-test {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .success { border-color: #28a745; background: #d4edda; }
+        .error { border-color: #dc3545; background: #f8d7da; }
+        .loading { border-color: #007bff; background: #d1ecf1; }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Dashboard API Test</h1>
+        <p>This page tests the real data integration for your dashboard. Click the buttons below to test different API endpoints.</p>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="currency-display">-</div>
+                <div>Code Coins</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="points-display">-</div>
+                <div>Total Points</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="progress-display">-</div>
+                <div>Progress %</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="lessons-display">-</div>
+                <div>Lessons Completed</div>
+            </div>
+        </div>
+
+        <button onclick="testDashboardAPI()">Test Dashboard API</button>
+        <button onclick="testUserProgressAPI()">Test User Progress API</button>
+        <button onclick="clearResults()">Clear Results</button>
+        
+        <div id="test-results"></div>
+        
+        <h2>Recent Activity</h2>
+        <div id="activity-display"></div>
+        
+        <h2>Learning Path Status</h2>
+        <div id="path-display"></div>
+        
+        <h2>Achievements</h2>
+        <div id="achievements-display"></div>
+    </div>
+
+    <script>
+        function showResult(title, data, isError = false) {
+            const resultsDiv = document.getElementById('test-results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `api-test ${isError ? 'error' : 'success'}`;
+            resultDiv.innerHTML = `
+                <h3>${title}</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        function showLoading(title) {
+            const resultsDiv = document.getElementById('test-results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'api-test loading';
+            resultDiv.innerHTML = `<h3>${title}</h3><p>Loading...</p>`;
+            resultsDiv.appendChild(resultDiv);
+            return resultDiv;
+        }
+
+        async function testDashboardAPI() {
+            const loadingDiv = showLoading('Testing Dashboard API');
+            
+            try {
+                const response = await fetch('/api/dashboard_data');
+                const data = await response.json();
+                
+                loadingDiv.remove();
+                
+                if (response.ok) {
+                    showResult('Dashboard API Success ✅', data);
+                    updateDisplays(data);
+                } else {
+                    showResult('Dashboard API Error ❌', data, true);
+                }
+            } catch (error) {
+                loadingDiv.remove();
+                showResult('Dashboard API Network Error ❌', {
+                    error: error.message,
+                    stack: error.stack
+                }, true);
+            }
+        }
+
+        async function testUserProgressAPI() {
+            const loadingDiv = showLoading('Testing User Progress API');
+            
+            try {
+                const response = await fetch('/api/user_progress');
+                const data = await response.json();
+                
+                loadingDiv.remove();
+                
+                if (response.ok) {
+                    showResult('User Progress API Success ✅', data);
+                } else {
+                    showResult('User Progress API Error ❌', data, true);
+                }
+            } catch (error) {
+                loadingDiv.remove();
+                showResult('User Progress API Network Error ❌', {
+                    error: error.message,
+                    stack: error.stack
+                }, true);
+            }
+        }
+
+        function updateDisplays(data) {
+            // Update stats
+            if (data.stats) {
+                document.getElementById('currency-display').textContent = data.stats.currency || 0;
+                document.getElementById('points-display').textContent = data.stats.points || 0;
+                document.getElementById('progress-display').textContent = `${data.stats.progress_percentage || 0}%`;
+                document.getElementById('lessons-display').textContent = `${data.stats.lessons_completed || 0}/${data.stats.total_lessons || 12}`;
+            }
+
+            // Update activity
+            if (data.recent_activity) {
+                const activityDiv = document.getElementById('activity-display');
+                activityDiv.innerHTML = '';
+                
+                if (data.recent_activity.length === 0) {
+                    activityDiv.innerHTML = '<p>No recent activity found.</p>';
+                } else {
+                    data.recent_activity.forEach(activity => {
+                        const activityItem = document.createElement('div');
+                        activityItem.style.cssText = 'padding: 10px; margin: 5px 0; background: #f8f9fa; border-radius: 5px;';
+                        activityItem.innerHTML = `
+                            <strong>${activity.content_title || activity.content_id}</strong> - 
+                            <span style="color: #666;">${activity.status}</span>
+                            ${activity.points_earned ? `<span style="color: #28a745; margin-left: 10px;">+${activity.points_earned} pts</span>` : ''}
+                        `;
+                        activityDiv.appendChild(activityItem);
+                    });
+                }
+            }
+
+            // Update learning path
+            if (data.learning_path) {
+                const pathDiv = document.getElementById('path-display');
+                pathDiv.innerHTML = '';
+                
+                data.learning_path.forEach(lesson => {
+                    const pathItem = document.createElement('div');
+                    pathItem.style.cssText = `
+                        padding: 10px; margin: 5px 0; 
+                        background: ${lesson.status === 'completed' ? '#d4edda' : lesson.status === 'in_progress' ? '#fff3cd' : '#f8d7da'}; 
+                        border-radius: 5px;
+                        border-left: 4px solid ${lesson.status === 'completed' ? '#28a745' : lesson.status === 'in_progress' ? '#ffc107' : '#dc3545'};
+                    `;
+                    pathItem.innerHTML = `
+                        <strong>${lesson.title}</strong> - 
+                        <span>${lesson.status.replace('_', ' ')}</span>
+                    `;
+                    pathDiv.appendChild(pathItem);
+                });
+            }
+
+            // Update achievements
+            if (data.achievements) {
+                const achievementsDiv = document.getElementById('achievements-display');
+                achievementsDiv.innerHTML = '';
+                
+                data.achievements.forEach(achievement => {
+                    const achievementItem = document.createElement('div');
+                    achievementItem.style.cssText = `
+                        padding: 15px; margin: 10px 0; 
+                        background: ${achievement.unlocked ? 'linear-gradient(135deg, #ffd700, #ffed4e)' : '#f8f9fa'}; 
+                        border-radius: 8px;
+                        opacity: ${achievement.unlocked ? '1' : '0.6'};
+                    `;
+                    achievementItem.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span style="font-size: 2rem;">${achievement.icon}</span>
+                            <div>
+                                <strong>${achievement.title}</strong>
+                                <p style="margin: 5px 0; color: #666;">${achievement.description}</p>
+                                <span style="font-size: 0.8rem; font-weight: 600;">
+                                    ${achievement.unlocked ? 'Unlocked! ✅' : 'Locked 🔒'}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    achievementsDiv.appendChild(achievementItem);
+                });
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('test-results').innerHTML = '';
+        }
+
+        // Auto-test dashboard API on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testDashboardAPI();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

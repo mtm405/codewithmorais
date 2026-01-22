@@ -1,0 +1,2915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Python I/O Mastery Workshop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'Monaco', 'Cascadia Code', 'monospace'],
+                    },
+                    colors: {
+                        'primary': '#3B82F6', // Blue-500
+                        'secondary': '#1F2937', // Gray-800
+                        'accent': '#10B981', // Emerald-500
+                        'success': '#059669', // Emerald-600
+                        'danger': '#DC2626', // Red-600
+                        'warning': '#D97706', // Amber-600
+                        'info': '#0EA5E9', // Sky-500
+                        'purple': '#8B5CF6', // Violet-500
+                    },
+                    animation: {
+                        'bounce-in': 'bounceIn 0.6s ease-out',
+                        'fade-in': 'fadeIn 0.4s ease-in',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-success': 'pulseSuccess 2s ease-in-out',
+                        'shake': 'shake 0.5s ease-in-out',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&display=swap');
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            70% { transform: scale(0.9); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulseSuccess {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+            20%, 40%, 60%, 80% { transform: translateX(3px); }
+        }
+
+        body { 
+            font-family: 'Inter', system-ui, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .code-editor {
+            background: #1a1a1a;
+            border: 2px solid #374151;
+            border-radius: 12px;
+            font-family: 'Fira Code', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .code-editor:focus-within {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .code-output {
+            background: #111827;
+            color: #E5E7EB;
+            font-family: 'Fira Code', monospace;
+            border-radius: 8px;
+            min-height: 120px;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        .project-card {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .achievement-badge {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            animation: bounce-in 0.6s ease-out;
+        }
+
+        .syntax-highlight {
+            background: #1F2937;
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .file-tree {
+            font-family: 'Fira Code', monospace;
+            background: #1F2937;
+            color: #E5E7EB;
+        }
+
+        .terminal-line {
+            display: flex;
+            align-items: center;
+            margin: 4px 0;
+        }
+
+        .terminal-prompt {
+            color: #10B981;
+            margin-right: 8px;
+        }
+
+        /* Custom scrollbars */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #374151; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #6B7280; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Header with Progress -->
+    <header class="bg-white/10 backdrop-blur-lg shadow-2xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-black text-white flex items-center">
+                        🐍 <span class="ml-2">Interactive Python I/O Mastery</span>
+                    </h1>
+                    <p class="mt-1 text-blue-100">Master file operations and user interaction with hands-on projects</p>
+                </div>
+                
+                <!-- Progress Indicator -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <div class="text-white font-bold text-lg" id="progressText">0% Complete</div>
+                        <div class="text-blue-100 text-sm">Keep going! 🚀</div>
+                    </div>
+                    <svg class="w-16 h-16" viewBox="0 0 42 42">
+                        <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ffffff20" stroke-width="3"/>
+                        <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#10B981" stroke-width="3" 
+                               stroke-dasharray="100" stroke-dashoffset="100" class="progress-ring" id="progressRing"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- Learning Modules Navigation -->
+        <nav class="mb-8">
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="showSection('console')" id="btn-console" class="nav-btn bg-white/20 backdrop-blur text-white px-6 py-3 rounded-xl font-bold transition-all hover:bg-white/30">
+                    � Console I/O
+                </button>
+                <button onclick="showSection('file')" id="btn-file" class="nav-btn bg-white/20 backdrop-blur text-white px-6 py-3 rounded-xl font-bold transition-all hover:bg-white/30">
+                    📁 File I/O
+                </button>
+                <button onclick="showSection('interactive')" id="btn-interactive" class="nav-btn bg-white/20 backdrop-blur text-white px-6 py-3 rounded-xl font-bold transition-all hover:bg-white/30">
+                    ⚡ Interactive Demo
+                </button>
+                <button onclick="showSection('projects')" id="btn-projects" class="nav-btn bg-white/20 backdrop-blur text-white px-6 py-3 rounded-xl font-bold transition-all hover:bg-white/30">
+                    🛠️ Practice Projects
+                </button>
+                <button onclick="showSection('challenges')" id="btn-challenges" class="nav-btn bg-white/20 backdrop-blur text-white px-6 py-3 rounded-xl font-bold transition-all hover:bg-white/30">
+                    🎯 Code Challenges
+                </button>
+                <button onclick="showSection('exam-prep')" id="btn-exam-prep" class="nav-btn bg-white/20 backdrop-blur text-white px-6 py-3 rounded-xl font-bold transition-all hover:bg-white/30">
+                    🎓 IT Specialist Exam Prep
+                </button>
+            </div>
+        </nav>
+
+        <!-- Section 1: I/O Basics -->
+        <section id="section-basics" class="section-content">
+            
+            <!-- Introduction to I/O -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl mb-8">
+                <h2 class="text-3xl font-bold text-secondary mb-6 text-center flex items-center justify-center">
+                    🎯 <span class="ml-2">What is Input/Output (I/O) in Python?</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                        <h3 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                            📥 <span class="ml-2">INPUT (Getting Data)</span>
+                        </h3>
+                        <p class="text-blue-700 mb-4">Input is how your program receives information from:</p>
+                        <ul class="space-y-2 text-blue-700">
+                            <li class="flex items-start"><span class="mr-2">👤</span> <strong>Users:</strong> Keyboard input, mouse clicks</li>
+                            <li class="flex items-start"><span class="mr-2">📄</span> <strong>Files:</strong> Text files, CSV, JSON, etc.</li>
+                            <li class="flex items-start"><span class="mr-2">🌐</span> <strong>Network:</strong> APIs, web requests</li>
+                            <li class="flex items-start"><span class="mr-2">💾</span> <strong>Databases:</strong> Stored data</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-green-50 p-6 rounded-xl border-2 border-green-200">
+                        <h3 class="text-xl font-bold text-green-800 mb-4 flex items-center">
+                            📤 <span class="ml-2">OUTPUT (Sending Data)</span>
+                        </h3>
+                        <p class="text-green-700 mb-4">Output is how your program sends information to:</p>
+                        <ul class="space-y-2 text-green-700">
+                            <li class="flex items-start"><span class="mr-2">🖥️</span> <strong>Screen:</strong> Print text, display graphics</li>
+                            <li class="flex items-start"><span class="mr-2">📁</span> <strong>Files:</strong> Save results, logs, reports</li>
+                            <li class="flex items-start"><span class="mr-2">🔊</span> <strong>Audio:</strong> Sound, music, alerts</li>
+                            <li class="flex items-start"><span class="mr-2">📧</span> <strong>Network:</strong> Send emails, web responses</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-purple-50 p-6 rounded-xl border-2 border-purple-200">
+                    <h3 class="text-xl font-bold text-purple-800 mb-4 text-center">🤔 Why is I/O Important?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl mb-2">🧠</div>
+                            <h4 class="font-semibold text-purple-800">Make Programs Interactive</h4>
+                            <p class="text-purple-600 text-sm">Programs that respond to users are more useful and engaging</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl mb-2">💾</div>
+                            <h4 class="font-semibold text-purple-800">Persist Data</h4>
+                            <p class="text-purple-600 text-sm">Save information so it survives after the program closes</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl mb-2">🔄</div>
+                            <h4 class="font-semibold text-purple-800">Process Information</h4>
+                            <p class="text-purple-600 text-sm">Read, analyze, and transform data from various sources</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts & Keywords -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl mb-8">
+                <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                    🔑 <span class="ml-2">Essential Keywords & Concepts</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Console I/O Keywords -->
+                    <div class="bg-gray-50 p-6 rounded-xl">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                            💬 Console I/O Keywords
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="bg-white p-3 rounded border">
+                                <code class="text-blue-600 font-bold">input()</code>
+                                <p class="text-sm text-gray-600 mt-1">Gets text from user. <strong>Always returns a string!</strong></p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <code class="text-green-600 font-bold">print()</code>
+                                <p class="text-sm text-gray-600 mt-1">Displays text on screen. Can format with f-strings.</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <code class="text-purple-600 font-bold">int(), float(), str()</code>
+                                <p class="text-sm text-gray-600 mt-1">Convert between data types. Essential for input processing.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File I/O Keywords -->
+                    <div class="bg-gray-50 p-6 rounded-xl">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                            📁 File I/O Keywords
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="bg-white p-3 rounded border">
+                                <code class="text-blue-600 font-bold">open()</code>
+                                <p class="text-sm text-gray-600 mt-1">Opens a file. Must specify filename and mode ('r', 'w', 'a').</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <code class="text-green-600 font-bold">with</code>
+                                <p class="text-sm text-gray-600 mt-1">Context manager. Automatically closes files. <strong>Always use this!</strong></p>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <code class="text-purple-600 font-bold">.read(), .write(), .readline()</code>
+                                <p class="text-sm text-gray-600 mt-1">Methods to read from or write to files.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- File I/O Deep Dive -->
+                <div class="interactive-demo rounded-2xl p-8 shadow-2xl">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        📁 <span class="ml-2">File I/O Mastery</span>
+                    </h2>
+                    
+                    <!-- File Modes Explanation -->
+                    <div class="bg-yellow-50 p-6 rounded-xl border-2 border-yellow-200 mb-6">
+                        <h3 class="text-lg font-bold text-yellow-800 mb-4">🚨 Critical File Mode Rules</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded text-sm font-bold mr-3">'r'</span>
+                                <div>
+                                    <strong class="text-blue-700">READ:</strong> File must exist. Opens for reading only.
+                                    <div class="text-xs text-gray-600 mt-1">❌ Crashes if file doesn't exist</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="bg-red-500 text-white px-2 py-1 rounded text-sm font-bold mr-3">'w'</span>
+                                <div>
+                                    <strong class="text-red-700">WRITE:</strong> Creates new file or overwrites existing.
+                                    <div class="text-xs text-gray-600 mt-1">⚠️ DANGER: Deletes all existing content!</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="bg-green-500 text-white px-2 py-1 rounded text-sm font-bold mr-3">'a'</span>
+                                <div>
+                                    <strong class="text-green-700">APPEND:</strong> Adds to end of file, keeps existing content.
+                                    <div class="text-xs text-gray-600 mt-1">✅ Safe: Won't lose data</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive File Demo -->
+                    <div class="space-y-4 mb-8">
+                        <h3 class="text-lg font-semibold text-gray-700">🎮 Interactive File Mode Demo:</h3>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="demonstrateMode('read')" class="mode-demo-btn bg-blue-500 text-white p-3 rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                                📖 Read Mode
+                            </button>
+                            <button onclick="demonstrateMode('write')" class="mode-demo-btn bg-red-500 text-white p-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
+                                ✏️ Write Mode
+                            </button>
+                            <button onclick="demonstrateMode('append')" class="mode-demo-btn bg-green-500 text-white p-3 rounded-lg font-bold hover:bg-green-600 transition-colors">
+                                ➕ Append Mode
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- File Content Visualizer -->
+                    <div class="bg-gray-800 rounded-lg p-4 mb-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-gray-300 font-mono text-sm">📄 sample.txt</span>
+                            <button onclick="resetFile()" class="text-xs text-blue-400 hover:text-blue-300">Reset File</button>
+                        </div>
+                        <div id="fileVisualizer" class="file-tree p-3 rounded text-sm min-h-24">
+                            <div class="text-gray-400">File is empty</div>
+                        </div>
+                    </div>
+
+                    <!-- Context Manager Explanation -->
+                    <div class="bg-red-50 p-4 rounded-xl border-2 border-red-200 mb-6">
+                        <h4 class="font-bold text-red-800 mb-2">🛡️ The Golden Rule: Always Use 'with'</h4>
+                        <p class="text-red-700 text-sm mb-3">Never manually open/close files. The <code class="bg-red-200 px-1 rounded">with</code> statement guarantees proper cleanup:</p>
+                        <div class="bg-white p-3 rounded font-mono text-sm">
+                            <div class="text-green-600"># ✅ CORRECT WAY</div>
+                            <div class="text-blue-600">with open('file.txt', 'r') as f:</div>
+                            <div class="text-blue-600">&nbsp;&nbsp;&nbsp;&nbsp;content = f.read()</div>
+                            <div class="text-gray-500"># File automatically closed here!</div>
+                        </div>
+                    </div>
+
+                    <!-- Live Code Example -->
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <div class="text-gray-300 font-mono text-sm mb-2">💻 Live Python Code:</div>
+                        <pre id="liveCodeDisplay" class="text-green-400 font-mono text-sm"><code>Click a mode button above to see the code!</code></pre>
+                    </div>
+                </div>
+
+                <!-- Console I/O Deep Dive -->
+                <div class="interactive-demo rounded-2xl p-8 shadow-2xl">
+                    <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                        💬 <span class="ml-2">Console I/O Mastery</span>
+                    </h2>
+
+                    <!-- Input Function Deep Dive -->
+                    <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200 mb-6">
+                        <h3 class="text-lg font-bold text-blue-800 mb-4">🎯 input() Function Deep Dive</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold text-blue-700 mb-2">What input() Does:</h4>
+                                <ol class="list-decimal list-inside text-blue-600 text-sm space-y-1">
+                                    <li>Displays the prompt text to user</li>
+                                    <li>Pauses program execution</li>
+                                    <li>Waits for user to type and press Enter</li>
+                                    <li><strong>Returns everything as a STRING</strong></li>
+                                </ol>
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded border">
+                                <code class="text-purple-600 font-mono text-sm">
+                                    user_input = input("Enter a number: ")<br>
+                                    <span class="text-gray-500"># user_input is ALWAYS a string, even if user types "42"</span>
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Type Conversion Critical Knowledge -->
+                    <div class="bg-orange-50 p-6 rounded-xl border-2 border-orange-200 mb-6">
+                        <h3 class="text-lg font-bold text-orange-800 mb-4">⚡ Type Conversion - Must Know!</h3>
+                        <div class="space-y-3">
+                            <div class="bg-white p-3 rounded">
+                                <div class="font-semibold text-orange-700 mb-1">String to Integer:</div>
+                                <code class="text-sm font-mono">age = int(input("Age: "))  # "25" → 25</code>
+                            </div>
+                            <div class="bg-white p-3 rounded">
+                                <div class="font-semibold text-orange-700 mb-1">String to Float:</div>
+                                <code class="text-sm font-mono">price = float(input("Price: "))  # "19.99" → 19.99</code>
+                            </div>
+                            <div class="bg-white p-3 rounded">
+                                <div class="font-semibold text-orange-700 mb-1">Handle Errors:</div>
+                                <code class="text-sm font-mono">try: num = int(input())<br>except: print("Invalid number!")</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Input Demo -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">🎮 Try Console I/O:</h3>
+                        <div class="space-y-3">
+                            <input type="text" id="userNameInput" placeholder="Enter your name..." 
+                                   class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none">
+                            <input type="text" id="userAgeInput" placeholder="Enter your age (number)..." 
+                                   class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none">
+                            <button onclick="runInputDemo()" class="w-full bg-blue-500 text-white py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                                ▶️ Run Input Demo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Output Formatting Mastery -->
+                    <div class="bg-green-50 p-6 rounded-xl border-2 border-green-200 mb-6">
+                        <h3 class="text-lg font-bold text-green-800 mb-4">🎨 Output Formatting Methods</h3>
+                        <div class="space-y-2">
+                            <button onclick="showFormatting('fstring')" class="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700 transition-colors">
+                                🔥 f-String (Recommended)
+                            </button>
+                            <button onclick="showFormatting('format')" class="w-full bg-green-500 text-white py-2 rounded font-bold hover:bg-green-600 transition-colors">
+                                🔧 .format() Method (Legacy)
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4 bg-white p-3 rounded text-sm">
+                            <div class="font-semibold text-green-700 mb-2">Why f-strings are better:</div>
+                            <ul class="text-green-600 space-y-1 text-xs">
+                                <li>✅ More readable and concise</li>
+                                <li>✅ Faster execution</li>
+                                <li>✅ Easier to debug</li>
+                                <li>✅ Supports expressions inside {}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Console Output Display -->
+                    <div class="code-output p-4">
+                        <div class="text-green-400 font-mono text-sm mb-2">🖥️ Console Output:</div>
+                        <div id="consoleDemo" class="text-gray-300 font-mono text-sm">
+                            Waiting for your input...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What Students Must Know Section -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl mt-8">
+                <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                    🎓 <span class="ml-2">What You MUST Know for Exams & Projects</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- File I/O Essentials -->
+                    <div class="bg-red-50 p-6 rounded-xl border-2 border-red-200">
+                        <h3 class="text-xl font-bold text-red-800 mb-4">📁 File I/O Essentials</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start">
+                                <span class="text-red-600 mr-2">1.</span>
+                                <div><strong>Always use 'with' statement</strong> - Files close automatically</div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-red-600 mr-2">2.</span>
+                                <div><strong>'w' mode overwrites everything</strong> - Use 'a' to preserve data</div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-red-600 mr-2">3.</span>
+                                <div><strong>Handle FileNotFoundError</strong> - Files might not exist</div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-red-600 mr-2">4.</span>
+                                <div><strong>Know .read(), .readline(), .write()</strong> - Core methods</div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-red-600 mr-2">5.</span>
+                                <div><strong>Understand file paths</strong> - Relative vs absolute</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Console I/O Essentials -->
+                    <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                        <h3 class="text-xl font-bold text-blue-800 mb-4">💬 Console I/O Essentials</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start">
+                                <span class="text-blue-600 mr-2">1.</span>
+                                <div><strong>input() always returns string</strong> - Convert with int(), float()</div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-blue-600 mr-2">2.</span>
+                                <div><strong>Use f-strings for output</strong> - Modern, readable formatting</div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-blue-600 mr-2">3.</span>
+                                <div><strong>Handle ValueError</strong> - User might enter invalid data</div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-blue-600 mr-2">4.</span>
+                                <div><strong>Validate user input</strong> - Check ranges, formats</div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-blue-600 mr-2">5.</span>
+                                <div><strong>Use clear prompts</strong> - Tell users what to enter</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Common Mistakes Warning -->
+                <div class="bg-yellow-50 p-6 rounded-xl border-2 border-yellow-400 mt-6">
+                    <h3 class="text-xl font-bold text-yellow-800 mb-4 flex items-center">
+                        ⚠️ <span class="ml-2">Common Mistakes to Avoid</span>
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <div class="font-semibold text-yellow-700 mb-2">❌ DON'T DO THIS:</div>
+                            <div class="bg-white p-3 rounded font-mono text-red-600">
+                                f = open("file.txt")<br>
+                                # Forgot to close file!<br><br>
+                                age = input("Age: ")<br>
+                                result = age + 5  # Error!
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-yellow-700 mb-2">✅ DO THIS INSTEAD:</div>
+                            <div class="bg-white p-3 rounded font-mono text-green-600">
+                                with open("file.txt") as f:<br>
+                                &nbsp;&nbsp;content = f.read()<br><br>
+                                age = int(input("Age: "))<br>
+                                result = age + 5  # Works!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Interactive Demo -->
+        <section id="section-interactive" class="section-content hidden">
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl">
+                <h2 class="text-3xl font-bold text-secondary mb-8 text-center">
+                    ⚡ Real-Time Python I/O Simulator
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Code Editor -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">✍️ Write Your Python Code:</h3>
+                        <div class="code-editor">
+                            <div class="bg-gray-800 px-4 py-2 rounded-t-lg">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                    <span class="text-gray-400 text-sm ml-4">main.py</span>
+                                </div>
+                            </div>
+                            <textarea id="codeEditor" class="w-full h-64 p-4 bg-gray-900 text-green-400 font-mono text-sm resize-none focus:outline-none rounded-b-lg" 
+                                placeholder="# Write your Python I/O code here...&#10;# Example:&#10;name = input('Enter your name: ')&#10;print(f'Hello, {name}!')"></textarea>
+                        </div>
+                        
+                        <div class="mt-4 flex space-x-3">
+                            <button onclick="executeCode()" class="bg-success text-white px-6 py-3 rounded-lg font-bold hover:bg-green-600 transition-colors flex items-center">
+                                ▶️ Run Code
+                            </button>
+                            <button onclick="clearEditor()" class="bg-gray-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-600 transition-colors">
+                                🗑️ Clear
+                            </button>
+                            <button onclick="loadExample()" class="bg-info text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                                📝 Load Example
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Execution Results -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">📊 Execution Results:</h3>
+                        
+                        <!-- Input Simulation -->
+                        <div class="mb-4" id="inputSection" style="display: none;">
+                            <label class="block text-sm font-medium mb-2">Program is asking for input:</label>
+                            <div class="flex space-x-2">
+                                <input type="text" id="simulatedInput" class="flex-1 p-2 border rounded-lg">
+                                <button onclick="submitInput()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Submit</button>
+                            </div>
+                        </div>
+
+                        <!-- Output Display -->
+                        <div class="code-output p-4 mb-4 custom-scrollbar overflow-y-auto" style="height: 200px;">
+                            <div id="executionOutput">Ready to run your code!</div>
+                        </div>
+
+                        <!-- Error Display -->
+                        <div id="errorDisplay" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 hidden">
+                            <h4 class="font-bold text-red-800">❌ Error Detected:</h4>
+                            <div id="errorMessage" class="text-red-700 font-mono text-sm mt-2"></div>
+                        </div>
+
+                        <!-- Syntax Tips -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h4 class="font-bold text-blue-800 mb-2">💡 Quick Tips:</h4>
+                            <ul class="text-blue-700 text-sm space-y-1">
+                                <li>• Use <code class="syntax-highlight">input()</code> to get user input</li>
+                                <li>• Use <code class="syntax-highlight">print()</code> to display output</li>
+                                <li>• Remember to convert strings: <code class="syntax-highlight">int(input())</code></li>
+                                <li>• Use <code class="syntax-highlight">with open()</code> for file operations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Practice Projects -->
+        <section id="section-projects" class="section-content hidden">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">🛠️ Hands-On Practice Projects</h2>
+                <p class="text-blue-100 text-lg">Build real applications to master Python I/O concepts</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8" id="projectsContainer">
+                <!-- Projects will be dynamically generated -->
+            </div>
+        </section>
+
+        <!-- Section 4: Code Challenges -->
+        <section id="section-challenges" class="section-content hidden">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">🎯 Code Challenges</h2>
+                <p class="text-blue-100 text-lg">Test your skills with progressive coding challenges</p>
+            </div>
+
+            <div id="challengesContainer">
+                <!-- Challenges will be dynamically generated -->
+            </div>
+        </section>
+
+        <!-- Section 5: IT Specialist Exam Preparation -->
+        <section id="section-exam-prep" class="section-content hidden">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">🎓 IT Specialist Python Exam Preparation</h2>
+                <p class="text-blue-100 text-lg">Comprehensive coverage of all exam topics with interactive examples</p>
+            </div>
+
+            <!-- Topic 1: Data Types and Operators -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl mb-8">
+                <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                    🔢 <span class="ml-2">1. Operations using Data Types and Operators</span>
+                </h2>
+
+                <!-- 1.1 Data Type Evaluation -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">1.1 Evaluate expressions to identify data types</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Data Types Reference -->
+                        <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                            <h4 class="text-lg font-bold text-blue-800 mb-4">Python Data Types</h4>
+                            <div class="space-y-3">
+                                <div class="bg-white p-3 rounded border">
+                                    <div class="flex justify-between items-center">
+                                        <code class="text-blue-600 font-bold">int</code>
+                                        <span class="text-sm text-gray-600">Whole numbers</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">Examples: 10, -500, 0</div>
+                                </div>
+                                <div class="bg-white p-3 rounded border">
+                                    <div class="flex justify-between items-center">
+                                        <code class="text-green-600 font-bold">float</code>
+                                        <span class="text-sm text-gray-600">Decimal numbers</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">Examples: 10.5, -3.14159, 2.0</div>
+                                </div>
+                                <div class="bg-white p-3 rounded border">
+                                    <div class="flex justify-between items-center">
+                                        <code class="text-purple-600 font-bold">str</code>
+                                        <span class="text-sm text-gray-600">Text strings</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">Examples: "Hello", 'Python', "123"</div>
+                                </div>
+                                <div class="bg-white p-3 rounded border">
+                                    <div class="flex justify-between items-center">
+                                        <code class="text-red-600 font-bold">bool</code>
+                                        <span class="text-sm text-gray-600">True/False values</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">Examples: True, False</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Type Checker -->
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4">🧪 Type Evaluation Practice</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Enter a Python expression:</label>
+                                    <input type="text" id="typeTestInput" placeholder="e.g., 15 + 2.5" 
+                                           class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none">
+                                </div>
+                                <button onclick="checkDataType()" class="w-full bg-blue-500 text-white py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                                    🔍 Check Data Type
+                                </button>
+                                <div id="typeResult" class="bg-white p-4 rounded-lg border min-h-16">
+                                    <div class="text-gray-500 text-center">Enter an expression above to see its type</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.2 Data Operations -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">1.2 Perform data and data type operations</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Type Conversion -->
+                        <div class="bg-orange-50 p-6 rounded-xl border-2 border-orange-200">
+                            <h4 class="text-lg font-bold text-orange-800 mb-4">Type Conversion (Casting)</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="bg-white p-3 rounded">
+                                    <code class="text-orange-600">int("123")</code> → <span class="text-green-600">123</span>
+                                </div>
+                                <div class="bg-white p-3 rounded">
+                                    <code class="text-orange-600">float(123)</code> → <span class="text-green-600">123.0</span>
+                                </div>
+                                <div class="bg-white p-3 rounded">
+                                    <code class="text-orange-600">str(123)</code> → <span class="text-green-600">"123"</span>
+                                </div>
+                                <div class="bg-white p-3 rounded">
+                                    <code class="text-orange-600">bool(0)</code> → <span class="text-green-600">False</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Indexing and Slicing -->
+                        <div class="bg-green-50 p-6 rounded-xl border-2 border-green-200">
+                            <h4 class="text-lg font-bold text-green-800 mb-4">Indexing & Slicing</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="bg-white p-3 rounded font-mono">
+                                    <div class="text-green-600">text = "Python"</div>
+                                    <div class="text-gray-600">text[0] → "P"</div>
+                                    <div class="text-gray-600">text[-1] → "n"</div>
+                                    <div class="text-gray-600">text[1:4] → "yth"</div>
+                                </div>
+                            </div>
+                            <button onclick="demonstrateSlicing()" class="w-full mt-3 bg-green-500 text-white py-2 rounded font-bold hover:bg-green-600 transition-colors text-sm">
+                                Try Slicing Demo
+                            </button>
+                        </div>
+
+                        <!-- List Operations -->
+                        <div class="bg-purple-50 p-6 rounded-xl border-2 border-purple-200">
+                            <h4 class="text-lg font-bold text-purple-800 mb-4">List Operations</h4>
+                            <div class="space-y-2 text-xs">
+                                <div class="bg-white p-2 rounded">
+                                    <code class="text-purple-600">.append(item)</code> - Add to end
+                                </div>
+                                <div class="bg-white p-2 rounded">
+                                    <code class="text-purple-600">.insert(i, item)</code> - Add at index
+                                </div>
+                                <div class="bg-white p-2 rounded">
+                                    <code class="text-purple-600">.remove(item)</code> - Remove first match
+                                </div>
+                                <div class="bg-white p-2 rounded">
+                                    <code class="text-purple-600">.sort()</code> - Sort in place
+                                </div>
+                            </div>
+                            <button onclick="demonstrateListOps()" class="w-full mt-3 bg-purple-500 text-white py-2 rounded font-bold hover:bg-purple-600 transition-colors text-sm">
+                                Try List Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1.3/1.4 Operator Precedence -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">1.3/1.4 Operator Precedence & Selection</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Precedence Table -->
+                        <div class="bg-red-50 p-6 rounded-xl border-2 border-red-200">
+                            <h4 class="text-lg font-bold text-red-800 mb-4">Operator Precedence (High to Low)</h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="bg-white p-2 rounded flex justify-between">
+                                    <code class="text-red-600">**</code>
+                                    <span class="text-gray-600">Exponentiation</span>
+                                </div>
+                                <div class="bg-white p-2 rounded flex justify-between">
+                                    <code class="text-red-600">+x, -x</code>
+                                    <span class="text-gray-600">Unary plus/minus</span>
+                                </div>
+                                <div class="bg-white p-2 rounded flex justify-between">
+                                    <code class="text-red-600">*, /, //, %</code>
+                                    <span class="text-gray-600">Multiply, divide, floor, modulus</span>
+                                </div>
+                                <div class="bg-white p-2 rounded flex justify-between">
+                                    <code class="text-red-600">+, -</code>
+                                    <span class="text-gray-600">Addition, subtraction</span>
+                                </div>
+                                <div class="bg-white p-2 rounded flex justify-between">
+                                    <code class="text-red-600">==, !=, &lt;, &gt;</code>
+                                    <span class="text-gray-600">Comparisons</span>
+                                </div>
+                                <div class="bg-white p-2 rounded flex justify-between">
+                                    <code class="text-red-600">not</code>
+                                    <span class="text-gray-600">Logical NOT</span>
+                                </div>
+                                <div class="bg-white p-2 rounded flex justify-between">
+                                    <code class="text-red-600">and</code>
+                                    <span class="text-gray-600">Logical AND</span>
+                                </div>
+                                <div class="bg-white p-2 rounded flex justify-between">
+                                    <code class="text-red-600">or</code>
+                                    <span class="text-gray-600">Logical OR</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Precedence Calculator -->
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4">🧮 Precedence Calculator</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Enter a complex expression:</label>
+                                    <input type="text" id="precedenceInput" placeholder="e.g., 10 + 5 * 2 ** 3 > 50 and True" 
+                                           class="w-full p-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none">
+                                </div>
+                                <button onclick="evaluatePrecedence()" class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
+                                    🔢 Evaluate Step by Step
+                                </button>
+                                <div id="precedenceResult" class="bg-white p-4 rounded-lg border min-h-24">
+                                    <div class="text-gray-500 text-center">Enter an expression to see step-by-step evaluation</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic 2: Flow Control -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl mb-8">
+                <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                    🔄 <span class="ml-2">2. Flow Control with Decisions and Loops</span>
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- 2.1 Branching Statements -->
+                    <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-4">2.1 Branching Statements</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-blue-700 mb-2">Conditional Structure:</h4>
+                                <div class="font-mono text-sm space-y-1">
+                                    <div><span class="text-blue-600">if</span> condition:</div>
+                                    <div class="ml-4"># Execute if True</div>
+                                    <div><span class="text-blue-600">elif</span> another_condition:</div>
+                                    <div class="ml-4"># Execute if first was False, this is True</div>
+                                    <div><span class="text-blue-600">else</span>:</div>
+                                    <div class="ml-4"># Execute if all conditions were False</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-blue-700 mb-2">Compound Conditions:</h4>
+                                <div class="text-sm space-y-1">
+                                    <div><code class="text-purple-600">and</code> - Both conditions must be True</div>
+                                    <div><code class="text-purple-600">or</code> - At least one condition must be True</div>
+                                    <div><code class="text-purple-600">not</code> - Reverses the condition</div>
+                                </div>
+                            </div>
+
+                            <button onclick="demonstrateBranching()" class="w-full bg-blue-500 text-white py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                                🔀 Try Branching Demo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2.2 Iteration -->
+                    <div class="bg-green-50 p-6 rounded-xl border-2 border-green-200">
+                        <h3 class="text-xl font-semibold text-green-800 mb-4">2.2 Iteration (Loops)</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-green-700 mb-2">Loop Types:</h4>
+                                <div class="text-sm space-y-2">
+                                    <div><code class="text-green-600">while</code> - Repeat while condition is True</div>
+                                    <div><code class="text-green-600">for</code> - Iterate over a sequence</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-green-700 mb-2">Loop Control:</h4>
+                                <div class="text-sm space-y-1">
+                                    <div><code class="text-red-600">break</code> - Exit the loop immediately</div>
+                                    <div><code class="text-orange-600">continue</code> - Skip to next iteration</div>
+                                    <div><code class="text-gray-600">pass</code> - Do nothing (placeholder)</div>
+                                </div>
+                            </div>
+
+                            <button onclick="demonstrateLoops()" class="w-full bg-green-500 text-white py-3 rounded-lg font-bold hover:bg-green-600 transition-colors">
+                                🔄 Try Loop Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Flow Control Simulator -->
+                <div class="mt-8 bg-gray-50 p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gray-800 mb-4">🎮 Flow Control Simulator</h4>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <textarea id="flowControlCode" class="w-full h-32 p-3 font-mono text-sm border rounded-lg resize-none" 
+                                placeholder="# Write if/elif/else or loop code here
+score = 85
+if score >= 90:
+    grade = 'A'
+elif score >= 80:
+    grade = 'B'
+else:
+    grade = 'C'
+print(f'Grade: {grade}')"></textarea>
+                            <button onclick="simulateFlowControl()" class="w-full mt-3 bg-purple-500 text-white py-2 rounded font-bold hover:bg-purple-600 transition-colors">
+                                ▶️ Simulate Execution
+                            </button>
+                        </div>
+                        <div class="code-output p-4 h-32 overflow-y-auto">
+                            <div id="flowControlOutput" class="text-sm">Ready to simulate your flow control code!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic 3: Input and Output Operations -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl mb-8">
+                <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                    📥📤 <span class="ml-2">3. Input and Output Operations</span>
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- 3.1 File I/O Operations -->
+                    <div class="bg-red-50 p-6 rounded-xl border-2 border-red-200">
+                        <h3 class="text-xl font-semibold text-red-800 mb-4">3.1 File Input/Output Operations</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-red-700 mb-2">File Modes:</h4>
+                                <div class="text-sm space-y-1">
+                                    <div><code class="text-blue-600">'r'</code> - Read (file must exist)</div>
+                                    <div><code class="text-red-600">'w'</code> - Write (overwrites existing)</div>
+                                    <div><code class="text-green-600">'a'</code> - Append (adds to end)</div>
+                                    <div><code class="text-purple-600">'r+'</code> - Read and Write</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-red-700 mb-2">Best Practice:</h4>
+                                <div class="font-mono text-sm bg-gray-100 p-2 rounded">
+                                    <div class="text-green-600">with open('file.txt', 'r') as f:</div>
+                                    <div class="ml-4">content = f.read()</div>
+                                    <div class="text-gray-500"># File automatically closed!</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-red-700 mb-2">Key Methods:</h4>
+                                <div class="text-sm space-y-1">
+                                    <div><code class="text-blue-600">.read()</code> - Read entire file</div>
+                                    <div><code class="text-blue-600">.readline()</code> - Read one line</div>
+                                    <div><code class="text-green-600">.write(string)</code> - Write string to file</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3.2 Console I/O Operations -->
+                    <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-4">3.2 Console Input/Output</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-blue-700 mb-2">Input Function:</h4>
+                                <div class="font-mono text-sm bg-gray-100 p-2 rounded">
+                                    <div>name = input("Enter name: ")</div>
+                                    <div class="text-gray-500"># Always returns a string!</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-blue-700 mb-2">Output Formatting:</h4>
+                                <div class="text-sm space-y-2">
+                                    <div><strong>f-String (Modern):</strong></div>
+                                    <div class="font-mono bg-gray-100 p-1 rounded text-xs">
+                                        print(f"Hello {name}, age {age}")
+                                    </div>
+                                    <div><strong>.format() Method:</strong></div>
+                                    <div class="font-mono bg-gray-100 p-1 rounded text-xs">
+                                        print("Hello {}, age {}".format(name, age))
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-blue-700 mb-2">Command-Line Arguments:</h4>
+                                <div class="font-mono text-sm bg-gray-100 p-2 rounded">
+                                    <div>import sys</div>
+                                    <div>args = sys.argv  # List of arguments</div>
+                                    <div class="text-gray-500"># sys.argv[0] is script name</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- I/O Practice Area -->
+                <div class="mt-8 bg-yellow-50 p-6 rounded-xl border-2 border-yellow-200">
+                    <h4 class="text-lg font-bold text-yellow-800 mb-4">🎯 I/O Practice Scenarios</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="practiceFileIO()" class="bg-red-500 text-white py-3 px-4 rounded-lg font-bold hover:bg-red-600 transition-colors">
+                            📄 File I/O Practice
+                        </button>
+                        <button onclick="practiceConsoleIO()" class="bg-blue-500 text-white py-3 px-4 rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                            💬 Console I/O Practice
+                        </button>
+                        <button onclick="practiceFormatting()" class="bg-green-500 text-white py-3 px-4 rounded-lg font-bold hover:bg-green-600 transition-colors">
+                            🎨 Formatting Practice
+                        </button>
+                    </div>
+                    <div id="ioOutput" class="mt-4 bg-white p-4 rounded-lg border min-h-24">
+                        <div class="text-gray-500 text-center">Click a practice button above to start</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic 4: Documentation and Structure -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl mb-8">
+                <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                    📚 <span class="ml-2">4. Code Documentation and Structure</span>
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- 4.1 Documentation -->
+                    <div class="bg-green-50 p-6 rounded-xl border-2 border-green-200">
+                        <h3 class="text-xl font-semibold text-green-800 mb-4">4.1 Document Code Segments</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-green-700 mb-2">Documentation Elements:</h4>
+                                <div class="text-sm space-y-2">
+                                    <div><strong>Indentation:</strong> 4 spaces (mandatory in Python)</div>
+                                    <div><strong>White Space:</strong> Blank lines for readability</div>
+                                    <div><strong>Comments:</strong> <code class="text-gray-600"># Explain why</code></div>
+                                    <div><strong>Docstrings:</strong> <code class="text-blue-600">"""Describe function purpose"""</code></div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-green-700 mb-2">Good Documentation Example:</h4>
+                                <div class="font-mono text-xs bg-gray-100 p-3 rounded">
+                                    <div class="text-blue-600">def calculate_area(radius):</div>
+                                    <div class="text-green-600 ml-4">"""</div>
+                                    <div class="text-green-600 ml-4">Calculate circle area.</div>
+                                    <div class="text-green-600 ml-4">Args: radius (float)</div>
+                                    <div class="text-green-600 ml-4">Returns: float</div>
+                                    <div class="text-green-600 ml-4">"""</div>
+                                    <div class="text-gray-500 ml-4"># Use math.pi for precision</div>
+                                    <div class="ml-4">import math</div>
+                                    <div class="ml-4">return math.pi * radius ** 2</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4.2 Functions -->
+                    <div class="bg-purple-50 p-6 rounded-xl border-2 border-purple-200">
+                        <h3 class="text-xl font-semibold text-purple-800 mb-4">4.2 Function Definitions</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-purple-700 mb-2">Function Components:</h4>
+                                <div class="text-sm space-y-1">
+                                    <div><code class="text-purple-600">def</code> - Define keyword</div>
+                                    <div><strong>Parameters:</strong> Variables in definition</div>
+                                    <div><strong>Arguments:</strong> Values passed when calling</div>
+                                    <div><code class="text-blue-600">return</code> - Send value back</div>
+                                    <div><strong>Default Values:</strong> Optional parameters</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-purple-700 mb-2">Function with Defaults:</h4>
+                                <div class="font-mono text-xs bg-gray-100 p-3 rounded">
+                                    <div class="text-purple-600">def greet(name, greeting="Hello"):</div>
+                                    <div class="text-green-600 ml-4">"""Greet a person."""</div>
+                                    <div class="ml-4">return f"{greeting}, {name}!"</div>
+                                    <div></div>
+                                    <div class="text-gray-500"># Usage:</div>
+                                    <div>greet("Alice")  # Uses default</div>
+                                    <div>greet("Bob", "Hi")  # Overrides default</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Function Builder -->
+                <div class="mt-8 bg-gray-50 p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gray-800 mb-4">🔧 Interactive Function Builder</h4>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <input type="text" id="funcName" placeholder="Function name" class="w-full p-2 border rounded">
+                            <input type="text" id="funcParams" placeholder="Parameters (comma-separated)" class="w-full p-2 border rounded">
+                            <textarea id="funcBody" placeholder="Function body (without def line)" class="w-full h-20 p-2 border rounded resize-none"></textarea>
+                            <button onclick="buildFunction()" class="w-full bg-purple-500 text-white py-2 rounded font-bold hover:bg-purple-600 transition-colors">
+                                🏗️ Build Function
+                            </button>
+                        </div>
+                        <div class="bg-white p-4 rounded border">
+                            <div id="builtFunction" class="font-mono text-sm">
+                                Your generated function will appear here...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic 5: Error Handling -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl mb-8">
+                <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                    🚨 <span class="ml-2">5. Troubleshooting and Error Handling</span>
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- 5.1 Error Types -->
+                    <div class="bg-red-50 p-6 rounded-xl border-2 border-red-200">
+                        <h3 class="text-xl font-semibold text-red-800 mb-4">5.1 Error Types & Detection</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded border-l-4 border-red-500">
+                                <h4 class="font-bold text-red-700 mb-2">Syntax Error</h4>
+                                <p class="text-sm text-gray-600 mb-2">Code violates Python grammar rules</p>
+                                <div class="font-mono text-xs bg-red-100 p-2 rounded">
+                                    <div class="text-red-600">if x > 10  # Missing colon</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded border-l-4 border-yellow-500">
+                                <h4 class="font-bold text-yellow-700 mb-2">Logic Error</h4>
+                                <p class="text-sm text-gray-600 mb-2">Program runs but gives wrong output</p>
+                                <div class="font-mono text-xs bg-yellow-100 p-2 rounded">
+                                    <div class="text-yellow-600">area = 2 * (length + width)  # Wrong formula</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded border-l-4 border-orange-500">
+                                <h4 class="font-bold text-orange-700 mb-2">Runtime Error</h4>
+                                <p class="text-sm text-gray-600 mb-2">Error occurs during execution</p>
+                                <div class="font-mono text-xs bg-orange-100 p-2 rounded">
+                                    <div class="text-orange-600">result = 10 / 0  # ZeroDivisionError</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5.2 Exception Handling -->
+                    <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-4">5.2 Exception Handling</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-blue-700 mb-2">Exception Structure:</h4>
+                                <div class="font-mono text-sm bg-gray-100 p-3 rounded">
+                                    <div class="text-blue-600">try:</div>
+                                    <div class="ml-4 text-gray-700"># Risky code</div>
+                                    <div class="text-red-600">except ExceptionType:</div>
+                                    <div class="ml-4 text-gray-700"># Handle specific error</div>
+                                    <div class="text-green-600">else:</div>
+                                    <div class="ml-4 text-gray-700"># No exception occurred</div>
+                                    <div class="text-purple-600">finally:</div>
+                                    <div class="ml-4 text-gray-700"># Always executes</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-blue-700 mb-2">Common Exceptions:</h4>
+                                <div class="text-xs space-y-1">
+                                    <div><code class="text-red-600">ValueError</code> - Invalid value for operation</div>
+                                    <div><code class="text-red-600">TypeError</code> - Wrong data type</div>
+                                    <div><code class="text-red-600">ZeroDivisionError</code> - Division by zero</div>
+                                    <div><code class="text-red-600">FileNotFoundError</code> - File doesn't exist</div>
+                                    <div><code class="text-red-600">IndexError</code> - List index out of range</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5.3 Unit Testing -->
+                <div class="mt-8 bg-green-50 p-6 rounded-xl border-2 border-green-200">
+                    <h3 class="text-xl font-semibold text-green-800 mb-4">5.3 Unit Testing</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-4 rounded">
+                            <h4 class="font-bold text-green-700 mb-2">unittest Framework:</h4>
+                            <div class="font-mono text-xs bg-gray-100 p-3 rounded">
+                                <div class="text-blue-600">import unittest</div>
+                                <div></div>
+                                <div class="text-purple-600">class TestMath(unittest.TestCase):</div>
+                                <div class="ml-4 text-green-600">def test_addition(self):</div>
+                                <div class="ml-8">self.assertEqual(2+2, 4)</div>
+                                <div class="ml-4 text-green-600">def test_division(self):</div>
+                                <div class="ml-8">self.assertTrue(10/2 == 5)</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded">
+                            <h4 class="font-bold text-green-700 mb-2">Assert Methods:</h4>
+                            <div class="text-xs space-y-1">
+                                <div><code class="text-green-600">assertEqual(a, b)</code> - a == b</div>
+                                <div><code class="text-green-600">assertTrue(x)</code> - x is True</div>
+                                <div><code class="text-green-600">assertFalse(x)</code> - x is False</div>
+                                <div><code class="text-green-600">assertIn(item, list)</code> - item in list</div>
+                                <div><code class="text-green-600">assertIsInstance(obj, class)</code> - type check</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Simulator -->
+                <div class="mt-8 bg-gray-50 p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gray-800 mb-4">🎯 Error Handling Practice</h4>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <button onclick="simulateError('syntax')" class="bg-red-500 text-white py-3 px-4 rounded-lg font-bold hover:bg-red-600 transition-colors">
+                            🔴 Syntax Error
+                        </button>
+                        <button onclick="simulateError('runtime')" class="bg-orange-500 text-white py-3 px-4 rounded-lg font-bold hover:bg-orange-600 transition-colors">
+                            🟠 Runtime Error
+                        </button>
+                        <button onclick="simulateError('logic')" class="bg-yellow-500 text-white py-3 px-4 rounded-lg font-bold hover:bg-yellow-600 transition-colors">
+                            🟡 Logic Error
+                        </button>
+                    </div>
+                    <div id="errorOutput" class="mt-4 bg-white p-4 rounded-lg border min-h-24">
+                        <div class="text-gray-500 text-center">Click an error type above to see examples and solutions</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic 6: Modules and Tools -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl mb-8">
+                <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                    🧰 <span class="ml-2">6. Operations using Modules and Tools</span>
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- 6.1 Built-in Modules -->
+                    <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-4">6.1 File System & Command-Line Operations</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-blue-700 mb-2">Essential Modules:</h4>
+                                <div class="text-sm space-y-2">
+                                    <div><code class="text-blue-600">os</code> - Operating system interface</div>
+                                    <div><code class="text-green-600">os.path</code> - Path manipulation utilities</div>
+                                    <div><code class="text-purple-600">sys</code> - System-specific parameters</div>
+                                    <div><code class="text-orange-600">io</code> - Core I/O tools</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded">
+                                <h4 class="font-bold text-blue-700 mb-2">Common Operations:</h4>
+                                <div class="font-mono text-xs space-y-1">
+                                    <div><span class="text-blue-600">os.path.exists(file)</span> - Check if exists</div>
+                                    <div><span class="text-green-600">os.remove(file)</span> - Delete file</div>
+                                    <div><span class="text-purple-600">os.mkdir(dir)</span> - Create directory</div>
+                                    <div><span class="text-orange-600">sys.argv</span> - Command-line arguments</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6.2 Specialized Modules -->
+                    <div class="bg-green-50 p-6 rounded-xl border-2 border-green-200">
+                        <h3 class="text-xl font-semibold text-green-800 mb-4">6.2 Specialized Computing Modules</h3>
+                        
+                        <div class="space-y-3">
+                            <div class="bg-white p-3 rounded">
+                                <h4 class="font-bold text-green-700 mb-1 text-sm">math - Mathematical Functions</h4>
+                                <div class="text-xs grid grid-cols-2 gap-1">
+                                    <div><code>math.pi</code> - π constant</div>
+                                    <div><code>math.sqrt(x)</code> - Square root</div>
+                                    <div><code>math.ceil(x)</code> - Round up</div>
+                                    <div><code>math.floor(x)</code> - Round down</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded">
+                                <h4 class="font-bold text-green-700 mb-1 text-sm">datetime - Date and Time</h4>
+                                <div class="text-xs space-y-1">
+                                    <div><code>datetime.now()</code> - Current time</div>
+                                    <div><code>.strftime(format)</code> - Format date</div>
+                                    <div><code>.weekday()</code> - Day of week (0-6)</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-3 rounded">
+                                <h4 class="font-bold text-green-700 mb-1 text-sm">random - Random Numbers</h4>
+                                <div class="text-xs space-y-1">
+                                    <div><code>random.randint(a, b)</code> - Random integer</div>
+                                    <div><code>random.choice(seq)</code> - Random element</div>
+                                    <div><code>random.shuffle(list)</code> - Shuffle in place</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module Playground -->
+                <div class="mt-8 bg-purple-50 p-6 rounded-xl border-2 border-purple-200">
+                    <h4 class="text-lg font-bold text-purple-800 mb-4">🎮 Module Playground</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <button onclick="demoModule('math')" class="bg-blue-500 text-white py-2 px-3 rounded font-bold hover:bg-blue-600 transition-colors text-sm">
+                            🔢 Math Demo
+                        </button>
+                        <button onclick="demoModule('datetime')" class="bg-green-500 text-white py-2 px-3 rounded font-bold hover:bg-green-600 transition-colors text-sm">
+                            📅 DateTime Demo
+                        </button>
+                        <button onclick="demoModule('random')" class="bg-red-500 text-white py-2 px-3 rounded font-bold hover:bg-red-600 transition-colors text-sm">
+                            🎲 Random Demo
+                        </button>
+                        <button onclick="demoModule('os')" class="bg-yellow-500 text-white py-2 px-3 rounded font-bold hover:bg-yellow-600 transition-colors text-sm">
+                            💻 OS Demo
+                        </button>
+                    </div>
+                    <div id="moduleOutput" class="mt-4 bg-white p-4 rounded-lg border min-h-32">
+                        <div class="text-gray-500 text-center">Click a module demo button above to see it in action</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Exam Checklist -->
+            <div class="interactive-demo rounded-2xl p-8 shadow-2xl">
+                <h2 class="text-2xl font-bold text-secondary mb-6 flex items-center">
+                    ✅ <span class="ml-2">IT Specialist Exam Readiness Checklist</span>
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                        <h3 class="text-lg font-bold text-blue-800 mb-4">Data Types & Operators</h3>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Identify data types from expressions
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Understand operator precedence
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Perform type conversions
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Use indexing and slicing
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Manipulate lists effectively
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 p-6 rounded-xl border-2 border-green-200">
+                        <h3 class="text-lg font-bold text-green-800 mb-4">Flow Control</h3>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Write if/elif/else statements
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Use compound conditions
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Create while and for loops
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Control loops with break/continue
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Handle nested structures
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-red-50 p-6 rounded-xl border-2 border-red-200">
+                        <h3 class="text-lg font-bold text-red-800 mb-4">Input/Output</h3>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Master file I/O operations
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Use with statement correctly
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Handle console input/output
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Format output with f-strings
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Work with command-line args
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 p-6 rounded-xl border-2 border-purple-200">
+                        <h3 class="text-lg font-bold text-purple-800 mb-4">Documentation & Functions</h3>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Write clear documentation
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Use proper indentation
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Define functions correctly
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Use default parameters
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Return values appropriately
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-orange-50 p-6 rounded-xl border-2 border-orange-200">
+                        <h3 class="text-lg font-bold text-orange-800 mb-4">Error Handling</h3>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Identify error types
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Use try/except blocks
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Handle specific exceptions
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Write unit tests
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Debug code effectively
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-xl border-2 border-yellow-200">
+                        <h3 class="text-lg font-bold text-yellow-800 mb-4">Modules & Tools</h3>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Use os and sys modules
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Work with file system
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Apply math functions
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Handle dates and times
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2 exam-checkbox"> Generate random numbers
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <div id="examProgress" class="text-2xl font-bold text-secondary mb-4">Progress: 0/30 Topics Mastered</div>
+                    <div class="bg-gray-200 rounded-full h-4 mb-4">
+                        <div id="examProgressBar" class="bg-green-500 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <button onclick="checkExamReadiness()" class="bg-green-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition-colors">
+                        🎯 Check Exam Readiness
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Achievement Modal -->
+    <div id="achievementModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 text-center">
+            <div class="text-6xl mb-4">🏆</div>
+            <h3 class="text-2xl font-bold text-secondary mb-2" id="achievementTitle"></h3>
+            <p class="text-gray-600 mb-6" id="achievementDescription"></p>
+            <button onclick="closeAchievementModal()" class="bg-success text-white px-6 py-3 rounded-lg font-bold">
+                Awesome! Continue Learning
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // === GLOBAL STATE ===
+        let currentSection = 'basics';
+        let fileContent = [];
+        let userProgress = {
+            sectionsCompleted: new Set(),
+            projectsCompleted: new Set(),
+            challengesCompleted: new Set(),
+            achievements: new Set()
+        };
+
+        // Simulate user inputs for code execution
+        let inputQueue = [];
+        let waitingForInput = false;
+        let inputCallback = null;
+
+        // === NAVIGATION ===
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Remove active state from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-white/40');
+            });
+            
+            // Show selected section
+            document.getElementById(`section-${sectionName}`).classList.remove('hidden');
+            document.getElementById(`btn-${sectionName}`).classList.add('bg-white/40');
+            
+            currentSection = sectionName;
+            
+            // Initialize section-specific content
+            if (sectionName === 'projects') {
+                initializeProjects();
+            } else if (sectionName === 'challenges') {
+                initializeChallenges();
+            }
+            
+            updateProgress();
+        }
+
+        // === FILE I/O DEMONSTRATIONS ===
+        function demonstrateMode(mode) {
+            const visualizer = document.getElementById('fileVisualizer');
+            const codeDisplay = document.getElementById('liveCodeDisplay');
+            
+            let code = '';
+            let explanation = '';
+            
+            switch(mode) {
+                case 'read':
+                    code = `# Reading from a file
+with open('sample.txt', 'r') as f:
+    content = f.read()
+    print(content)`;
+                    
+                    if (fileContent.length === 0) {
+                        visualizer.innerHTML = '<div class="text-red-400">❌ Error: File is empty or doesn\'t exist!</div>';
+                        explanation = '# This would cause an error if file is empty!';
+                    } else {
+                        visualizer.innerHTML = fileContent.map(line => `<div class="text-green-400">${line}</div>`).join('');
+                    }
+                    break;
+                    
+                case 'write':
+                    code = `# Writing to a file (overwrites existing content!)
+with open('sample.txt', 'w') as f:
+    f.write('Hello, World!\\n')
+    f.write('This is new content.')`;
+                    
+                    fileContent = ['Hello, World!', 'This is new content.'];
+                    visualizer.innerHTML = fileContent.map(line => `<div class="text-yellow-400 animate-fade-in">${line}</div>`).join('');
+                    explanation = '# ⚠️ Write mode clears the file first!';
+                    break;
+                    
+                case 'append':
+                    code = `# Appending to a file (preserves existing content)
+with open('sample.txt', 'a') as f:
+    f.write('\\nAppended line!')`;
+                    
+                    fileContent.push('Appended line!');
+                    visualizer.innerHTML = fileContent.map((line, index) => 
+                        `<div class="text-green-400 ${index === fileContent.length - 1 ? 'animate-bounce-in' : ''}">${line}</div>`
+                    ).join('');
+                    explanation = '# ✅ Append mode keeps existing content safe!';
+                    break;
+            }
+            
+            codeDisplay.innerHTML = `<code class="language-python">${code}\n\n${explanation}</code>`;
+            
+            // Re-run Prism highlighting
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAll();
+            }
+            
+            // Mark progress
+            userProgress.sectionsCompleted.add('file-modes');
+            updateProgress();
+        }
+
+        function resetFile() {
+            fileContent = [];
+            document.getElementById('fileVisualizer').innerHTML = '<div class="text-gray-400">File is empty</div>';
+            document.getElementById('liveCodeDisplay').innerHTML = '<code>Click a mode button above to see the code!</code>';
+        }
+
+        // === CONSOLE I/O DEMONSTRATIONS ===
+        function runInputDemo() {
+            const name = document.getElementById('userNameInput').value || 'Student';
+            const age = document.getElementById('userAgeInput').value || '20';
+            const consoleDemo = document.getElementById('consoleDemo');
+            
+            const output = `
+<div class="terminal-line">
+    <span class="terminal-prompt">></span>
+    <span>name = input("Enter your name: ")</span>
+</div>
+<div class="terminal-line">
+    <span class="text-blue-400">User typed:</span> "${name}" 
+    <span class="text-gray-500">(type: string)</span>
+</div>
+<div class="terminal-line">
+    <span class="terminal-prompt">></span>
+    <span>age_str = input("Enter your age: ")</span>
+</div>
+<div class="terminal-line">
+    <span class="text-blue-400">User typed:</span> "${age}" 
+    <span class="text-gray-500">(type: string)</span>
+</div>
+<div class="terminal-line">
+    <span class="terminal-prompt">></span>
+    <span>age = int(age_str)  # Convert to integer!</span>
+</div>
+<div class="terminal-line">
+    <span class="text-success">Output:</span> Hello ${name}, you are ${age} years old!
+</div>`;
+            
+            consoleDemo.innerHTML = output;
+            
+            // Mark progress
+            userProgress.sectionsCompleted.add('console-io');
+            updateProgress();
+        }
+
+        function showFormatting(method) {
+            const consoleDemo = document.getElementById('consoleDemo');
+            
+            const name = document.getElementById('userNameInput').value || 'Alice';
+            const age = document.getElementById('userAgeInput').value || '25';
+            
+            let code, output;
+            
+            if (method === 'fstring') {
+                code = `print(f"Hello {name}, you are {age} years old!")`;
+                output = `Hello ${name}, you are ${age} years old!`;
+            } else {
+                code = `print("Hello {}, you are {} years old!".format(name, age))`;
+                output = `Hello ${name}, you are ${age} years old!`;
+            }
+            
+            consoleDemo.innerHTML = `
+<div class="terminal-line">
+    <span class="terminal-prompt">></span>
+    <span class="text-purple">${code}</span>
+</div>
+<div class="terminal-line">
+    <span class="text-success">Output:</span> ${output}
+</div>
+<div class="mt-2 text-yellow-400 text-xs">
+    💡 ${method === 'fstring' ? 'f-strings are the modern, preferred way!' : '.format() is the traditional method'}
+</div>`;
+            
+            // Mark progress
+            userProgress.sectionsCompleted.add('formatting');
+            updateProgress();
+        }
+
+        // === CODE EXECUTION SIMULATOR ===
+        function executeCode() {
+            const code = document.getElementById('codeEditor').value.trim();
+            const outputDiv = document.getElementById('executionOutput');
+            const errorDiv = document.getElementById('errorDisplay');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Clear previous results
+            outputDiv.innerHTML = '';
+            errorDiv.classList.add('hidden');
+            
+            if (!code) {
+                outputDiv.innerHTML = '<div class="text-yellow-400">No code to execute!</div>';
+                return;
+            }
+            
+            // Simulate code execution
+            try {
+                simulatePythonExecution(code, outputDiv);
+                userProgress.sectionsCompleted.add('interactive-coding');
+                updateProgress();
+            } catch (error) {
+                errorDiv.classList.remove('hidden');
+                errorMessage.textContent = error.message;
+            }
+        }
+
+        function simulatePythonExecution(code, outputDiv) {
+            // This is a simplified Python interpreter simulation
+            const lines = code.split('\n').filter(line => line.trim());
+            let variables = {};
+            let fileSystem = { files: {} };
+            let outputLines = [];
+            
+            for (let line of lines) {
+                line = line.trim();
+                if (!line || line.startsWith('#')) continue;
+                
+                // Handle print statements
+                if (line.match(/^print\s*\(/)) {
+                    const content = line.match(/print\s*\(\s*(.+)\s*\)/)?.[1];
+                    if (content) {
+                        const result = evaluateExpression(content, variables);
+                        outputLines.push(`<div class="text-green-400">${result}</div>`);
+                    }
+                }
+                
+                // Handle input statements
+                else if (line.match(/.*=\s*input\s*\(/)) {
+                    const varName = line.match(/(\w+)\s*=/)?.[1];
+                    const prompt = line.match(/input\s*\(\s*['"](.*)['"]?\s*\)/)?.[1] || '';
+                    
+                    if (varName) {
+                        outputLines.push(`<div class="text-blue-400">${prompt}</div>`);
+                        // Simulate user input (you can extend this to be interactive)
+                        const simulatedInput = prompt.toLowerCase().includes('name') ? 'Alice' : 
+                                            prompt.toLowerCase().includes('age') ? '25' : 'test';
+                        variables[varName] = simulatedInput;
+                        outputLines.push(`<div class="text-gray-300">${simulatedInput}</div>`);
+                    }
+                }
+                
+                // Handle variable assignments
+                else if (line.includes('=') && !line.includes('==')) {
+                    const parts = line.split('=');
+                    if (parts.length === 2) {
+                        const varName = parts[0].trim();
+                        const value = parts[1].trim();
+                        variables[varName] = evaluateExpression(value, variables);
+                    }
+                }
+                
+                // Handle file operations (simplified)
+                else if (line.includes('open(')) {
+                    const fileName = line.match(/open\s*\(\s*['"]([^'"]+)['"]/)?.[1];
+                    const mode = line.match(/['"],\s*['"]([^'"]+)['"]/)?.[1] || 'r';
+                    
+                    if (fileName && mode) {
+                        if (mode === 'w') {
+                            fileSystem.files[fileName] = '';
+                            outputLines.push(`<div class="text-yellow-400">📝 Created/cleared file: ${fileName}</div>`);
+                        } else if (mode === 'a') {
+                            if (!fileSystem.files[fileName]) fileSystem.files[fileName] = '';
+                            outputLines.push(`<div class="text-green-400">📄 Opened file for appending: ${fileName}</div>`);
+                        } else if (mode === 'r') {
+                            if (!fileSystem.files[fileName]) {
+                                throw new Error(`File '${fileName}' not found!`);
+                            }
+                            outputLines.push(`<div class="text-blue-400">📖 Reading file: ${fileName}</div>`);
+                        }
+                    }
+                }
+            }
+            
+            outputDiv.innerHTML = outputLines.join('') || '<div class="text-green-400">Code executed successfully!</div>';
+        }
+
+        function evaluateExpression(expr, variables) {
+            // Simplified expression evaluator
+            expr = expr.trim();
+            
+            // Handle f-strings (very basic)
+            if (expr.startsWith('f"') || expr.startsWith("f'")) {
+                let result = expr.slice(2, -1);
+                for (let [varName, value] of Object.entries(variables)) {
+                    result = result.replace(new RegExp(`{${varName}}`, 'g'), value);
+                }
+                return result;
+            }
+            
+            // Handle regular strings
+            if ((expr.startsWith('"') && expr.endsWith('"')) || 
+                (expr.startsWith("'") && expr.endsWith("'"))) {
+                return expr.slice(1, -1);
+            }
+            
+            // Handle variables
+            if (variables.hasOwnProperty(expr)) {
+                return variables[expr];
+            }
+            
+            // Handle int() conversion
+            if (expr.startsWith('int(') && expr.endsWith(')')) {
+                const inner = expr.slice(4, -1);
+                const value = variables[inner] || inner;
+                return parseInt(value) || 0;
+            }
+            
+            return expr;
+        }
+
+        function clearEditor() {
+            document.getElementById('codeEditor').value = '';
+            document.getElementById('executionOutput').innerHTML = 'Ready to run your code!';
+            document.getElementById('errorDisplay').classList.add('hidden');
+        }
+
+        function loadExample() {
+            const examples = [
+                `# Simple greeting program
+name = input("What's your name? ")
+age = input("How old are you? ")
+age_num = int(age)
+print(f"Hello {name}! You are {age_num} years old.")`,
+                
+                `# File writing example
+with open("diary.txt", "w") as f:
+    f.write("Dear Diary,\\n")
+    f.write("Today I learned Python I/O!\\n")
+print("Diary entry saved!")`,
+                
+                `# Calculator program
+num1 = input("Enter first number: ")
+num2 = input("Enter second number: ")
+result = int(num1) + int(num2)
+print(f"The sum is: {result}")`
+            ];
+            
+            const randomExample = examples[Math.floor(Math.random() * examples.length)];
+            document.getElementById('codeEditor').value = randomExample;
+        }
+
+        // === PROJECTS SYSTEM ===
+        const projects = [
+            {
+                id: 'personal-diary',
+                title: '📔 Personal Diary App',
+                difficulty: 'Beginner',
+                description: 'Create a simple diary application that saves entries to a file.',
+                skills: ['File Writing', 'User Input', 'String Formatting'],
+                starter: `# Personal Diary App
+# TODO: Get diary entry from user
+# TODO: Save entry with timestamp to file
+# TODO: Allow reading previous entries
+
+import datetime
+
+# Your code here...`,
+                solution: `import datetime
+
+def add_entry():
+    entry = input("Write your diary entry: ")
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    with open("diary.txt", "a") as f:
+        f.write(f"[{timestamp}] {entry}\\n\\n")
+    
+    print("✅ Entry saved!")
+
+def read_entries():
+    try:
+        with open("diary.txt", "r") as f:
+            content = f.read()
+            if content:
+                print("📖 Your diary entries:")
+                print(content)
+            else:
+                print("📝 No entries yet!")
+    except FileNotFoundError:
+        print("📝 No diary file found. Write your first entry!")
+
+# Main program
+while True:
+    choice = input("\\n1. Add entry\\n2. Read entries\\n3. Quit\\nChoice: ")
+    if choice == "1":
+        add_entry()
+    elif choice == "2":
+        read_entries()
+    elif choice == "3":
+        break`,
+                tests: [
+                    'Creates diary.txt file',
+                    'Saves entries with timestamps',
+                    'Handles file not found error'
+                ]
+            },
+            
+            {
+                id: 'grade-calculator',
+                title: '🎯 Grade Calculator',
+                difficulty: 'Intermediate',
+                description: 'Build a grade calculator that processes student data from a file.',
+                skills: ['File Reading', 'Data Processing', 'Error Handling'],
+                starter: `# Grade Calculator
+# TODO: Read student data from file
+# TODO: Calculate averages
+# TODO: Generate report
+
+def calculate_grade(scores):
+    # Calculate average and letter grade
+    pass
+
+def process_student_file(filename):
+    # Read and process student data
+    pass
+
+# Your code here...`,
+                solution: `def calculate_grade(scores):
+    if not scores:
+        return 0, 'F'
+    
+    average = sum(scores) / len(scores)
+    
+    if average >= 90:
+        letter = 'A'
+    elif average >= 80:
+        letter = 'B'
+    elif average >= 70:
+        letter = 'C'
+    elif average >= 60:
+        letter = 'D'
+    else:
+        letter = 'F'
+    
+    return average, letter
+
+def create_sample_data():
+    sample_data = """Alice,85,92,78,88
+Bob,76,81,74,79
+Charlie,95,97,93,96
+Diana,68,72,70,75"""
+    
+    with open("students.txt", "w") as f:
+        f.write(sample_data)
+    print("📁 Created sample student data file")
+
+def process_student_file(filename):
+    try:
+        with open(filename, "r") as f:
+            print("📊 Grade Report")
+            print("-" * 40)
+            
+            for line in f:
+                parts = line.strip().split(',')
+                name = parts[0]
+                scores = [int(score) for score in parts[1:]]
+                
+                average, letter = calculate_grade(scores)
+                print(f"{name:10} | Avg: {average:5.1f} | Grade: {letter}")
+    
+    except FileNotFoundError:
+        print("❌ File not found! Creating sample data...")
+        create_sample_data()
+        process_student_file(filename)
+
+# Main program
+process_student_file("students.txt")`,
+                tests: [
+                    'Reads CSV format correctly',
+                    'Calculates averages properly',
+                    'Handles missing files gracefully'
+                ]
+            },
+            
+            {
+                id: 'password-manager',
+                title: '🔐 Simple Password Manager',
+                difficulty: 'Advanced',
+                description: 'Create a secure password manager with file encryption basics.',
+                skills: ['File I/O', 'Data Security', 'Input Validation', 'Menu Systems'],
+                starter: `# Simple Password Manager
+# TODO: Add password entry
+# TODO: Search passwords
+# TODO: Basic security measures
+
+def add_password(service, username, password):
+    # Save password entry
+    pass
+
+def search_password(service):
+    # Find and return password
+    pass
+
+# Your code here...`,
+                solution: `import base64
+
+def simple_encode(text):
+    """Basic encoding (NOT secure for real use!)"""
+    return base64.b64encode(text.encode()).decode()
+
+def simple_decode(encoded_text):
+    """Basic decoding"""
+    try:
+        return base64.b64decode(encoded_text.encode()).decode()
+    except:
+        return "Error decoding"
+
+def add_password(service, username, password):
+    encoded_password = simple_encode(password)
+    
+    with open("passwords.txt", "a") as f:
+        f.write(f"{service}|{username}|{encoded_password}\\n")
+    
+    print(f"✅ Password for {service} saved!")
+
+def search_password(service):
+    try:
+        with open("passwords.txt", "r") as f:
+            for line in f:
+                parts = line.strip().split('|')
+                if len(parts) == 3 and parts[0].lower() == service.lower():
+                    decoded_password = simple_decode(parts[2])
+                    print(f"🔍 Found: {service}")
+                    print(f"   Username: {parts[1]}")
+                    print(f"   Password: {decoded_password}")
+                    return
+        
+        print(f"❌ No password found for {service}")
+    
+    except FileNotFoundError:
+        print("📝 No passwords stored yet!")
+
+def list_services():
+    try:
+        with open("passwords.txt", "r") as f:
+            services = set()
+            for line in f:
+                parts = line.strip().split('|')
+                if len(parts) >= 1:
+                    services.add(parts[0])
+            
+            if services:
+                print("🗂️  Stored services:")
+                for service in sorted(services):
+                    print(f"   • {service}")
+            else:
+                print("📝 No services stored yet!")
+    
+    except FileNotFoundError:
+        print("📝 No passwords stored yet!")
+
+# Main program
+print("🔐 Simple Password Manager")
+print("⚠️  WARNING: This is for learning only - not secure for real passwords!")
+
+while True:
+    print("\\n" + "="*50)
+    choice = input("\\n1. Add password\\n2. Search password\\n3. List services\\n4. Quit\\nChoice: ")
+    
+    if choice == "1":
+        service = input("Service name: ")
+        username = input("Username: ")
+        password = input("Password: ")
+        add_password(service, username, password)
+    
+    elif choice == "2":
+        service = input("Service to search: ")
+        search_password(service)
+    
+    elif choice == "3":
+        list_services()
+    
+    elif choice == "4":
+        print("👋 Goodbye!")
+        break
+    
+    else:
+        print("❌ Invalid choice!")`,
+                tests: [
+                    'Stores passwords securely',
+                    'Searches by service name',
+                    'Lists all stored services',
+                    'Handles file errors gracefully'
+                ]
+            }
+        ];
+
+        function initializeProjects() {
+            const container = document.getElementById('projectsContainer');
+            
+            container.innerHTML = projects.map(project => `
+                <div class="project-card bg-white/95 rounded-2xl p-6 shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-secondary">${project.title}</h3>
+                        <span class="bg-${getDifficultyColor(project.difficulty)}-100 text-${getDifficultyColor(project.difficulty)}-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            ${project.difficulty}
+                        </span>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">${project.description}</p>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-gray-700 mb-2">Skills practiced:</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${project.skills.map(skill => 
+                                `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">${skill}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <button onclick="startProject('${project.id}')" class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                            🚀 Start Project
+                        </button>
+                        <button onclick="showProjectSolution('${project.id}')" class="w-full bg-gray-200 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                            💡 Show Solution
+                        </button>
+                    </div>
+                    
+                    ${userProgress.projectsCompleted.has(project.id) ? 
+                        '<div class="mt-4 flex items-center justify-center text-success font-bold">✅ Completed!</div>' : 
+                        ''
+                    }
+                </div>
+            `).join('');
+        }
+
+        function getDifficultyColor(difficulty) {
+            const colors = {
+                'Beginner': 'green',
+                'Intermediate': 'yellow',
+                'Advanced': 'red'
+            };
+            return colors[difficulty] || 'gray';
+        }
+
+        function startProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            // Switch to interactive section and load project starter code
+            showSection('interactive');
+            document.getElementById('codeEditor').value = project.starter;
+            
+            // Show project info
+            alert(`🚀 Starting: ${project.title}\n\nRead the TODO comments in the code and start building!\n\nTip: Use the "Run Code" button to test your progress.`);
+        }
+
+        function showProjectSolution(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            if (confirm(`Show solution for "${project.title}"?\n\nTry building it yourself first for better learning!`)) {
+                showSection('interactive');
+                document.getElementById('codeEditor').value = project.solution;
+                
+                // Mark as completed
+                userProgress.projectsCompleted.add(projectId);
+                updateProgress();
+                checkAchievements();
+            }
+        }
+
+        // === CHALLENGES SYSTEM ===
+        const challenges = [
+            {
+                id: 'input-validation',
+                title: 'Input Validation Challenge',
+                description: 'Write code that asks for a number and keeps asking until a valid number is entered.',
+                difficulty: 1,
+                hint: 'Use a while loop and try/except for int() conversion',
+                expectedOutput: 'Should handle invalid inputs gracefully',
+                testCases: ['abc', '12.5', '42']
+            },
+            
+            {
+                id: 'file-word-count',
+                title: 'File Word Counter',
+                description: 'Count the number of words in a text file and display the result.',
+                difficulty: 2,
+                hint: 'Use .split() method to count words',
+                expectedOutput: 'Should count words correctly',
+                testCases: ['sample.txt with known word count']
+            },
+            
+            {
+                id: 'data-formatter',
+                title: 'Data Formatter Challenge',
+                description: 'Read CSV data and format it into a nice table output.',
+                difficulty: 3,
+                hint: 'Use string formatting to align columns',
+                expectedOutput: 'Nicely formatted table with headers',
+                testCases: ['CSV with name,age,city format']
+            }
+        ];
+
+        function initializeChallenges() {
+            const container = document.getElementById('challengesContainer');
+            
+            container.innerHTML = challenges.map((challenge, index) => `
+                <div class="interactive-demo rounded-2xl p-8 shadow-2xl mb-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-secondary">Challenge ${index + 1}: ${challenge.title}</h3>
+                        <div class="flex items-center space-x-2">
+                            ${Array(3).fill(0).map((_, i) => 
+                                `<div class="w-3 h-3 rounded-full ${i < challenge.difficulty ? 'bg-red-500' : 'bg-gray-300'}"></div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <p class="text-lg text-gray-700 mb-4">${challenge.description}</p>
+                    
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <h4 class="font-bold text-blue-800 mb-2">💡 Hint:</h4>
+                        <p class="text-blue-700">${challenge.hint}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-2">Your Solution:</h4>
+                            <textarea id="challenge-${challenge.id}" class="w-full h-32 p-3 font-mono text-sm border rounded-lg resize-none" 
+                                placeholder="Write your Python code here..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold mb-2">Expected Output:</h4>
+                            <div class="code-output p-3 h-32">
+                                ${challenge.expectedOutput}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 flex space-x-3">
+                        <button onclick="testChallenge('${challenge.id}')" class="bg-success text-white px-6 py-3 rounded-lg font-bold hover:bg-green-600 transition-colors">
+                            🧪 Test Solution
+                        </button>
+                        <button onclick="showChallengeHint('${challenge.id}')" class="bg-info text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors">
+                            💡 More Hints
+                        </button>
+                    </div>
+                    
+                    <div id="challenge-result-${challenge.id}" class="mt-4 hidden"></div>
+                </div>
+            `).join('');
+        }
+
+        function testChallenge(challengeId) {
+            const challenge = challenges.find(c => c.id === challengeId);
+            const code = document.getElementById(`challenge-${challengeId}`).value;
+            const resultDiv = document.getElementById(`challenge-result-${challengeId}`);
+            
+            if (!code.trim()) {
+                resultDiv.innerHTML = '<div class="bg-yellow-100 border border-yellow-400 rounded-lg p-4"><div class="text-yellow-800">Please write some code first!</div></div>';
+                resultDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // Simple validation (you can expand this)
+            let passed = false;
+            let feedback = '';
+            
+            if (challengeId === 'input-validation') {
+                passed = code.includes('while') && (code.includes('try') || code.includes('except'));
+                feedback = passed ? 'Great! You used a loop and error handling.' : 'Try using a while loop with try/except for validation.';
+            } else if (challengeId === 'file-word-count') {
+                passed = code.includes('open') && code.includes('split');
+                feedback = passed ? 'Excellent! You opened a file and used split() to count words.' : 'Remember to open a file and use split() to count words.';
+            } else if (challengeId === 'data-formatter') {
+                passed = code.includes('open') && (code.includes('split') || code.includes('format'));
+                feedback = passed ? 'Perfect! You handled file reading and formatting.' : 'Try reading the file and formatting the output nicely.';
+            }
+            
+            const resultClass = passed ? 'bg-green-100 border-green-400' : 'bg-red-100 border-red-400';
+            const textClass = passed ? 'text-green-800' : 'text-red-800';
+            const icon = passed ? '✅' : '❌';
+            
+            resultDiv.innerHTML = `
+                <div class="${resultClass} border rounded-lg p-4">
+                    <div class="font-bold ${textClass}">${icon} ${passed ? 'Challenge Passed!' : 'Keep Trying!'}</div>
+                    <div class="${textClass} mt-2">${feedback}</div>
+                </div>
+            `;
+            resultDiv.classList.remove('hidden');
+            
+            if (passed) {
+                userProgress.challengesCompleted.add(challengeId);
+                updateProgress();
+                checkAchievements();
+            }
+        }
+
+        function showChallengeHint(challengeId) {
+            const hints = {
+                'input-validation': 'Use: while True: → try: int(input()) → except ValueError: print("Invalid!") → else: break',
+                'file-word-count': 'Steps: open file → read content → split by spaces → count the list length',
+                'data-formatter': 'Use string formatting: f"{name:15} {age:3} {city:10}" for aligned columns'
+            };
+            
+            alert(`💡 Detailed Hint:\n\n${hints[challengeId] || 'Keep experimenting!'}`);
+        }
+
+        // === PROGRESS AND ACHIEVEMENTS ===
+        function updateProgress() {
+            const totalItems = 8; // Approximate total learning items
+            const completed = userProgress.sectionsCompleted.size + 
+                            userProgress.projectsCompleted.size + 
+                            userProgress.challengesCompleted.size;
+            
+            const percentage = Math.min(100, Math.round((completed / totalItems) * 100));
+            
+            document.getElementById('progressText').textContent = `${percentage}% Complete`;
+            
+            // Update progress ring
+            const circumference = 2 * Math.PI * 15.915;
+            const offset = circumference - (percentage / 100) * circumference;
+            document.getElementById('progressRing').style.strokeDashoffset = offset;
+        }
+
+        function checkAchievements() {
+            const achievements = [
+                {
+                    id: 'first-steps',
+                    title: 'First Steps',
+                    description: 'Completed your first I/O demonstration',
+                    condition: () => userProgress.sectionsCompleted.size >= 1
+                },
+                {
+                    id: 'project-starter',
+                    title: 'Project Starter',
+                    description: 'Completed your first project',
+                    condition: () => userProgress.projectsCompleted.size >= 1
+                },
+                {
+                    id: 'challenge-accepted',
+                    title: 'Challenge Accepted',
+                    description: 'Solved your first coding challenge',
+                    condition: () => userProgress.challengesCompleted.size >= 1
+                },
+                {
+                    id: 'io-master',
+                    title: 'I/O Master',
+                    description: 'Completed all sections and projects',
+                    condition: () => userProgress.sectionsCompleted.size >= 4 && 
+                                   userProgress.projectsCompleted.size >= 2
+                }
+            ];
+            
+            achievements.forEach(achievement => {
+                if (!userProgress.achievements.has(achievement.id) && achievement.condition()) {
+                    userProgress.achievements.add(achievement.id);
+                    showAchievement(achievement);
+                }
+            });
+        }
+
+        function showAchievement(achievement) {
+            document.getElementById('achievementTitle').textContent = achievement.title;
+            document.getElementById('achievementDescription').textContent = achievement.description;
+            document.getElementById('achievementModal').classList.remove('hidden');
+        }
+
+        function closeAchievementModal() {
+            document.getElementById('achievementModal').classList.add('hidden');
+        }
+
+        // === EXAM PREP INTERACTIVE FUNCTIONS ===
+        
+        // Data Type Checker
+        function checkDataType() {
+            const input = document.getElementById('typeTestInput').value.trim();
+            const resultDiv = document.getElementById('typeResult');
+            
+            if (!input) {
+                resultDiv.innerHTML = '<div class="text-red-500">Please enter an expression</div>';
+                return;
+            }
+            
+            try {
+                // Simulate type evaluation
+                let result = '';
+                let type = '';
+                
+                if (input.includes('"') || input.includes("'")) {
+                    type = 'str';
+                    result = input;
+                } else if (input.includes('.') && !isNaN(parseFloat(input))) {
+                    type = 'float';
+                    result = parseFloat(input);
+                } else if (!isNaN(parseInt(input))) {
+                    type = 'int';
+                    result = parseInt(input);
+                } else if (input === 'True' || input === 'False') {
+                    type = 'bool';
+                    result = input === 'True';
+                } else if (input.includes('+') || input.includes('*') || input.includes('-') || input.includes('/')) {
+                    // Simple expression evaluation
+                    if (input.includes('.')) {
+                        type = 'float';
+                        result = 'float result';
+                    } else {
+                        type = 'int';
+                        result = 'int result';
+                    }
+                } else {
+                    type = 'unknown';
+                    result = 'Cannot determine';
+                }
+                
+                const colors = { int: 'blue', float: 'green', str: 'purple', bool: 'red', unknown: 'gray' };
+                
+                resultDiv.innerHTML = `
+                    <div class="text-${colors[type]}-600 font-bold text-lg">${input}</div>
+                    <div class="text-sm text-gray-600 mt-1">
+                        Type: <code class="text-${colors[type]}-600 font-bold">${type}</code>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2">
+                        Result: ${result}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="text-red-500">Invalid expression</div>';
+            }
+        }
+
+        // Slicing Demo
+        function demonstrateSlicing() {
+            const examples = [
+                { text: 'Python', slice: '[0]', result: 'P', explanation: 'First character' },
+                { text: 'Python', slice: '[-1]', result: 'n', explanation: 'Last character' },
+                { text: 'Python', slice: '[1:4]', result: 'yth', explanation: 'Characters 1 to 3' },
+                { text: 'Python', slice: '[2:]', result: 'thon', explanation: 'From index 2 to end' },
+                { text: 'Python', slice: '[:3]', result: 'Pyt', explanation: 'From start to index 2' }
+            ];
+            
+            const randomExample = examples[Math.floor(Math.random() * examples.length)];
+            
+            alert(`String Slicing Example:\n\ntext = "${randomExample.text}"\ntext${randomExample.slice} = "${randomExample.result}"\n\nExplanation: ${randomExample.explanation}`);
+        }
+
+        // List Operations Demo
+        function demonstrateListOps() {
+            const operations = [
+                { op: 'append()', example: 'my_list = [1, 2, 3]\nmy_list.append(4)\n# Result: [1, 2, 3, 4]' },
+                { op: 'insert()', example: 'my_list = [1, 3, 4]\nmy_list.insert(1, 2)\n# Result: [1, 2, 3, 4]' },
+                { op: 'remove()', example: 'my_list = [1, 2, 3, 2]\nmy_list.remove(2)\n# Result: [1, 3, 2]' },
+                { op: 'sort()', example: 'my_list = [3, 1, 4, 2]\nmy_list.sort()\n# Result: [1, 2, 3, 4]' }
+            ];
+            
+            const randomOp = operations[Math.floor(Math.random() * operations.length)];
+            
+            alert(`List Operation: ${randomOp.op}\n\n${randomOp.example}`);
+        }
+
+        // Precedence Evaluator
+        function evaluatePrecedence() {
+            const input = document.getElementById('precedenceInput').value.trim();
+            const resultDiv = document.getElementById('precedenceResult');
+            
+            if (!input) {
+                resultDiv.innerHTML = '<div class="text-red-500">Please enter an expression</div>';
+                return;
+            }
+            
+            // Simplified precedence demonstration
+            const steps = [
+                'Step 1: Evaluate exponentiation (**)',
+                'Step 2: Evaluate multiplication, division (* / // %)',
+                'Step 3: Evaluate addition, subtraction (+ -)',
+                'Step 4: Evaluate comparisons (== != < > <= >=)',
+                'Step 5: Evaluate logical operations (not, and, or)'
+            ];
+            
+            resultDiv.innerHTML = `
+                <div class="font-bold text-gray-800 mb-2">Evaluation Order for: ${input}</div>
+                <div class="space-y-1 text-sm">
+                    ${steps.map(step => `<div class="text-gray-600">• ${step}</div>`).join('')}
+                </div>
+                <div class="mt-3 p-2 bg-blue-100 rounded text-sm">
+                    <strong>Tip:</strong> Use parentheses to override precedence!
+                </div>
+            `;
+        }
+
+        // Flow Control Demonstrations
+        function demonstrateBranching() {
+            const examples = [
+                {
+                    title: 'Simple if-else',
+                    code: `score = 85
+if score >= 80:
+    print("Great job!")
+else:
+    print("Keep trying!")`
+                },
+                {
+                    title: 'Multiple conditions',
+                    code: `age = 20
+has_license = True
+if age >= 18 and has_license:
+    print("Can drive")
+elif age >= 16:
+    print("Can get learner's permit")
+else:
+    print("Too young to drive")`
+                }
+            ];
+            
+            const example = examples[Math.floor(Math.random() * examples.length)];
+            alert(`${example.title}:\n\n${example.code}`);
+        }
+
+        function demonstrateLoops() {
+            const examples = [
+                {
+                    title: 'For Loop',
+                    code: `for i in range(5):
+    print(f"Count: {i}")
+# Output: Count: 0, 1, 2, 3, 4`
+                },
+                {
+                    title: 'While Loop',
+                    code: `count = 0
+while count < 3:
+    print(f"Count: {count}")
+    count += 1
+# Output: Count: 0, 1, 2`
+                },
+                {
+                    title: 'Break and Continue',
+                    code: `for i in range(10):
+    if i == 3:
+        continue  # Skip 3
+    if i == 7:
+        break     # Stop at 7
+    print(i)
+# Output: 0, 1, 2, 4, 5, 6`
+                }
+            ];
+            
+            const example = examples[Math.floor(Math.random() * examples.length)];
+            alert(`${example.title}:\n\n${example.code}`);
+        }
+
+        function simulateFlowControl() {
+            const code = document.getElementById('flowControlCode').value;
+            const outputDiv = document.getElementById('flowControlOutput');
+            
+            // Simple simulation
+            outputDiv.innerHTML = `
+                <div class="text-green-400 mb-2">Simulating execution...</div>
+                <div class="text-gray-300 text-sm">
+                    Code analysis: ${code.split('\n').length} lines detected<br>
+                    Contains: ${code.includes('if') ? 'conditional statements' : 'no conditionals'}<br>
+                    Contains: ${code.includes('for') || code.includes('while') ? 'loops' : 'no loops'}
+                </div>
+                <div class="text-yellow-400 mt-2 text-sm">
+                    💡 Use the Interactive Demo section for full code execution!
+                </div>
+            `;
+        }
+
+        // I/O Practice Functions
+        function practiceFileIO() {
+            const scenarios = [
+                {
+                    title: 'Reading a file',
+                    code: `with open('data.txt', 'r') as f:
+    content = f.read()
+    print(content)`,
+                    explanation: 'Opens file in read mode, reads all content'
+                },
+                {
+                    title: 'Writing to a file',
+                    code: `with open('output.txt', 'w') as f:
+    f.write('Hello, World!')
+    f.write('\\nSecond line')`,
+                    explanation: 'Creates/overwrites file with new content'
+                },
+                {
+                    title: 'Appending to a file',
+                    code: `with open('log.txt', 'a') as f:
+    f.write('\\nNew log entry')`,
+                    explanation: 'Adds content to end without deleting existing data'
+                }
+            ];
+            
+            const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            document.getElementById('ioOutput').innerHTML = `
+                <div class="font-bold text-red-600 mb-2">${scenario.title}</div>
+                <div class="font-mono text-sm bg-gray-100 p-3 rounded mb-2">${scenario.code}</div>
+                <div class="text-gray-600 text-sm">${scenario.explanation}</div>
+            `;
+        }
+
+        function practiceConsoleIO() {
+            const scenarios = [
+                {
+                    title: 'Getting user input',
+                    code: `name = input("Enter your name: ")
+age = int(input("Enter your age: "))
+print(f"Hello {name}, you are {age} years old")`,
+                    explanation: 'Gets string input, converts age to integer'
+                },
+                {
+                    title: 'Input validation',
+                    code: `while True:
+    try:
+        num = int(input("Enter a number: "))
+        break
+    except ValueError:
+        print("Please enter a valid number")`,
+                    explanation: 'Keeps asking until valid integer is entered'
+                }
+            ];
+            
+            const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            document.getElementById('ioOutput').innerHTML = `
+                <div class="font-bold text-blue-600 mb-2">${scenario.title}</div>
+                <div class="font-mono text-sm bg-gray-100 p-3 rounded mb-2">${scenario.code}</div>
+                <div class="text-gray-600 text-sm">${scenario.explanation}</div>
+            `;
+        }
+
+        function practiceFormatting() {
+            const scenarios = [
+                {
+                    title: 'f-String formatting',
+                    code: `name = "Alice"
+score = 95.7
+print(f"{name} scored {score:.1f}%")
+# Output: Alice scored 95.7%`,
+                    explanation: 'Modern formatting with embedded expressions'
+                },
+                {
+                    title: '.format() method',
+                    code: `template = "Hello {}, you have {} messages"
+result = template.format("Bob", 5)
+print(result)
+# Output: Hello Bob, you have 5 messages`,
+                    explanation: 'Traditional formatting with placeholders'
+                }
+            ];
+            
+            const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            document.getElementById('ioOutput').innerHTML = `
+                <div class="font-bold text-green-600 mb-2">${scenario.title}</div>
+                <div class="font-mono text-sm bg-gray-100 p-3 rounded mb-2">${scenario.code}</div>
+                <div class="text-gray-600 text-sm">${scenario.explanation}</div>
+            `;
+        }
+
+        // Function Builder
+        function buildFunction() {
+            const name = document.getElementById('funcName').value.trim();
+            const params = document.getElementById('funcParams').value.trim();
+            const body = document.getElementById('funcBody').value.trim();
+            
+            if (!name) {
+                document.getElementById('builtFunction').innerHTML = '<div class="text-red-500">Please enter a function name</div>';
+                return;
+            }
+            
+            const funcCode = `def ${name}(${params || ''}):
+    """
+    Function description goes here.
+    """
+    ${body || 'pass  # TODO: Implement function body'}
+    
+# Example usage:
+# result = ${name}(${params ? params.split(',')[0].trim() : ''})`;
+            
+            document.getElementById('builtFunction').innerHTML = `<pre>${funcCode}</pre>`;
+        }
+
+        // Error Simulation
+        function simulateError(type) {
+            const errorExamples = {
+                syntax: {
+                    title: 'Syntax Error Example',
+                    wrong: 'if x > 10  # Missing colon\n    print("Big number")',
+                    right: 'if x > 10:  # Colon added\n    print("Big number")',
+                    explanation: 'Python requires a colon after if statements'
+                },
+                runtime: {
+                    title: 'Runtime Error Example',
+                    wrong: 'result = 10 / 0  # ZeroDivisionError',
+                    right: 'if denominator != 0:\n    result = 10 / denominator\nelse:\n    print("Cannot divide by zero")',
+                    explanation: 'Always check for conditions that could cause errors'
+                },
+                logic: {
+                    title: 'Logic Error Example',
+                    wrong: 'area = 2 * (length + width)  # Wrong formula',
+                    right: 'area = length * width  # Correct formula',
+                    explanation: 'Logic errors produce wrong results without crashing'
+                }
+            };
+            
+            const error = errorExamples[type];
+            document.getElementById('errorOutput').innerHTML = `
+                <div class="font-bold text-red-600 mb-3">${error.title}</div>
+                <div class="mb-3">
+                    <div class="text-sm font-semibold text-red-700 mb-1">❌ Wrong:</div>
+                    <div class="font-mono text-sm bg-red-100 p-2 rounded">${error.wrong}</div>
+                </div>
+                <div class="mb-3">
+                    <div class="text-sm font-semibold text-green-700 mb-1">✅ Correct:</div>
+                    <div class="font-mono text-sm bg-green-100 p-2 rounded">${error.right}</div>
+                </div>
+                <div class="text-gray-600 text-sm">
+                    <strong>Explanation:</strong> ${error.explanation}
+                </div>
+            `;
+        }
+
+        // Module Demonstrations
+        function demoModule(moduleName) {
+            const moduleExamples = {
+                math: {
+                    title: 'Math Module Demo',
+                    code: `import math
+
+# Mathematical constants
+print(f"Pi: {math.pi}")
+print(f"E: {math.e}")
+
+# Common functions
+print(f"Square root of 16: {math.sqrt(16)}")
+print(f"Ceiling of 4.1: {math.ceil(4.1)}")
+print(f"Floor of 4.9: {math.floor(4.9)}")`,
+                    output: 'Pi: 3.14159...\nE: 2.71828...\nSquare root of 16: 4.0\nCeiling of 4.1: 5\nFloor of 4.9: 4'
+                },
+                datetime: {
+                    title: 'DateTime Module Demo',
+                    code: `import datetime
+
+# Current date and time
+now = datetime.datetime.now()
+print(f"Current time: {now}")
+
+# Format date
+formatted = now.strftime("%Y-%m-%d %H:%M:%S")
+print(f"Formatted: {formatted}")
+
+# Day of week (0=Monday, 6=Sunday)
+print(f"Day of week: {now.weekday()}")`,
+                    output: 'Current time: 2024-10-07 14:30:15.123456\nFormatted: 2024-10-07 14:30:15\nDay of week: 0'
+                },
+                random: {
+                    title: 'Random Module Demo',
+                    code: `import random
+
+# Random integer between 1 and 6 (dice roll)
+dice = random.randint(1, 6)
+print(f"Dice roll: {dice}")
+
+# Random choice from list
+colors = ['red', 'blue', 'green']
+color = random.choice(colors)
+print(f"Random color: {color}")
+
+# Shuffle a list
+numbers = [1, 2, 3, 4, 5]
+random.shuffle(numbers)
+print(f"Shuffled: {numbers}")`,
+                    output: 'Dice roll: 4\nRandom color: blue\nShuffled: [3, 1, 5, 2, 4]'
+                },
+                os: {
+                    title: 'OS Module Demo',
+                    code: `import os
+import os.path
+
+# Check if file exists
+file_exists = os.path.exists('myfile.txt')
+print(f"File exists: {file_exists}")
+
+# Get current directory
+current_dir = os.getcwd()
+print(f"Current directory: {current_dir}")
+
+# List directory contents
+files = os.listdir('.')
+print(f"Files: {files[:3]}...")  # Show first 3`,
+                    output: 'File exists: False\nCurrent directory: /home/user/project\nFiles: [\'main.py\', \'data.txt\', \'README.md\']...'
+                }
+            };
+            
+            const demo = moduleExamples[moduleName];
+            document.getElementById('moduleOutput').innerHTML = `
+                <div class="font-bold text-purple-600 mb-3">${demo.title}</div>
+                <div class="mb-3">
+                    <div class="text-sm font-semibold mb-1">Code:</div>
+                    <div class="font-mono text-sm bg-gray-100 p-3 rounded">${demo.code}</div>
+                </div>
+                <div>
+                    <div class="text-sm font-semibold mb-1">Output:</div>
+                    <div class="font-mono text-sm bg-green-100 p-3 rounded">${demo.output}</div>
+                </div>
+            `;
+        }
+
+        // Exam Readiness Checker
+        function checkExamReadiness() {
+            const checkboxes = document.querySelectorAll('.exam-checkbox');
+            const total = checkboxes.length;
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const percentage = Math.round((checked / total) * 100);
+            
+            document.getElementById('examProgress').textContent = `Progress: ${checked}/${total} Topics Mastered`;
+            document.getElementById('examProgressBar').style.width = `${percentage}%`;
+            
+            let message = '';
+            let color = '';
+            
+            if (percentage >= 90) {
+                message = '🎉 Excellent! You\'re ready for the IT Specialist exam!';
+                color = 'text-green-600';
+            } else if (percentage >= 70) {
+                message = '👍 Good progress! Review unchecked topics and you\'ll be ready.';
+                color = 'text-blue-600';
+            } else if (percentage >= 50) {
+                message = '📚 Keep studying! You\'re halfway there.';
+                color = 'text-yellow-600';
+            } else {
+                message = '💪 Don\'t give up! Focus on the fundamentals first.';
+                color = 'text-red-600';
+            }
+            
+            // Update progress display
+            const progressDiv = document.getElementById('examProgress');
+            progressDiv.className = `text-2xl font-bold mb-4 ${color}`;
+            progressDiv.textContent = `${message} (${checked}/${total})`;
+        }
+
+        // Update progress tracking for exam checkboxes
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('exam-checkbox')) {
+                const checkboxes = document.querySelectorAll('.exam-checkbox');
+                const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+                const total = checkboxes.length;
+                const percentage = Math.round((checked / total) * 100);
+                
+                document.getElementById('examProgress').textContent = `Progress: ${checked}/${total} Topics Mastered`;
+                document.getElementById('examProgressBar').style.width = `${percentage}%`;
+            }
+        });
+
+        // === INITIALIZATION ===
+        window.onload = function() {
+            showSection('basics');
+            updateProgress();
+            
+            // Add some initial file content for demo
+            fileContent = ['Welcome to Python!', 'This is sample content.'];
+        };
+
+    </script>
+
+</body>
+</html>

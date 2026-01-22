@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Miniproject 3: AI Code Reviewer Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            border-radius: 15px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .mission-brief {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #ffd700;
+        }
+        
+        .section {
+            margin: 25px 0;
+            padding: 25px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border-left: 6px solid #007bff;
+            position: relative;
+        }
+        
+        .phase-card {
+            background: white;
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #007bff;
+        }
+        
+        .phase-header {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .ai-prompt-zone {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 2px dashed #673ab7;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .ai-prompt-zone::before {
+            content: '🤖 AI ZONE';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #673ab7;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .challenge-level {
+            display: inline-block;
+            background: #dc3545;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+        
+        .beginner { background: #28a745; }
+        .intermediate { background: #ffc107; color: #000; }
+        .advanced { background: #dc3545; }
+        
+        .reveal-button {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 8px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .reveal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .hidden-content {
+            display: none;
+            background: #d1ecf1;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+            animation: slideIn 0.3s ease-in-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .code-sample {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            border: 2px solid #007bff;
+        }
+        
+        .interactive-element {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .interactive-element:hover {
+            background: #ffe8a1;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .deliverables {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #28a745;
+            color: #155724;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 2px solid #dc3545;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .progress-tracker {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            border: 2px solid #673ab7;
+        }
+        
+        .checkpoint {
+            margin: 12px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .checkpoint:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .emoji-large {
+            font-size: 2.5em;
+            margin: 0 15px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .phase-counter {
+            display: inline-block;
+            background: #ffd700;
+            color: #000;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .skill-badge {
+            display: inline-block;
+            background: #6f42c1;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin: 3px;
+            font-weight: bold;
+        }
+        
+        .ai-tip {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #ff4757;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="emoji-large">🤖</span>AI Code Reviewer Assistant<span class="emoji-large">🔍</span></h1>
+            <h2>Build Your Own AI-Powered Code Analysis Tool</h2>
+            <p><strong>Mission:</strong> Create a Python program that uses AI to review, analyze, and improve code quality</p>
+        </div>
+
+        <div class="mission-brief no-select">
+            <h3>🎯 Mission Briefing</h3>
+            <p>You're tasked with building an AI assistant that can analyze Python code, detect issues, suggest improvements, and even generate documentation. This project combines functions, file handling, API integration, and AI prompt engineering!</p>
+            
+            <div style="display: flex; flex-wrap: wrap; margin: 15px 0;">
+                <span class="skill-badge">Functions & Classes</span>
+                <span class="skill-badge">File I/O Operations</span>
+                <span class="skill-badge">API Integration</span>
+                <span class="skill-badge">AI Prompt Engineering</span>
+                <span class="skill-badge">Error Handling</span>
+                <span class="skill-badge">Code Analysis</span>
+            </div>
+        </div>
+
+        <div class="warning-box no-select">
+            <strong>⚠️ CRITICAL RULE:</strong> You must use AI (Gemini/ChatGPT) as your <u>strategic advisor only</u>. Ask for guidance on architecture, best practices, and problem-solving approaches. Never ask AI to write entire functions for you!
+        </div>
+
+        <div class="progress-tracker">
+            <h4>🏆 Mission Progress Tracker</h4>
+            <div class="checkpoint">
+                <input type="checkbox" id="phase1"> <label for="phase1"><strong>Phase 1:</strong> Core Architecture Setup</label>
+                <span class="challenge-level beginner">Beginner</span>
+            </div>
+            <div class="checkpoint">
+                <input type="checkbox" id="phase2"> <label for="phase2"><strong>Phase 2:</strong> File Processing Engine</label>
+                <span class="challenge-level intermediate">Intermediate</span>
+            </div>
+            <div class="checkpoint">
+                <input type="checkbox" id="phase3"> <label for="phase3"><strong>Phase 3:</strong> AI Integration Layer</label>
+                <span class="challenge-level advanced">Advanced</span>
+            </div>
+            <div class="checkpoint">
+                <input type="checkbox" id="phase4"> <label for="phase4"><strong>Phase 4:</strong> Analysis & Reporting</label>
+                <span class="challenge-level advanced">Advanced</span>
+            </div>
+            <div class="checkpoint">
+                <input type="checkbox" id="phase5"> <label for="phase5"><strong>Phase 5:</strong> Enhancement Features</label>
+                <span class="challenge-level advanced">Advanced</span>
+            </div>
+        </div>
+
+        <!-- Phase 1 -->
+        <div class="section">
+            <h3>🏗️ Phase 1: Core Architecture Setup</h3>
+            
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-counter">1</span>Project Structure & Main Class
+                    <span class="challenge-level beginner">Beginner</span>
+                </div>
+                
+                <p><strong>Objective:</strong> Design the main CodeReviewer class and project structure.</p>
+                
+                <div class="ai-prompt-zone">
+                    <p><strong>🎯 Your AI Consultation Task:</strong></p>
+                    <button class="reveal-button" onclick="toggleContent('prompt1a')">🧠 Reveal Architecture Guidance</button>
+                    <div id="prompt1a" class="hidden-content no-select">
+                        <p><strong>Ask AI about:</strong></p>
+                        <ul>
+                            <li>Best practices for organizing a code analysis tool in Python</li>
+                            <li>Should you use a single class or multiple classes for different analysis types?</li>
+                            <li>What attributes should a CodeReviewer class have?</li>
+                            <li>How to structure methods for different analysis functions</li>
+                            <li>Error handling strategies for file operations</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="interactive-element" onclick="showHint('hint1a')">
+                    💡 Click for implementation hints after consulting AI
+                </div>
+                <div id="hint1a" class="hidden-content">
+                    <p><strong>Implementation Goals:</strong></p>
+                    <ul>
+                        <li>Create a <code>CodeReviewer</code> class with initialization method</li>
+                        <li>Add attributes for storing file path, code content, and analysis results</li>
+                        <li>Include placeholder methods for different analysis types</li>
+                    </ul>
+                </div>
+                
+                <div class="code-sample">
+# Your CodeReviewer class structure might look like:
+class CodeReviewer:
+    def __init__(self, file_path=None):
+        # Initialize your attributes here
+        pass
+    
+    def load_code_file(self, file_path):
+        # File loading logic
+        pass
+    
+    def analyze_syntax(self):
+        # Syntax analysis placeholder
+        pass</div>
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-counter">2</span>File Reading & Validation
+                    <span class="challenge-level beginner">Beginner</span>
+                </div>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt1b')">🔍 File Handling Strategy</button>
+                    <div id="prompt1b" class="hidden-content no-select">
+                        <p><strong>Strategic Questions for AI:</strong></p>
+                        <ul>
+                            <li>What's the safest way to read files in Python to avoid crashes?</li>
+                            <li>How should you validate that a file contains Python code?</li>
+                            <li>What file extensions should you accept (.py, .pyw, etc.)?</li>
+                            <li>How to handle different text encodings?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="interactive-element" onclick="showHint('hint1b')">
+                    🎯 Get coding direction here
+                </div>
+                <div id="hint1b" class="hidden-content">
+                    <p><strong>Build these features:</strong></p>
+                    <ul>
+                        <li>Safe file reading with try/except</li>
+                        <li>File extension validation</li>
+                        <li>Basic Python syntax validation using <code>ast.parse()</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="section">
+            <h3>⚙️ Phase 2: File Processing Engine</h3>
+            
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-counter">3</span>Code Analysis Functions
+                    <span class="challenge-level intermediate">Intermediate</span>
+                </div>
+                
+                <p><strong>Challenge:</strong> Build functions that can automatically analyze code quality.</p>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt2a')">🔬 Analysis Strategy</button>
+                    <div id="prompt2a" class="hidden-content no-select">
+                        <p><strong>Consult AI about:</strong></p>
+                        <ul>
+                            <li>What are the most common Python code quality issues beginners make?</li>
+                            <li>How can you count lines of code, functions, and classes programmatically?</li>
+                            <li>What patterns should you look for to detect potential bugs?</li>
+                            <li>How to identify missing docstrings or comments?</li>
+                            <li>Ways to detect overly complex functions (too many lines/parameters)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="ai-tip">
+                    <strong>🤖 AI Integration Hint:</strong> You'll need these analysis functions to work independently first, then later connect them to AI for smarter suggestions!
+                </div>
+
+                <div class="interactive-element" onclick="showHint('hint2a')">
+                    🛠️ Implementation roadmap
+                </div>
+                <div id="hint2a" class="hidden-content">
+                    <p><strong>Functions to implement:</strong></p>
+                    <ul>
+                        <li><code>count_lines()</code> - Total, blank, comment lines</li>
+                        <li><code>find_functions()</code> - Extract function definitions</li>
+                        <li><code>check_docstrings()</code> - Missing documentation</li>
+                        <li><code>analyze_complexity()</code> - Function length, parameters</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-counter">4</span>Pattern Detection System
+                    <span class="challenge-level intermediate">Intermediate</span>
+                </div>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt2b')">🕵️ Pattern Recognition</button>
+                    <div id="prompt2b" class="hidden-content no-select">
+                        <p><strong>AI Consultation Topics:</strong></p>
+                        <ul>
+                            <li>Common anti-patterns in beginner Python code</li>
+                            <li>How to detect unused variables or imports</li>
+                            <li>Regular expressions vs AST parsing for code analysis</li>
+                            <li>Identifying security vulnerabilities in simple code</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="section">
+            <h3>🧠 Phase 3: AI Integration Layer</h3>
+            
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-counter">5</span>AI API Connection
+                    <span class="challenge-level advanced">Advanced</span>
+                </div>
+                
+                <p><strong>Mission Critical:</strong> Connect your analyzer to an AI service for intelligent code review.</p>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt3a')">🔌 API Integration Strategy</button>
+                    <div id="prompt3a" class="hidden-content no-select">
+                        <p><strong>Strategic AI Questions:</strong></p>
+                        <ul>
+                            <li>What's the best way to structure API calls to AI services in Python?</li>
+                            <li>How should you handle API rate limits and errors gracefully?</li>
+                            <li>What information should you send to AI vs keep local?</li>
+                            <li>How to format code analysis results for AI processing?</li>
+                            <li>Best practices for API key management and security</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>🔒 Security Note:</strong> Never hardcode API keys! Ask AI about environment variables and secure configuration.
+                </div>
+
+                <div class="interactive-element" onclick="showHint('hint3a')">
+                    🚀 Get API integration guidance
+                </div>
+                <div id="hint3a" class="hidden-content">
+                    <p><strong>Implementation steps:</strong></p>
+                    <ul>
+                        <li>Set up API configuration (OpenAI, Gemini, or local AI)</li>
+                        <li>Create prompt templates for different analysis types</li>
+                        <li>Handle API responses and errors</li>
+                        <li>Parse AI suggestions into actionable feedback</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-counter">6</span>Intelligent Prompt Engineering
+                    <span class="challenge-level advanced">Advanced</span>
+                </div>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt3b')">✨ Prompt Crafting Mastery</button>
+                    <div id="prompt3b" class="hidden-content no-select">
+                        <p><strong>Ask AI to help you design prompts for:</strong></p>
+                        <ul>
+                            <li>How to structure prompts that give specific, actionable code feedback?</li>
+                            <li>What context should you provide about the student's skill level?</li>
+                            <li>How to ask for both positive feedback and improvement suggestions?</li>
+                            <li>Ways to get AI to explain complex concepts simply</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="section">
+            <h3>📊 Phase 4: Analysis & Reporting</h3>
+            
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-counter">7</span>Report Generation System
+                    <span class="challenge-level advanced">Advanced</span>
+                </div>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt4a')">📈 Reporting Strategy</button>
+                    <div id="prompt4a" class="hidden-content no-select">
+                        <p><strong>Consultation areas:</strong></p>
+                        <ul>
+                            <li>How to format code analysis results for easy reading?</li>
+                            <li>What's a good scoring system for code quality?</li>
+                            <li>How to prioritize suggestions (critical vs minor improvements)?</li>
+                            <li>Best way to save reports (text, HTML, JSON)?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 5 -->
+        <div class="section">
+            <h3>🌟 Phase 5: Enhancement Features</h3>
+            
+            <div class="phase-card">
+                <div class="phase-header">
+                    <span class="phase-counter">8</span>Advanced Features (Choose 2)
+                    <span class="challenge-level advanced">Advanced</span>
+                </div>
+                
+                <p><strong>Pick two enhancement features to implement:</strong></p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                    <div class="interactive-element">
+                        <strong>🎯 Code Improvement Suggestions</strong>
+                        <p>AI suggests specific code rewrites and improvements</p>
+                    </div>
+                    <div class="interactive-element">
+                        <strong>📝 Auto-Documentation</strong>
+                        <p>Generate docstrings and comments for functions</p>
+                    </div>
+                    <div class="interactive-element">
+                        <strong>🔧 Bug Prediction</strong>
+                        <p>Predict potential runtime errors before they happen</p>
+                    </div>
+                    <div class="interactive-element">
+                        <strong>📊 Performance Analysis</strong>
+                        <p>Suggest optimization opportunities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deliverables -->
+        <div class="deliverables">
+            <h3>🎯 Mission Deliverables</h3>
+            
+            <h4>1. 💻 The AI Code Reviewer Tool</h4>
+            <p><strong>File:</strong> <code>ai_code_reviewer.py</code></p>
+            <ul>
+                <li>Complete CodeReviewer class with all core functionality</li>
+                <li>AI integration for intelligent analysis</li>
+                <li>User-friendly command-line interface</li>
+                <li>Error handling and input validation</li>
+            </ul>
+            
+            <h4>2. 📋 AI Strategy Log</h4>
+            <p>Document your AI consultations for each phase:</p>
+            
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0; border: 2px solid #28a745;">
+                <tr style="background: #d4edda;">
+                    <th style="border: 1px solid #28a745; padding: 12px;">Phase</th>
+                    <th style="border: 1px solid #28a745; padding: 12px;">AI Consultation Question</th>
+                    <th style="border: 1px solid #28a745; padding: 12px;">Key Insight Gained</th>
+                    <th style="border: 1px solid #28a745; padding: 12px;">How You Applied It</th>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #28a745; padding: 8px;">1</td>
+                    <td style="border: 1px solid #28a745; padding: 8px;">[Your architecture question]</td>
+                    <td style="border: 1px solid #28a745; padding: 8px;">[AI's main advice]</td>
+                    <td style="border: 1px solid #28a745; padding: 8px;">[Your implementation]</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #28a745; padding: 8px;">2-8</td>
+                    <td style="border: 1px solid #28a745; padding: 8px;">...continue for all phases...</td>
+                    <td style="border: 1px solid #28a745; padding: 8px;">...</td>
+                    <td style="border: 1px solid #28a745; padding: 8px;">...</td>
+                </tr>
+            </table>
+            
+            <h4>3. 🧪 Test Cases & Demo</h4>
+            <ul>
+                <li>Test your tool on at least 3 different Python files</li>
+                <li>Include one file with intentional bugs/issues</li>
+                <li>Document what your AI reviewer found vs missed</li>
+            </ul>
+            
+            <h4>4. 🎭 Creative Challenge Response</h4>
+            <p><strong>Answer:</strong> "If you could add one more AI-powered feature to your code reviewer, what would it be and why? Describe how you would implement it."</p>
+        </div>
+
+        <div class="ai-tip">
+            <strong>🏆 Success Metrics:</strong> Your tool should be able to analyze a Python file, provide meaningful feedback, and suggest improvements that would actually help a beginner programmer learn and improve their code quality!
+        </div>
+    </div>
+
+    <script>
+        // Anti-copy protection
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && ['a','c','s','u','p'].includes(e.key)) e.preventDefault();
+            if (e.key === 'F12') e.preventDefault();
+        });
+
+        function toggleContent(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = element.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showHint(hintId) {
+            document.getElementById(hintId).style.display = 'block';
+        }
+
+        // Progress tracking with celebrations
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const completed = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                const total = document.querySelectorAll('input[type="checkbox"]').length;
+                
+                if (completed === 1) {
+                    showCelebration('🎯 Great start! You\'re building something amazing!');
+                } else if (completed === total) {
+                    showCelebration('🎉 Mission Complete! You\'ve built an AI-powered code reviewer!');
+                } else if (completed === Math.floor(total/2)) {
+                    showCelebration('🔥 Halfway there! Your AI integration skills are growing!');
+                }
+            });
+        });
+
+        function showCelebration(message) {
+            const celebration = document.createElement('div');
+            celebration.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 1000;
+                background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                color: white; padding: 15px 25px; border-radius: 25px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                animation: slideIn 0.5s ease-out;
+            `;
+            celebration.textContent = message;
+            document.body.appendChild(celebration);
+            setTimeout(() => celebration.remove(), 4000);
+        }
+
+        // Interactive element animations
+        document.querySelectorAll('.interactive-element').forEach(element => {
+            element.addEventListener('click', function() {
+                this.style.background = '#d4edda';
+                this.innerHTML = '✅ ' + this.innerHTML.replace('✅ ', '');
+            });
+        });
+    </script>
+</body>
+</html>

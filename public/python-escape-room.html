@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Escape Room - Code Your Way Out! 🔓</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 30px rgba(0,255,136,0.3);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0,255,136,0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0,255,136,0.5); }
+            to { text-shadow: 0 0 30px rgba(0,255,136,0.8), 0 0 40px rgba(0,255,136,0.5); }
+        }
+
+        .timer {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00ff88;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer.warning {
+            color: #ff9800;
+            animation: pulse 1s infinite;
+        }
+
+        .timer.danger {
+            color: #f44336;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .progress-bar {
+            background: rgba(0,0,0,0.3);
+            height: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            border: 2px solid #00ff88;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: black;
+        }
+
+        .room {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .room.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .room-content {
+            background: rgba(0,0,0,0.5);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid #00ff88;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .room-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #00ff88;
+        }
+
+        .room-icon {
+            font-size: 4em;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .room-title {
+            flex: 1;
+        }
+
+        .room-title h2 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .room-title p {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+
+        .puzzle {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #00ff88;
+        }
+
+        .puzzle h3 {
+            color: #00ff88;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin: 15px 0;
+            border: 1px solid #3c3c3c;
+            color: #d4d4d4;
+            font-size: 0.95em;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .keyword { color: #c586c0; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+        .comment { color: #6a9955; font-style: italic; }
+        .function { color: #dcdcaa; }
+        .method { color: #dcdcaa; }
+        .variable { color: #9cdcfe; }
+        .operator { color: #d4d4d4; }
+        .bracket { color: #ffd700; }
+
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            border: 2px solid #00ff88;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(0,255,136,0.5);
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            margin: 10px 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,255,136,0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid #00ff88;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0,255,136,0.2);
+        }
+
+        .hint-box {
+            background: rgba(255,152,0,0.2);
+            border: 2px solid #ff9800;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .hint-box.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .success-message {
+            background: rgba(76,175,80,0.3);
+            border: 2px solid #4caf50;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: fadeIn 0.5s;
+        }
+
+        .error-message {
+            background: rgba(244,67,54,0.3);
+            border: 2px solid #f44336;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .choices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .choice {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #00ff88;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .choice:hover {
+            background: rgba(0,255,136,0.2);
+            transform: scale(1.05);
+        }
+
+        .choice.selected {
+            background: rgba(0,255,136,0.3);
+            border-color: #00d4ff;
+        }
+
+        .completion-screen {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .completion-screen.show {
+            display: block;
+            animation: fadeIn 1s;
+        }
+
+        .trophy {
+            font-size: 10em;
+            animation: bounce 2s infinite, rotate 3s infinite;
+        }
+
+        @keyframes rotate {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #00ff88;
+        }
+
+        .stat-value {
+            font-size: 3em;
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .start-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .start-screen.hide {
+            display: none;
+        }
+
+        .story {
+            background: rgba(0,0,0,0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #ff9800;
+            font-size: 1.2em;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+            <div class="header">
+                <h1>🔓 PYTHON ESCAPE ROOM 🐍</h1>
+                <p style="font-size: 1.5em; margin-top: 15px;">Can you code your way out?</p>
+            </div>
+
+            <div class="story">
+                <p>⚠️ <strong>ALERT!</strong> You've been locked in the Python Lab!</p>
+                <p style="margin-top: 15px;">The AI has malfunctioned and sealed all the doors. To escape, you must solve 5 Python coding puzzles within <strong>20 minutes</strong>.</p>
+                <p style="margin-top: 15px;">Each puzzle unlocks the next room. Work fast, think smart, and use your Python skills!</p>
+                <p style="margin-top: 15px; color: #00ff88;">🎯 <strong>Goal:</strong> Solve all 5 rooms to escape!</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="startGame()" style="font-size: 1.5em; padding: 20px 60px;">
+                🚀 START ESCAPE ROOM
+            </button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" style="display: none;">
+            <div class="header">
+                <h1>🔓 PYTHON ESCAPE ROOM</h1>
+                <div class="timer" id="timer">20:00</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar">Room 0 of 5</div>
+                </div>
+            </div>
+
+            <!-- Room 1: Variables & Data Types -->
+            <div class="room active" id="room1">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">🔢</div>
+                        <div class="room-title">
+                            <h2>Room 1: The Variable Vault</h2>
+                            <p>Unlock the vault by understanding variables and data types</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: Variable Detective</h3>
+                        <p>Trace through this code and figure out what gets printed:</p>
+                        
+                        <div class="code-block"><span class="comment"># What will this code print?</span>
+<span class="variable">name</span> <span class="operator">=</span> <span class="string">"Python"</span>
+<span class="variable">age</span> <span class="operator">=</span> <span class="number">30</span>
+<span class="variable">score</span> <span class="operator">=</span> <span class="number">85</span>
+
+<span class="variable">age</span> <span class="operator">=</span> <span class="variable">age</span> <span class="operator">+</span> <span class="number">3</span>
+<span class="variable">score</span> <span class="operator">=</span> <span class="variable">score</span> <span class="operator">+</span> <span class="number">10</span>
+
+<span class="function">print</span><span class="bracket">(</span><span class="variable">name</span><span class="bracket">)</span>
+<span class="function">print</span><span class="bracket">(</span><span class="variable">age</span><span class="bracket">)</span>
+<span class="function">print</span><span class="bracket">(</span><span class="variable">score</span><span class="bracket">)</span></div>
+
+                        <p><strong>What gets printed?</strong></p>
+                        
+                        <div style="margin: 20px 0;">
+                            <label>First print (name):</label>
+                            <input type="text" id="q1_name" placeholder="What prints first?" />
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>Second print (age):</label>
+                            <input type="number" id="q1_age" placeholder="What prints second?" />
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>Third print (score):</label>
+                            <input type="number" id="q1_score" placeholder="What prints third?" />
+                        </div>
+
+                        <button class="btn btn-primary" onclick="checkRoom1()">🔓 Unlock Vault</button>
+                        <button class="btn btn-secondary" onclick="showHint(1)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint1">
+                        <strong>💡 Hint:</strong> 
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>name stays "Python" (it never changes)</li>
+                            <li>age starts at 30, then we add 3 → 33</li>
+                            <li>score starts at 85, then we add 10 → 95</li>
+                        </ul>
+                    </div>
+
+                    <div id="room1_feedback"></div>
+                </div>
+            </div>
+
+            <!-- Room 2: Operators -->
+            <div class="room" id="room2">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">➕</div>
+                        <div class="room-title">
+                            <h2>Room 2: The Operator Chamber</h2>
+                            <p>Calculate your way through the locked door</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: Math Mystery</h3>
+                        <p>Solve these Python calculations to unlock the door:</p>
+                        
+                        <div class="code-block"><span class="comment"># Calculate the unlock code</span>
+<span class="variable">a</span> <span class="operator">=</span> <span class="number">10</span>
+<span class="variable">b</span> <span class="operator">=</span> <span class="number">5</span>
+
+<span class="variable">result1</span> <span class="operator">=</span> <span class="variable">a</span> <span class="operator">+</span> <span class="variable">b</span>        <span class="comment"># What is this?</span>
+<span class="variable">result2</span> <span class="operator">=</span> <span class="variable">a</span> <span class="operator">*</span> <span class="variable">b</span>        <span class="comment"># What is this?</span>
+<span class="variable">result3</span> <span class="operator">=</span> <span class="variable">result1</span> <span class="operator">+</span> <span class="variable">result2</span>   <span class="comment"># What is this?</span>
+
+<span class="variable">unlock_code</span> <span class="operator">=</span> <span class="variable">result3</span> <span class="operator">-</span> <span class="number">10</span>
+
+<span class="function">print</span><span class="bracket">(</span><span class="variable">unlock_code</span><span class="bracket">)</span></div>
+
+                        <p><strong>Calculate each step:</strong></p>
+                        
+                        <input type="number" id="q2_result1" placeholder="result1 = a + b = ?" />
+                        <input type="number" id="q2_result2" placeholder="result2 = a * b = ?" />
+                        <input type="number" id="q2_result3" placeholder="result3 = result1 + result2 = ?" />
+                        <input type="number" id="q2_code" placeholder="unlock_code = result3 - 10 = ?" />
+
+                        <button class="btn btn-primary" onclick="checkRoom2()">🔓 Enter Code</button>
+                        <button class="btn btn-secondary" onclick="showHint(2)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint2">
+                        <strong>💡 Hint:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>result1: 10 + 5 = ?</li>
+                            <li>result2: 10 * 5 = ?</li>
+                            <li>result3: Add result1 and result2 together</li>
+                            <li>unlock_code: Take result3 and subtract 10</li>
+                        </ul>
+                    </div>
+
+                    <div id="room2_feedback"></div>
+                </div>
+            </div>
+
+            <!-- Room 3: Conditionals -->
+            <div class="room" id="room3">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">🔀</div>
+                        <div class="room-title">
+                            <h2>Room 3: The Decision Door</h2>
+                            <p>Make the right choice with if/else statements</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: If Statement Challenge</h3>
+                        <p>What will this code print?</p>
+                        
+                        <div class="code-block"><span class="variable">points</span> <span class="operator">=</span> <span class="number">75</span>
+<span class="variable">bonus</span> <span class="operator">=</span> <span class="number">20</span>
+<span class="variable">total</span> <span class="operator">=</span> <span class="variable">points</span> <span class="operator">+</span> <span class="variable">bonus</span>
+
+<span class="keyword">if</span> <span class="variable">total</span> <span class="operator">>=</span> <span class="number">100</span><span class="operator">:</span>
+    <span class="function">print</span><span class="bracket">(</span><span class="string">"WINNER"</span><span class="bracket">)</span>
+<span class="keyword">elif</span> <span class="variable">total</span> <span class="operator">>=</span> <span class="number">80</span><span class="operator">:</span>
+    <span class="function">print</span><span class="bracket">(</span><span class="string">"GREAT"</span><span class="bracket">)</span>
+<span class="keyword">else</span><span class="operator">:</span>
+    <span class="function">print</span><span class="bracket">(</span><span class="string">"NICE"</span><span class="bracket">)</span></div>
+
+                        <p><strong>What gets printed?</strong></p>
+                        
+                        <div class="choices">
+                            <div class="choice" onclick="selectChoice(3, 'WINNER')">
+                                <h3>WINNER</h3>
+                            </div>
+                            <div class="choice" onclick="selectChoice(3, 'GREAT')">
+                                <h3>GREAT</h3>
+                            </div>
+                            <div class="choice" onclick="selectChoice(3, 'NICE')">
+                                <h3>NICE</h3>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="checkRoom3()">🔓 Submit Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(3)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint3">
+                        <strong>💡 Hint:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>First, calculate total: 75 + 20 = ?</li>
+                            <li>Then check: Is total >= 100?</li>
+                            <li>If not, check: Is total >= 80?</li>
+                            <li>The first TRUE condition runs!</li>
+                        </ul>
+                    </div>
+
+                    <div id="room3_feedback"></div>
+                </div>
+            </div>
+
+            <!-- Room 4: Loops -->
+            <div class="room" id="room4">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">🔁</div>
+                        <div class="room-title">
+                            <h2>Room 4: The Loop Lab</h2>
+                            <p>Break the infinite loop to escape</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: Loop Counter</h3>
+                        <p>How many times will this loop run?</p>
+                        
+                        <div class="code-block"><span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>
+
+<span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span><span class="bracket">(</span><span class="number">5</span><span class="bracket">)</span><span class="operator">:</span>
+    <span class="variable">count</span> <span class="operator">=</span> <span class="variable">count</span> <span class="operator">+</span> <span class="number">1</span>
+    <span class="function">print</span><span class="bracket">(</span><span class="variable">i</span><span class="bracket">)</span>
+
+<span class="function">print</span><span class="bracket">(</span><span class="string">"Total:"</span>, <span class="variable">count</span><span class="bracket">)</span></div>
+
+                        <p><strong>Answer these questions:</strong></p>
+                        <input type="number" id="q4_count" placeholder="What is the final count?" />
+                        <input type="text" id="q4_values" placeholder="What values does i print? (e.g., 0, 1, 2, 3, 4)" />
+
+                        <button class="btn btn-primary" onclick="checkRoom4()">🔓 Break the Loop</button>
+                        <button class="btn btn-secondary" onclick="showHint(4)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint4">
+                        <strong>💡 Hint:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>range(5) gives you: 0, 1, 2, 3, 4</li>
+                            <li>That's 5 numbers total!</li>
+                            <li>Each time the loop runs, count goes up by 1</li>
+                            <li>So count will be 5 at the end</li>
+                        </ul>
+                    </div>
+
+                    <div id="room4_feedback"></div>
+                </div>
+            </div>
+
+            <!-- Room 5: Lists -->
+            <div class="room" id="room5">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">📝</div>
+                        <div class="room-title">
+                            <h2>Room 5: The List Library</h2>
+                            <p>Master lists to unlock the final door</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: List Master</h3>
+                        <p>Trace through these list operations:</p>
+                        
+                        <div class="code-block"><span class="variable">numbers</span> <span class="operator">=</span> <span class="bracket">[</span><span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span><span class="bracket">]</span>
+
+<span class="variable">numbers</span><span class="operator">.</span><span class="method">append</span><span class="bracket">(</span><span class="number">40</span><span class="bracket">)</span>
+<span class="variable">numbers</span><span class="operator">.</span><span class="method">append</span><span class="bracket">(</span><span class="number">50</span><span class="bracket">)</span>
+
+<span class="variable">first</span> <span class="operator">=</span> <span class="variable">numbers</span><span class="bracket">[</span><span class="number">0</span><span class="bracket">]</span>
+<span class="variable">last</span> <span class="operator">=</span> <span class="variable">numbers</span><span class="bracket">[</span><span class="operator">-</span><span class="number">1</span><span class="bracket">]</span>
+<span class="variable">length</span> <span class="operator">=</span> <span class="function">len</span><span class="bracket">(</span><span class="variable">numbers</span><span class="bracket">)</span>
+
+<span class="variable">password</span> <span class="operator">=</span> <span class="variable">first</span> <span class="operator">+</span> <span class="variable">last</span> <span class="operator">+</span> <span class="variable">length</span>
+
+<span class="function">print</span><span class="bracket">(</span><span class="variable">password</span><span class="bracket">)</span></div>
+
+                        <p><strong>What is the final password?</strong></p>
+                        <input type="number" id="q5_password" placeholder="password = ?" />
+
+                        <p style="margin-top: 20px;"><strong>Bonus: What is the final list?</strong></p>
+                        <input type="text" id="q5_list" placeholder="e.g., [10, 20, 30, 40, 50]" />
+
+                        <button class="btn btn-primary" onclick="checkRoom5()">🔓 ESCAPE!</button>
+                        <button class="btn btn-secondary" onclick="showHint(5)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint5">
+                        <strong>💡 Hint:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Start with [10, 20, 30]</li>
+                            <li>append(40) → [10, 20, 30, 40]</li>
+                            <li>append(50) → [10, 20, 30, 40, 50]</li>
+                            <li>first = numbers[0] = 10</li>
+                            <li>last = numbers[-1] = 50</li>
+                            <li>length = 5 items</li>
+                            <li>password = 10 + 50 + 5</li>
+                        </ul>
+                    </div>
+
+                    <div id="room5_feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="completion-screen" id="completionScreen">
+            <div class="trophy">🏆</div>
+            <h1 style="font-size: 3em; margin: 20px 0;">YOU ESCAPED!</h1>
+            <p style="font-size: 1.5em; margin-bottom: 30px;">Congratulations! You've successfully coded your way out!</p>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="finalTime">15:23</div>
+                    <div>Time Taken</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">5/5</div>
+                    <div>Rooms Solved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="hintsUsed">2</div>
+                    <div>Hints Used</div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="location.reload()" style="font-size: 1.5em; padding: 20px 60px; margin-top: 30px;">
+                🔄 Play Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentRoom = 1;
+        let timeLeft = 1200; // 20 minutes
+        let timerInterval;
+        let hintsUsedCount = 0;
+        let room3Selected = '';
+
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hide');
+            document.getElementById('gameScreen').style.display = 'block';
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    gameOver();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const timerEl = document.getElementById('timer');
+            timerEl.textContent = display;
+            
+            if (timeLeft <= 300 && timeLeft > 60) {
+                timerEl.className = 'timer warning';
+            } else if (timeLeft <= 60) {
+                timerEl.className = 'timer danger';
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentRoom / 5) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressBar').textContent = `Room ${currentRoom} of 5`;
+        }
+
+        function showHint(room) {
+            document.getElementById('hint' + room).classList.add('show');
+            hintsUsedCount++;
+        }
+
+        function nextRoom() {
+            document.getElementById('room' + currentRoom).classList.remove('active');
+            currentRoom++;
+            if (currentRoom <= 5) {
+                document.getElementById('room' + currentRoom).classList.add('active');
+                updateProgress();
+            } else {
+                completeGame();
+            }
+        }
+
+        function showFeedback(roomId, success, message) {
+            const feedbackEl = document.getElementById(roomId + '_feedback');
+            feedbackEl.className = success ? 'success-message' : 'error-message';
+            feedbackEl.innerHTML = `<strong>${success ? '✅ Correct!' : '❌ Incorrect!'}</strong><p>${message}</p>`;
+            
+            if (success) {
+                setTimeout(() => nextRoom(), 2000);
+            }
+        }
+
+        // Room 1: Variables
+        function checkRoom1() {
+            const name = document.getElementById('q1_name').value.trim();
+            const age = parseInt(document.getElementById('q1_age').value);
+            const score = parseInt(document.getElementById('q1_score').value);
+            
+            // Correct: name="Python", age=33, score=95
+            if ((name === 'Python' || name === '"Python"') && age === 33 && score === 95) {
+                showFeedback('room1', true, 'Perfect! Python, 33, 95 - You traced it correctly!');
+            } else if (age === 33 && score === 95) {
+                showFeedback('room1', true, 'Great! The numbers are correct!');
+            } else {
+                showFeedback('room1', false, 'Trace carefully: age starts at 30 then +3, score starts at 85 then +10');
+            }
+        }
+
+        // Room 2: Math
+        function checkRoom2() {
+            const r1 = parseInt(document.getElementById('q2_result1').value);
+            const r2 = parseInt(document.getElementById('q2_result2').value);
+            const r3 = parseInt(document.getElementById('q2_result3').value);
+            const code = parseInt(document.getElementById('q2_code').value);
+            
+            // Correct: r1=15, r2=50, r3=65, code=55
+            if (r1 === 15 && r2 === 50 && r3 === 65 && code === 55) {
+                showFeedback('room2', true, 'Perfect math! Code 55 unlocks the door!');
+            } else if (code === 55) {
+                showFeedback('room2', true, 'Correct! Code 55 is right!');
+            } else {
+                showFeedback('room2', false, '10+5=15, 10*5=50, 15+50=65, 65-10=55');
+            }
+        }
+
+        // Room 3: Conditionals
+        function selectChoice(room, choice) {
+            document.querySelectorAll('#room3 .choice').forEach(el => el.classList.remove('selected'));
+            event.target.closest('.choice').classList.add('selected');
+            room3Selected = choice;
+        }
+
+        function checkRoom3() {
+            if (room3Selected === 'GREAT') {
+                showFeedback('room3', true, 'Correct! total=95, which is >=80, so it prints GREAT!');
+            } else {
+                showFeedback('room3', false, 'Calculate total first: 75 + 20 = 95. Is 95 >= 100? No. Is 95 >= 80? Yes!');
+            }
+        }
+
+        // Room 4: Loops
+        function checkRoom4() {
+            const count = parseInt(document.getElementById('q4_count').value);
+            const values = document.getElementById('q4_values').value.trim();
+            
+            // Correct: count=5, values="0, 1, 2, 3, 4"
+            if (count === 5 && (values === '0, 1, 2, 3, 4' || values === '0,1,2,3,4')) {
+                showFeedback('room4', true, 'Perfect! range(5) gives 0-4, and count becomes 5!');
+            } else if (count === 5) {
+                showFeedback('room4', true, 'Correct! The loop runs 5 times!');
+            } else {
+                showFeedback('room4', false, 'range(5) gives: 0, 1, 2, 3, 4 - that\'s 5 numbers!');
+            }
+        }
+
+        // Room 5: Lists
+        function checkRoom5() {
+            const password = parseInt(document.getElementById('q5_password').value);
+            const list = document.getElementById('q5_list').value.trim();
+            
+            // Correct: password=65, list=[10, 20, 30, 40, 50]
+            const validLists = ['[10, 20, 30, 40, 50]', '[10,20,30,40,50]'];
+            if (password === 65 && validLists.includes(list)) {
+                showFeedback('room5', true, '🎉 ESCAPED! Password 65 is correct! You\'re free!');
+            } else if (password === 65) {
+                showFeedback('room5', true, '🎉 YES! Password 65 - YOU ESCAPED!');
+            } else {
+                showFeedback('room5', false, 'After appends: [10,20,30,40,50]. first=10, last=50, length=5. Add them!');
+            }
+        }
+
+        function completeGame() {
+            clearInterval(timerInterval);
+            const timeTaken = 1200 - timeLeft;
+            const minutes = Math.floor(timeTaken / 60);
+            const seconds = timeTaken % 60;
+            
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('completionScreen').classList.add('show');
+            document.getElementById('finalTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('hintsUsed').textContent = hintsUsedCount;
+        }
+
+        function gameOver() {
+            alert('⏰ Time\'s up! The lab remains locked. Try again?');
+            location.reload();
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>

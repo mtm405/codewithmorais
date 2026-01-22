@@ -1,0 +1,258 @@
+{
+  "File I/O Basics": {
+    "description": "Learn to read and write files in Python using the 'with' statement",
+    "difficulty": "Beginner",
+    "estimated_time": "15-20 minutes",
+    "starter_code": "# File I/O Basics Assignment\n# Complete the functions below\n\ndef save_message(filename, message):\n    \"\"\"Save a message to a file\"\"\"\n    # TODO: Write code to save the message to the file\n    pass\n\ndef read_message(filename):\n    \"\"\"Read a message from a file\"\"\"\n    # TODO: Write code to read and return the message from the file\n    pass\n\n# Test your functions\nif __name__ == \"__main__\":\n    # Test saving\n    save_message(\"test.txt\", \"Hello, World!\")\n    print(\"Message saved!\")\n    \n    # Test reading\n    message = read_message(\"test.txt\")\n    print(\"Message from file:\", message)",
+    "hints": [
+      "Use the 'with open()' statement to safely handle files",
+      "Remember 'w' mode for writing and 'r' mode for reading",
+      "Use f.write() to write text to a file",
+      "Use f.read() to read all text from a file"
+    ],
+    "tests": [
+      {
+        "name": "Function save_message exists",
+        "type": "function_exists",
+        "function": "save_message",
+        "points": 20
+      },
+      {
+        "name": "Function read_message exists",
+        "type": "function_exists",
+        "function": "read_message",
+        "points": 20
+      },
+      {
+        "name": "save_message writes to file correctly",
+        "type": "file_write",
+        "function": "save_message",
+        "args": ["test_save.txt", "Test content"],
+        "expected_content": "Test content",
+        "points": 30
+      },
+      {
+        "name": "read_message reads from file correctly",
+        "type": "file_read",
+        "setup": [
+          "with open('test_read.txt', 'w') as f: f.write('Hello from file')"
+        ],
+        "function": "read_message",
+        "args": ["test_read.txt"],
+        "expected_output": "Hello from file",
+        "points": 30
+      }
+    ]
+  },
+  "High Score Manager": {
+    "description": "Create a system to manage high scores by reading and writing to a file",
+    "difficulty": "Intermediate",
+    "estimated_time": "20-30 minutes",
+    "starter_code": "# High Score Manager Assignment\n# Build a simple high score tracking system\n\ndef save_high_score(score):\n    \"\"\"Save a new high score to highscore.txt\"\"\"\n    # TODO: Write code to save the high score\n    pass\n\ndef get_high_score():\n    \"\"\"Get the current high score from highscore.txt\"\"\"\n    # TODO: Write code to read and return the high score\n    # Return 0 if the file doesn't exist\n    pass\n\ndef check_and_update_high_score(new_score):\n    \"\"\"Check if new_score beats the high score and update if it does\"\"\"\n    # TODO: Compare new_score with current high score and update if higher\n    # Return True if it's a new high score, False otherwise\n    pass\n\n# Test your functions\nif __name__ == \"__main__\":\n    print(\"Current high score:\", get_high_score())\n    \n    if check_and_update_high_score(1500):\n        print(\"🎉 New high score!\")\n    else:\n        print(\"Try again!\")\n    \n    print(\"Updated high score:\", get_high_score())",
+    "hints": [
+      "Use try/except to handle FileNotFoundError when reading",
+      "Remember to convert between strings and integers with str() and int()",
+      "Use 'w' mode to write and 'r' mode to read",
+      "Compare numbers, not strings, when checking high scores"
+    ],
+    "tests": [
+      {
+        "name": "save_high_score function exists",
+        "type": "function_exists",
+        "function": "save_high_score",
+        "points": 15
+      },
+      {
+        "name": "get_high_score function exists",
+        "type": "function_exists",
+        "function": "get_high_score",
+        "points": 15
+      },
+      {
+        "name": "check_and_update_high_score function exists",
+        "type": "function_exists",
+        "function": "check_and_update_high_score",
+        "points": 15
+      },
+      {
+        "name": "get_high_score returns 0 when file doesn't exist",
+        "type": "function_call",
+        "function": "get_high_score",
+        "cleanup": ["import os; os.remove('highscore.txt') if os.path.exists('highscore.txt') else None"],
+        "expected_output": 0,
+        "points": 20
+      },
+      {
+        "name": "save_high_score saves correctly",
+        "type": "custom",
+        "description": "Tests if save_high_score saves integer values correctly",
+        "points": 20
+      },
+      {
+        "name": "High score comparison works correctly",
+        "type": "custom",
+        "description": "Tests if the system correctly identifies new high scores",
+        "points": 15
+      }
+    ]
+  },
+  "Message Logger": {
+    "description": "Create a message logging system that appends timestamped messages to a file",
+    "difficulty": "Intermediate",
+    "estimated_time": "25-35 minutes",
+    "starter_code": "# Message Logger Assignment\n# Build a system to log messages with timestamps\n\nfrom datetime import datetime\n\ndef log_message(message):\n    \"\"\"Append a message with timestamp to log.txt\"\"\"\n    # TODO: Add timestamp and message to the log file\n    # Format: [2025-10-27 14:30:45] Your message here\n    pass\n\ndef read_log():\n    \"\"\"Read and return all log entries\"\"\"\n    # TODO: Read and return the entire log file\n    # Return empty string if file doesn't exist\n    pass\n\ndef clear_log():\n    \"\"\"Clear all log entries\"\"\"\n    # TODO: Clear the log file\n    pass\n\n# Test your functions\nif __name__ == \"__main__\":\n    log_message(\"Application started\")\n    log_message(\"User logged in\")\n    print(\"Log contents:\")\n    print(read_log())",
+    "hints": [
+      "Use 'a' mode to append to a file without deleting existing content",
+      "Use datetime.now().strftime() to format timestamps",
+      "Add \\n (newline) after each log entry",
+      "Use try/except to handle missing log files",
+      "To clear a file, open it with 'w' mode and write nothing"
+    ],
+    "tests": [
+      {
+        "name": "log_message function exists",
+        "type": "function_exists",
+        "function": "log_message",
+        "points": 20
+      },
+      {
+        "name": "read_log function exists",
+        "type": "function_exists",
+        "function": "read_log",
+        "points": 20
+      },
+      {
+        "name": "clear_log function exists",
+        "type": "function_exists",
+        "function": "clear_log",
+        "points": 15
+      },
+      {
+        "name": "Messages are appended correctly",
+        "type": "custom",
+        "description": "Tests if multiple messages are appended without overwriting",
+        "points": 25
+      },
+      {
+        "name": "Log includes timestamps",
+        "type": "custom",
+        "description": "Tests if log entries include properly formatted timestamps",
+        "points": 20
+      }
+    ]
+  },
+  "Student Grade Book": {
+    "description": "Create a grade book system that stores and retrieves student grades from a file",
+    "difficulty": "Advanced",
+    "estimated_time": "30-40 minutes",
+    "starter_code": "# Student Grade Book Assignment\n# Build a system to manage student grades in a file\n\ndef add_grade(student_name, grade):\n    \"\"\"Add a student's grade to grades.txt\"\"\"\n    # Format: student_name,grade\n    # TODO: Append the student and grade to the file\n    pass\n\ndef get_all_grades():\n    \"\"\"Read all grades and return as a dictionary\"\"\"\n    # TODO: Read grades.txt and return dict like {'Alice': 95, 'Bob': 87}\n    # Return empty dict if file doesn't exist\n    pass\n\ndef get_student_grade(student_name):\n    \"\"\"Get a specific student's grade\"\"\"\n    # TODO: Return the grade for the student, or None if not found\n    pass\n\ndef calculate_class_average():\n    \"\"\"Calculate the average grade for all students\"\"\"\n    # TODO: Read all grades and return the average\n    # Return 0 if no grades exist\n    pass\n\n# Test your functions\nif __name__ == \"__main__\":\n    add_grade(\"Alice\", 95)\n    add_grade(\"Bob\", 87)\n    add_grade(\"Charlie\", 92)\n    \n    print(\"All grades:\", get_all_grades())\n    print(\"Alice's grade:\", get_student_grade(\"Alice\"))\n    print(\"Class average:\", calculate_class_average())",
+    "hints": [
+      "Use comma-separated values (CSV) format: name,grade",
+      "Use 'a' mode to append new grades",
+      "Use split(',') to parse each line",
+      "Build a dictionary using a loop",
+      "Remember to convert grade strings to integers"
+    ],
+    "tests": [
+      {
+        "name": "add_grade function exists",
+        "type": "function_exists",
+        "function": "add_grade",
+        "points": 15
+      },
+      {
+        "name": "get_all_grades function exists",
+        "type": "function_exists",
+        "function": "get_all_grades",
+        "points": 15
+      },
+      {
+        "name": "get_student_grade function exists",
+        "type": "function_exists",
+        "function": "get_student_grade",
+        "points": 15
+      },
+      {
+        "name": "calculate_class_average function exists",
+        "type": "function_exists",
+        "function": "calculate_class_average",
+        "points": 10
+      },
+      {
+        "name": "Grades are stored correctly",
+        "type": "custom",
+        "description": "Tests if grades are properly stored in CSV format",
+        "points": 15
+      },
+      {
+        "name": "get_all_grades returns correct dictionary",
+        "type": "custom",
+        "description": "Tests if grades are correctly parsed into a dictionary",
+        "points": 15
+      },
+      {
+        "name": "Class average calculation is correct",
+        "type": "custom",
+        "description": "Tests if average is calculated correctly",
+        "points": 15
+      }
+    ]
+  },
+  "Configuration Manager": {
+    "description": "Create a system to save and load application settings from a configuration file",
+    "difficulty": "Advanced",
+    "estimated_time": "35-45 minutes",
+    "starter_code": "# Configuration Manager Assignment\n# Build a system to manage application settings\n\ndef save_config(settings):\n    \"\"\"Save settings dictionary to config.txt\"\"\"\n    # Format: key=value (one per line)\n    # TODO: Save all settings to the file\n    pass\n\ndef load_config():\n    \"\"\"Load settings from config.txt and return as dictionary\"\"\"\n    # TODO: Read config file and return as dict\n    # Return empty dict if file doesn't exist\n    pass\n\ndef update_setting(key, value):\n    \"\"\"Update a single setting without losing other settings\"\"\"\n    # TODO: Load current config, update the key, save back to file\n    pass\n\ndef get_setting(key, default=None):\n    \"\"\"Get a specific setting value\"\"\"\n    # TODO: Return the value for key, or default if not found\n    pass\n\n# Test your functions\nif __name__ == \"__main__\":\n    # Save initial settings\n    settings = {\n        \"theme\": \"dark\",\n        \"language\": \"python\",\n        \"auto_save\": \"true\"\n    }\n    save_config(settings)\n    \n    # Load and display\n    config = load_config()\n    print(\"Current config:\", config)\n    \n    # Update one setting\n    update_setting(\"theme\", \"light\")\n    print(\"Theme setting:\", get_setting(\"theme\"))",
+    "hints": [
+      "Use key=value format for storing settings",
+      "Use split('=') to parse each line",
+      "Use strip() to remove whitespace",
+      "When updating, load existing settings first",
+      "Handle missing files with try/except"
+    ],
+    "tests": [
+      {
+        "name": "save_config function exists",
+        "type": "function_exists",
+        "function": "save_config",
+        "points": 15
+      },
+      {
+        "name": "load_config function exists",
+        "type": "function_exists",
+        "function": "load_config",
+        "points": 15
+      },
+      {
+        "name": "update_setting function exists",
+        "type": "function_exists",
+        "function": "update_setting",
+        "points": 15
+      },
+      {
+        "name": "get_setting function exists",
+        "type": "function_exists",
+        "function": "get_setting",
+        "points": 10
+      },
+      {
+        "name": "Settings are saved correctly",
+        "type": "custom",
+        "description": "Tests if settings dictionary is properly saved",
+        "points": 15
+      },
+      {
+        "name": "Settings are loaded correctly",
+        "type": "custom",
+        "description": "Tests if settings are correctly parsed back into dictionary",
+        "points": 15
+      },
+      {
+        "name": "Update setting preserves other settings",
+        "type": "custom",
+        "description": "Tests if updating one setting doesn't delete others",
+        "points": 15
+      }
+    ]
+  }
+}

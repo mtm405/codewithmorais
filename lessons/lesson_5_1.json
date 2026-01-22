@@ -1,0 +1,384 @@
+{
+    "lesson_id": "5_1",
+    "title": "Troubleshooting and Error Handling",
+    "description": "Master debugging, exception handling, and unit testing in Python",
+    "difficulty": "intermediate",
+    "estimated_duration": "120 minutes",
+    "learning_objectives": [
+        "Analyze, detect, and fix code segments that have errors",
+        "Understand syntax errors, logic errors, and runtime errors",
+        "Construct code segments that handle exceptions properly",
+        "Master try, except, else, finally, and raise statements", 
+        "Perform comprehensive unit testing",
+        "Use unittest framework and various assert methods effectively"
+    ],
+    "prerequisites": [
+        "Basic Python syntax",
+        "Functions and control flow",
+        "Data structures (lists, dictionaries)",
+        "File operations"
+    ],
+    "sections": [
+        {
+            "section_id": "5.1",
+            "title": "Error Analysis and Detection",
+            "topics": [
+                {
+                    "topic_id": "5.1.1",
+                    "title": "Types of Errors",
+                    "content": {
+                        "theory": "Understanding the three main categories of errors in Python programming",
+                        "syntax_errors": {
+                            "description": "Errors that occur when Python cannot parse your code due to incorrect syntax",
+                            "examples": [
+                                {
+                                    "error_code": "print(\"Hello World\"  # Missing closing parenthesis",
+                                    "error_message": "SyntaxError: unexpected EOF while parsing",
+                                    "fixed_code": "print(\"Hello World\")  # Proper closing parenthesis",
+                                    "explanation": "Always match opening and closing parentheses, brackets, and quotes"
+                                },
+                                {
+                                    "error_code": "if x = 5:  # Using assignment instead of comparison",
+                                    "error_message": "SyntaxError: invalid syntax", 
+                                    "fixed_code": "if x == 5:  # Correct comparison operator",
+                                    "explanation": "Use == for comparison, = for assignment"
+                                }
+                            ]
+                        },
+                        "runtime_errors": {
+                            "description": "Errors that occur during program execution when something goes wrong",
+                            "common_types": [
+                                {
+                                    "error_type": "IndexError",
+                                    "description": "Accessing list index that doesn't exist",
+                                    "example": "numbers = [1, 2, 3]; print(numbers[5])",
+                                    "solution": "Check list length or use try-except"
+                                },
+                                {
+                                    "error_type": "KeyError", 
+                                    "description": "Accessing dictionary key that doesn't exist",
+                                    "example": "data = {'name': 'John'}; print(data['age'])",
+                                    "solution": "Use dict.get() or check if key exists"
+                                },
+                                {
+                                    "error_type": "TypeError",
+                                    "description": "Using wrong data type for operation",
+                                    "example": "result = \"5\" + 3",
+                                    "solution": "Convert data types or use consistent types"
+                                },
+                                {
+                                    "error_type": "ValueError",
+                                    "description": "Correct type but inappropriate value",
+                                    "example": "number = int(\"not_a_number\")",
+                                    "solution": "Validate input before conversion"
+                                }
+                            ]
+                        },
+                        "logic_errors": {
+                            "description": "Code runs without crashing but produces incorrect results",
+                            "examples": [
+                                {
+                                    "buggy_code": "def calculate_average(numbers):\n    return sum(numbers) / len(numbers) + 1",
+                                    "issue": "Adding 1 to average calculation",
+                                    "fixed_code": "def calculate_average(numbers):\n    return sum(numbers) / len(numbers)",
+                                    "detection_method": "Unit testing and verification of expected outputs"
+                                }
+                            ]
+                        }
+                    },
+                    "exercises": [
+                        {
+                            "exercise_id": "error_detection_1",
+                            "title": "Find the Syntax Error",
+                            "code": "def greet_user(name\n    print(f\"Hello, {name}!\")",
+                            "error_type": "syntax",
+                            "hint": "Check the function definition line",
+                            "solution": "Missing closing parenthesis in function definition"
+                        }
+                    ]
+                },
+                {
+                    "topic_id": "5.1.2",
+                    "title": "Debugging Strategies",
+                    "content": {
+                        "methodology": [
+                            "Reproduce the error consistently",
+                            "Read error messages carefully",
+                            "Check the stack trace",
+                            "Use print statements for debugging",
+                            "Use a debugger for complex issues",
+                            "Test small parts in isolation"
+                        ],
+                        "tools": [
+                            {
+                                "tool": "print() statements",
+                                "use_case": "Quick debugging and variable inspection",
+                                "example": "print(f\"DEBUG: variable_name = {variable_name}\")"
+                            },
+                            {
+                                "tool": "pdb debugger",
+                                "use_case": "Interactive debugging and step-by-step execution",
+                                "example": "import pdb; pdb.set_trace()"
+                            },
+                            {
+                                "tool": "assert statements",
+                                "use_case": "Validate assumptions during development",
+                                "example": "assert len(data) > 0, \"Data list should not be empty\""
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "section_id": "5.2", 
+            "title": "Exception Handling",
+            "topics": [
+                {
+                    "topic_id": "5.2.1",
+                    "title": "Try-Except Structure",
+                    "content": {
+                        "basic_syntax": {
+                            "structure": "try:\n    # risky code\nexcept ExceptionType:\n    # handle exception",
+                            "explanation": "The try block contains code that might raise an exception, except block handles the exception"
+                        },
+                        "multiple_exceptions": {
+                            "syntax": "try:\n    # code\nexcept (ValueError, TypeError):\n    # handle multiple types\nexcept Exception as e:\n    # handle any other exception",
+                            "best_practices": "Handle specific exceptions first, then general ones"
+                        }
+                    }
+                },
+                {
+                    "topic_id": "5.2.2", 
+                    "title": "Complete Exception Structure",
+                    "content": {
+                        "full_syntax": {
+                            "structure": "try:\n    # risky code\nexcept SpecificException:\n    # handle specific exception\nexcept Exception as e:\n    # handle general exception\nelse:\n    # executes if no exception\nfinally:\n    # always executes",
+                            "else_clause": "Runs only if no exception occurred in try block",
+                            "finally_clause": "Always runs, used for cleanup (closing files, etc.)"
+                        }
+                    }
+                },
+                {
+                    "topic_id": "5.2.3",
+                    "title": "Raising Custom Exceptions",
+                    "content": {
+                        "raise_statement": {
+                            "syntax": "raise ExceptionType(\"Error message\")",
+                            "use_cases": "Input validation, business logic violations, error propagation"
+                        },
+                        "custom_exceptions": {
+                            "definition": "class CustomError(Exception):\n    pass",
+                            "advanced": "class ValidationError(Exception):\n    def __init__(self, message, error_code=None):\n        super().__init__(message)\n        self.error_code = error_code"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "section_id": "5.3",
+            "title": "Unit Testing",
+            "topics": [
+                {
+                    "topic_id": "5.3.1",
+                    "title": "Introduction to Unit Testing",
+                    "content": {
+                        "importance": [
+                            "Early bug detection",
+                            "Code documentation", 
+                            "Refactoring safety",
+                            "Code quality improvement"
+                        ],
+                        "unittest_framework": {
+                            "import": "import unittest",
+                            "test_class": "class TestMyCode(unittest.TestCase):",
+                            "test_method": "def test_something(self):",
+                            "run_tests": "unittest.main()"
+                        }
+                    }
+                },
+                {
+                    "topic_id": "5.3.2",
+                    "title": "Assert Methods",
+                    "content": {
+                        "equality": {
+                            "assertEqual": "self.assertEqual(a, b) - Check if a == b",
+                            "assertNotEqual": "self.assertNotEqual(a, b) - Check if a != b",
+                            "assertAlmostEqual": "self.assertAlmostEqual(a, b) - Check floating point equality"
+                        },
+                        "boolean": {
+                            "assertTrue": "self.assertTrue(x) - Check if x is True",
+                            "assertFalse": "self.assertFalse(x) - Check if x is False"
+                        },
+                        "identity": {
+                            "assertIs": "self.assertIs(a, b) - Check if a is b (same object)",
+                            "assertIsNot": "self.assertIsNot(a, b) - Check if a is not b",
+                            "assertIsNone": "self.assertIsNone(x) - Check if x is None",
+                            "assertIsNotNone": "self.assertIsNotNone(x) - Check if x is not None"
+                        },
+                        "membership": {
+                            "assertIn": "self.assertIn(a, b) - Check if a is in b",
+                            "assertNotIn": "self.assertNotIn(a, b) - Check if a is not in b"
+                        },
+                        "type_checking": {
+                            "assertIsInstance": "self.assertIsInstance(obj, cls) - Check if obj is instance of cls",
+                            "assertNotIsInstance": "self.assertNotIsInstance(obj, cls) - Check if obj is not instance of cls"
+                        },
+                        "exceptions": {
+                            "assertRaises": "with self.assertRaises(Exception): - Check if exception is raised"
+                        }
+                    }
+                },
+                {
+                    "topic_id": "5.3.3", 
+                    "title": "Test Organization",
+                    "content": {
+                        "setUp": "def setUp(self): - Runs before each test method",
+                        "tearDown": "def tearDown(self): - Runs after each test method",
+                        "setUpClass": "@classmethod def setUpClass(cls): - Runs once before all tests in class",
+                        "tearDownClass": "@classmethod def tearDownClass(cls): - Runs once after all tests in class"
+                    }
+                }
+            ]
+        }
+    ],
+    "practical_exercises": [
+        {
+            "exercise_id": "error_detective",
+            "title": "Error Detective Challenge",
+            "description": "Find and fix various types of errors in Python code",
+            "difficulty": "beginner",
+            "code_samples": [
+                {
+                    "sample_id": "syntax_error_1",
+                    "code": "def calculate_area(length, width\n    return length * width",
+                    "error_type": "syntax",
+                    "hint": "Check the function definition"
+                }
+            ]
+        },
+        {
+            "exercise_id": "exception_handler",
+            "title": "Build a Robust File Processor", 
+            "description": "Create a file processing system with comprehensive exception handling",
+            "difficulty": "intermediate",
+            "requirements": [
+                "Handle FileNotFoundError",
+                "Handle PermissionError", 
+                "Handle empty files",
+                "Use finally for cleanup",
+                "Log all errors appropriately"
+            ]
+        },
+        {
+            "exercise_id": "testing_master",
+            "title": "Complete Testing Suite",
+            "description": "Write comprehensive unit tests for a banking system",
+            "difficulty": "advanced",
+            "test_cases": [
+                "Account creation with various initial balances",
+                "Deposit and withdrawal operations",
+                "Overdraft protection",
+                "Transaction history tracking",
+                "Edge cases and boundary conditions"
+            ]
+        }
+    ],
+    "real_world_applications": [
+        {
+            "application": "Web Development",
+            "use_case": "Handling user input validation and database connection errors",
+            "example": "try-except blocks for form processing and API error responses"
+        },
+        {
+            "application": "Data Science",
+            "use_case": "Robust data processing pipelines that handle missing or malformed data",
+            "example": "Exception handling for data parsing and statistical calculations"
+        },
+        {
+            "application": "System Administration",
+            "use_case": "Scripts that gracefully handle file system errors and network issues",
+            "example": "Automated deployment scripts with comprehensive error recovery"
+        }
+    ],
+    "assessment": {
+        "quiz_questions": [
+            {
+                "question": "Which type of error occurs when Python cannot parse your code?",
+                "options": ["Runtime Error", "Logic Error", "Syntax Error", "Value Error"],
+                "correct": 2,
+                "explanation": "Syntax errors occur during parsing, before the code even runs"
+            },
+            {
+                "question": "What is the purpose of the 'finally' block in exception handling?",
+                "options": [
+                    "Only runs if an exception occurs", 
+                    "Only runs if no exception occurs",
+                    "Always runs regardless of exceptions",
+                    "Never runs"
+                ],
+                "correct": 2,
+                "explanation": "The finally block always executes, making it perfect for cleanup operations"
+            },
+            {
+                "question": "Which assert method would you use to check if a variable is an instance of a specific class?",
+                "options": ["assertEqual", "assertIs", "assertIsInstance", "assertIn"],
+                "correct": 2,
+                "explanation": "assertIsInstance checks if an object is an instance of a given class"
+            }
+        ],
+        "coding_challenges": [
+            {
+                "challenge": "Write a function that safely converts a string to an integer with proper exception handling",
+                "starter_code": "def safe_int_conversion(value):\n    # Your code here\n    pass",
+                "test_cases": [
+                    "safe_int_conversion('123') should return 123",
+                    "safe_int_conversion('abc') should return None or raise appropriate exception",
+                    "safe_int_conversion('') should handle empty string gracefully"
+                ]
+            }
+        ]
+    },
+    "resources": [
+        {
+            "type": "documentation",
+            "title": "Python Built-in Exceptions",
+            "url": "https://docs.python.org/3/library/exceptions.html"
+        },
+        {
+            "type": "documentation", 
+            "title": "unittest — Unit testing framework",
+            "url": "https://docs.python.org/3/library/unittest.html"
+        },
+        {
+            "type": "tutorial",
+            "title": "Python Debugging with pdb",
+            "description": "Learn interactive debugging techniques"
+        }
+    ],
+    "progress_tracking": {
+        "completion_criteria": {
+            "theory_understanding": 70,
+            "practical_exercises": 80,
+            "coding_challenges": 75
+        },
+        "milestones": [
+            {
+                "milestone": "Error Type Recognition",
+                "description": "Can identify and classify different types of Python errors"
+            },
+            {
+                "milestone": "Exception Handling Mastery", 
+                "description": "Can implement comprehensive exception handling strategies"
+            },
+            {
+                "milestone": "Testing Proficiency",
+                "description": "Can write effective unit tests using unittest framework"
+            },
+            {
+                "milestone": "Debugging Expert",
+                "description": "Can systematically debug and troubleshoot complex issues"
+            }
+        ]
+    }
+}

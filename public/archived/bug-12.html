@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug #12: Index Out of Bounds | Code With Morais</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .bug-header {
+            background: linear-gradient(135deg, #ff6b6b, #ff5722);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .bug-number {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .bug-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .bug-description {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .code-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 10;
+        }
+        
+        .copy-button:hover {
+            background: #2980b9;
+        }
+        
+        .copy-button.copied {
+            background: #27ae60;
+        }
+        
+        pre {
+            margin: 0;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .goal-highlight {
+            background: #e8f5e8;
+            padding: 15px;
+            border-left: 4px solid #27ae60;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .ide-link {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        .ide-link:hover {
+            background: #229954;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 2px solid #ecf0f1;
+        }
+        
+        .nav-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .nav-button:hover {
+            background: #2980b9;
+        }
+        
+        .nav-button.disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .bug-title {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="bug-header">
+            <div class="bug-number">Bug Challenge #12</div>
+            <div class="bug-title">Index Out of Bounds</div>
+            <div class="bug-description">Accessing list index beyond bounds</div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-bullseye"></i> How to Complete This Exercise</h2>
+            <div class="goal-highlight">
+                <strong>🎯 Goal:</strong> The loop must print all items in the list without an IndexError.
+            </div>
+            <p><strong>Your Task:</strong></p>
+            <ul>
+                <li>Copy the buggy code below</li>
+                <li>Paste it into <a href="https://www.online-python.com" target="_blank" style="color: #27ae60; font-weight: bold;">Online Python</a></li>
+                <li>Run the code to see the IndexError</li>
+                <li>Fix the range to match the list length</li>
+                <li>Test your solution to see all fruits printed correctly</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-bug"></i> Buggy Code</h2>
+            <div class="code-container">
+                <button class="copy-button" onclick="copyCode('buggy-code')">
+                    <i class="fas fa-copy"></i> Copy Code
+                </button>
+                <pre><code id="buggy-code" class="language-python">fruits = ["apple", "banana", "orange"]
+
+print("All fruits in the list:")
+for i in range(5):  # Bug: range too large for list
+    print(f"{i+1}. {fruits[i]}")
+
+print("Done listing fruits!")</code></pre>
+            </div>
+            <a href="https://www.online-python.com" target="_blank" class="ide-link">
+                <i class="fas fa-external-link-alt"></i> Open Online Python IDE
+            </a>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-search"></i> Debugging Tips</h2>
+            <ul>
+                <li><strong>List length:</strong> How many items are in the fruits list?</li>
+                <li><strong>Index range:</strong> Valid indices are 0 to (length-1)</li>
+                <li><strong>len() function:</strong> Use len(list) to get the correct size</li>
+                <li><strong>Error message:</strong> The IndexError tells you which index failed</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-lightbulb"></i> What You Should Learn</h2>
+            <ul>
+                <li>How to avoid IndexError by checking list bounds</li>
+                <li>Using len() function to determine proper range size</li>
+                <li>Understanding zero-based indexing in Python</li>
+                <li>The importance of matching loop ranges to data structures</li>
+            </ul>
+        </div>
+
+        <div class="navigation">
+            <a href="/bug-11.html" class="nav-button">
+                <i class="fas fa-arrow-left"></i> Previous Bug
+            </a>
+            <a href="/bug-index.html" class="nav-button">
+                <i class="fas fa-home"></i> All Bugs
+            </a>
+            <a href="/bug-13.html" class="nav-button">
+                Next Bug <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script>
+    <script>
+        function copyCode(elementId) {
+            const code = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const button = event.target.closest('.copy-button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy code:', err);
+                alert('Failed to copy code. Please select and copy manually.');
+            });
+        }
+    </script>
+</body>
+</html>

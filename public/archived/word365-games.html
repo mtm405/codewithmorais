@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta viewport="width=device-width, initial-scale=1.0">
+    <title>Word 365 Learning Games | Code with Morais</title>
+    <style>
+        :root {
+            --primary-blue: #0078d4;
+            --secondary-blue: #106ebe;
+            --accent-orange: #ff8c00;
+            --success-green: #107c10;
+            --warning-yellow: #ffb900;
+            --error-red: #d13438;
+            --purple: #6264a7;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e1e1e1;
+            --dark-gray: #323130;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-orange));
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .game-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .game-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .topic-tag {
+            background: var(--light-gray);
+            color: var(--dark-gray);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--light-gray);
+            border-radius: 10px;
+        }
+
+        .game-stat {
+            text-align: center;
+        }
+
+        .game-stat-value {
+            font-weight: bold;
+            color: var(--primary-blue);
+            display: block;
+        }
+
+        .game-stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .play-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 120, 212, 0.4);
+        }
+
+        .difficulty-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .difficulty-beginner {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .difficulty-intermediate {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty-advanced {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--error-red);
+        }
+
+        .quiz-question {
+            background: var(--light-gray);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: white;
+            border: 2px solid var(--medium-gray);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-blue);
+            background: #f0f8ff;
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success-green);
+            background: #d4edda;
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error-red);
+            background: #f8d7da;
+        }
+
+        .game-progress {
+            width: 100%;
+            height: 10px;
+            background: var(--light-gray);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-green), var(--primary-blue));
+            transition: width 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .leaderboard {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaderboard h2 {
+            text-align: center;
+            color: var(--dark-gray);
+            margin-bottom: 25px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: var(--light-gray);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(10px);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-right: 20px;
+            min-width: 40px;
+        }
+
+        .player-info {
+            flex-grow: 1;
+        }
+
+        .player-name {
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .player-score {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .achievement-badge {
+            background: var(--warning-yellow);
+            color: var(--dark-gray);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-bar {
+                gap: 15px;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 20px;
+                width: calc(100% - 40px);
+                padding: 25px;
+            }
+        }
+
+        .ribbon-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .ribbon-filter {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ribbon-filter:hover,
+        .ribbon-filter.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark-gray);
+        }
+
+        .game-timer {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin: 20px 0;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--success-green);
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Word 365 Learning Games</h1>
+            <p>Master Microsoft Word through fun and interactive games!</p>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-number" id="gamesPlayed">0</span>
+                    <span class="stat-label">Games Played</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalScore">0</span>
+                    <span class="stat-label">Total Score</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="averageScore">0%</span>
+                    <span class="stat-label">Average Score</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="badgesEarned">0</span>
+                    <span class="stat-label">Badges Earned</span>
+                </div>
+            </div>
+
+            <div class="ribbon-selector">
+                <div class="ribbon-filter active" data-filter="all">All Ribbons</div>
+                <div class="ribbon-filter" data-filter="home">Home</div>
+                <div class="ribbon-filter" data-filter="insert">Insert</div>
+                <div class="ribbon-filter" data-filter="design">Design</div>
+                <div class="ribbon-filter" data-filter="layout">Layout</div>
+                <div class="ribbon-filter" data-filter="references">References</div>
+                <div class="ribbon-filter" data-filter="review">Review</div>
+                <div class="ribbon-filter" data-filter="view">View</div>
+            </div>
+        </div>
+
+        <div class="games-grid">
+            <!-- Ribbon Matching Game -->
+            <div class="game-card" data-ribbons="home,insert,design">
+                <div class="difficulty-indicator difficulty-beginner">Beginner</div>
+                <div class="game-icon">🎯</div>
+                <h3 class="game-title">Ribbon Command Matcher</h3>
+                <p class="game-description">Match Word commands to their correct ribbons. Perfect for learning where to find specific tools!</p>
+                
+                <div class="game-topics">
+                    <span class="topic-tag">Ribbon Navigation</span>
+                    <span class="topic-tag">Command Location</span>
+                    <span class="topic-tag">Interface Mastery</span>
+                </div>
+
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="ribbon-best">0</span>
+                        <span class="game-stat-label">Best Score</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">3 min</span>
+                        <span class="game-stat-label">Duration</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="ribbon-plays">0</span>
+                        <span class="game-stat-label">Times Played</span>
+                    </div>
+                </div>
+
+                <button class="play-button" onclick="startGame('ribbon-matcher')">
+                    <span>🎮</span> Play Now
+                </button>
+            </div>
+
+            <!-- Formatting Speed Test -->
+            <div class="game-card" data-ribbons="home,design">
+                <div class="difficulty-indicator difficulty-intermediate">Intermediate</div>
+                <div class="game-icon">⚡</div>
+                <h3 class="game-title">Formatting Speed Challenge</h3>
+                <p class="game-description">Race against time to apply correct formatting. Test your speed and accuracy with fonts, styles, and colors!</p>
+                
+                <div class="game-topics">
+                    <span class="topic-tag">Text Formatting</span>
+                    <span class="topic-tag">Font Styles</span>
+                    <span class="topic-tag">Quick Access</span>
+                    <span class="topic-tag">Keyboard Shortcuts</span>
+                </div>
+
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="format-best">0</span>
+                        <span class="game-stat-label">Best Time</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">2 min</span>
+                        <span class="game-stat-label">Duration</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="format-plays">0</span>
+                        <span class="game-stat-label">Times Played</span>
+                    </div>
+                </div>
+
+                <button class="play-button" onclick="startGame('format-speed')">
+                    <span>⚡</span> Start Challenge
+                </button>
+            </div>
+
+            <!-- Table Builder Puzzle -->
+            <div class="game-card" data-ribbons="insert,layout">
+                <div class="difficulty-indicator difficulty-intermediate">Intermediate</div>
+                <div class="game-icon">📊</div>
+                <h3 class="game-title">Table Builder Puzzle</h3>
+                <p class="game-description">Create tables based on requirements. Practice table creation, formatting, and data organization skills!</p>
+                
+                <div class="game-topics">
+                    <span class="topic-tag">Table Creation</span>
+                    <span class="topic-tag">Cell Formatting</span>
+                    <span class="topic-tag">Data Organization</span>
+                    <span class="topic-tag">Table Styles</span>
+                </div>
+
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="table-best">0</span>
+                        <span class="game-stat-label">Best Score</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">5 min</span>
+                        <span class="game-stat-label">Duration</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="table-plays">0</span>
+                        <span class="game-stat-label">Times Played</span>
+                    </div>
+                </div>
+
+                <button class="play-button" onclick="startGame('table-builder')">
+                    <span>🔨</span> Build Tables
+                </button>
+            </div>
+
+            <!-- Style Detective -->
+            <div class="game-card" data-ribbons="home,design">
+                <div class="difficulty-indicator difficulty-advanced">Advanced</div>
+                <div class="game-icon">🔍</div>
+                <h3 class="game-title">Style Detective</h3>
+                <p class="game-description">Identify and fix style inconsistencies in documents. Master advanced formatting and style management!</p>
+                
+                <div class="game-topics">
+                    <span class="topic-tag">Style Management</span>
+                    <span class="topic-tag">Consistency Checking</span>
+                    <span class="topic-tag">Professional Formatting</span>
+                    <span class="topic-tag">Document Quality</span>
+                </div>
+
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="style-best">0</span>
+                        <span class="game-stat-label">Best Score</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">4 min</span>
+                        <span class="game-stat-label">Duration</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="style-plays">0</span>
+                        <span class="game-stat-label">Times Played</span>
+                    </div>
+                </div>
+
+                <button class="play-button" onclick="startGame('style-detective')">
+                    <span>🕵️</span> Start Investigation
+                </button>
+            </div>
+
+            <!-- Reference Master -->
+            <div class="game-card" data-ribbons="references">
+                <div class="difficulty-indicator difficulty-advanced">Advanced</div>
+                <div class="game-icon">📚</div>
+                <h3 class="game-title">Reference Master</h3>
+                <p class="game-description">Master citations, footnotes, and table of contents. Essential for academic and professional documents!</p>
+                
+                <div class="game-topics">
+                    <span class="topic-tag">Citations</span>
+                    <span class="topic-tag">Footnotes</span>
+                    <span class="topic-tag">Table of Contents</span>
+                    <span class="topic-tag">Academic Writing</span>
+                </div>
+
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="ref-best">0</span>
+                        <span class="game-stat-label">Best Score</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">6 min</span>
+                        <span class="game-stat-label">Duration</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="ref-plays">0</span>
+                        <span class="game-stat-label">Times Played</span>
+                    </div>
+                </div>
+
+                <button class="play-button" onclick="startGame('reference-master')">
+                    <span>📖</span> Master References
+                </button>
+            </div>
+
+            <!-- Collaboration Quiz -->
+            <div class="game-card" data-ribbons="review">
+                <div class="difficulty-indicator difficulty-intermediate">Intermediate</div>
+                <div class="game-icon">👥</div>
+                <h3 class="game-title">Collaboration Champion</h3>
+                <p class="game-description">Master document review, comments, and track changes. Essential for teamwork and document collaboration!</p>
+                
+                <div class="game-topics">
+                    <span class="topic-tag">Track Changes</span>
+                    <span class="topic-tag">Comments</span>
+                    <span class="topic-tag">Document Review</span>
+                    <span class="topic-tag">Team Collaboration</span>
+                </div>
+
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="collab-best">0</span>
+                        <span class="game-stat-label">Best Score</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">4 min</span>
+                        <span class="game-stat-label">Duration</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="collab-plays">0</span>
+                        <span class="game-stat-label">Times Played</span>
+                    </div>
+                </div>
+
+                <button class="play-button" onclick="startGame('collaboration-quiz')">
+                    <span>🤝</span> Join Team
+                </button>
+            </div>
+
+            <!-- Document Doctor -->
+            <div class="game-card" data-ribbons="review,view,layout">
+                <div class="difficulty-indicator difficulty-advanced">Advanced</div>
+                <div class="game-icon">🩺</div>
+                <h3 class="game-title">Document Doctor</h3>
+                <p class="game-description">Diagnose and fix document problems. Test your troubleshooting skills with formatting, accessibility, and layout issues!</p>
+                
+                <div class="game-topics">
+                    <span class="topic-tag">Troubleshooting</span>
+                    <span class="topic-tag">Accessibility</span>
+                    <span class="topic-tag">Error Detection</span>
+                    <span class="topic-tag">Document Quality</span>
+                </div>
+
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="doctor-best">0</span>
+                        <span class="game-stat-label">Best Score</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">5 min</span>
+                        <span class="game-stat-label">Duration</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="doctor-plays">0</span>
+                        <span class="game-stat-label">Times Played</span>
+                    </div>
+                </div>
+
+                <button class="play-button" onclick="startGame('document-doctor')">
+                    <span>🔧</span> Start Diagnosis
+                </button>
+            </div>
+
+            <!-- Layout Master -->
+            <div class="game-card" data-ribbons="layout,design">
+                <div class="difficulty-indicator difficulty-intermediate">Intermediate</div>
+                <div class="game-icon">📐</div>
+                <h3 class="game-title">Layout Master</h3>
+                <p class="game-description">Perfect your page setup skills. Master margins, orientation, columns, and professional document layout!</p>
+                
+                <div class="game-topics">
+                    <span class="topic-tag">Page Setup</span>
+                    <span class="topic-tag">Margins</span>
+                    <span class="topic-tag">Orientation</span>
+                    <span class="topic-tag">Columns</span>
+                </div>
+
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="layout-best">0</span>
+                        <span class="game-stat-label">Best Score</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">3 min</span>
+                        <span class="game-stat-label">Duration</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value" id="layout-plays">0</span>
+                        <span class="game-stat-label">Times Played</span>
+                    </div>
+                </div>
+
+                <button class="play-button" onclick="startGame('layout-master')">
+                    <span>📏</span> Master Layout
+                </button>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="leaderboard">
+            <h2>🏆 Global Leaderboard</h2>
+            <div class="leaderboard-item">
+                <span class="rank">1</span>
+                <div class="player-info">
+                    <div class="player-name">WordMaster2024</div>
+                    <div class="player-score">2,450 points • 95% accuracy</div>
+                </div>
+                <span class="achievement-badge">🥇 Champion</span>
+            </div>
+            <div class="leaderboard-item">
+                <span class="rank">2</span>
+                <div class="player-info">
+                    <div class="player-name">DocumentPro</div>
+                    <div class="player-score">2,180 points • 92% accuracy</div>
+                </div>
+                <span class="achievement-badge">🥈 Expert</span>
+            </div>
+            <div class="leaderboard-item">
+                <span class="rank">3</span>
+                <div class="player-info">
+                    <div class="player-name">FormatNinja</div>
+                    <div class="player-score">1,920 points • 89% accuracy</div>
+                </div>
+                <span class="achievement-badge">🥉 Master</span>
+            </div>
+            <div class="leaderboard-item">
+                <span class="rank">4</span>
+                <div class="player-info">
+                    <div class="player-name">TableWizard</div>
+                    <div class="player-score">1,750 points • 87% accuracy</div>
+                </div>
+                <span class="achievement-badge">⭐ Advanced</span>
+            </div>
+            <div class="leaderboard-item">
+                <span class="rank">5</span>
+                <div class="player-info">
+                    <div class="player-name">StyleGuru</div>
+                    <div class="player-score">1,580 points • 85% accuracy</div>
+                </div>
+                <span class="achievement-badge">📈 Rising</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div class="game-modal" id="gameModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeGame()">&times;</span>
+            <div id="gameContent">
+                <!-- Game content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game data and state management
+        let gameStats = JSON.parse(localStorage.getItem('word365GameStats') || '{}');
+        let currentGame = null;
+        let gameScore = 0;
+        let currentQuestion = 0;
+
+        // Sample game questions and data
+        const gameData = {
+            'ribbon-matcher': {
+                questions: [
+                    {
+                        question: "Which ribbon contains the Bold, Italic, and Underline buttons?",
+                        options: ["Home", "Insert", "Design", "Layout"],
+                        correct: 0,
+                        explanation: "The Home ribbon contains basic text formatting tools including Bold, Italic, and Underline."
+                    },
+                    {
+                        question: "Where would you find the Insert Table command?",
+                        options: ["Home", "Insert", "References", "Review"],
+                        correct: 1,
+                        explanation: "The Insert ribbon contains commands for adding elements like tables, pictures, and shapes."
+                    },
+                    {
+                        question: "Which ribbon is used to add footnotes and citations?",
+                        options: ["Layout", "Design", "References", "View"],
+                        correct: 2,
+                        explanation: "The References ribbon contains tools for citations, footnotes, table of contents, and bibliography."
+                    },
+                    {
+                        question: "Where can you find the Track Changes feature?",
+                        options: ["Home", "Insert", "Review", "View"],
+                        correct: 2,
+                        explanation: "The Review ribbon contains collaboration tools including Track Changes, Comments, and Spelling & Grammar."
+                    },
+                    {
+                        question: "Which ribbon contains page margin settings?",
+                        options: ["Layout", "Design", "Home", "Insert"],
+                        correct: 0,
+                        explanation: "The Layout ribbon contains page setup options including margins, orientation, and size."
+                    }
+                ]
+            },
+            'format-speed': {
+                tasks: [
+                    { task: "Make text Bold", shortcut: "Ctrl+B", ribbon: "Home → Bold" },
+                    { task: "Make text Italic", shortcut: "Ctrl+I", ribbon: "Home → Italic" },
+                    { task: "Underline text", shortcut: "Ctrl+U", ribbon: "Home → Underline" },
+                    { task: "Change font size to 16pt", shortcut: "Ctrl+Shift+P", ribbon: "Home → Font Size" },
+                    { task: "Apply Heading 1 style", shortcut: "Ctrl+Alt+1", ribbon: "Home → Styles → Heading 1" }
+                ]
+            },
+            'table-builder': {
+                scenarios: [
+                    {
+                        description: "Create a 3x4 table for a product comparison",
+                        requirements: ["3 columns", "4 rows", "Header row styling", "Center alignment"],
+                        solution: "Insert → Table → 3x4, then Table Design → Header Row"
+                    },
+                    {
+                        description: "Build an employee schedule table",
+                        requirements: ["Days of week headers", "Employee names column", "Time slots", "Alternating row colors"],
+                        solution: "Insert → Table, add headers, Table Design → Banded Rows"
+                    }
+                ]
+            }
+        };
+
+        // Initialize page
+        function initializePage() {
+            updateStats();
+            setupFilters();
+            loadGameStats();
+        }
+
+        // Update player statistics
+        function updateStats() {
+            const stats = calculateStats();
+            document.getElementById('gamesPlayed').textContent = stats.gamesPlayed;
+            document.getElementById('totalScore').textContent = stats.totalScore;
+            document.getElementById('averageScore').textContent = stats.averageScore + '%';
+            document.getElementById('badgesEarned').textContent = stats.badges;
+        }
+
+        // Calculate statistics from game data
+        function calculateStats() {
+            const games = Object.keys(gameStats);
+            let totalGames = 0;
+            let totalScore = 0;
+            let badges = 0;
+
+            games.forEach(game => {
+                const data = gameStats[game];
+                totalGames += data.plays || 0;
+                totalScore += data.totalScore || 0;
+                if (data.bestScore >= 80) badges++;
+            });
+
+            return {
+                gamesPlayed: totalGames,
+                totalScore: totalScore,
+                averageScore: totalGames > 0 ? Math.round(totalScore / totalGames) : 0,
+                badges: badges
+            };
+        }
+
+        // Setup ribbon filters
+        function setupFilters() {
+            const filters = document.querySelectorAll('.ribbon-filter');
+            filters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    filters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    filterGames(this.dataset.filter);
+                });
+            });
+        }
+
+        // Filter games by ribbon
+        function filterGames(ribbon) {
+            const cards = document.querySelectorAll('.game-card');
+            cards.forEach(card => {
+                if (ribbon === 'all' || card.dataset.ribbons.includes(ribbon)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Load individual game statistics
+        function loadGameStats() {
+            Object.keys(gameStats).forEach(gameId => {
+                const data = gameStats[gameId];
+                const bestElement = document.getElementById(gameId.replace('-', '-') + '-best');
+                const playsElement = document.getElementById(gameId.replace('-', '-') + '-plays');
+                
+                if (bestElement) bestElement.textContent = data.bestScore || 0;
+                if (playsElement) playsElement.textContent = data.plays || 0;
+            });
+        }
+
+        // Start a specific game
+        function startGame(gameId) {
+            currentGame = gameId;
+            gameScore = 0;
+            currentQuestion = 0;
+            
+            document.getElementById('gameModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            switch(gameId) {
+                case 'ribbon-matcher':
+                    startRibbonMatcher();
+                    break;
+                case 'format-speed':
+                    startFormatSpeed();
+                    break;
+                case 'table-builder':
+                    startTableBuilder();
+                    break;
+                case 'style-detective':
+                    startStyleDetective();
+                    break;
+                case 'reference-master':
+                    startReferenceMaster();
+                    break;
+                case 'collaboration-quiz':
+                    startCollaborationQuiz();
+                    break;
+                case 'document-doctor':
+                    startDocumentDoctor();
+                    break;
+                case 'layout-master':
+                    startLayoutMaster();
+                    break;
+            }
+        }
+
+        // Start Ribbon Matcher Game
+        function startRibbonMatcher() {
+            const questions = gameData['ribbon-matcher'].questions;
+            showQuestion(questions[currentQuestion]);
+        }
+
+        // Display quiz question
+        function showQuestion(questionData) {
+            const content = `
+                <h2>🎯 Ribbon Command Matcher</h2>
+                <div class="game-progress">
+                    <div class="progress-fill" style="width: ${(currentQuestion / gameData[currentGame].questions.length) * 100}%"></div>
+                </div>
+                <div class="score-display">Score: ${gameScore}</div>
+                <div class="quiz-question">
+                    <h3>Question ${currentQuestion + 1} of ${gameData[currentGame].questions.length}</h3>
+                    <p style="font-size: 1.2rem; margin: 15px 0;">${questionData.question}</p>
+                    <div class="quiz-options">
+                        ${questionData.options.map((option, index) => 
+                            `<div class="quiz-option" onclick="selectAnswer(${index})">${option}</div>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('gameContent').innerHTML = content;
+        }
+
+        // Handle answer selection
+        function selectAnswer(selectedIndex) {
+            const questions = gameData[currentGame].questions;
+            const currentQ = questions[currentQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+            
+            // Disable all options
+            options.forEach(option => option.style.pointerEvents = 'none');
+            
+            // Show correct/incorrect
+            if (selectedIndex === currentQ.correct) {
+                options[selectedIndex].classList.add('correct');
+                gameScore += 20;
+                showFeedback("✅ Correct! " + currentQ.explanation, true);
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+                options[currentQ.correct].classList.add('correct');
+                showFeedback("❌ Incorrect. " + currentQ.explanation, false);
+            }
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    showQuestion(questions[currentQuestion]);
+                } else {
+                    endGame();
+                }
+            }, 3000);
+        }
+
+        // Show feedback message
+        function showFeedback(message, isCorrect) {
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.style.cssText = `
+                margin-top: 20px;
+                padding: 15px;
+                border-radius: 10px;
+                font-weight: 600;
+                background: ${isCorrect ? '#d4edda' : '#f8d7da'};
+                color: ${isCorrect ? '#155724' : '#721c24'};
+                border: 1px solid ${isCorrect ? '#c3e6cb' : '#f5c6cb'};
+            `;
+            feedbackDiv.textContent = message;
+            document.querySelector('.quiz-question').appendChild(feedbackDiv);
+        }
+
+        // Start Format Speed Game
+        function startFormatSpeed() {
+            const content = `
+                <h2>⚡ Formatting Speed Challenge</h2>
+                <div class="game-timer" id="gameTimer">60</div>
+                <div class="score-display">Score: <span id="speedScore">0</span></div>
+                <div class="quiz-question">
+                    <h3>Complete as many formatting tasks as possible!</h3>
+                    <p id="currentTask">Loading task...</p>
+                    <div style="margin: 20px 0;">
+                        <button class="play-button" onclick="completeTask()">Task Complete!</button>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-top: 20px;">
+                        <strong>Tip:</strong> <span id="taskHint">Loading hint...</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('gameContent').innerHTML = content;
+            startSpeedTimer();
+            showNextTask();
+        }
+
+        // Start speed timer
+        function startSpeedTimer() {
+            let timeLeft = 60;
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('gameTimer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Show next formatting task
+        function showNextTask() {
+            const tasks = gameData['format-speed'].tasks;
+            const task = tasks[Math.floor(Math.random() * tasks.length)];
+            
+            document.getElementById('currentTask').textContent = task.task;
+            document.getElementById('taskHint').textContent = `Shortcut: ${task.shortcut} or ${task.ribbon}`;
+        }
+
+        // Complete current task
+        function completeTask() {
+            gameScore += 10;
+            document.getElementById('speedScore').textContent = gameScore;
+            showNextTask();
+        }
+
+        // Start other games (simplified for demo)
+        function startTableBuilder() {
+            showGenericGame('📊 Table Builder Puzzle', 'Build tables according to specifications!');
+        }
+
+        function startStyleDetective() {
+            showGenericGame('🔍 Style Detective', 'Find and fix style inconsistencies!');
+        }
+
+        function startReferenceMaster() {
+            showGenericGame('📚 Reference Master', 'Master citations and academic formatting!');
+        }
+
+        function startCollaborationQuiz() {
+            showGenericGame('👥 Collaboration Champion', 'Test your teamwork and review skills!');
+        }
+
+        function startDocumentDoctor() {
+            showGenericGame('🩺 Document Doctor', 'Diagnose and fix document problems!');
+        }
+
+        function startLayoutMaster() {
+            showGenericGame('📐 Layout Master', 'Perfect your page layout skills!');
+        }
+
+        // Generic game template
+        function showGenericGame(title, description) {
+            const content = `
+                <h2>${title}</h2>
+                <div class="quiz-question">
+                    <h3>${description}</h3>
+                    <p style="text-align: center; margin: 30px 0;">
+                        🚧 This game is coming soon! 🚧
+                    </p>
+                    <p style="text-align: center; color: #666;">
+                        Practice your skills in the Word 365 Learning System while we finish building this game.
+                    </p>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="play-button" onclick="closeGame()">
+                            <span>📚</span> Back to Learning System
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('gameContent').innerHTML = content;
+        }
+
+        // End current game
+        function endGame() {
+            const percentage = Math.round((gameScore / (gameData[currentGame].questions.length * 20)) * 100);
+            
+            // Update game statistics
+            if (!gameStats[currentGame]) {
+                gameStats[currentGame] = { plays: 0, bestScore: 0, totalScore: 0 };
+            }
+            
+            gameStats[currentGame].plays++;
+            gameStats[currentGame].totalScore += percentage;
+            gameStats[currentGame].bestScore = Math.max(gameStats[currentGame].bestScore, percentage);
+            
+            localStorage.setItem('word365GameStats', JSON.stringify(gameStats));
+            
+            // Show results
+            let badge = '';
+            if (percentage >= 90) badge = '🥇 Perfect!';
+            else if (percentage >= 80) badge = '🥈 Excellent!';
+            else if (percentage >= 70) badge = '🥉 Good Job!';
+            else badge = '📚 Keep Learning!';
+            
+            const content = `
+                <h2>🎉 Game Complete!</h2>
+                <div style="text-align: center; margin: 30px 0;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">${badge.split(' ')[0]}</div>
+                    <div style="font-size: 2rem; color: var(--success-green); margin-bottom: 10px;">${percentage}%</div>
+                    <div style="font-size: 1.2rem; color: #666;">${badge}</div>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                    <h4>Your Performance:</h4>
+                    <p>• Score: ${gameScore} points</p>
+                    <p>• Accuracy: ${percentage}%</p>
+                    <p>• Games Played: ${gameStats[currentGame].plays}</p>
+                    <p>• Best Score: ${gameStats[currentGame].bestScore}%</p>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="play-button" onclick="startGame('${currentGame}')" style="margin-right: 10px;">
+                        <span>🔄</span> Play Again
+                    </button>
+                    <button class="play-button" onclick="closeGame()" style="background: #666;">
+                        <span>📚</span> Back to Games
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('gameContent').innerHTML = content;
+            updateStats();
+            loadGameStats();
+        }
+
+        // Close game modal
+        function closeGame() {
+            document.getElementById('gameModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentGame = null;
+        }
+
+        // Initialize page when loaded
+        document.addEventListener('DOMContentLoaded', initializePage);
+
+        // Close modal when clicking outside
+        document.getElementById('gameModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeGame();
+            }
+        });
+    </script>
+</body>
+</html>

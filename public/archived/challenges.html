@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Coding Challenges | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .control-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .control-btn.active {
+            background: #4c51bf;
+        }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .challenge-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 3px solid;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .beginner { border-color: #28a745; }
+        .intermediate { border-color: #ffc107; }
+        .advanced { border-color: #dc3545; }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .challenge-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2d3436;
+        }
+
+        .difficulty-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .difficulty-badge.beginner {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .difficulty-badge.intermediate {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty-badge.advanced {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .challenge-description {
+            font-size: 1.1rem;
+            color: #495057;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .requirements {
+            background: #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .requirements h4 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .requirements ul {
+            margin-left: 20px;
+            color: #6c757d;
+        }
+
+        .requirements li {
+            margin-bottom: 5px;
+        }
+
+        .example-box {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .example-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .solution-container {
+            margin-top: 25px;
+        }
+
+        .solution-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .solution-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .solution-content {
+            display: none;
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .solution-content.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .solution-content pre {
+            margin: 0;
+            color: #e2e8f0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-button:hover {
+            background: #3182ce;
+        }
+
+        .hints-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .hints-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .hints-content {
+            color: #856404;
+        }
+
+        .challenge-number {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .filter-info {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .challenge-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .challenge-card {
+                padding: 20px 15px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Large screen optimizations for board display */
+        @media (min-width: 1400px) {
+            .container {
+                max-width: 1600px;
+            }
+            
+            .challenge-card {
+                padding: 40px;
+                font-size: 1.1rem;
+            }
+            
+            .challenge-title {
+                font-size: 1.6rem;
+            }
+            
+            .challenge-description {
+                font-size: 1.2rem;
+            }
+            
+            .requirements {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Python Coding Challenges</h1>
+            <p>Practice your programming skills with these hands-on challenges</p>
+        </div>
+
+        <div class="content">
+            <!-- Filter Controls -->
+            <div class="controls">
+                <button class="control-btn active" onclick="filterChallenges('all')">All Challenges</button>
+                <button class="control-btn" onclick="filterChallenges('beginner')">Beginner</button>
+                <button class="control-btn" onclick="filterChallenges('intermediate')">Intermediate</button>
+                <button class="control-btn" onclick="filterChallenges('advanced')">Advanced</button>
+                <button class="control-btn" onclick="toggleAllSolutions()">Show All Solutions</button>
+            </div>
+
+            <div class="filter-info" id="filterInfo">Showing all challenges</div>
+
+            <!-- Challenges Grid -->
+            <div class="challenge-grid">
+                
+                <!-- Challenge 1: Hello World -->
+                <div class="challenge-card beginner" data-difficulty="beginner">
+                    <div class="challenge-number">1</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Hello World</div>
+                        <div class="difficulty-badge beginner">Beginner</div>
+                    </div>
+                    <div class="challenge-description">
+                        Write a Python program that prints "Hello, World!" to the console.
+                    </div>
+                    <div class="example-box">
+                        <div class="example-title">Expected Output:</div>
+                        Hello, World!
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">print("Hello, World!")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge 2: Calculator -->
+                <div class="challenge-card beginner" data-difficulty="beginner">
+                    <div class="challenge-number">2</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Simple Calculator</div>
+                        <div class="difficulty-badge beginner">Beginner</div>
+                    </div>
+                    <div class="challenge-description">
+                        Create a calculator that asks the user for two numbers and an operation (+, -, *, /) and displays the result.
+                    </div>
+                    <div class="requirements">
+                        <h4>Requirements:</h4>
+                        <ul>
+                            <li>Ask for two numbers</li>
+                            <li>Ask for an operation</li>
+                            <li>Display the result</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-title">Example Run:</div>
+                        Enter first number: 10<br>
+                        Enter second number: 5<br>
+                        Enter operation (+, -, *, /): +<br>
+                        Result: 15
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">num1 = float(input("Enter first number: "))
+num2 = float(input("Enter second number: "))
+operation = input("Enter operation (+, -, *, /): ")
+
+if operation == "+":
+    result = num1 + num2
+elif operation == "-":
+    result = num1 - num2
+elif operation == "*":
+    result = num1 * num2
+elif operation == "/":
+    result = num1 / num2
+else:
+    result = "Invalid operation"
+
+print(f"Result: {result}")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge 3: Number Guessing Game -->
+                <div class="challenge-card beginner" data-difficulty="beginner">
+                    <div class="challenge-number">3</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Number Guessing Game</div>
+                        <div class="difficulty-badge beginner">Beginner</div>
+                    </div>
+                    <div class="challenge-description">
+                        Create a number guessing game where the computer picks a random number between 1 and 10, and the user has to guess it.
+                    </div>
+                    <div class="requirements">
+                        <h4>Requirements:</h4>
+                        <ul>
+                            <li>Generate a random number between 1 and 10</li>
+                            <li>Ask user for their guess</li>
+                            <li>Tell them if they're right or wrong</li>
+                            <li>Show the correct number at the end</li>
+                        </ul>
+                    </div>
+                    <div class="hints-box">
+                        <div class="hints-title">💡 Hint:</div>
+                        <div class="hints-content">Use import random and random.randint(1, 10)</div>
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">import random
+
+secret_number = random.randint(1, 10)
+guess = int(input("Guess a number between 1 and 10: "))
+
+if guess == secret_number:
+    print("Congratulations! You guessed it!")
+else:
+    print(f"Sorry! The number was {secret_number}")
+    
+print("Thanks for playing!")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge 4: Countdown Timer -->
+                <div class="challenge-card intermediate" data-difficulty="intermediate">
+                    <div class="challenge-number">4</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Countdown Timer</div>
+                        <div class="difficulty-badge intermediate">Intermediate</div>
+                    </div>
+                    <div class="challenge-description">
+                        Create a countdown timer that counts down from a given number to 0, printing each number.
+                    </div>
+                    <div class="requirements">
+                        <h4>Requirements:</h4>
+                        <ul>
+                            <li>Ask user for starting number</li>
+                            <li>Count down from that number to 0</li>
+                            <li>Print each number on a new line</li>
+                            <li>Print "Time's up!" at the end</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-title">Example (starting from 5):</div>
+                        5<br>4<br>3<br>2<br>1<br>0<br>Time's up!
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">start_number = int(input("Enter starting number: "))
+
+for i in range(start_number, -1, -1):
+    print(i)
+
+print("Time's up!")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge 5: Password Generator -->
+                <div class="challenge-card intermediate" data-difficulty="intermediate">
+                    <div class="challenge-number">5</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Password Generator</div>
+                        <div class="difficulty-badge intermediate">Intermediate</div>
+                    </div>
+                    <div class="challenge-description">
+                        Create a password generator that creates a random password using letters and numbers.
+                    </div>
+                    <div class="requirements">
+                        <h4>Requirements:</h4>
+                        <ul>
+                            <li>Ask user for password length</li>
+                            <li>Generate random password with letters and numbers</li>
+                            <li>Display the generated password</li>
+                        </ul>
+                    </div>
+                    <div class="hints-box">
+                        <div class="hints-title">💡 Hint:</div>
+                        <div class="hints-content">Use import string and random.choice()</div>
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">import random
+import string
+
+length = int(input("Enter password length: "))
+characters = string.ascii_letters + string.digits
+
+password = ""
+for i in range(length):
+    password += random.choice(characters)
+
+print(f"Your password is: {password}")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge 6: Word Counter -->
+                <div class="challenge-card intermediate" data-difficulty="intermediate">
+                    <div class="challenge-number">6</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Word Counter</div>
+                        <div class="difficulty-badge intermediate">Intermediate</div>
+                    </div>
+                    <div class="challenge-description">
+                        Create a program that counts the number of words in a sentence entered by the user.
+                    </div>
+                    <div class="requirements">
+                        <h4>Requirements:</h4>
+                        <ul>
+                            <li>Ask user for a sentence</li>
+                            <li>Count the number of words</li>
+                            <li>Display the count</li>
+                            <li>Bonus: Also count characters</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-title">Example:</div>
+                        Enter a sentence: Hello world Python<br>
+                        Number of words: 3<br>
+                        Number of characters: 18
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">sentence = input("Enter a sentence: ")
+
+words = sentence.split()
+word_count = len(words)
+char_count = len(sentence)
+
+print(f"Number of words: {word_count}")
+print(f"Number of characters: {char_count}")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge 7: Prime Number Checker -->
+                <div class="challenge-card advanced" data-difficulty="advanced">
+                    <div class="challenge-number">7</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Prime Number Checker</div>
+                        <div class="difficulty-badge advanced">Advanced</div>
+                    </div>
+                    <div class="challenge-description">
+                        Write a function that checks if a given number is prime (only divisible by 1 and itself).
+                    </div>
+                    <div class="requirements">
+                        <h4>Requirements:</h4>
+                        <ul>
+                            <li>Create a function is_prime()</li>
+                            <li>Ask user for a number</li>
+                            <li>Return True if prime, False if not</li>
+                            <li>Display the result clearly</li>
+                        </ul>
+                    </div>
+                    <div class="hints-box">
+                        <div class="hints-title">💡 Hint:</div>
+                        <div class="hints-content">Check divisibility from 2 to the square root of the number</div>
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">def is_prime(n):
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+    
+    for i in range(3, int(n**0.5) + 1, 2):
+        if n % i == 0:
+            return False
+    return True
+
+number = int(input("Enter a number: "))
+
+if is_prime(number):
+    print(f"{number} is a prime number!")
+else:
+    print(f"{number} is not a prime number.")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge 8: Fibonacci Sequence -->
+                <div class="challenge-card advanced" data-difficulty="advanced">
+                    <div class="challenge-number">8</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Fibonacci Sequence</div>
+                        <div class="difficulty-badge advanced">Advanced</div>
+                    </div>
+                    <div class="challenge-description">
+                        Generate the Fibonacci sequence up to n terms, where each number is the sum of the two preceding ones.
+                    </div>
+                    <div class="requirements">
+                        <h4>Requirements:</h4>
+                        <ul>
+                            <li>Ask user how many terms to generate</li>
+                            <li>Generate the Fibonacci sequence</li>
+                            <li>Display all numbers in the sequence</li>
+                            <li>Handle edge cases (n ≤ 0)</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-title">Example (n=7):</div>
+                        Fibonacci sequence: 0, 1, 1, 2, 3, 5, 8
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">n = int(input("How many terms? "))
+
+if n <= 0:
+    print("Please enter a positive number")
+elif n == 1:
+    print("Fibonacci sequence: 0")
+else:
+    fibonacci = [0, 1]
+    
+    for i in range(2, n):
+        next_num = fibonacci[i-1] + fibonacci[i-2]
+        fibonacci.append(next_num)
+    
+    print("Fibonacci sequence:", ", ".join(map(str, fibonacci)))</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge 9: Rock Paper Scissors -->
+                <div class="challenge-card intermediate" data-difficulty="intermediate">
+                    <div class="challenge-number">9</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Rock Paper Scissors</div>
+                        <div class="difficulty-badge intermediate">Intermediate</div>
+                    </div>
+                    <div class="challenge-description">
+                        Create a Rock, Paper, Scissors game where the user plays against the computer.
+                    </div>
+                    <div class="requirements">
+                        <h4>Requirements:</h4>
+                        <ul>
+                            <li>Ask user for their choice (rock, paper, scissors)</li>
+                            <li>Generate random computer choice</li>
+                            <li>Determine and display the winner</li>
+                            <li>Show both choices</li>
+                        </ul>
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">import random
+
+choices = ["rock", "paper", "scissors"]
+computer_choice = random.choice(choices)
+user_choice = input("Enter rock, paper, or scissors: ").lower()
+
+print(f"You chose: {user_choice}")
+print(f"Computer chose: {computer_choice}")
+
+if user_choice == computer_choice:
+    print("It's a tie!")
+elif (user_choice == "rock" and computer_choice == "scissors") or \
+     (user_choice == "paper" and computer_choice == "rock") or \
+     (user_choice == "scissors" and computer_choice == "paper"):
+    print("You win!")
+else:
+    print("Computer wins!")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge 10: Shopping List -->
+                <div class="challenge-card beginner" data-difficulty="beginner">
+                    <div class="challenge-number">10</div>
+                    <div class="challenge-header">
+                        <div class="challenge-title">Shopping List Manager</div>
+                        <div class="difficulty-badge beginner">Beginner</div>
+                    </div>
+                    <div class="challenge-description">
+                        Create a simple shopping list program that allows users to add items and display the list.
+                    </div>
+                    <div class="requirements">
+                        <h4>Requirements:</h4>
+                        <ul>
+                            <li>Ask how many items to add</li>
+                            <li>Add each item to a list</li>
+                            <li>Display the complete shopping list</li>
+                            <li>Number each item</li>
+                        </ul>
+                    </div>
+                    <div class="solution-container">
+                        <button class="solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                        <div class="solution-content">
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <pre><code class="language-python">shopping_list = []
+num_items = int(input("How many items to add? "))
+
+for i in range(num_items):
+    item = input(f"Enter item {i+1}: ")
+    shopping_list.append(item)
+
+print("\nYour Shopping List:")
+for i, item in enumerate(shopping_list, 1):
+    print(f"{i}. {item}")</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        let allSolutionsVisible = false;
+
+        function toggleSolution(button) {
+            const solutionContent = button.nextElementSibling;
+            const isVisible = solutionContent.classList.contains('show');
+            
+            if (isVisible) {
+                solutionContent.classList.remove('show');
+                button.textContent = 'Show Solution';
+                button.style.background = '#28a745';
+            } else {
+                solutionContent.classList.add('show');
+                button.textContent = 'Hide Solution';
+                button.style.background = '#6c757d';
+            }
+        }
+
+        function toggleAllSolutions() {
+            const allButtons = document.querySelectorAll('.solution-btn');
+            const allSolutions = document.querySelectorAll('.solution-content');
+            
+            if (allSolutionsVisible) {
+                // Hide all solutions
+                allSolutions.forEach(solution => solution.classList.remove('show'));
+                allButtons.forEach(button => {
+                    button.textContent = 'Show Solution';
+                    button.style.background = '#28a745';
+                });
+                document.querySelector('.control-btn:last-child').textContent = 'Show All Solutions';
+                allSolutionsVisible = false;
+            } else {
+                // Show all solutions
+                allSolutions.forEach(solution => solution.classList.add('show'));
+                allButtons.forEach(button => {
+                    button.textContent = 'Hide Solution';
+                    button.style.background = '#6c757d';
+                });
+                document.querySelector('.control-btn:last-child').textContent = 'Hide All Solutions';
+                allSolutionsVisible = true;
+            }
+        }
+
+        function filterChallenges(difficulty) {
+            const challenges = document.querySelectorAll('.challenge-card');
+            const buttons = document.querySelectorAll('.control-btn');
+            const filterInfo = document.getElementById('filterInfo');
+            
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter challenges
+            let visibleCount = 0;
+            challenges.forEach(challenge => {
+                if (difficulty === 'all' || challenge.dataset.difficulty === difficulty) {
+                    challenge.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    challenge.style.display = 'none';
+                }
+            });
+            
+            // Update filter info
+            if (difficulty === 'all') {
+                filterInfo.textContent = `Showing all ${visibleCount} challenges`;
+            } else {
+                filterInfo.textContent = `Showing ${visibleCount} ${difficulty} challenges`;
+            }
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling.textContent;
+            navigator.clipboard.writeText(codeBlock).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#38a169';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#4299e1';
+                }, 2000);
+            });
+        }
+
+        // Initialize Prism highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            Prism.highlightAll();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                toggleAllSolutions();
+            }
+        });
+    </script>
+</body>
+</html>

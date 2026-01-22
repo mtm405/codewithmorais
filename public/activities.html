@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Coding Activities | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .activity-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .activity-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .activity-icon {
+            font-size: 3em;
+        }
+
+        .activity-title h2 {
+            color: #1e3c72;
+            font-size: 2em;
+            margin: 0;
+        }
+
+        .difficulty-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            color: #2a5298;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .goal-box {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .goal-box p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .steps {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .steps ol {
+            padding-left: 25px;
+        }
+
+        .steps li {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 1.05em;
+        }
+
+        .steps li strong {
+            color: #1e3c72;
+        }
+
+        .expected-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .expected-output::before {
+            content: 'Expected Output';
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .expected-output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-size: 1em;
+        }
+
+        .hints-box {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .hints-box h4 {
+            color: #f57c00;
+            margin-bottom: 10px;
+        }
+
+        .hints-box ul {
+            padding-left: 25px;
+        }
+
+        .hints-box li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-solution {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-solution:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-hide {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-hide:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .solution {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+        }
+
+        .solution.show {
+            display: block;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .solution h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .code-container {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .code-container pre {
+            margin: 0;
+            color: #f8f8f2;
+            font-size: 1em;
+        }
+
+        .explanation {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .explanation h4 {
+            color: #2a5298;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .explanation p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .key-concepts {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .key-concepts h5 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .key-concepts ul {
+            padding-left: 25px;
+        }
+
+        .key-concepts li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: #1e3c72;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .activity-card {
+                padding: 25px;
+            }
+
+            .activity-title h2 {
+                font-size: 1.5em;
+            }
+
+            .activity-icon {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐍 Python Coding Activities</h1>
+            <p>Step-by-Step Challenges for Classroom Display</p>
+        </div>
+
+        <!-- Activity 1: Functions -->
+        <div class="activity-card" id="activity-1">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <span class="activity-icon">📦</span>
+                    <h2>Activity 1: Temperature Converter</h2>
+                </div>
+                <span class="difficulty-badge easy">Easy</span>
+            </div>
+
+            <div class="section">
+                <h3>🎯 Goal</h3>
+                <div class="goal-box">
+                    <p>Create a function that converts temperatures between Fahrenheit and Celsius. The function should accept two parameters: the temperature value and the conversion type.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📝 Step-by-Step Instructions</h3>
+                <div class="steps">
+                    <ol>
+                        <li><strong>Define a function</strong> called <code>convert_temperature(temp, to_celsius)</code></li>
+                        <li><strong>Add a parameter</strong> <code>to_celsius</code> that is True when converting to Celsius, False when converting to Fahrenheit</li>
+                        <li><strong>Use an if/else statement</strong> to check which conversion to perform</li>
+                        <li><strong>Formula for F to C:</strong> (temp - 32) * 5/9</li>
+                        <li><strong>Formula for C to F:</strong> (temp * 9/5) + 32</li>
+                        <li><strong>Return</strong> the converted temperature rounded to 2 decimal places</li>
+                        <li><strong>Test your function</strong> with: 100°F → C and 37°C → F</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>✅ Expected Output</h3>
+                <div class="expected-output">
+                    <pre>100°F is 37.78°C
+37°C is 98.6°F</pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="hints-box">
+                    <h4>💡 Hints</h4>
+                    <ul>
+                        <li>Use the <code>round()</code> function to round to 2 decimal places</li>
+                        <li>Remember: if statements check boolean conditions</li>
+                        <li>The formula order matters - parentheses are important!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-solution" onclick="toggleSolution('solution-1')">
+                    🔓 Show Solution
+                </button>
+            </div>
+
+            <div class="solution" id="solution-1">
+                <h3>✨ Solution</h3>
+                <div class="code-container">
+                    <pre><code class="language-python">def convert_temperature(temp, to_celsius):
+    """
+    Convert temperature between Fahrenheit and Celsius
+    
+    Parameters:
+    temp (float): Temperature value to convert
+    to_celsius (bool): True to convert F→C, False to convert C→F
+    
+    Returns:
+    float: Converted temperature rounded to 2 decimal places
+    """
+    if to_celsius:
+        # Fahrenheit to Celsius
+        result = (temp - 32) * 5/9
+    else:
+        # Celsius to Fahrenheit
+        result = (temp * 9/5) + 32
+    
+    return round(result, 2)
+
+# Test the function
+fahrenheit = 100
+celsius = convert_temperature(fahrenheit, True)
+print(f"{fahrenheit}°F is {celsius}°C")
+
+celsius_temp = 37
+fahrenheit = convert_temperature(celsius_temp, False)
+print(f"{celsius_temp}°C is {fahrenheit}°F")</code></pre>
+                </div>
+
+                <div class="explanation">
+                    <h4>📖 Explanation</h4>
+                    <p><strong>Function Definition:</strong> We define a function with two parameters - the temperature and a boolean flag.</p>
+                    <p><strong>Conditional Logic:</strong> The if statement checks which conversion to perform based on the <code>to_celsius</code> parameter.</p>
+                    <p><strong>Mathematical Operations:</strong> Each branch applies the correct conversion formula.</p>
+                    <p><strong>Return Value:</strong> We use <code>round()</code> to limit the result to 2 decimal places for readability.</p>
+
+                    <div class="key-concepts">
+                        <h5>🔑 Key Concepts</h5>
+                        <ul>
+                            <li>Function parameters and return values</li>
+                            <li>Boolean parameters for controlling behavior</li>
+                            <li>If/else conditional statements</li>
+                            <li>Mathematical operations in Python</li>
+                            <li>String formatting with f-strings</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button class="btn btn-hide" onclick="toggleSolution('solution-1')">
+                    🔒 Hide Solution
+                </button>
+            </div>
+        </div>
+
+        <!-- Activity 2: For Loops -->
+        <div class="activity-card" id="activity-2">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <span class="activity-icon">🔄</span>
+                    <h2>Activity 2: Grade Calculator</h2>
+                </div>
+                <span class="difficulty-badge medium">Medium</span>
+            </div>
+
+            <div class="section">
+                <h3>🎯 Goal</h3>
+                <div class="goal-box">
+                    <p>Create a function that calculates the average grade from a list of scores and assigns a letter grade. Use a for loop to sum the scores and if/elif/else to determine the letter grade.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📝 Step-by-Step Instructions</h3>
+                <div class="steps">
+                    <ol>
+                        <li><strong>Define a function</strong> called <code>calculate_grade(scores)</code> that takes a list of numbers</li>
+                        <li><strong>Initialize a variable</strong> <code>total = 0</code> to store the sum</li>
+                        <li><strong>Use a for loop</strong> to iterate through each score in the list</li>
+                        <li><strong>Add each score</strong> to the total inside the loop</li>
+                        <li><strong>Calculate average:</strong> total / len(scores)</li>
+                        <li><strong>Use if/elif/else</strong> to assign letter grades:
+                            <ul>
+                                <li>A: 90-100</li>
+                                <li>B: 80-89</li>
+                                <li>C: 70-79</li>
+                                <li>D: 60-69</li>
+                                <li>F: below 60</li>
+                            </ul>
+                        </li>
+                        <li><strong>Return</strong> both the average and letter grade</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>✅ Expected Output</h3>
+                <div class="expected-output">
+                    <pre>Scores: [85, 92, 78, 90, 88]
+Average: 86.6
+Letter Grade: B
+
+Scores: [95, 98, 93, 97, 100]
+Average: 96.6
+Letter Grade: A</pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="hints-box">
+                    <h4>💡 Hints</h4>
+                    <ul>
+                        <li>Use <code>for score in scores:</code> to iterate</li>
+                        <li>Add to total with <code>total += score</code></li>
+                        <li>Use <code>len(scores)</code> to get the count</li>
+                        <li>Use <code>>=</code> for grade boundaries</li>
+                        <li>Round average to 1 decimal place</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-solution" onclick="toggleSolution('solution-2')">
+                    🔓 Show Solution
+                </button>
+            </div>
+
+            <div class="solution" id="solution-2">
+                <h3>✨ Solution</h3>
+                <div class="code-container">
+                    <pre><code class="language-python">def calculate_grade(scores):
+    """
+    Calculate average and letter grade from a list of scores
+    
+    Parameters:
+    scores (list): List of numerical scores
+    
+    Returns:
+    tuple: (average, letter_grade)
+    """
+    # Calculate sum using for loop
+    total = 0
+    for score in scores:
+        total += score
+    
+    # Calculate average
+    average = total / len(scores)
+    
+    # Determine letter grade using if/elif/else
+    if average >= 90:
+        letter = 'A'
+    elif average >= 80:
+        letter = 'B'
+    elif average >= 70:
+        letter = 'C'
+    elif average >= 60:
+        letter = 'D'
+    else:
+        letter = 'F'
+    
+    return round(average, 1), letter
+
+# Test the function
+test_scores_1 = [85, 92, 78, 90, 88]
+avg1, grade1 = calculate_grade(test_scores_1)
+print(f"Scores: {test_scores_1}")
+print(f"Average: {avg1}")
+print(f"Letter Grade: {grade1}")
+print()
+
+test_scores_2 = [95, 98, 93, 97, 100]
+avg2, grade2 = calculate_grade(test_scores_2)
+print(f"Scores: {test_scores_2}")
+print(f"Average: {avg2}")
+print(f"Letter Grade: {grade2}")</code></pre>
+                </div>
+
+                <div class="explanation">
+                    <h4>📖 Explanation</h4>
+                    <p><strong>For Loop:</strong> We iterate through each score in the list, adding it to our running total.</p>
+                    <p><strong>Average Calculation:</strong> Divide the total by the count of scores using <code>len()</code>.</p>
+                    <p><strong>If/Elif/Else Chain:</strong> We check grade boundaries from highest to lowest. Once a condition is met, the rest are skipped.</p>
+                    <p><strong>Multiple Return Values:</strong> Python functions can return multiple values as a tuple.</p>
+
+                    <div class="key-concepts">
+                        <h5>🔑 Key Concepts</h5>
+                        <ul>
+                            <li>For loops for iterating over lists</li>
+                            <li>Accumulator pattern (building up a total)</li>
+                            <li>If/elif/else chains for multiple conditions</li>
+                            <li>Returning multiple values (tuples)</li>
+                            <li>Comparison operators (>=, <)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button class="btn btn-hide" onclick="toggleSolution('solution-2')">
+                    🔒 Hide Solution
+                </button>
+            </div>
+        </div>
+
+        <!-- Activity 3: While Loops -->
+        <div class="activity-card" id="activity-3">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <span class="activity-icon">🔁</span>
+                    <h2>Activity 3: Password Validator</h2>
+                </div>
+                <span class="difficulty-badge medium">Medium</span>
+            </div>
+
+            <div class="section">
+                <h3>🎯 Goal</h3>
+                <div class="goal-box">
+                    <p>Create a function that validates if a password meets security requirements. Use a while loop to give the user 3 attempts to enter a valid password.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📝 Step-by-Step Instructions</h3>
+                <div class="steps">
+                    <ol>
+                        <li><strong>Define a function</strong> called <code>is_valid_password(password)</code> that checks:
+                            <ul>
+                                <li>Length is at least 8 characters</li>
+                                <li>Contains at least one digit</li>
+                                <li>Contains at least one uppercase letter</li>
+                            </ul>
+                        </li>
+                        <li><strong>Return True</strong> if all conditions are met, False otherwise</li>
+                        <li><strong>Create another function</strong> <code>password_prompt()</code></li>
+                        <li><strong>Initialize</strong> <code>attempts = 0</code> and <code>max_attempts = 3</code></li>
+                        <li><strong>Use a while loop</strong> that runs while attempts < max_attempts</li>
+                        <li><strong>Inside the loop:</strong>
+                            <ul>
+                                <li>Ask for password input</li>
+                                <li>Check if valid</li>
+                                <li>If valid, return success message and break</li>
+                                <li>If not, increment attempts and show error</li>
+                            </ul>
+                        </li>
+                        <li><strong>After loop:</strong> Show "locked out" message if all attempts failed</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>✅ Expected Output</h3>
+                <div class="expected-output">
+                    <pre>Enter password: hello
+❌ Invalid! Must be 8+ chars, have digit, have uppercase
+Attempts remaining: 2
+
+Enter password: Hello123
+✅ Password accepted! Access granted.</pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="hints-box">
+                    <h4>💡 Hints</h4>
+                    <ul>
+                        <li>Use <code>len(password) >= 8</code> for length</li>
+                        <li>Use <code>any(c.isdigit() for c in password)</code> to check for digits</li>
+                        <li>Use <code>any(c.isupper() for c in password)</code> to check for uppercase</li>
+                        <li>Use <code>and</code> to combine all conditions</li>
+                        <li>Remember to increment attempts!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-solution" onclick="toggleSolution('solution-3')">
+                    🔓 Show Solution
+                </button>
+            </div>
+
+            <div class="solution" id="solution-3">
+                <h3>✨ Solution</h3>
+                <div class="code-container">
+                    <pre><code class="language-python">def is_valid_password(password):
+    """
+    Check if password meets security requirements
+    
+    Requirements:
+    - At least 8 characters long
+    - Contains at least one digit
+    - Contains at least one uppercase letter
+    
+    Parameters:
+    password (str): Password to validate
+    
+    Returns:
+    bool: True if valid, False otherwise
+    """
+    # Check length
+    has_length = len(password) >= 8
+    
+    # Check for at least one digit
+    has_digit = any(c.isdigit() for c in password)
+    
+    # Check for at least one uppercase letter
+    has_upper = any(c.isupper() for c in password)
+    
+    # All conditions must be True
+    return has_length and has_digit and has_upper
+
+def password_prompt():
+    """
+    Prompt user for valid password with 3 attempts
+    """
+    attempts = 0
+    max_attempts = 3
+    
+    while attempts < max_attempts:
+        password = input("Enter password: ")
+        
+        if is_valid_password(password):
+            print("✅ Password accepted! Access granted.")
+            return True
+        else:
+            attempts += 1
+            remaining = max_attempts - attempts
+            print("❌ Invalid! Must be 8+ chars, have digit, have uppercase")
+            
+            if remaining > 0:
+                print(f"Attempts remaining: {remaining}")
+                print()
+    
+    print("🔒 Account locked! Too many failed attempts.")
+    return False
+
+# Test the function
+# Uncomment to run interactively:
+# password_prompt()
+
+# For demonstration without input:
+print("Testing password validation:")
+print(f"'hello' is valid: {is_valid_password('hello')}")
+print(f"'Hello123' is valid: {is_valid_password('Hello123')}")
+print(f"'Pass' is valid: {is_valid_password('Pass')}")
+print(f"'Password1' is valid: {is_valid_password('Password1')}")</code></pre>
+                </div>
+
+                <div class="explanation">
+                    <h4>📖 Explanation</h4>
+                    <p><strong>Validation Function:</strong> We break down password requirements into separate boolean checks, then combine them with <code>and</code>.</p>
+                    <p><strong>While Loop:</strong> Continues running as long as attempts haven't reached the maximum. This is perfect for retry logic.</p>
+                    <p><strong>Early Exit:</strong> When a valid password is entered, we <code>return</code> immediately, breaking out of the loop.</p>
+                    <p><strong>Counter Pattern:</strong> We increment <code>attempts</code> each iteration to track progress toward the limit.</p>
+
+                    <div class="key-concepts">
+                        <h5>🔑 Key Concepts</h5>
+                        <ul>
+                            <li>While loops with conditional logic</li>
+                            <li>String methods (isdigit(), isupper())</li>
+                            <li>Generator expressions with any()</li>
+                            <li>Boolean logic and compound conditions</li>
+                            <li>Loop control with return/break</li>
+                            <li>Counter pattern for tracking attempts</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button class="btn btn-hide" onclick="toggleSolution('solution-3')">
+                    🔒 Hide Solution
+                </button>
+            </div>
+        </div>
+
+        <!-- Activity 4: Combined Challenge -->
+        <div class="activity-card" id="activity-4">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <span class="activity-icon">🎯</span>
+                    <h2>Activity 4: Number Guessing Game</h2>
+                </div>
+                <span class="difficulty-badge hard">Hard</span>
+            </div>
+
+            <div class="section">
+                <h3>🎯 Goal</h3>
+                <div class="goal-box">
+                    <p>Create a complete number guessing game that combines functions, while loops, and if/elif/else statements. The computer picks a random number and the player has to guess it with hints.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📝 Step-by-Step Instructions</h3>
+                <div class="steps">
+                    <ol>
+                        <li><strong>Import random module</strong> at the top of your file</li>
+                        <li><strong>Define function</strong> <code>play_guessing_game(min_num, max_num, max_guesses)</code></li>
+                        <li><strong>Generate random number:</strong> <code>secret = random.randint(min_num, max_num)</code></li>
+                        <li><strong>Initialize</strong> <code>guesses = 0</code></li>
+                        <li><strong>Use while loop</strong> that continues while guesses < max_guesses</li>
+                        <li><strong>Inside loop:</strong>
+                            <ul>
+                                <li>Get player's guess (convert to int)</li>
+                                <li>Increment guesses counter</li>
+                                <li>Use if/elif/else to check:
+                                    <ul>
+                                        <li>If correct → congratulate and return True</li>
+                                        <li>If too high → give "Too high!" hint</li>
+                                        <li>If too low → give "Too low!" hint</li>
+                                    </ul>
+                                </li>
+                                <li>Show remaining guesses</li>
+                            </ul>
+                        </li>
+                        <li><strong>After loop:</strong> If not guessed, reveal answer and return False</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>✅ Expected Output</h3>
+                <div class="expected-output">
+                    <pre>🎲 Guess the number between 1 and 100!
+You have 7 guesses.
+
+Guess #1: 50
+Too high! Try again.
+Remaining guesses: 6
+
+Guess #2: 25
+Too low! Try again.
+Remaining guesses: 5
+
+Guess #3: 37
+🎉 Correct! You won in 3 guesses!</pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="hints-box">
+                    <h4>💡 Hints</h4>
+                    <ul>
+                        <li>Import random with: <code>import random</code></li>
+                        <li>Use <code>int(input("Guess: "))</code> to get number from user</li>
+                        <li>Handle invalid input with try/except (optional challenge!)</li>
+                        <li>Track remaining guesses: <code>max_guesses - guesses</code></li>
+                        <li>Use descriptive variable names</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-solution" onclick="toggleSolution('solution-4')">
+                    🔓 Show Solution
+                </button>
+            </div>
+
+            <div class="solution" id="solution-4">
+                <h3>✨ Solution</h3>
+                <div class="code-container">
+                    <pre><code class="language-python">import random
+
+def play_guessing_game(min_num=1, max_num=100, max_guesses=7):
+    """
+    Play a number guessing game
+    
+    Parameters:
+    min_num (int): Minimum number in range
+    max_num (int): Maximum number in range
+    max_guesses (int): Maximum number of guesses allowed
+    
+    Returns:
+    bool: True if player won, False if ran out of guesses
+    """
+    # Generate random secret number
+    secret = random.randint(min_num, max_num)
+    guesses = 0
+    
+    print(f"🎲 Guess the number between {min_num} and {max_num}!")
+    print(f"You have {max_guesses} guesses.\n")
+    
+    # Main game loop
+    while guesses < max_guesses:
+        try:
+            # Get player's guess
+            guess = int(input(f"Guess #{guesses + 1}: "))
+            guesses += 1
+            
+            # Check the guess
+            if guess == secret:
+                print(f"🎉 Correct! You won in {guesses} guesses!")
+                return True
+            elif guess > secret:
+                remaining = max_guesses - guesses
+                print("Too high! Try again.")
+                if remaining > 0:
+                    print(f"Remaining guesses: {remaining}\n")
+            else:  # guess < secret
+                remaining = max_guesses - guesses
+                print("Too low! Try again.")
+                if remaining > 0:
+                    print(f"Remaining guesses: {remaining}\n")
+        
+        except ValueError:
+            print("❌ Invalid input! Please enter a number.\n")
+            # Don't count invalid input as a guess
+            guesses -= 1
+    
+    # Out of guesses
+    print(f"\n💔 Game Over! The number was {secret}.")
+    return False
+
+# Play the game
+# Uncomment to run interactively:
+# play_guessing_game()
+
+# For demonstration:
+print("Number Guessing Game - Ready to play!")
+print("Uncomment the play_guessing_game() line to start.")</code></pre>
+                </div>
+
+                <div class="explanation">
+                    <h4>📖 Explanation</h4>
+                    <p><strong>Random Number Generation:</strong> We use <code>random.randint()</code> to pick a number in the specified range.</p>
+                    <p><strong>While Loop with Limit:</strong> The game continues until max guesses are used or the player wins.</p>
+                    <p><strong>Nested If/Elif/Else:</strong> We check three cases: correct guess, too high, or too low.</p>
+                    <p><strong>Try/Except Block:</strong> Handles invalid input (non-numbers) gracefully without crashing.</p>
+                    <p><strong>Return Values:</strong> Function returns True/False to indicate win/loss, which could be used for tracking statistics.</p>
+
+                    <div class="key-concepts">
+                        <h5>🔑 Key Concepts</h5>
+                        <ul>
+                            <li>Importing and using modules (random)</li>
+                            <li>Function with default parameters</li>
+                            <li>While loop with multiple exit conditions</li>
+                            <li>If/elif/else for game logic</li>
+                            <li>Exception handling (try/except)</li>
+                            <li>User input and type conversion</li>
+                            <li>Boolean return values</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button class="btn btn-hide" onclick="toggleSolution('solution-4')">
+                    🔒 Hide Solution
+                </button>
+            </div>
+        </div>
+
+        <!-- Activity 5: Advanced Challenge -->
+        <div class="activity-card" id="activity-5">
+            <div class="activity-header">
+                <div class="activity-title">
+                    <span class="activity-icon">🏆</span>
+                    <h2>Activity 5: FizzBuzz with a Twist</h2>
+                </div>
+                <span class="difficulty-badge hard">Hard</span>
+            </div>
+
+            <div class="section">
+                <h3>🎯 Goal</h3>
+                <div class="goal-box">
+                    <p>Create an enhanced FizzBuzz function that accepts custom divisors and words, demonstrating advanced use of functions, loops, and conditionals.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📝 Step-by-Step Instructions</h3>
+                <div class="steps">
+                    <ol>
+                        <li><strong>Define function</strong> <code>custom_fizzbuzz(n, rules)</code> where:
+                            <ul>
+                                <li>n = how many numbers to process</li>
+                                <li>rules = dictionary like {3: "Fizz", 5: "Buzz", 7: "Pop"}</li>
+                            </ul>
+                        </li>
+                        <li><strong>Use a for loop</strong> to iterate from 1 to n</li>
+                        <li><strong>For each number:</strong>
+                            <ul>
+                                <li>Create empty string for output</li>
+                                <li>Loop through rules dictionary</li>
+                                <li>If number divisible by divisor, add word to output</li>
+                                <li>If output is empty, use the number itself</li>
+                            </ul>
+                        </li>
+                        <li><strong>Print each result</strong></li>
+                        <li><strong>Return</strong> count of special numbers (non-numeric outputs)</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>✅ Expected Output</h3>
+                <div class="expected-output">
+                    <pre>With rules {3: "Fizz", 5: "Buzz"}:
+1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz
+Special numbers found: 4
+
+With rules {2: "Even", 3: "Three", 6: "Both"}:
+1
+Even
+Three
+Even
+5
+EvenThreeBoth</pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="hints-box">
+                    <h4>💡 Hints</h4>
+                    <ul>
+                        <li>Use <code>for divisor, word in rules.items():</code> to loop through dictionary</li>
+                        <li>Check divisibility with <code>if num % divisor == 0:</code></li>
+                        <li>Concatenate strings with <code>+=</code></li>
+                        <li>Use <code>if not output:</code> to check for empty string</li>
+                        <li>Count special numbers with a counter variable</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-solution" onclick="toggleSolution('solution-5')">
+                    🔓 Show Solution
+                </button>
+            </div>
+
+            <div class="solution" id="solution-5">
+                <h3>✨ Solution</h3>
+                <div class="code-container">
+                    <pre><code class="language-python">def custom_fizzbuzz(n, rules):
+    """
+    Enhanced FizzBuzz with custom rules
+    
+    Parameters:
+    n (int): Count from 1 to n
+    rules (dict): Dictionary mapping divisor to replacement word
+                  Example: {3: "Fizz", 5: "Buzz"}
+    
+    Returns:
+    int: Count of special numbers (non-numeric outputs)
+    """
+    special_count = 0
+    
+    # Process each number from 1 to n
+    for num in range(1, n + 1):
+        output = ""
+        
+        # Check each rule
+        for divisor, word in rules.items():
+            if num % divisor == 0:
+                output += word
+        
+        # If no rules matched, use the number
+        if not output:
+            output = str(num)
+        else:
+            special_count += 1
+        
+        print(output)
+    
+    return special_count
+
+# Test with classic FizzBuzz
+print("Classic FizzBuzz (1-15):")
+print("=" * 40)
+classic_rules = {3: "Fizz", 5: "Buzz"}
+count1 = custom_fizzbuzz(15, classic_rules)
+print(f"\nSpecial numbers found: {count1}\n")
+
+# Test with custom rules
+print("Custom rules (1-10):")
+print("=" * 40)
+custom_rules = {2: "Even", 3: "Three", 6: "Both"}
+count2 = custom_fizzbuzz(10, custom_rules)
+print(f"\nSpecial numbers found: {count2}\n")
+
+# Test with prime checker (7, 11, 13)
+print("Prime highlight (1-20):")
+print("=" * 40)
+prime_rules = {7: "Lucky", 11: "Eleven", 13: "Tricky"}
+count3 = custom_fizzbuzz(20, prime_rules)
+print(f"\nSpecial numbers found: {count3}")</code></pre>
+                </div>
+
+                <div class="explanation">
+                    <h4>📖 Explanation</h4>
+                    <p><strong>Flexible Design:</strong> By accepting a rules dictionary, this function can handle any FizzBuzz-style problem.</p>
+                    <p><strong>Nested Loops:</strong> The outer for loop processes numbers, the inner loop checks each rule.</p>
+                    <p><strong>String Building:</strong> We concatenate words when multiple rules match (e.g., 15 → "FizzBuzz").</p>
+                    <p><strong>Conditional Output:</strong> If no rules matched, we output the number; otherwise, we output the built string.</p>
+                    <p><strong>Tracking Statistics:</strong> We count and return how many special numbers were found.</p>
+
+                    <div class="key-concepts">
+                        <h5>🔑 Key Concepts</h5>
+                        <ul>
+                            <li>Functions with multiple parameters</li>
+                            <li>Dictionary iteration with .items()</li>
+                            <li>Nested for loops</li>
+                            <li>String concatenation and building</li>
+                            <li>Modulo operator for divisibility</li>
+                            <li>Boolean evaluation of strings (truthy/falsy)</li>
+                            <li>Accumulator pattern for counting</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button class="btn btn-hide" onclick="toggleSolution('solution-5')">
+                    🔒 Hide Solution
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <a href="#activity-1" class="nav-btn">📦 Activity 1</a>
+            <a href="#activity-2" class="nav-btn">🔄 Activity 2</a>
+            <a href="#activity-3" class="nav-btn">🔁 Activity 3</a>
+            <a href="#activity-4" class="nav-btn">🎯 Activity 4</a>
+            <a href="#activity-5" class="nav-btn">🏆 Activity 5</a>
+            <a href="/dashboard.html" class="nav-btn">🏠 Dashboard</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        function toggleSolution(solutionId) {
+            const solution = document.getElementById(solutionId);
+            solution.classList.toggle('show');
+            
+            // Scroll to solution if showing
+            if (solution.classList.contains('show')) {
+                setTimeout(() => {
+                    solution.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+
+        // Initialize Prism highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            Prism.highlightAll();
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

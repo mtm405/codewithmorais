@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python File I/O Mastery: Analysis</title>
+    <style>
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.75in;
+            background: #f5f5f5;
+            line-height: 1.6;
+            font-size: 12pt;
+        }
+
+        .document {
+            background: white;
+            padding: 0.75in;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            
+            .document {
+                box-shadow: none;
+                padding: 0.4in;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .page-break {
+                page-break-after: always;
+            }
+            
+            h1 {
+                font-size: 20pt !important;
+                margin-bottom: 8px !important;
+            }
+            
+            h2 {
+                font-size: 16pt !important;
+                margin: 15px 0 8px 0 !important;
+            }
+            
+            h3 {
+                font-size: 13pt !important;
+                margin: 12px 0 6px 0 !important;
+            }
+            
+            .question {
+                margin: 8px 0 !important;
+            }
+            
+            .answer-space {
+                min-height: 30px !important;
+                padding: 5px !important;
+            }
+            
+            .answer-line {
+                margin: 6px 0 !important;
+                min-height: 14px !important;
+            }
+            
+            .answer-lines {
+                gap: 6px !important;
+            }
+            
+            .intro {
+                padding: 8px !important;
+                margin: 10px 0 !important;
+                font-size: 10pt !important;
+            }
+            
+            .student-info {
+                margin: 10px 0 !important;
+                font-size: 10pt !important;
+            }
+            
+            .header {
+                padding-bottom: 8px !important;
+                margin-bottom: 12px !important;
+            }
+            
+            h2 {
+                margin: 12px 0 8px 0 !important;
+                padding-bottom: 3px !important;
+            }
+            
+            h3 {
+                margin: 10px 0 5px 0 !important;
+            }
+            
+            .question-header {
+                font-size: 10pt !important;
+                margin-bottom: 3px !important;
+            }
+            
+            @page {
+                margin: 0.5in;
+            }
+        }
+
+        .header {
+            border-bottom: 3px solid #2e5090;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #2e5090;
+            font-size: 26pt;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11pt;
+            color: #333;
+            margin-top: 8px;
+        }
+
+        .student-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 11pt;
+        }
+
+        .field {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .field:last-child {
+            margin-right: 0;
+        }
+
+        .field label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .field .line {
+            border-bottom: 1px solid #000;
+            min-height: 20px;
+            padding: 2px 0;
+        }
+
+        .intro {
+            background: #f0f4f8;
+            padding: 10px;
+            border-left: 4px solid #2e5090;
+            margin: 15px 0;
+            font-size: 11pt;
+        }
+
+        h2 {
+            color: #2e5090;
+            font-size: 18pt;
+            margin: 18px 0 10px 0;
+            border-bottom: 2px solid #2e5090;
+            padding-bottom: 4px;
+        }
+
+        h3 {
+            color: #1a3a5c;
+            font-size: 14pt;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+
+        .question {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+
+        .question-header {
+            font-weight: bold;
+            color: #1a3a5c;
+            margin-bottom: 5px;
+            font-size: 11pt;
+        }
+
+        .answer-space {
+            border: 1px solid #ccc;
+            min-height: 35px;
+            padding: 8px;
+            background: #fafafa;
+            margin-top: 3px;
+        }
+
+        .answer-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .answer-line {
+            border-bottom: 1px solid #999;
+            min-height: 16px;
+        }
+
+        .points {
+            color: #c00;
+            font-weight: bold;
+        }
+
+        .download-section {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .download-section h3 {
+            margin: 0 0 15px 0;
+            font-size: 16pt;
+            color: #2e5090;
+            border: none;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-word {
+            background: #2b579a;
+            color: white;
+        }
+
+        .btn-word:hover {
+            background: #1e3d6b;
+            transform: translateY(-2px);
+        }
+
+        .btn-google {
+            background: #4285f4;
+            color: white;
+        }
+
+        .btn-google:hover {
+            background: #3367d6;
+            transform: translateY(-2px);
+        }
+
+        .btn-print {
+            background: #34a853;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #2d8e47;
+            transform: translateY(-2px);
+        }
+
+        .btn-pdf {
+            background: #ea4335;
+            color: white;
+        }
+
+        .btn-pdf:hover {
+            background: #c5362d;
+            transform: translateY(-2px);
+        }
+
+        code {
+            background: #e8e8e8;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+        }
+
+        .note {
+            font-style: italic;
+            color: #666;
+            font-size: 10pt;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .download-section {
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="download-section no-print">
+        <h3>📥 Download Options</h3>
+        <button class="btn btn-word" onclick="downloadAsWord()">
+            📄 Download as Word (.docx)
+        </button>
+        <button class="btn btn-google" onclick="openInGoogleDocs()">
+            📝 Open in Google Docs
+        </button>
+        <button class="btn btn-print" onclick="window.print()">
+            🖨️ Print or Save as PDF
+        </button>
+    </div>
+
+    <div class="document">
+        <div class="header">
+            <h1>🐍 Python File I/O Mastery: Analysis</h1>
+            <div class="subtitle">
+                <div><strong>Topic:</strong> Robust File Input/Output (I/O) and Error Handling</div>
+                <div><strong>Total Points:</strong> <span class="points">16</span></div>
+            </div>
+        </div>
+
+        <div class="student-info">
+            <div class="field" style="flex: 2;">
+                <label>Student Name:</label>
+                <div class="line"></div>
+            </div>
+            <div class="field">
+                <label>Date:</label>
+                <div class="line"></div>
+            </div>
+            <div class="field">
+                <label>Period:</label>
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <div class="intro">
+            <strong>Introduction:</strong> In this assignment, you will analyze a fully functional Python utility (mood_tracker.py) to understand key File I/O concepts, and then apply those concepts to complete a similar, simplified coding challenge.
+        </div>
+
+        <h2>Part A: Code Analysis (<span class="points">16 Points</span>)</h2>
+
+        <h3>Section 1: Core I/O Structure and Modes (<span class="points">8 Points</span>)</h3>
+
+        <div class="question">
+            <div class="question-header">1. Context Manager (<span class="points">2 pts</span>): What is the single most important reason for using the <code>with open(...)</code> structure instead of just calling <code>f = open(...)</code> and later <code>f.close()</code>?</div>
+            <div class="answer-space">
+                <div class="answer-lines">
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">2. File Modes (<span class="points">2 pts</span>): Explain the crucial difference between the file modes 'w' (write) and 'a' (append).</div>
+            <div class="answer-space">
+                <div class="answer-lines">
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">3. Catastrophic Failure (<span class="points">2 pts</span>): Why would using the 'w' mode every time a user logs a mood be a catastrophic failure for the application?</div>
+            <div class="answer-space">
+                <div class="answer-lines">
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">4. Reading Methods (<span class="points">2 pts</span>): The <code>view_history</code> function uses <code>f.read()</code>. If the log file was 100 lines long, how many separate strings would <code>f.read()</code> return?</div>
+            <div class="answer-space">
+                <div class="answer-lines">
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <h3>Section 2: Defensive Programming and Formatting (<span class="points">8 Points</span>)</h3>
+
+        <div class="question">
+            <div class="question-header">5. Error Prevention (<span class="points">2 pts</span>): What specific Python error is the line <code>if not os.path.exists(FILENAME):</code> in the <code>view_history</code> function designed to prevent if the log file is missing?</div>
+            <div class="answer-space">
+                <div class="answer-lines">
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">6. Logic Flow (<span class="points">2 pts</span>): In the <code>log_mood_entry</code> function, what is the condition that determines whether the program uses 'w' mode (to create the header) or 'a' mode (to append the new entry)?</div>
+            <div class="answer-space">
+                <div class="answer-lines">
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">7. Newline Character (<span class="points">2 pts</span>): Why is the newline character (<code>\n</code>) added to the <code>log_entry</code> string? What would happen to the file contents if this character was forgotten in append mode?</div>
+            <div class="answer-space">
+                <div class="answer-lines">
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">8. Robustness (<span class="points">2 pts</span>): The <code>main_menu</code> function uses a <code>try/except</code> block. What is the primary benefit of using <code>try/except</code> here?</div>
+            <div class="answer-space">
+                <div class="answer-lines">
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                    <div class="answer-line"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadAsWord() {
+            // Create a clean HTML version for Word
+            const content = document.querySelector('.document').innerHTML;
+            const htmlContent = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>Python File I/O Mastery Assignment</title>
+                    <style>
+                        body { font-family: Calibri, Arial, sans-serif; line-height: 1.6; }
+                        h1 { color: #2e5090; font-size: 24pt; border-bottom: 3px solid #2e5090; padding-bottom: 15px; }
+                        h2 { color: #2e5090; font-size: 16pt; border-bottom: 2px solid #2e5090; padding-bottom: 5px; }
+                        h3 { color: #1a3a5c; font-size: 13pt; }
+                        .points { color: #c00; font-weight: bold; }
+                        .line { border-bottom: 1px solid #000; min-height: 20px; }
+                        .answer-space { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+                        .answer-line { border-bottom: 1px solid #999; min-height: 18px; margin: 10px 0; }
+                        code { background: #e8e8e8; padding: 2px 6px; font-family: Courier New, monospace; }
+                        .intro { background: #f0f4f8; padding: 15px; border-left: 4px solid #2e5090; margin: 20px 0; }
+                    </style>
+                </head>
+                <body>${content}</body>
+                </html>
+            `;
+            
+            const blob = new Blob(['\ufeff', htmlContent], {
+                type: 'application/msword'
+            });
+            
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Python_File_IO_Assignment.doc';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function openInGoogleDocs() {
+            // Get the current page HTML
+            const content = document.querySelector('.document').innerHTML;
+            const fullHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>Python File I/O Mastery Assignment</title>
+                </head>
+                <body>${content}</body>
+                </html>
+            `;
+            
+            // Encode and open in Google Docs viewer
+            const encoded = encodeURIComponent(fullHtml);
+            const googleDocsUrl = `https://docs.google.com/document/create?title=Python_File_IO_Assignment`;
+            
+            alert('To open in Google Docs:\n\n1. Click OK to open Google Docs\n2. Copy this page content (Ctrl+A, Ctrl+C)\n3. Paste into the new Google Doc\n4. Format as needed');
+            window.open(googleDocsUrl, '_blank');
+        }
+    </script>
+</body>
+</html>

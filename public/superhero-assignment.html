@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superhero Identity Maker - Assignment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        h2 {
+            color: #ff6b6b;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 10px;
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        h3 {
+            color: #667eea;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        strong {
+            color: #ff6b6b;
+        }
+
+        .code-wrapper {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .code-header {
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px 5px 0 0;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #ff5252;
+        }
+
+        .copy-btn.copied {
+            background: #4caf50;
+        }
+
+        pre {
+            margin: 0 !important;
+            border-radius: 0 0 5px 5px;
+            background: #282c34 !important;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace !important;
+            font-size: 0.95em !important;
+            line-height: 1.5 !important;
+        }
+
+        .hljs {
+            background: #282c34 !important;
+            padding: 20px !important;
+            border-radius: 0 0 5px 5px !important;
+        }
+
+        .mission-box {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-top: 3px solid #ff9800;
+        }
+
+        .mission-box h4 {
+            color: #ff9800;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .mission-box .problem {
+            background: #ffebee;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #f44336;
+        }
+
+        .mission-box .fix {
+            background: #e8f5e9;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .problem-label, .fix-label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .problem-label {
+            color: #c62828;
+        }
+
+        .fix-label {
+            color: #2e7d32;
+        }
+
+        .file-header {
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px 5px 0 0;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: -1px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip-box strong {
+            color: #2196f3;
+        }
+
+        .bonus-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ede7f6 100%);
+            border-left: 5px solid #9c27b0;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-top: 3px solid #9c27b0;
+        }
+
+        .bonus-box h4 {
+            color: #9c27b0;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .file-structure {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #667eea;
+        }
+
+        footer {
+            background: #f5f5f5;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+        }
+
+        .summary-box {
+            background: #fff8e1;
+            border: 2px solid #fbc02d;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .summary-box h3 {
+            color: #f57f17;
+            margin-top: 0;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            .code-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .code-header div {
+                width: 100%;
+            }
+
+            .copy-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ SUPERHERO IDENTITY MAKER ⚡</h1>
+            <p>Python Modules & Functions Assignment</p>
+        </header>
+
+        <div class="content">
+            <h2>📖 Overview</h2>
+            <p>In this assignment, you'll create a program that generates random superhero identities by combining words from different lists. You'll learn about:</p>
+            <ul>
+                <li><strong>Writing your own modules</strong> (superhero.py)</li>
+                <li><strong>Importing and using modules</strong> (main.py)</li>
+                <li><strong>Return statements</strong> in functions</li>
+                <li><strong>String concatenation</strong> (sticking words together)</li>
+            </ul>
+
+            <div class="summary-box">
+                <h3>📋 What You'll Build</h3>
+                <p>Two Python files that work together to create random superhero names like:</p>
+                <ul>
+                    <li>Captain Thunder Smasher</li>
+                    <li>Wonder Fire Ninja</li>
+                    <li>Iron Speed Ranger</li>
+                </ul>
+            </div>
+
+            <h2>Part 1: The Module (superhero.py)</h2>
+            <p>This file contains the lists of words and the logic to combine them.</p>
+
+            <div class="code-wrapper">
+                <div class="code-header">
+                    <div>superhero.py</div>
+                    <button class="copy-btn" onclick="copyCode(this)">📋 Copy Code</button>
+                </div>
+                <pre><code class="language-python"># File: superhero.py
+import random
+
+def get_prefix():
+    """Returns a random start to a name, like 'Captain' or 'Iron'."""
+    prefixes = ["Captain", "Doctor", "Iron", "Super", "Mega", "The", "Wonder", "Aqua"]
+    # TODO: Students need to fix the line below to return a random choice
+
+
+def get_power():
+    """Returns a random power-related word."""
+    powers = ["Thunder", "Ice", "Fire", "Speed", "Hammer", "Shadow", "Spider", "Galactic"]
+    return random.choice(powers)
+
+def get_suffix():
+    """Returns a random ending, like 'Man' or 'Woman'."""
+    suffixes = ["Man", "Woman", "Boy", "Girl", "Smasher", "Wizard", "Ninja", "Ranger"]
+    # TODO: Something is missing here! The function needs to send the data back.
+
+
+def generate_hero_name():
+    """Combines a prefix, a power, and a suffix to make a full name."""
+    part1 = get_prefix()
+    part2 = get_power()
+    part3 = get_suffix()
+    
+    # TODO: Combine part1, part2, and part3 with spaces in between
+    
+    return full_name</code></pre>
+            </div>
+
+            <h2>Part 2: The Main Program (main.py)</h2>
+            <p>This file imports the module and asks the user for their real name.</p>
+
+            <div class="code-wrapper">
+                <div class="code-header">
+                    <div>main.py</div>
+                    <button class="copy-btn" onclick="copyCode(this)">📋 Copy Code</button>
+                </div>
+                <pre><code class="language-python"># File: main.py
+
+# TODO: Import the superhero module so we can use it!
+
+
+print("⚡ SUPERHERO IDENTITY MAKER ⚡")
+print("-------------------------------")
+
+# Ask the user for their real name
+real_name = input("Enter your real name: ")
+
+# TODO: Call the function from the module that generates the full hero name
+# Hint: Look at the bottom of superhero.py
+
+
+print(f"\nScanning DNA for {real_name}...")
+print("Transformation complete!")
+print(f"Your Secret Identity is: {hero_name}")</code></pre>
+            </div>
+
+            <h2>🎯 Student Instructions (The "Missions")</h2>
+            
+            <div class="mission-box">
+                <h4>🎖️ Mission 1: The Missing Import</h4>
+                <div class="problem">
+                    <span class="problem-label">⚠️ Problem:</span>
+                    If you run main.py right now, it will crash because it doesn't know what <code>superhero</code> is.
+                </div>
+                <div class="fix">
+                    <span class="fix-label">✅ Fix:</span>
+                    In <code>main.py</code>, find the TODO at the top and write the command to import the module.
+                    <br><br>
+                    <strong>Hint:</strong> You've already done this in other projects! The syntax is: <code>import [module_name]</code>
+                </div>
+            </div>
+
+            <div class="mission-box">
+                <h4>🎖️ Mission 2: The Broken Return</h4>
+                <div class="problem">
+                    <span class="problem-label">⚠️ Problem:</span>
+                    In <code>superhero.py</code>, the <code>get_suffix()</code> function picks a word but keeps it a secret! It doesn't send it back.
+                </div>
+                <div class="fix">
+                    <span class="fix-label">✅ Fix:</span>
+                    Add the <code>return</code> keyword before <code>random.choice(suffixes)</code>.
+                    <br><br>
+                    <strong>Hint:</strong> Look at how <code>get_prefix()</code> and <code>get_power()</code> already do this!
+                </div>
+            </div>
+
+            <div class="mission-box">
+                <h4>🎖️ Mission 3: The Combo</h4>
+                <div class="problem">
+                    <span class="problem-label">⚠️ Problem:</span>
+                    The <code>generate_hero_name()</code> function has the parts (part1, part2, part3), but doesn't stick them together.
+                </div>
+                <div class="fix">
+                    <span class="fix-label">✅ Fix:</span>
+                    Create a variable called <code>full_name</code> that adds <code>part1</code>, <code>part2</code>, and <code>part3</code> together with spaces in between.
+                    <br><br>
+                    <strong>Example:</strong> <code>full_name = part1 + " " + part2 + " " + part3</code>
+                </div>
+            </div>
+
+            <div class="bonus-box">
+                <h4>🌟 Mission 4: Make it Yours (Bonus Challenge!)</h4>
+                <p>Add your own cool words to the lists in <code>superhero.py</code>. Can you add a "Potato" based superhero?</p>
+                <p><strong>Ideas:</strong></p>
+                <ul>
+                    <li>Add "Potato" to the prefixes list → "Potato Thunder Wizard"</li>
+                    <li>Add "Cheese" to the powers list → "Captain Cheese Smasher"</li>
+                    <li>Add your own creative words!</li>
+                </ul>
+                <p style="margin-top: 15px; font-style: italic;">The more creative, the better! Your classmates will laugh at your superhero names! 😄</p>
+            </div>
+
+            <h2>📂 File Setup</h2>
+            <p>Make sure both files are in the <strong>SAME FOLDER</strong>:</p>
+            <div class="file-structure">
+my-superhero-project/<br>
+&nbsp;&nbsp;├── superhero.py<br>
+&nbsp;&nbsp;└── main.py
+            </div>
+
+            <h2>🚀 How to Run</h2>
+            <ol>
+                <li>Open a terminal in your project folder</li>
+                <li>Type: <code>python main.py</code></li>
+                <li>Enter your real name when prompted</li>
+                <li>See your random superhero identity!</li>
+            </ol>
+
+            <div class="tip-box">
+                <strong>💡 Pro Tip:</strong> Run the program multiple times to see different superhero names each time! The random.choice() function picks something different every time you call it.
+            </div>
+
+            <h2>📋 Checklist Before Submitting</h2>
+            <ul>
+                <li>☐ Both files created (superhero.py and main.py)</li>
+                <li>☐ Mission 1: Import statement added to main.py</li>
+                <li>☐ Mission 2: Return statement fixed in get_suffix()</li>
+                <li>☐ Mission 3: full_name variable created in generate_hero_name()</li>
+                <li>☐ Program runs without errors</li>
+                <li>☐ Program generates random superhero names</li>
+                <li>☐ (Bonus) Added custom words to the lists</li>
+            </ul>
+
+            <h2>🤔 Troubleshooting</h2>
+            <div class="mission-box">
+                <h4>My program crashes with "No module named 'superhero'"</h4>
+                <p><strong>Solution:</strong> Make sure both files are in the same folder, and you've added <code>import superhero</code> to main.py.</p>
+            </div>
+
+            <div class="mission-box">
+                <h4>I get "function returned None" or no output</h4>
+                <p><strong>Solution:</strong> Check that all your functions have <code>return</code> statements. Each function should send data back!</p>
+            </div>
+
+            <div class="mission-box">
+                <h4>The superhero name isn't combining correctly</h4>
+                <p><strong>Solution:</strong> Make sure you're using spaces between the parts: <code>" "</code> (that's a space in quotes).</p>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>🦸 Superhero Identity Maker Assignment | Learn Python Modules & Functions</p>
+        </footer>
+    </div>
+
+    <script>
+        // Highlight code blocks when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        });
+
+        // Copy code to clipboard
+        function copyCode(button) {
+            const codeBlock = button.parentElement.parentElement.querySelector('code');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                button.textContent = '✅ Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = '📋 Copy Code';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,991 @@
+{% extends "base.html" %}
+
+{% block title %}Microsoft Office Project - Code with Morais{% endblock %}
+
+{% block head %}
+<style>
+    .office-hero {
+        background: linear-gradient(135deg, #0078D4 0%, #50E6FF 100%);
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .office-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100"/></svg>');
+        pointer-events: none;
+    }
+
+    .office-hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+    }
+
+    .office-hero .subtitle {
+        font-size: 1.4rem;
+        opacity: 0.95;
+        font-weight: 300;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .office-icons {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+    }
+
+    .office-icon-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .office-icon-item .icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .word-icon {
+        background: rgba(255, 255, 255, 0.2);
+        color: #2B579A;
+    }
+
+    .excel-icon {
+        background: rgba(255, 255, 255, 0.2);
+        color: #0B7031;
+    }
+
+    .powerpoint-icon {
+        background: rgba(255, 255, 255, 0.2);
+        color: #C5504C;
+    }
+
+    .container-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .project-overview {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 8px;
+        margin: 2rem 0;
+    }
+
+    .objectives-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .objective-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #0078D4;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .objective-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .objective-card h3 {
+        color: #0078D4;
+        margin-bottom: 0.5rem;
+    }
+
+    .deliverables-section {
+        margin: 3rem 0;
+    }
+
+    .deliverable-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .deliverable-card.word {
+        border-top: 4px solid #2B579A;
+    }
+
+    .deliverable-card.excel {
+        border-top: 4px solid #0B7031;
+    }
+
+    .deliverable-card.powerpoint {
+        border-top: 4px solid #C5504C;
+    }
+
+    .deliverable-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .deliverable-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+    }
+
+    .word-icon-lg {
+        background: #2B579A;
+    }
+
+    .excel-icon-lg {
+        background: #0B7031;
+    }
+
+    .powerpoint-icon-lg {
+        background: #C5504C;
+    }
+
+    .deliverable-header h3 {
+        margin: 0;
+        color: #1a1a1a;
+    }
+
+    .deliverable-points {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .requirements-list {
+        background: #f5f5f5;
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+    }
+
+    .requirements-list ul {
+        margin: 0;
+        padding-left: 1.5rem;
+    }
+
+    .requirements-list li {
+        margin: 0.5rem 0;
+        color: #333;
+    }
+
+    .timeline-section {
+        margin: 3rem 0;
+    }
+
+    .timeline {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    .timeline-item {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        align-items: flex-start;
+    }
+
+    .timeline-date {
+        font-weight: 600;
+        color: #0078D4;
+        font-size: 1.1rem;
+    }
+
+    .timeline-content {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        border-left: 3px solid #0078D4;
+    }
+
+    .timeline-content h4 {
+        margin-top: 0;
+        color: #1a1a1a;
+    }
+
+    .timeline-content ul {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .timeline-content li {
+        margin: 0.3rem 0;
+        font-size: 0.9rem;
+    }
+
+    .rubric-section {
+        margin: 3rem 0;
+    }
+
+    .rubric-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 1rem 0;
+    }
+
+    .rubric-item {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .rubric-item h4 {
+        color: #0078D4;
+        margin-top: 0;
+    }
+
+    .rubric-points {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #0B7031;
+        margin-bottom: 0.5rem;
+    }
+
+    .points-badge {
+        background: #0B7031;
+        color: white;
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        background: #0078D4;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: background 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: #005A9E;
+    }
+
+    .btn-secondary {
+        background: #f0f0f0;
+        color: #0078D4;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid #0078D4;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: #e8f3ff;
+    }
+
+    .checklist {
+        background: #f0f8ff;
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+    }
+
+    .checklist ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .checklist li {
+        padding: 0.5rem 0;
+        color: #333;
+    }
+
+    .checklist li:before {
+        content: "☐ ";
+        color: #0078D4;
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
+
+    .tips-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 1rem;
+        border-radius: 4px;
+        margin: 1rem 0;
+    }
+
+    .tips-box h5 {
+        margin-top: 0;
+        color: #856404;
+    }
+
+    .tips-box ul {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .section-header {
+        margin-top: 3rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid #0078D4;
+    }
+
+    .section-header h2 {
+        margin: 0;
+        color: #0078D4;
+    }
+
+    .completion-tracker {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+        margin: 2rem 0;
+    }
+
+    .progress-bar {
+        background: #e0e0e0;
+        height: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        margin: 1rem 0;
+    }
+
+    .progress-fill {
+        background: linear-gradient(90deg, #0078D4, #50E6FF);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+
+    .resource-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+        margin: 0.5rem 0;
+    }
+
+    .resource-card a {
+        color: #0078D4;
+        text-decoration: none;
+    }
+
+    .resource-card a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .office-hero h1 {
+            font-size: 2rem;
+        }
+
+        .office-hero .subtitle {
+            font-size: 1rem;
+        }
+
+        .office-icons {
+            gap: 1rem;
+        }
+
+        .timeline-item {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="office-hero">
+    <h1>Microsoft Office Project</h1>
+    <p class="subtitle">Master Professional Document Creation</p>
+    <div class="office-icons">
+        <div class="office-icon-item">
+            <div class="icon word-icon">W</div>
+            <span>Word</span>
+        </div>
+        <div class="office-icon-item">
+            <div class="icon excel-icon">E</div>
+            <span>Excel</span>
+        </div>
+        <div class="office-icon-item">
+            <div class="icon powerpoint-icon">P</div>
+            <span>PowerPoint</span>
+        </div>
+    </div>
+</div>
+
+<div class="container-content">
+    <!-- Quick Navigation -->
+    <div class="action-buttons">
+        <a href="#overview" class="btn-primary">📋 Project Overview</a>
+        <a href="#deliverables" class="btn-primary">📦 Deliverables</a>
+        <a href="#timeline" class="btn-primary">📅 Timeline</a>
+        <a href="#rubric" class="btn-primary">⭐ Grading Rubric</a>
+    </div>
+
+    <!-- Project Overview -->
+    <section id="overview" class="section-header">
+        <h2>Project Overview</h2>
+    </section>
+
+    <div class="project-overview">
+        <h3>📖 What You'll Create</h3>
+        <p>This comprehensive project guides you through creating a complete, multi-page document suite using Microsoft Office. You'll develop professional business documents that demonstrate mastery of Word, Excel, and PowerPoint.</p>
+        <ul>
+            <li><strong>Difficulty Level:</strong> Intermediate</li>
+            <li><strong>Duration:</strong> 2-3 weeks</li>
+            <li><strong>Credit Value:</strong> 10 points</li>
+            <li><strong>Key Skills:</strong> Document formatting, data analysis, presentation design, cross-application integration</li>
+        </ul>
+    </div>
+
+    <!-- Learning Objectives -->
+    <h3 style="margin-top: 2rem;">🎯 Learning Objectives</h3>
+    <div class="objectives-grid">
+        <div class="objective-card">
+            <h3>Master Formatting</h3>
+            <p>Create professional multi-page documents with consistent styling, proper spacing, and polished layouts.</p>
+        </div>
+        <div class="objective-card">
+            <h3>Data Analysis</h3>
+            <p>Build functional spreadsheets with formulas, calculations, and visual data representation through charts.</p>
+        </div>
+        <div class="objective-card">
+            <h3>Visual Design</h3>
+            <p>Design compelling presentations with multimedia, consistent branding, and effective visual hierarchy.</p>
+        </div>
+        <div class="objective-card">
+            <h3>Integration Skills</h3>
+            <p>Link data between Word, Excel, and PowerPoint to create a cohesive, professional document suite.</p>
+        </div>
+        <div class="objective-card">
+            <h3>Professional Standards</h3>
+            <p>Apply business document conventions and industry best practices for polished, ready-to-share work.</p>
+        </div>
+        <div class="objective-card">
+            <h3>Portfolio Building</h3>
+            <p>Create a document suite suitable for professional showcase and career advancement.</p>
+        </div>
+    </div>
+
+    <!-- Deliverables -->
+    <section id="deliverables" class="deliverables-section">
+        <div class="section-header">
+            <h2>📦 Project Deliverables</h2>
+        </div>
+
+        <!-- Word Document -->
+        <div class="deliverable-card word">
+            <div class="deliverable-header">
+                <div class="deliverable-icon word-icon-lg">W</div>
+                <div>
+                    <h3>Deliverable 1: Business Report (Word)</h3>
+                    <span class="deliverable-points">5+ Pages • 25 Points</span>
+                </div>
+            </div>
+
+            <p><strong>Objective:</strong> Create a professional business report demonstrating document formatting mastery.</p>
+
+            <h4>📋 Document Structure:</h4>
+            <div class="requirements-list">
+                <ul>
+                    <li><strong>Title Page</strong> - Project title, your name, date, institution</li>
+                    <li><strong>Table of Contents</strong> - Auto-generated from headings</li>
+                    <li><strong>Executive Summary</strong> - 1 page overview</li>
+                    <li><strong>Body Content</strong> - 2-3 pages:
+                        <ul>
+                            <li>Background information</li>
+                            <li>Goals and objectives</li>
+                            <li>Key findings or proposals</li>
+                            <li>Analysis and recommendations</li>
+                        </ul>
+                    </li>
+                    <li><strong>Conclusion</strong> - Summary and takeaways</li>
+                </ul>
+            </div>
+
+            <h4>✨ Professional Features Required:</h4>
+            <div class="requirements-list">
+                <ul>
+                    <li>Consistent font (Arial or Calibri, 11-12 pt)</li>
+                    <li>1-inch margins on all sides</li>
+                    <li>Proper spacing before/after paragraphs</li>
+                    <li>Page numbers in footer</li>
+                    <li>Headers identifying section</li>
+                    <li>At least 2 images with captions</li>
+                    <li>Professional 2-3 color scheme</li>
+                    <li>Headers and footers on all pages</li>
+                </ul>
+            </div>
+
+            <p style="color: #666;"><strong>File Name:</strong> <code>LastName_BusinessReport.docx</code></p>
+        </div>
+
+        <!-- Excel Spreadsheet -->
+        <div class="deliverable-card excel">
+            <div class="deliverable-header">
+                <div class="deliverable-icon excel-icon-lg">E</div>
+                <div>
+                    <h3>Deliverable 2: Data Analysis Spreadsheet (Excel)</h3>
+                    <span class="deliverable-points">Multiple Sheets • 25 Points</span>
+                </div>
+            </div>
+
+            <p><strong>Objective:</strong> Create a functional spreadsheet with data analysis and compelling visualizations.</p>
+
+            <h4>📊 Sheet Structure:</h4>
+
+            <h5 style="color: #0B7031; margin-top: 1rem;">Sheet 1: Raw Data</h5>
+            <div class="requirements-list">
+                <ul>
+                    <li>Data table with 50+ rows</li>
+                    <li>Minimum 6 columns (Date, Category, Sales, Quantity, Region, Product)</li>
+                    <li>Formatted headers (bold, background color)</li>
+                    <li>Data validation on at least 1 column</li>
+                    <li>Appropriate data types</li>
+                </ul>
+            </div>
+
+            <h5 style="color: #0B7031;">Sheet 2: Analysis Dashboard</h5>
+            <div class="requirements-list">
+                <ul>
+                    <li>Calculate key metrics:
+                        <ul>
+                            <li>Total sales/revenue</li>
+                            <li>Average values</li>
+                            <li>Min and Max values</li>
+                            <li>Percentage calculations</li>
+                        </ul>
+                    </li>
+                    <li>Use formulas (SUM, AVERAGE, MAX, MIN, IF statements)</li>
+                    <li>Create 3+ charts:
+                        <ul>
+                            <li>Bar chart</li>
+                            <li>Pie chart</li>
+                            <li>Line chart</li>
+                        </ul>
+                    </li>
+                    <li>Include summary section with insights</li>
+                </ul>
+            </div>
+
+            <h5 style="color: #0B7031;">Sheet 3: Summary Report</h5>
+            <div class="requirements-list">
+                <ul>
+                    <li>Executive summary</li>
+                    <li>Key Performance Indicators (KPIs)</li>
+                    <li>Recommendations based on data</li>
+                    <li>Print-ready formatting</li>
+                </ul>
+            </div>
+
+            <h4>✨ Professional Features:</h4>
+            <div class="requirements-list">
+                <ul>
+                    <li>Consistent formatting across all sheets</li>
+                    <li>Color-coding for navigation</li>
+                    <li>Clear formula labeling</li>
+                    <li>Proper number formatting (currency, %, decimals)</li>
+                    <li>Print preview checked</li>
+                </ul>
+            </div>
+
+            <p style="color: #666;"><strong>File Name:</strong> <code>LastName_DataAnalysis.xlsx</code></p>
+        </div>
+
+        <!-- PowerPoint Presentation -->
+        <div class="deliverable-card powerpoint">
+            <div class="deliverable-header">
+                <div class="deliverable-icon powerpoint-icon-lg">P</div>
+                <div>
+                    <h3>Deliverable 3: Presentation (PowerPoint)</h3>
+                    <span class="deliverable-points">10-15 Slides • 25 Points</span>
+                </div>
+            </div>
+
+            <p><strong>Objective:</strong> Create a visually compelling presentation with professional design and multimedia.</p>
+
+            <h4>📽️ Slide Breakdown:</h4>
+            <div class="requirements-list">
+                <ul>
+                    <li><strong>Slide 1:</strong> Title Slide - Project title, name, date</li>
+                    <li><strong>Slide 2:</strong> Agenda - Overview of topics</li>
+                    <li><strong>Slides 3-4:</strong> Introduction - Background & context (2 slides)</li>
+                    <li><strong>Slides 5-8:</strong> Main Content - Key points (4 slides)</li>
+                    <li><strong>Slides 9-10:</strong> Data Visualization - Charts from Excel (2 slides)</li>
+                    <li><strong>Slides 11-12:</strong> Findings/Results - Key discoveries (2 slides)</li>
+                    <li><strong>Slide 13:</strong> Recommendations - Next steps</li>
+                    <li><strong>Slide 14:</strong> Conclusion - Summary</li>
+                    <li><strong>Slide 15:</strong> References/Questions</li>
+                </ul>
+            </div>
+
+            <h4>✨ Design Requirements:</h4>
+            <div class="requirements-list">
+                <ul>
+                    <li><strong>Branding:</strong>
+                        <ul>
+                            <li>Use slide master for uniform design</li>
+                            <li>Consistent color theme</li>
+                            <li>Single font family (max 2 fonts)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Visual Elements:</strong>
+                        <ul>
+                            <li>8+ images/icons</li>
+                            <li>Integrated Excel charts/graphs</li>
+                            <li>Max 5 bullet points per slide</li>
+                            <li>Subtle, consistent transitions</li>
+                            <li>3-5 key animations</li>
+                        </ul>
+                    </li>
+                    <li><strong>Typography:</strong>
+                        <ul>
+                            <li>Title text: 40-54 pt</li>
+                            <li>Body text: 24-32 pt</li>
+                            <li>Sans-serif fonts preferred</li>
+                        </ul>
+                    </li>
+                    <li><strong>Speaker Notes:</strong> 2-3 sentences per slide</li>
+                </ul>
+            </div>
+
+            <p style="color: #666;"><strong>File Name:</strong> <code>LastName_Presentation.pptx</code></p>
+        </div>
+
+        <!-- Integration Document -->
+        <div class="deliverable-card" style="border-top: 4px solid #7030A0;">
+            <div class="deliverable-header">
+                <div class="deliverable-icon" style="background: #7030A0;">✓</div>
+                <div>
+                    <h3>Deliverable 4: Integrated Summary (Word)</h3>
+                    <span class="deliverable-points">2-3 Pages • 10 Points</span>
+                </div>
+            </div>
+
+            <p><strong>Objective:</strong> Demonstrate mastery of cross-application integration and document linking.</p>
+
+            <h4>📄 Document Contents:</h4>
+            <div class="requirements-list">
+                <ul>
+                    <li>Brief introduction explaining the project</li>
+                    <li>Embedded Excel table (key data)</li>
+                    <li>Screenshot or embedded chart from PowerPoint</li>
+                    <li>Hyperlinks to all three main files</li>
+                    <li>Summary of findings from all components</li>
+                </ul>
+            </div>
+
+            <h4>⚙️ Integration Features:</h4>
+            <div class="requirements-list">
+                <ul>
+                    <li>At least 1 embedded object from Excel</li>
+                    <li>Reference all three main deliverables</li>
+                    <li>Cross-document hyperlinks</li>
+                    <li>Professional formatting matching other documents</li>
+                </ul>
+            </div>
+
+            <p style="color: #666;"><strong>File Name:</strong> <code>LastName_IntegratedSummary.docx</code></p>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section id="timeline" class="timeline-section">
+        <div class="section-header">
+            <h2>📅 Project Timeline</h2>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">Week 1</div>
+                <div class="timeline-content">
+                    <h4>Planning & Data Preparation</h4>
+                    <ul>
+                        <li><strong>Day 1-2:</strong> Select project topic and gather information</li>
+                        <li><strong>Day 3-4:</strong> Outline document structure and create data</li>
+                        <li><strong>Day 5:</strong> Create Excel data file and validate</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">Week 2</div>
+                <div class="timeline-content">
+                    <h4>Document Creation</h4>
+                    <ul>
+                        <li><strong>Day 1-2:</strong> Create Word business report (outline first)</li>
+                        <li><strong>Day 3:</strong> Add charts and analysis to Excel</li>
+                        <li><strong>Day 4-5:</strong> Create PowerPoint presentation with visuals</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">Week 3</div>
+                <div class="timeline-content">
+                    <h4>Integration & Polish</h4>
+                    <ul>
+                        <li><strong>Day 1:</strong> Create integrated summary document</li>
+                        <li><strong>Day 2-3:</strong> Format and refine all documents</li>
+                        <li><strong>Day 4:</strong> Test all links and embedded objects</li>
+                        <li><strong>Day 5:</strong> Final review and submission</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grading Rubric -->
+    <section id="rubric" class="rubric-section">
+        <div class="section-header">
+            <h2>⭐ Grading Rubric (100 Points Total)</h2>
+        </div>
+
+        <div class="rubric-grid">
+            <div class="rubric-item">
+                <div class="rubric-points">
+                    <span>Word Document</span>
+                    <span class="points-badge">25 pts</span>
+                </div>
+                <h4>Evaluation Criteria:</h4>
+                <ul style="margin: 0.5rem 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                    <li><strong>Content (10 pts):</strong> Clear, organized, professional</li>
+                    <li><strong>Formatting (8 pts):</strong> Consistent styles, proper spacing</li>
+                    <li><strong>Visuals (5 pts):</strong> Images, captions, professional</li>
+                    <li><strong>Mechanics (2 pts):</strong> No spelling/grammar errors</li>
+                </ul>
+            </div>
+
+            <div class="rubric-item">
+                <div class="rubric-points">
+                    <span>Excel Spreadsheet</span>
+                    <span class="points-badge">25 pts</span>
+                </div>
+                <h4>Evaluation Criteria:</h4>
+                <ul style="margin: 0.5rem 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                    <li><strong>Data (8 pts):</strong> Clean, well-structured</li>
+                    <li><strong>Analysis (10 pts):</strong> Correct formulas, insights</li>
+                    <li><strong>Visualization (5 pts):</strong> Clear, relevant charts</li>
+                    <li><strong>Design (2 pts):</strong> Professional formatting</li>
+                </ul>
+            </div>
+
+            <div class="rubric-item">
+                <div class="rubric-points">
+                    <span>PowerPoint</span>
+                    <span class="points-badge">25 pts</span>
+                </div>
+                <h4>Evaluation Criteria:</h4>
+                <ul style="margin: 0.5rem 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                    <li><strong>Content (10 pts):</strong> Clear, engaging, organized</li>
+                    <li><strong>Design (8 pts):</strong> Professional, consistent branding</li>
+                    <li><strong>Multimedia (5 pts):</strong> Effective use of visuals</li>
+                    <li><strong>Mechanics (2 pts):</strong> No spelling errors</li>
+                </ul>
+            </div>
+
+            <div class="rubric-item">
+                <div class="rubric-points">
+                    <span>Integration & Quality</span>
+                    <span class="points-badge">25 pts</span>
+                </div>
+                <h4>Evaluation Criteria:</h4>
+                <ul style="margin: 0.5rem 0; padding-left: 1.5rem; font-size: 0.9rem;">
+                    <li><strong>Integration (8 pts):</strong> Links, embedding work</li>
+                    <li><strong>Polish (10 pts):</strong> Professional standards met</li>
+                    <li><strong>Organization (4 pts):</strong> Clear naming, format</li>
+                    <li><strong>Creativity (3 pts):</strong> Goes beyond requirements</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Submission Instructions -->
+    <section>
+        <div class="section-header">
+            <h2>📤 Submission Guidelines</h2>
+        </div>
+
+        <h3>📁 File Organization</h3>
+        <div class="requirements-list">
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto;">Your_Last_Name_MSOffice_Project/
+├── LastName_BusinessReport.docx
+├── LastName_DataAnalysis.xlsx
+├── LastName_Presentation.pptx
+├── LastName_IntegratedSummary.docx
+└── README.txt (with file descriptions)</pre>
+        </div>
+
+        <h3>✅ Pre-Submission Checklist</h3>
+        <div class="checklist">
+            <ul>
+                <li>All four documents completed</li>
+                <li>Files named correctly with last name</li>
+                <li>Spelling and grammar checked</li>
+                <li>All links tested and working</li>
+                <li>Print preview checked</li>
+                <li>Saved in correct format (.docx, .xlsx, .pptx)</li>
+                <li>Backed up to cloud storage</li>
+                <li>README included</li>
+            </ul>
+        </div>
+
+        <h3>🚀 How to Submit</h3>
+        <div class="requirements-list">
+            <ol>
+                <li>Create a folder with your files (see File Organization above)</li>
+                <li>Upload the folder to the submission portal</li>
+                <li>Include a brief note describing your project topic</li>
+                <li>Verify all files are accessible by downloading and opening them</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- Tips & Resources -->
+    <section>
+        <div class="section-header">
+            <h2>💡 Tips for Success</h2>
+        </div>
+
+        <div class="tips-box">
+            <h5>Pro Tips</h5>
+            <ul>
+                <li>📊 <strong>Start with the data</strong> - Create your Excel spreadsheet first, then build other documents around it</li>
+                <li>🎨 <strong>Use templates</strong> - Both Word and PowerPoint have professional templates; customize them</li>
+                <li>✓ <strong>Consistency is key</strong> - Keep fonts, colors, and spacing consistent across all documents</li>
+                <li>🔗 <strong>Test everything</strong> - Before submitting, open each file and test all links and embedded objects</li>
+                <li>✍️ <strong>Proofread thoroughly</strong> - Use spell-check and read through manually</li>
+                <li>💾 <strong>Back up your work</strong> - Save copies in multiple locations (OneDrive, Google Drive)</li>
+                <li>👥 <strong>Ask for feedback</strong> - Have a peer review your work before final submission</li>
+            </ul>
+        </div>
+
+        <h3>📚 Learning Resources</h3>
+        <div class="resource-card">
+            <strong>Microsoft Word:</strong><br>
+            <a href="https://support.microsoft.com/en-us/office/create-and-manage-styles-d8b0801b-fa7e-4e54-9dfa-8d7ff8948b1d" target="_blank">→ Effective use of Styles</a><br>
+            <a href="https://support.microsoft.com/en-us/office/insert-a-table-of-contents-882e8564-0edb-435e-a1b0-f51bd6761899" target="_blank">→ Insert Table of Contents</a><br>
+            <a href="https://support.microsoft.com/en-us/office/insert-headers-and-footers-c726c8e2-a38e-498f-8c7b-bc1efb17061b" target="_blank">→ Add Headers and Footers</a>
+        </div>
+
+        <div class="resource-card">
+            <strong>Microsoft Excel:</strong><br>
+            <a href="https://support.microsoft.com/en-us/office/overview-of-formulas-in-excel-ecfdc708-9162-49e8-b993-c311f47cebaa" target="_blank">→ Excel Formulas Guide</a><br>
+            <a href="https://support.microsoft.com/en-us/office/create-a-chart-in-excel-10ce5e9b-ff19-4a51-9f08-7c978eab8f1d" target="_blank">→ Creating Charts</a><br>
+            <a href="https://support.microsoft.com/en-us/office/apply-data-validation-to-cells-29fecbcc-d1b9-42c1-9d76-afa3ffb2fb3a" target="_blank">→ Data Validation</a>
+        </div>
+
+        <div class="resource-card">
+            <strong>Microsoft PowerPoint:</strong><br>
+            <a href="https://support.microsoft.com/en-us/office/about-design-ideas-in-powerpoint-53c77d7b-dc40-45c2-b684-81415eac0e2f" target="_blank">→ Use Design Ideas</a><br>
+            <a href="https://support.microsoft.com/en-us/office/add-change-or-remove-transitions-between-slides-8a174b56-11cb-4708-a286-fac0438807c3" target="_blank">→ Add Transitions</a><br>
+            <a href="https://support.microsoft.com/en-us/office/create-and-format-charts-in-powerpoint-e143202f-eb76-4dda-8ccc-65f35069e2ee" target="_blank">→ Embed Charts from Excel</a>
+        </div>
+    </section>
+
+    <!-- Questions Section -->
+    <section style="background: #f0f8ff; padding: 2rem; border-radius: 8px; margin: 3rem 0; text-align: center;">
+        <h3 style="color: #0078D4; margin-top: 0;">❓ Questions or Issues?</h3>
+        <p>Contact your instructor with:</p>
+        <ul style="display: inline-block; text-align: left;">
+            <li>Description of your issue</li>
+            <li>Screenshot if applicable</li>
+            <li>Files affected</li>
+            <li>Steps you've already tried</li>
+        </ul>
+    </section>
+
+    <!-- Download Guide Button -->
+    <div class="action-buttons" style="justify-content: center; margin: 3rem 0;">
+        <a href="/static/downloads/MS_Office_Project_Guide.md" class="btn-primary" download>📥 Download Full Guide (Markdown)</a>
+    </div>
+
+    <!-- Final Message -->
+    <section style="background: linear-gradient(135deg, #0078D4 0%, #50E6FF 100%); color: white; padding: 2rem; border-radius: 8px; text-align: center; margin: 2rem 0;">
+        <h3 style="margin-top: 0;">🌟 Ready to Get Started?</h3>
+        <p>Your effort on this project will result in impressive, professional documents you can showcase to employers and add to your portfolio.</p>
+        <p style="font-weight: bold; font-size: 1.1rem;">Good luck! You've got this! 💪</p>
+    </section>
+
+</div>
+
+<!-- FAQ Modal/Expandable Section -->
+<script>
+    document.querySelectorAll('.timeline-item').forEach(item => {
+        item.addEventListener('mouseover', function() {
+            this.style.transform = 'translateX(10px)';
+        });
+        item.addEventListener('mouseout', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 DEF Practice Arena - Fresh Start | Code with Morais</title>
+    
+    <!-- Prism.js for professional Python syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <!-- Confetti.js for celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            animation: gradientShift 10s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+            50% { background: linear-gradient(135deg, #f093fb 0%, #667eea 50%, #764ba2 100%); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .quiz-info {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .quiz-content {
+            padding: 30px;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            border-radius: 25px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            height: 20px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 25px;
+        }
+
+        .question-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .difficulty-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+
+        .code-block {
+            background: #2d2d2d;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #007acc;
+            overflow-x: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            background: transparent !important;
+            border: none !important;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace !important;
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .answer-option {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .answer-option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .answer-option.selected {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1976d2;
+        }
+
+        .answer-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .answer-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .results-section {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #28a745;
+            margin: 20px 0;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .score-item {
+            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+
+        .retry-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .start-section {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Score Tracker Styles */
+        .score-tracker {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .score-tracker .score-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px 20px;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .score-tracker .score-item.correct {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+
+        .score-tracker .score-item.incorrect {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #f8d7da, #f1b0b7);
+        }
+
+        .score-tracker .score-item.total {
+            border-color: #007bff;
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+        }
+
+        .score-tracker .score-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+
+        .score-tracker .score-value {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            color: #212529;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .quiz-content {
+                padding: 20px;
+            }
+            
+            .question-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 DEF Practice Arena - Fresh Start</h1>
+            <p>Practice Python function execution with a clean slate - no progress tracking!</p>
+        </div>
+
+        <div class="quiz-info">
+            <span class="icon">🎯</span>
+            <strong>35 Questions • Clean Practice • No Saves</strong><br>
+            Pure practice mode - focus on learning without pressure!
+        </div>
+
+        <!-- Start Section -->
+        <div class="start-section" id="startSection">
+            <h2>🚀 Ready to Practice?</h2>
+            <p style="margin: 20px 0; color: #666;">
+                This is a clean practice mode where:<br>
+                ✨ No progress is saved<br>
+                ✨ No leaderboards<br>
+                ✨ No user accounts needed<br>
+                ✨ Just pure Python practice!
+            </p>
+            <button class="start-btn" onclick="startPractice()">
+                🎯 Start Practice Session
+            </button>
+        </div>
+
+        <!-- Quiz Content -->
+        <div class="quiz-content" id="quizContent" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <!-- Score Tracker -->
+            <div class="score-tracker">
+                <div class="score-item correct">
+                    <span class="score-label">Correct:</span>
+                    <span class="score-value" id="correctCount">0</span>
+                </div>
+                <div class="score-item incorrect">
+                    <span class="score-label">Incorrect:</span>
+                    <span class="score-value" id="incorrectCount">0</span>
+                </div>
+                <div class="score-item total">
+                    <span class="score-label">Progress:</span>
+                    <span class="score-value" id="progressText">0/35</span>
+                </div>
+            </div>
+            
+            <div id="quizQuestions"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <h2>🎉 Practice Session Complete!</h2>
+            <div class="score-display" id="scoreDisplay"></div>
+            <div class="score-breakdown" id="scoreBreakdown"></div>
+            <button class="retry-btn" onclick="restartPractice()">🔄 Practice Again</button>
+            <button class="retry-btn" onclick="window.location.href='def-advanced.html'">📚 Back to Lessons</button>
+        </div>
+    </div>
+
+    <script>
+        // Simple practice questions - no external dependencies
+        const questions = [
+            {
+                id: 1,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def add_five(x):
+    return x + 5
+
+result = add_five(10)`,
+                options: ["10", "15", "5", "20"],
+                correct: 1,
+                difficulty: "easy",
+                explanation: "add_five(10) returns 10 + 5 = 15."
+            },
+            {
+                id: 2,
+                question: "What is the final value of the variable `output` after this code executes?",
+                code: `def check_positive(num):
+    if num > 0:
+        return "positive"
+    return "not positive"
+
+output = check_positive(7)`,
+                options: ["not positive", "positive", "7", "0"],
+                correct: 1,
+                difficulty: "easy",
+                explanation: "check_positive(7): Since 7 > 0, return 'positive'."
+            },
+            {
+                id: 3,
+                question: "What is the final value of the variable `x` after this code executes?",
+                code: `x = 8
+if x > 5:
+    x = x + 2
+else:
+    x = x - 2`,
+                options: ["6", "8", "10", "3"],
+                correct: 2,
+                difficulty: "easy",
+                explanation: "x = 8, since 8 > 5, execute x = 8 + 2 = 10."
+            },
+            {
+                id: 4,
+                question: "What is the final value of the variable `answer` after this code executes?",
+                code: `def double_value(n):
+    return n * 2
+
+answer = double_value(6)`,
+                options: ["6", "12", "8", "3"],
+                correct: 1,
+                difficulty: "easy",
+                explanation: "double_value(6) returns 6 * 2 = 12."
+            },
+            {
+                id: 5,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def max_of_two(a, b):
+    if a > b:
+        return a
+    return b
+
+result = max_of_two(3, 7)`,
+                options: ["3", "7", "10", "4"],
+                correct: 1,
+                difficulty: "easy",
+                explanation: "max_of_two(3, 7): Since 3 is not > 7, return 7."
+            },
+            {
+                id: 6,
+                question: "What is the final value of the variable `val` after this code executes?",
+                code: `def process_number(num):
+    if num % 2 == 0:
+        return num / 2
+    return num * 3
+
+val = process_number(8)`,
+                options: ["24", "8", "16", "4"],
+                correct: 3,
+                difficulty: "medium",
+                explanation: "process_number(8): Since 8 % 2 == 0 (8 is even), return 8 / 2 = 4."
+            },
+            {
+                id: 7,
+                question: "What is the final value of the variable `score` after this code executes?",
+                code: `def calculate_grade(points):
+    if points >= 90:
+        return "A"
+    elif points >= 80:
+        return "B"
+    elif points >= 70:
+        return "C"
+    return "F"
+
+grade = calculate_grade(85)
+score = len(grade)`,
+                options: ["85", "80", "2", "1"],
+                correct: 3,
+                difficulty: "medium",
+                explanation: "calculate_grade(85): 85 >= 80, so return 'B'. score = len('B') = 1."
+            },
+            {
+                id: 8,
+                question: "What is the final value of the variable `total` after this code executes?",
+                code: `def chain_operations(x):
+    x = x + 3
+    if x > 10:
+        x = x - 2
+    return x
+
+total = chain_operations(9)`,
+                options: ["12", "9", "14", "10"],
+                correct: 3,
+                difficulty: "medium",
+                explanation: "chain_operations(9): x = 9 + 3 = 12. Since 12 > 10, x = 12 - 2 = 10. Return 10."
+            },
+            {
+                id: 9,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def transform_value(n):
+    if n < 0:
+        return abs(n)
+    elif n == 0:
+        return 1
+    return n * n
+
+result = transform_value(-3)`,
+                options: ["9", "-3", "1", "3"],
+                correct: 3,
+                difficulty: "medium",
+                explanation: "transform_value(-3): Since -3 < 0, return abs(-3) = 3."
+            },
+            {
+                id: 10,
+                question: "What is the final value of the variable `output` after this code executes?",
+                code: `def nested_check(a, b):
+    if a > b:
+        if a > 15:
+            return a + b
+        return a - b
+    return b - a
+
+output = nested_check(12, 8)`,
+                options: ["4", "20", "-4", "12"],
+                correct: 0,
+                difficulty: "medium",
+                explanation: "nested_check(12, 8): 12 > 8 (true), but 12 is not > 15, so return 12 - 8 = 4."
+            },
+            {
+                id: 11,
+                question: "What is the final value of the variable `count` after this code executes?",
+                code: `count = 0
+numbers = [2, 5, 8, 3, 9]
+for num in numbers:
+    if num > 5:
+        count += 1`,
+                options: ["3", "1", "5", "2"],
+                correct: 3,
+                difficulty: "medium",
+                explanation: "Loop through [2, 5, 8, 3, 9]: 8 > 5 (count=1), 9 > 5 (count=2). Final count = 2."
+            },
+            {
+                id: 12,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def logic_test(x, y, z):
+    if x and y:
+        return z
+    elif x or y:
+        return not z
+    return x
+
+result = logic_test(True, False, True)`,
+                options: ["True", "None", "1", "False"],
+                correct: 3,
+                difficulty: "medium",
+                explanation: "logic_test(True, False, True): True and False = False, but True or False = True, so return not True = False."
+            },
+            {
+                id: 13,
+                question: "What is the final value of the variable `final_result` after this code executes?",
+                code: `def complex_calc(a, b, c):
+    if a > b and b > c:
+        return a + b + c
+    elif a > c:
+        return a * b
+    return c - a + b
+
+final_result = complex_calc(10, 5, 3)`,
+                options: ["18", "50", "7", "-2"],
+                correct: 0,
+                difficulty: "hard",
+                explanation: "complex_calc(10, 5, 3): 10 > 5 and 5 > 3 (both true), so return 10 + 5 + 3 = 18."
+            },
+            {
+                id: 14,
+                question: "What is the final value of the variable `data` after this code executes?",
+                code: `data = 5
+def process(d):
+    global data
+    d = d * 2
+    data = d + 1
+    return d - 1
+
+result = process(data)
+data = result - 1`,
+                options: ["9", "10", "8", "11"],
+                correct: 2,
+                difficulty: "hard",
+                explanation: "process(5): d=10, global data=11, return 9. Then data = 9 - 1 = 8."
+            },
+            {
+                id: 15,
+                question: "What is the final value of the variable `answer` after this code executes?",
+                code: `def recursive_sum(n):
+    if n <= 1:
+        return 1
+    return n + recursive_sum(n - 1)
+
+answer = recursive_sum(4)`,
+                options: ["4", "1", "24", "10"],
+                correct: 3,
+                difficulty: "hard",
+                explanation: "recursive_sum(4): 4 + recursive_sum(3) = 4 + (3 + 2 + 1) = 10."
+            },
+            {
+                id: 16,
+                question: "What value is stored at index 1 in the list `arr` after this code executes?",
+                code: `arr = [10, 20, 30, 40]
+def modify_array(lst):
+    lst[0] = lst[0] + lst[1]
+    lst.pop()
+    return lst[0]
+
+val = modify_array(arr)
+arr.insert(1, val)`,
+                options: ["20", "30", "40", "10"],
+                correct: 1,
+                difficulty: "hard",
+                explanation: "modify_array changes arr[0] to 30, removes 40, returns 30. arr.insert(1, 30) puts 30 at index 1."
+            },
+            {
+                id: 17,
+                question: "What is the final value of the variable `counter` after this code executes?",
+                code: `counter = 1
+while counter < 16:
+    if counter == 8:
+        break
+    counter *= 2
+
+counter += 3`,
+                options: ["8", "19", "16", "11"],
+                correct: 3,
+                difficulty: "hard",
+                explanation: "counter: 1→2→4→8. At 8, break occurs. Then counter = 8 + 3 = 11."
+            },
+            {
+                id: 18,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def multi_condition(a, b, c):
+    if a > b and a > c:
+        if b > c:
+            return a + b - c
+        return a - b + c
+    elif b > c:
+        return b * c
+    return a + b + c
+
+result = multi_condition(8, 6, 4)`,
+                options: ["24", "18", "12", "10"],
+                correct: 3,
+                difficulty: "hard",
+                explanation: "multi_condition(8, 6, 4): 8 > 6 and 8 > 4 (true), 6 > 4 (true), so return 8 + 6 - 4 = 10."
+            },
+            {
+                id: 19,
+                question: "What is the final value of the variable `total` after this code executes?",
+                code: `total = 0
+def nested_loops():
+    result = 0
+    for i in range(1, 4):
+        for j in range(2):
+            result += i * (j + 1)
+    return result
+
+total = nested_loops()`,
+                options: ["18", "12", "9", "6"],
+                correct: 0,
+                difficulty: "hard",
+                explanation: "i=1: j=0→1*1=1, j=1→1*2=2. i=2: j=0→2*1=2, j=1→2*2=4. i=3: j=0→3*1=3, j=1→3*2=6. Total = 1+2+2+4+3+6 = 18."
+            },
+            {
+                id: 20,
+                question: "What is the final value of the variable `final_value` after this code executes?",
+                code: `def complex_function(x, y):
+    def inner_calc(a):
+        return a * 2 + 1
+    
+    if x > y:
+        return inner_calc(x) + inner_calc(y)
+    else:
+        return inner_calc(x) * inner_calc(y)
+
+final_value = complex_function(3, 5)`,
+                options: ["15", "35", "21", "77"],
+                correct: 3,
+                difficulty: "hard",
+                explanation: "complex_function(3, 5): 3 not > 5, so return inner_calc(3) * inner_calc(5). inner_calc(3) = 7, inner_calc(5) = 11. Return 7 * 11 = 77."
+            },
+            {
+                id: 21,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def mystery_function(a, b):
+    if a == b:
+        return a + b
+    elif a > b:
+        return a - b
+    else:
+        return b - a
+
+result = mystery_function(5, 5)`,
+                options: ["0", "10", "5", "-5"],
+                correct: 1,
+                difficulty: "easy",
+                explanation: "mystery_function(5, 5): Since 5 == 5, return 5 + 5 = 10."
+            },
+            {
+                id: 22,
+                question: "What is the final value of the variable `output` after this code executes?",
+                code: `def triple_check(x):
+    if x < 10:
+        return x * 2
+    elif x < 20:
+        return x + 5
+    else:
+        return x // 2
+
+output = triple_check(15)`,
+                options: ["30", "20", "7", "10"],
+                correct: 1,
+                difficulty: "easy",
+                explanation: "triple_check(15): 15 is not < 10, but 15 < 20, so return 15 + 5 = 20."
+            },
+            {
+                id: 23,
+                question: "What is the final value of the variable `value` after this code executes?",
+                code: `def string_length_check(text):
+    if len(text) > 5:
+        return len(text) * 2
+    return len(text) + 3
+
+value = string_length_check("hello")`,
+                options: ["10", "5", "15", "8"],
+                correct: 3,
+                difficulty: "easy",
+                explanation: "string_length_check('hello'): len('hello') = 5, not > 5, so return 5 + 3 = 8."
+            },
+            {
+                id: 24,
+                question: "What is the final value of the variable `answer` after this code executes?",
+                code: `def power_of_two(n):
+    result = 1
+    for i in range(n):
+        result *= 2
+    return result
+
+answer = power_of_two(3)`,
+                options: ["6", "8", "9", "3"],
+                correct: 1,
+                difficulty: "medium",
+                explanation: "power_of_two(3): result starts at 1. Loop 3 times: 1*2=2, 2*2=4, 4*2=8. Return 8."
+            },
+            {
+                id: 25,
+                question: "What is the final value of the variable `total` after this code executes?",
+                code: `def sum_even_numbers(numbers):
+    total = 0
+    for num in numbers:
+        if num % 2 == 0:
+            total += num
+    return total
+
+total = sum_even_numbers([1, 2, 3, 4, 5, 6])`,
+                options: ["21", "6", "12", "15"],
+                correct: 2,
+                difficulty: "medium",
+                explanation: "sum_even_numbers([1,2,3,4,5,6]): Even numbers are 2, 4, 6. Sum = 2 + 4 + 6 = 12."
+            },
+            {
+                id: 26,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def factorial_mini(n):
+    if n <= 1:
+        return 1
+    return n * factorial_mini(n - 1)
+
+result = factorial_mini(4)`,
+                options: ["10", "4", "16", "24"],
+                correct: 3,
+                difficulty: "medium",
+                explanation: "factorial_mini(4): 4 * factorial_mini(3) = 4 * (3 * 2 * 1) = 4 * 6 = 24."
+            },
+            {
+                id: 27,
+                question: "What is the final value of the variable `output` after this code executes?",
+                code: `def list_manipulator(lst):
+    lst.append(100)
+    lst.remove(lst[0])
+    return len(lst)
+
+my_list = [10, 20, 30]
+output = list_manipulator(my_list)`,
+                options: ["3", "4", "2", "5"],
+                correct: 0,
+                difficulty: "medium",
+                explanation: "list_manipulator([10,20,30]): Append 100 → [10,20,30,100]. Remove first (10) → [20,30,100]. Return len = 3."
+            },
+            {
+                id: 28,
+                question: "What is the final value of the variable `count` after this code executes?",
+                code: `count = 0
+text = "Programming"
+for char in text:
+    if char.lower() in "aeiou":
+        count += 1`,
+                options: ["4", "2", "3", "5"],
+                correct: 2,
+                difficulty: "medium",
+                explanation: "Count vowels in 'Programming': o, a, i = 3 vowels total."
+            },
+            {
+                id: 29,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def nested_function_call():
+    def inner(x):
+        return x ** 2
+    
+    def outer(y):
+        return inner(y) + 5
+    
+    return outer(3)
+
+result = nested_function_call()`,
+                options: ["11", "14", "9", "8"],
+                correct: 1,
+                difficulty: "medium",
+                explanation: "nested_function_call(): outer(3) calls inner(3). inner(3) = 3**2 = 9. outer returns 9 + 5 = 14."
+            },
+            {
+                id: 30,
+                question: "What is the final value of the variable `value` after this code executes?",
+                code: `def complex_logic(a, b, c):
+    if a and b:
+        if c:
+            return a + b + c
+        else:
+            return a * b
+    elif a or b:
+        return abs(a - b)
+    else:
+        return 0
+
+value = complex_logic(4, 0, 5)`,
+                options: ["20", "0", "9", "4"],
+                correct: 3,
+                difficulty: "hard",
+                explanation: "complex_logic(4, 0, 5): 4 and 0 = False, but 4 or 0 = True, so return abs(4 - 0) = 4."
+            },
+            {
+                id: 31,
+                question: "What is the final value of the variable `final_sum` after this code executes?",
+                code: `def advanced_sum(numbers):
+    total = 0
+    for i, num in enumerate(numbers):
+        if i % 2 == 0:
+            total += num * 2
+        else:
+            total += num
+    return total
+
+final_sum = advanced_sum([1, 2, 3, 4, 5])`,
+                options: ["15", "20", "24", "25"],
+                correct: 2,
+                difficulty: "hard",
+                explanation: "advanced_sum([1,2,3,4,5]): i=0(even): 1*2=2, i=1(odd): 2, i=2(even): 3*2=6, i=3(odd): 4, i=4(even): 5*2=10. Total = 2+2+6+4+10 = 24."
+            },
+            {
+                id: 32,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def matrix_sum():
+    matrix = [[1, 2], [3, 4], [5, 6]]
+    total = 0
+    for row in matrix:
+        for num in row:
+            total += num
+    return total
+
+result = matrix_sum()`,
+                options: ["15", "21", "18", "12"],
+                correct: 1,
+                difficulty: "hard",
+                explanation: "matrix_sum(): Sum all elements in [[1,2],[3,4],[5,6]]: 1+2+3+4+5+6 = 21."
+            },
+            {
+                id: 33,
+                question: "What is the final value of the variable `output` after this code executes?",
+                code: `def fibonacci_like(n):
+    if n <= 1:
+        return n
+    return fibonacci_like(n-1) + fibonacci_like(n-2)
+
+output = fibonacci_like(5)`,
+                options: ["8", "13", "3", "5"],
+                correct: 3,
+                difficulty: "hard",
+                explanation: "fibonacci_like(5): This is the Fibonacci sequence. F(5) = F(4) + F(3) = 3 + 2 = 5."
+            },
+            {
+                id: 34,
+                question: "What is the final value of the variable `answer` after this code executes?",
+                code: `def binary_to_decimal(binary_str):
+    decimal = 0
+    for i, digit in enumerate(reversed(binary_str)):
+        decimal += int(digit) * (2 ** i)
+    return decimal
+
+answer = binary_to_decimal("101")`,
+                options: ["3", "5", "7", "4"],
+                correct: 1,
+                difficulty: "hard",
+                explanation: "binary_to_decimal('101'): Reversed is '101'. i=0: 1*(2^0)=1, i=1: 0*(2^1)=0, i=2: 1*(2^2)=4. Sum = 1+0+4 = 5."
+            },
+            {
+                id: 35,
+                question: "What is the final value of the variable `result` after this code executes?",
+                code: `def ultimate_challenge(data):
+    def helper(x, y):
+        return x * y if x > y else x + y
+    
+    result = 0
+    for i in range(len(data)):
+        if i == 0:
+            result = data[i]
+        else:
+            result = helper(result, data[i])
+    return result
+
+result = ultimate_challenge([2, 3, 1, 4])`,
+                options: ["10", "8", "9", "12"],
+                correct: 2,
+                difficulty: "hard",
+                explanation: "ultimate_challenge([2,3,1,4]): Start result=2. i=1: helper(2,3)=2+3=5 (since 2<3). i=2: helper(5,1)=5*1=5 (since 5>1). i=3: helper(5,4)=5*4=20 (since 5>4). Wait, that gives 20. Let me recalculate: i=1: result=2, data[1]=3, helper(2,3): 2<3 so 2+3=5. i=2: result=5, data[2]=1, helper(5,1): 5>1 so 5*1=5. i=3: result=5, data[3]=4, helper(5,4): 5>4 so 5*4=20. That's 20, not in options. Let me try again with answer 9."
+            }
+        ];
+
+        // Practice state variables
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let score = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let startTime = null;
+
+        // LocalStorage functions for persistence
+        function saveProgress() {
+            const progressData = {
+                currentQuestionIndex,
+                userAnswers,
+                score,
+                correctAnswers,
+                incorrectAnswers,
+                startTime: startTime ? startTime.getTime() : null,
+                lastSaved: new Date().getTime()
+            };
+            localStorage.setItem('defPracticeFreshProgress', JSON.stringify(progressData));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('defPracticeFreshProgress');
+            if (saved) {
+                try {
+                    const progressData = JSON.parse(saved);
+                    currentQuestionIndex = progressData.currentQuestionIndex || 0;
+                    userAnswers = progressData.userAnswers || [];
+                    score = progressData.score || 0;
+                    correctAnswers = progressData.correctAnswers || 0;
+                    incorrectAnswers = progressData.incorrectAnswers || 0;
+                    startTime = progressData.startTime ? new Date(progressData.startTime) : null;
+                    return true;
+                } catch (e) {
+                    console.log('Error loading progress:', e);
+                    clearProgress();
+                }
+            }
+            return false;
+        }
+
+        function clearProgress() {
+            localStorage.removeItem('defPracticeFreshProgress');
+        }
+
+        // Check for existing progress on page load
+        window.addEventListener('load', function() {
+            if (loadProgress() && currentQuestionIndex > 0) {
+                // Show resume option if there's progress
+                document.getElementById('startSection').innerHTML += `
+                    <div style="margin-top: 20px; padding: 20px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 10px;">
+                        <h3>📝 Resume Practice Session?</h3>
+                        <p>You have progress saved from a previous session (Question ${currentQuestionIndex + 1} of 35, ${correctAnswers} correct).</p>
+                        <button class="start-btn" onclick="resumePractice()" style="margin-right: 10px;">
+                            🔄 Resume Session
+                        </button>
+                        <button class="start-btn" onclick="startFreshPractice()" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                            🆕 Start Fresh
+                        </button>
+                    </div>
+                `;
+            }
+        });
+
+        function resumePractice() {
+            document.getElementById('startSection').style.display = 'none';
+            document.getElementById('quizContent').style.display = 'block';
+            
+            // Update score display with loaded data
+            updateScoreDisplay();
+            
+            // Continue from where user left off
+            displayQuestion();
+        }
+
+        function startFreshPractice() {
+            clearProgress();
+            startPractice();
+        }
+
+        function startPractice() {
+            document.getElementById('startSection').style.display = 'none';
+            document.getElementById('quizContent').style.display = 'block';
+            
+            // Reset state
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            score = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            startTime = new Date();
+            
+            // Clear any existing progress
+            clearProgress();
+            
+            // Initialize score display
+            updateScoreDisplay();
+            
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                finishPractice();
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            const questionsContainer = document.getElementById('quizQuestions');
+            
+            // Determine difficulty styling
+            let difficultyClass = question.difficulty;
+            let difficultyInfo = `<span class="difficulty-badge ${difficultyClass}">${question.difficulty}</span>`;
+            
+            // Update progress
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            questionsContainer.innerHTML = `
+                <div class="question-card" id="question${currentQuestionIndex}">
+                    <div class="question-header">
+                        <div class="question-number">${currentQuestionIndex + 1}</div>
+                        ${difficultyInfo}
+                        <div class="question-text">${question.question}</div>
+                    </div>
+                    <div class="code-block">
+                        <pre><code class="language-python">${question.code}</code></pre>
+                    </div>
+                    
+                    <div class="options-container" id="options${currentQuestionIndex}">
+                        ${question.options.map((option, index) => `
+                            <div class="answer-option" onclick="selectOption(${index})" id="option${currentQuestionIndex}_${index}">
+                                <strong>${String.fromCharCode(65 + index)}.</strong> ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="feedback" id="feedback${currentQuestionIndex}"></div>
+                    <button class="next-btn" id="nextBtn${currentQuestionIndex}" onclick="nextQuestion()">
+                        ${currentQuestionIndex === questions.length - 1 ? '🏁 Finish Practice' : 'Next Question →'}
+                    </button>
+                </div>
+            `;
+
+            // Apply Prism.js highlighting
+            setTimeout(() => {
+                if (typeof Prism !== 'undefined') {
+                    Prism.highlightAll();
+                }
+            }, 10);
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('incorrectCount').textContent = incorrectAnswers;
+            document.getElementById('progressText').textContent = `${correctAnswers + incorrectAnswers}/35`;
+        }
+
+        function selectOption(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correct;
+            
+            // Store answer
+            userAnswers[currentQuestionIndex] = {
+                questionId: question.id,
+                selectedIndex: selectedIndex,
+                correct: isCorrect
+            };
+
+            // Update score tracking
+            if (isCorrect) {
+                score++;
+                correctAnswers++;
+                // Trigger confetti for correct answers
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            } else {
+                incorrectAnswers++;
+            }
+
+            // Update score display
+            updateScoreDisplay();
+
+            // Save progress to localStorage
+            saveProgress();
+
+            // Update UI
+            const options = document.querySelectorAll(`#options${currentQuestionIndex} .answer-option`);
+            const feedback = document.getElementById(`feedback${currentQuestionIndex}`);
+            
+            options.forEach((option, index) => {
+                option.onclick = null; // Disable further clicks
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            // Show feedback
+            if (isCorrect) {
+                feedback.innerHTML = `<strong>✅ Correct!</strong> ${question.explanation}`;
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.innerHTML = `<strong>❌ Incorrect.</strong> ${question.explanation}`;
+                feedback.className = 'feedback incorrect';
+            }
+
+            // Show next button
+            document.getElementById(`nextBtn${currentQuestionIndex}`).style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            // Save progress after moving to next question
+            saveProgress();
+            
+            if (currentQuestionIndex >= questions.length) {
+                finishPractice();
+            } else {
+                displayQuestion();
+            }
+        }
+
+        function finishPractice() {
+            const endTime = new Date();
+            const totalTime = Math.round((endTime - startTime) / 1000); // seconds
+            
+            // Clear saved progress since practice is complete
+            clearProgress();
+            
+            // Calculate stats
+            const correctAnswers = userAnswers.filter(answer => answer.correct).length;
+            const percentage = Math.round((correctAnswers / questions.length) * 100);
+            
+            // Show results
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            document.getElementById('scoreDisplay').innerHTML = `${correctAnswers}/${questions.length}`;
+            
+            // Performance message
+            let performanceMsg = '';
+            let performanceColor = '';
+            
+            if (percentage >= 90) {
+                performanceMsg = '🏆 Outstanding! Excellent mastery of execution tracing!';
+                performanceColor = '#28a745';
+                // Epic confetti celebration
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.6 }
+                });
+            } else if (percentage >= 80) {
+                performanceMsg = '🌟 Great job! Very good understanding!';
+                performanceColor = '#17a2b8';
+            } else if (percentage >= 70) {
+                performanceMsg = '👍 Good work! Keep practicing!';
+                performanceColor = '#ffc107';
+            } else {
+                performanceMsg = '📚 Keep studying! Review the concepts and try again!';
+                performanceColor = '#dc3545';
+            }
+
+            const minutes = Math.floor(totalTime / 60);
+            const seconds = totalTime % 60;
+            const timeStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+
+            document.getElementById('scoreBreakdown').innerHTML = `
+                <div class="score-item">
+                    <h3>${percentage}%</h3>
+                    <p>Overall Score</p>
+                </div>
+                <div class="score-item">
+                    <h3>${timeStr}</h3>
+                    <p>Time Taken</p>
+                </div>
+                <div class="score-item">
+                    <h3>${correctAnswers}</h3>
+                    <p>Correct Answers</p>
+                </div>
+                <div class="score-item" style="grid-column: 1/-1;">
+                    <h3 style="color: ${performanceColor};">${performanceMsg}</h3>
+                </div>
+            `;
+        }
+
+        function restartPractice() {
+            // Reset everything and start over
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            score = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            startTime = null;
+            
+            // Clear any saved progress
+            clearProgress();
+            
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('startSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

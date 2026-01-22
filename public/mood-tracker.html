@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Mood Tracker - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .terminal-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+
+        .history-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background: #f5f5f5;
+        }
+
+        .terminal {
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .terminal-output {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .menu-title {
+            color: #4ec9b0;
+            border-bottom: 2px solid #4ec9b0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+
+        .menu-item {
+            color: #ce9178;
+            margin: 5px 0;
+        }
+
+        .info {
+            color: #4fc1ff;
+        }
+
+        .warning {
+            color: #ffa500;
+        }
+
+        .error {
+            color: #f48771;
+        }
+
+        .success {
+            color: #4ec9b0;
+        }
+
+        .user-input {
+            color: #dcdcaa;
+        }
+
+        .input-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .history-content {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .history-title {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .history-empty {
+            color: #999;
+            font-style: italic;
+        }
+
+        .history-entry {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .clear-btn {
+            margin-top: 15px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            width: 100%;
+        }
+
+        .instructions {
+            padding: 20px 30px;
+            background: #fff9e6;
+            border-top: 3px solid #ffd700;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 Daily Mood Tracker</h1>
+            <p>Interactive Python Program Demo - File I/O & Exception Handling</p>
+        </div>
+
+        <div class="content">
+            <div class="terminal-section">
+                <h3 style="color: #4ec9b0; margin-bottom: 15px;">💻 Program Output</h3>
+                <div class="terminal">
+                    <div class="terminal-output" id="output"></div>
+                </div>
+                <div class="input-container">
+                    <input type="text" id="userInput" placeholder="Enter your choice or mood..." autofocus>
+                    <button onclick="submitInput()">Submit</button>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <h3 style="color: #667eea; margin-bottom: 15px;">📋 Mood Log File</h3>
+                <div class="history-content" id="historyDisplay"></div>
+                <button class="clear-btn" onclick="clearLog()">🗑️ Clear Log & Reset</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📚 How This Program Works:</h3>
+            <ul>
+                <li><strong>Log Current Mood (Option 1):</strong> Creates a file if it doesn't exist, or appends to existing file</li>
+                <li><strong>View Mood History (Option 2):</strong> Reads and displays all logged moods from the file</li>
+                <li><strong>File Safety:</strong> Uses <code>os.path.exists()</code> to check if file exists before reading/writing</li>
+                <li><strong>Exception Handling:</strong> Try/except blocks catch errors gracefully</li>
+                <li><strong>File Modes:</strong> 'w' for creating new files, 'a' for appending, 'r' for reading</li>
+            </ul>
+        </div>
+
+        <div style="padding: 30px; background: #f5f5f5; border-top: 3px solid #667eea;">
+            <h3 style="color: #667eea; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace;">📝 Python Source Code - Analyze This!</h3>
+            <pre style="background: #1e1e1e; color: #d4d4d4; padding: 25px; border-radius: 8px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 13px; line-height: 1.6; border: 2px solid #333;"><code><span style="color: #c586c0;">import</span> <span style="color: #4ec9b0;">os</span>
+<span style="color: #c586c0;">import</span> <span style="color: #4ec9b0;">time</span>
+
+<span style="color: #4fc1ff;">FILENAME</span> <span style="color: #d4d4d4;">=</span> <span style="color: #ce9178;">'mood_log.txt'</span>
+
+<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">log_mood_entry</span><span style="color: #d4d4d4;">():</span>
+    <span style="color: #6a9955;">"""Handles user input, file creation, and appending data."""</span>
+    
+    <span style="color: #6a9955;"># 1. Get user input</span>
+    <span style="color: #9cdcfe;">mood</span> <span style="color: #d4d4d4;">=</span> <span style="color: #dcdcaa;">input</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"What is your current mood? (e.g., Happy, Stressed): "</span><span style="color: #d4d4d4;">)</span>
+    <span style="color: #9cdcfe;">timestamp</span> <span style="color: #d4d4d4;">=</span> <span style="color: #4ec9b0;">time</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">strftime</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"%Y-%m-%d %H:%M:%S"</span><span style="color: #d4d4d4;">)</span>
+    
+    <span style="color: #6a9955;"># Format the log line, including the necessary newline character</span>
+    <span style="color: #9cdcfe;">log_entry</span> <span style="color: #d4d4d4;">=</span> <span style="color: #ce9178;">f"[</span><span style="color: #d4d4d4;">{</span><span style="color: #9cdcfe;">timestamp</span><span style="color: #d4d4d4;">}</span><span style="color: #ce9178;">] Mood: </span><span style="color: #d4d4d4;">{</span><span style="color: #9cdcfe;">mood</span><span style="color: #d4d4d4;">}</span><span style="color: #ce9178;">\n"</span>
+    
+    <span style="color: #6a9955;"># 2. Critical Safety Check</span>
+    <span style="color: #c586c0;">if</span> <span style="color: #c586c0;">not</span> <span style="color: #4ec9b0;">os</span><span style="color: #d4d4d4;">.</span><span style="color: #4ec9b0;">path</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">exists</span><span style="color: #d4d4d4;">(</span><span style="color: #4fc1ff;">FILENAME</span><span style="color: #d4d4d4;">):</span>
+        <span style="color: #6a9955;"># Path A: File does NOT exist -> use 'w' mode to create it and write the header</span>
+        <span style="color: #c586c0;">try</span><span style="color: #d4d4d4;">:</span>
+            <span style="color: #c586c0;">with</span> <span style="color: #dcdcaa;">open</span><span style="color: #d4d4d4;">(</span><span style="color: #4fc1ff;">FILENAME</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">'w'</span><span style="color: #d4d4d4;">)</span> <span style="color: #c586c0;">as</span> <span style="color: #9cdcfe;">f</span><span style="color: #d4d4d4;">:</span>
+                <span style="color: #9cdcfe;">f</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">write</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"--- Daily Mood Tracker Log ---\n"</span><span style="color: #d4d4d4;">)</span>
+                <span style="color: #9cdcfe;">f</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">write</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">log_entry</span><span style="color: #d4d4d4;">)</span>
+            <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">f"\n[INFO] Created new log file and recorded your mood."</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #c586c0;">except</span> <span style="color: #4ec9b0;">Exception</span> <span style="color: #c586c0;">as</span> <span style="color: #9cdcfe;">e</span><span style="color: #d4d4d4;">:</span>
+            <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">f"\n[ERROR] Failed to create file: </span><span style="color: #d4d4d4;">{</span><span style="color: #9cdcfe;">e</span><span style="color: #d4d4d4;">}</span><span style="color: #ce9178;">"</span><span style="color: #d4d4d4;">)</span>
+    <span style="color: #c586c0;">else</span><span style="color: #d4d4d4;">:</span>
+        <span style="color: #6a9955;"># Path B: File DOES exist -> use 'a' mode to append the new entry</span>
+        <span style="color: #c586c0;">try</span><span style="color: #d4d4d4;">:</span>
+            <span style="color: #c586c0;">with</span> <span style="color: #dcdcaa;">open</span><span style="color: #d4d4d4;">(</span><span style="color: #4fc1ff;">FILENAME</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">'a'</span><span style="color: #d4d4d4;">)</span> <span style="color: #c586c0;">as</span> <span style="color: #9cdcfe;">f</span><span style="color: #d4d4d4;">:</span>
+                <span style="color: #9cdcfe;">f</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">write</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">log_entry</span><span style="color: #d4d4d4;">)</span>
+            <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">f"\n[INFO] Successfully appended your mood entry."</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #c586c0;">except</span> <span style="color: #4ec9b0;">Exception</span> <span style="color: #c586c0;">as</span> <span style="color: #9cdcfe;">e</span><span style="color: #d4d4d4;">:</span>
+            <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">f"\n[ERROR] Failed to append to file: </span><span style="color: #d4d4d4;">{</span><span style="color: #9cdcfe;">e</span><span style="color: #d4d4d4;">}</span><span style="color: #ce9178;">"</span><span style="color: #d4d4d4;">)</span>
+
+<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">view_history</span><span style="color: #d4d4d4;">():</span>
+    <span style="color: #6a9955;">"""Handles checking for file existence and reading all contents."""</span>
+    
+    <span style="color: #6a9955;"># 1. Safety Check (Q23) - Prevent FileNotFoundError</span>
+    <span style="color: #c586c0;">if</span> <span style="color: #c586c0;">not</span> <span style="color: #4ec9b0;">os</span><span style="color: #d4d4d4;">.</span><span style="color: #4ec9b0;">path</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">exists</span><span style="color: #d4d4d4;">(</span><span style="color: #4fc1ff;">FILENAME</span><span style="color: #d4d4d4;">):</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"\n--- History Log ---"</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">">> No history found. Log a mood entry first!"</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"-------------------"</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #c586c0;">return</span>
+
+    <span style="color: #6a9955;"># 2. File exists -> Open in 'r' mode and read</span>
+    <span style="color: #c586c0;">try</span><span style="color: #d4d4d4;">:</span>
+        <span style="color: #c586c0;">with</span> <span style="color: #dcdcaa;">open</span><span style="color: #d4d4d4;">(</span><span style="color: #4fc1ff;">FILENAME</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">'r'</span><span style="color: #d4d4d4;">)</span> <span style="color: #c586c0;">as</span> <span style="color: #9cdcfe;">f</span><span style="color: #d4d4d4;">:</span>
+            <span style="color: #6a9955;"># f.read() loads the entire file contents as a single string</span>
+            <span style="color: #9cdcfe;">history</span> <span style="color: #d4d4d4;">=</span> <span style="color: #9cdcfe;">f</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">read</span><span style="color: #d4d4d4;">()</span>
+            
+            <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"\n--- Your Mood History ---"</span><span style="color: #d4d4d4;">)</span>
+            <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">history</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">strip</span><span style="color: #d4d4d4;">())</span>
+            <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"-------------------------"</span><span style="color: #d4d4d4;">)</span>
+            
+    <span style="color: #c586c0;">except</span> <span style="color: #4ec9b0;">Exception</span> <span style="color: #c586c0;">as</span> <span style="color: #9cdcfe;">e</span><span style="color: #d4d4d4;">:</span>
+        <span style="color: #6a9955;"># Catch reading errors (e.g., file permissions changed)</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">f"\n[ERROR] Could not read history file: </span><span style="color: #d4d4d4;">{</span><span style="color: #9cdcfe;">e</span><span style="color: #d4d4d4;">}</span><span style="color: #ce9178;">"</span><span style="color: #d4d4d4;">)</span>
+
+
+<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">main_menu</span><span style="color: #d4d4d4;">():</span>
+    <span style="color: #6a9955;">"""The main application loop with robust exception handling."""</span>
+    <span style="color: #c586c0;">while</span> <span style="color: #569cd6;">True</span><span style="color: #d4d4d4;">:</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"\n=============================="</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"  Daily Mood Tracker Menu"</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"=============================="</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"1. Log Current Mood"</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"2. View Mood History"</span><span style="color: #d4d4d4;">)</span>
+        <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"3. Exit"</span><span style="color: #d4d4d4;">)</span>
+        
+        <span style="color: #6a9955;"># Use try/except for robust user input handling</span>
+        <span style="color: #c586c0;">try</span><span style="color: #d4d4d4;">:</span>
+            <span style="color: #9cdcfe;">choice</span> <span style="color: #d4d4d4;">=</span> <span style="color: #dcdcaa;">input</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"Enter your choice (1, 2, or 3): "</span><span style="color: #d4d4d4;">)</span>
+            
+            <span style="color: #c586c0;">if</span> <span style="color: #9cdcfe;">choice</span> <span style="color: #d4d4d4;">==</span> <span style="color: #ce9178;">'1'</span><span style="color: #d4d4d4;">:</span>
+                <span style="color: #dcdcaa;">log_mood_entry</span><span style="color: #d4d4d4;">()</span>
+            <span style="color: #c586c0;">elif</span> <span style="color: #9cdcfe;">choice</span> <span style="color: #d4d4d4;">==</span> <span style="color: #ce9178;">'2'</span><span style="color: #d4d4d4;">:</span>
+                <span style="color: #dcdcaa;">view_history</span><span style="color: #d4d4d4;">()</span>
+            <span style="color: #c586c0;">elif</span> <span style="color: #9cdcfe;">choice</span> <span style="color: #d4d4d4;">==</span> <span style="color: #ce9178;">'3'</span><span style="color: #d4d4d4;">:</span>
+                <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"Thank you for using the Mood Tracker. Goodbye!"</span><span style="color: #d4d4d4;">)</span>
+                <span style="color: #c586c0;">break</span>
+            <span style="color: #c586c0;">else</span><span style="color: #d4d4d4;">:</span>
+                <span style="color: #6a9955;"># Handle invalid numbers or characters (Triggers ValueError conceptually)</span>
+                <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"[WARNING] Invalid choice. Please enter 1, 2, or 3."</span><span style="color: #d4d4d4;">)</span>
+
+        <span style="color: #c586c0;">except</span> <span style="color: #4ec9b0;">Exception</span> <span style="color: #c586c0;">as</span> <span style="color: #9cdcfe;">e</span><span style="color: #d4d4d4;">:</span>
+            <span style="color: #6a9955;"># Catch unexpected exceptions in the loop</span>
+            <span style="color: #dcdcaa;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">f"[FATAL ERROR] An unexpected error occurred: </span><span style="color: #d4d4d4;">{</span><span style="color: #9cdcfe;">e</span><span style="color: #d4d4d4;">}</span><span style="color: #ce9178;">. Restarting menu..."</span><span style="color: #d4d4d4;">)</span>
+            
+<span style="color: #6a9955;"># Run the application</span>
+<span style="color: #dcdcaa;">main_menu</span><span style="color: #d4d4d4;">()</span></code></pre>
+
+            <div style="margin-top: 20px; padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #667eea;">
+                <h4 style="color: #667eea; margin-bottom: 15px;">🔍 Key Concepts to Study:</h4>
+                <ul style="line-height: 1.8; color: #333;">
+                    <li><strong>os.path.exists(FILENAME):</strong> Returns True if file exists, False if not - prevents crashes</li>
+                    <li><strong>File Modes:</strong> 'w' creates/overwrites, 'a' appends to end, 'r' reads existing file</li>
+                    <li><strong>with open() as f:</strong> Context manager automatically closes file after use</li>
+                    <li><strong>try/except blocks:</strong> Catch errors gracefully instead of crashing the program</li>
+                    <li><strong>f.write() vs f.read():</strong> Writing adds text to file, reading retrieves all content</li>
+                    <li><strong>String formatting:</strong> f-strings like f"[{timestamp}]" embed variables in text</li>
+                    <li><strong>time.strftime():</strong> Formats current time as readable string</li>
+                    <li><strong>Conditional branching:</strong> if/else paths handle different file states</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate the file system
+        let moodLogFile = null; // null means file doesn't exist
+        let waitingForMood = false;
+        let programRunning = true;
+
+        function appendOutput(text, className = '') {
+            const output = document.getElementById('output');
+            const line = document.createElement('div');
+            if (className) {
+                line.className = className;
+            }
+            line.textContent = text;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+        }
+
+        function updateHistoryDisplay() {
+            const historyDisplay = document.getElementById('historyDisplay');
+            
+            if (!moodLogFile) {
+                historyDisplay.innerHTML = `
+                    <div class="history-title">--- Daily Mood Tracker Log ---</div>
+                    <div class="history-empty">No log file exists yet. Log a mood to create the file!</div>
+                `;
+            } else {
+                const lines = moodLogFile.split('\n').filter(line => line.trim());
+                let html = '<div class="history-title">--- Daily Mood Tracker Log ---</div>';
+                
+                lines.forEach((line, index) => {
+                    if (index === 0) {
+                        html += `<div style="font-weight: bold; color: #667eea; margin-bottom: 10px;">${line}</div>`;
+                    } else {
+                        html += `<div class="history-entry">${line}</div>`;
+                    }
+                });
+                
+                historyDisplay.innerHTML = html;
+            }
+        }
+
+        function getCurrentTimestamp() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        function logMoodEntry(mood) {
+            const timestamp = getCurrentTimestamp();
+            const logEntry = `[${timestamp}] Mood: ${mood}`;
+            
+            if (!moodLogFile) {
+                // Path A: File does NOT exist -> create it with header
+                try {
+                    moodLogFile = "--- Daily Mood Tracker Log ---\n" + logEntry + "\n";
+                    appendOutput("\n[INFO] Created new log file and recorded your mood.", "info");
+                } catch (e) {
+                    appendOutput(`\n[ERROR] Failed to create file: ${e}`, "error");
+                }
+            } else {
+                // Path B: File DOES exist -> append
+                try {
+                    moodLogFile += logEntry + "\n";
+                    appendOutput("\n[INFO] Successfully appended your mood entry.", "success");
+                } catch (e) {
+                    appendOutput(`\n[ERROR] Failed to append to file: ${e}`, "error");
+                }
+            }
+            
+            updateHistoryDisplay();
+        }
+
+        function viewHistory() {
+            if (!moodLogFile) {
+                appendOutput("\n--- History Log ---", "menu-title");
+                appendOutput(">> No history found. Log a mood entry first!", "warning");
+                appendOutput("-------------------");
+                return;
+            }
+
+            try {
+                const history = moodLogFile.trim();
+                appendOutput("\n--- Your Mood History ---", "menu-title");
+                appendOutput(history);
+                appendOutput("-------------------------");
+            } catch (e) {
+                appendOutput(`\n[ERROR] Could not read history file: ${e}`, "error");
+            }
+        }
+
+        function showMenu() {
+            appendOutput("\n==============================", "menu-title");
+            appendOutput("  Daily Mood Tracker Menu", "menu-title");
+            appendOutput("==============================", "menu-title");
+            appendOutput("1. Log Current Mood", "menu-item");
+            appendOutput("2. View Mood History", "menu-item");
+            appendOutput("3. Exit", "menu-item");
+            appendOutput("Enter your choice (1, 2, or 3): ", "");
+        }
+
+        function submitInput() {
+            const input = document.getElementById('userInput');
+            const value = input.value.trim();
+            
+            if (!value) return;
+            
+            appendOutput(value, "user-input");
+            input.value = '';
+
+            if (waitingForMood) {
+                // User is entering a mood
+                logMoodEntry(value);
+                waitingForMood = false;
+                showMenu();
+            } else {
+                // User is choosing from menu
+                handleMenuChoice(value);
+            }
+        }
+
+        function handleMenuChoice(choice) {
+            if (choice === '1') {
+                appendOutput("What is your current mood? (e.g., Happy, Stressed): ", "");
+                waitingForMood = true;
+            } else if (choice === '2') {
+                viewHistory();
+                showMenu();
+            } else if (choice === '3') {
+                appendOutput("Thank you for using the Mood Tracker. Goodbye!", "success");
+                appendOutput("\n🔄 Program ended. Refresh the page or clear log to restart.", "info");
+                programRunning = false;
+            } else {
+                appendOutput("[WARNING] Invalid choice. Please enter 1, 2, or 3.", "warning");
+                showMenu();
+            }
+        }
+
+        function clearLog() {
+            moodLogFile = null;
+            clearOutput();
+            waitingForMood = false;
+            programRunning = true;
+            updateHistoryDisplay();
+            init();
+        }
+
+        function init() {
+            appendOutput("Starting Daily Mood Tracker...\n", "success");
+            showMenu();
+        }
+
+        // Handle Enter key
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitInput();
+            }
+        });
+
+        // Initialize
+        updateHistoryDisplay();
+        init();
+    </script>
+</body>
+</html>

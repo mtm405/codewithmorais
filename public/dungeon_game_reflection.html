@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Dungeon Game - Reflection & Learning Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #ff6b6b;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        .form-group textarea,
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1em;
+            line-height: 1.6;
+            transition: border-color 0.3s;
+        }
+
+        .form-group textarea:focus,
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checklist {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+        }
+
+        .checklist label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .checklist input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #ff9800;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box strong {
+            color: #ff6b6b;
+        }
+
+        .loop-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .loop-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid #667eea;
+        }
+
+        .loop-card.while-loop {
+            border-top-color: #ff6b6b;
+        }
+
+        .loop-card h4 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .loop-card.while-loop h4 {
+            color: #ff6b6b;
+        }
+
+        .loop-card p {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .rating-group {
+            margin-bottom: 20px;
+        }
+
+        .rating-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .rating-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .rating-options input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .rating-options label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .team-info {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+        }
+
+        .team-info input[type="text"] {
+            max-width: 200px;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            .loop-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+        }
+
+        .success-message {
+            background: #c8e6c9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1>🎮 THE ENDLESS DUNGEON</h1>
+            <p>✨ Learning Reflection & Summary ✨</p>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <div class="success-message" id="successMessage">
+                ✅ Your reflection has been saved! Great work on the Dungeon Game!
+            </div>
+
+            <form id="reflectionForm">
+                <!-- TEAM INFO -->
+                <div class="section">
+                    <h2>📋 Team Information</h2>
+                    <div class="team-info">
+                        <div class="form-group">
+                            <label>Team Name:</label>
+                            <input type="text" name="teamName" placeholder="e.g., Dragon Slayers">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Team Members:</label>
+                            <input type="text" name="teamMembers" placeholder="Names of all 4 team members">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Your Role:</label>
+                            <input type="text" name="yourRole" placeholder="e.g., Role 1 - Mathematician">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Date Completed:</label>
+                            <input type="text" name="dateCompleted" placeholder="e.g., January 20, 2025">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOOPS LEARNING -->
+                <div class="section">
+                    <h2>🔄 For Loops vs While Loops</h2>
+                    
+                    <div class="highlight-box">
+                        <strong>What did YOU learn about the difference between FOR and WHILE loops?</strong>
+                    </div>
+
+                    <h3>📊 FOR Loops (Role 3)</h3>
+                    <div class="form-group">
+                        <label>Where did you use a FOR loop in your code?</label>
+                        <textarea name="forLoopUsage" placeholder="Describe the FOR loop in your treasure.py file. What did it do? How many times did it run?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Why was a FOR loop the right choice here?</label>
+                        <textarea name="forLoopWhy" placeholder="Explain: You knew exactly how many times to test... (in 2-3 sentences)"></textarea>
+                    </div>
+
+                    <h3>⚔️ WHILE Loops (Role 4)</h3>
+                    <div class="form-group">
+                        <label>Describe the WHILE loop in your main.py game:</label>
+                        <textarea name="whileLoopUsage" placeholder="What was the condition? (e.g., player_hp > 0 and enemy_hp > 0) When did the loop stop?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Why was a WHILE loop the right choice here?</label>
+                        <textarea name="whileLoopWhy" placeholder="Explain: You didn't know how many turns the battle would take... (in 2-3 sentences)"></textarea>
+                    </div>
+
+                    <h3>💡 Key Difference</h3>
+                    <div class="form-group">
+                        <label>In your own words, what's the main difference between FOR and WHILE?</label>
+                        <textarea name="mainDifference" placeholder="FOR loops: when you know... | WHILE loops: when you don't know..."></textarea>
+                    </div>
+                </div>
+
+                <!-- CODE & FUNCTIONS -->
+                <div class="section">
+                    <h2>🛠️ Code & Functions</h2>
+
+                    <div class="form-group">
+                        <label>Which function did you write or use the most? Why?</label>
+                        <textarea name="favoriteFunction" placeholder="e.g., I used roll_d20() a lot because..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What was the hardest part of this project?</label>
+                        <textarea name="hardestPart" placeholder="e.g., Getting the imports to work, understanding the dictionary keys, making the loop condition work..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What would you do differently if you built this game again?</label>
+                        <textarea name="dodifferently" placeholder="e.g., Add more enemies, use lists instead of random.choice(), add XP system..."></textarea>
+                    </div>
+                </div>
+
+                <!-- TEAMWORK -->
+                <div class="section">
+                    <h2>🤝 Teamwork & Collaboration</h2>
+
+                    <div class="form-group">
+                        <label>Which teammate helped you the most? How?</label>
+                        <textarea name="teamHelp" placeholder="Names and what they helped with..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Did the 4-role structure help you? Why or why not?</label>
+                        <textarea name="roleStructure" placeholder="Was it clear? Did you have to work together? What could improve it?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What did you learn from seeing other people's code?</label>
+                        <textarea name="fromOthersCode" placeholder="How they wrote dictionaries, functions, imported modules, etc."></textarea>
+                    </div>
+                </div>
+
+                <!-- RATINGS -->
+                <div class="section">
+                    <h2>⭐ How Much Did You Learn?</h2>
+
+                    <div class="rating-group">
+                        <label>My understanding of LOOPS (FOR vs WHILE):</label>
+                        <div class="rating-options">
+                            <label><input type="radio" name="loopsUnderstanding" value="1"> 🟥 Not at all (1)</label>
+                            <label><input type="radio" name="loopsUnderstanding" value="2"> 🟨 A little (2)</label>
+                            <label><input type="radio" name="loopsUnderstanding" value="3"> 🟩 Good (3)</label>
+                            <label><input type="radio" name="loopsUnderstanding" value="4"> 🟦 Really good (4)</label>
+                            <label><input type="radio" name="loopsUnderstanding" value="5"> 🌟 Excellent (5)</label>
+                        </div>
+                    </div>
+
+                    <div class="rating-group">
+                        <label>My understanding of MODULES & IMPORTS:</label>
+                        <div class="rating-options">
+                            <label><input type="radio" name="modulesUnderstanding" value="1"> 🟥 Not at all (1)</label>
+                            <label><input type="radio" name="modulesUnderstanding" value="2"> 🟨 A little (2)</label>
+                            <label><input type="radio" name="modulesUnderstanding" value="3"> 🟩 Good (3)</label>
+                            <label><input type="radio" name="modulesUnderstanding" value="4"> 🟦 Really good (4)</label>
+                            <label><input type="radio" name="modulesUnderstanding" value="5"> 🌟 Excellent (5)</label>
+                        </div>
+                    </div>
+
+                    <div class="rating-group">
+                        <label>How fun was this project?</label>
+                        <div class="rating-options">
+                            <label><input type="radio" name="funRating" value="1"> 😞 Not fun (1)</label>
+                            <label><input type="radio" name="funRating" value="2"> 😐 Okay (2)</label>
+                            <label><input type="radio" name="funRating" value="3"> 😊 Good (3)</label>
+                            <label><input type="radio" name="funRating" value="4"> 😄 Really fun (4)</label>
+                            <label><input type="radio" name="funRating" value="5"> 🤩 AWESOME! (5)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHALLENGE YOURSELF -->
+                <div class="section">
+                    <h2>🚀 Challenge Yourself</h2>
+
+                    <h3>What would you add to make this game better?</h3>
+                    <div class="checklist">
+                        <label>
+                            <input type="checkbox" name="challenges" value="bosses"> 
+                            Boss battles (stronger enemies)
+                        </label>
+                        <label>
+                            <input type="checkbox" name="challenges" value="levels"> 
+                            Multiple levels or dungeons
+                        </label>
+                        <label>
+                            <input type="checkbox" name="challenges" value="inventory"> 
+                            Inventory/loot system
+                        </label>
+                        <label>
+                            <input type="checkbox" name="challenges" value="abilities"> 
+                            Special abilities or spells
+                        </label>
+                        <label>
+                            <input type="checkbox" name="challenges" value="saving"> 
+                            Save/load game progress
+                        </label>
+                        <label>
+                            <input type="checkbox" name="challenges" value="stats"> 
+                            Character stats (strength, defense, etc.)
+                        </label>
+                        <label>
+                            <input type="checkbox" name="challenges" value="ai"> 
+                            Better enemy AI
+                        </label>
+                        <label>
+                            <input type="checkbox" name="challenges" value="graphics"> 
+                            Better graphics/colors
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Which of these would you try to build if you had more time?</label>
+                        <textarea name="nextSteps" placeholder="What would you add next? How would you code it?"></textarea>
+                    </div>
+                </div>
+
+                <!-- FINAL THOUGHTS -->
+                <div class="section">
+                    <h2>💭 Final Thoughts</h2>
+
+                    <div class="form-group">
+                        <label>What's one thing you're proud of from this project?</label>
+                        <textarea name="proudOf" placeholder="Getting the loop to work? Helping your teammate? Completing it? Working together?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What will you remember most about this project?</label>
+                        <textarea name="willRemember" placeholder="The feeling of accomplishment? How loops work? Teamwork? Something else?"></textarea>
+                    </div>
+                </div>
+
+                <!-- SUBMIT -->
+                <div class="section" style="text-align: center; margin-top: 40px;">
+                    <button type="submit" class="submit-button">📤 Submit Your Reflection</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>🎮 The Endless Dungeon - Reflection Sheet | Great job building and learning! 🎉</p>
+        </footer>
+    </div>
+
+    <script>
+        const form = document.getElementById('reflectionForm');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = {
+                teamName: formData.get('teamName'),
+                teamMembers: formData.get('teamMembers'),
+                yourRole: formData.get('yourRole'),
+                dateCompleted: formData.get('dateCompleted'),
+                forLoopUsage: formData.get('forLoopUsage'),
+                forLoopWhy: formData.get('forLoopWhy'),
+                whileLoopUsage: formData.get('whileLoopUsage'),
+                whileLoopWhy: formData.get('whileLoopWhy'),
+                mainDifference: formData.get('mainDifference'),
+                favoriteFunction: formData.get('favoriteFunction'),
+                hardestPart: formData.get('hardestPart'),
+                dodifferently: formData.get('dodifferently'),
+                teamHelp: formData.get('teamHelp'),
+                roleStructure: formData.get('roleStructure'),
+                fromOthersCode: formData.get('fromOthersCode'),
+                loopsUnderstanding: formData.get('loopsUnderstanding'),
+                modulesUnderstanding: formData.get('modulesUnderstanding'),
+                funRating: formData.get('funRating'),
+                challenges: formData.getAll('challenges'),
+                nextSteps: formData.get('nextSteps'),
+                proudOf: formData.get('proudOf'),
+                willRemember: formData.get('willRemember'),
+                timestamp: new Date().toLocaleString()
+            };
+
+            // Save to localStorage
+            localStorage.setItem('dungeonReflection_' + data.teamName, JSON.stringify(data));
+
+            // Show success message
+            successMessage.style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Reset form
+            form.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        });
+
+        // Load saved data if it exists
+        window.addEventListener('load', function() {
+            const teamName = localStorage.getItem('lastTeamName');
+            if (teamName) {
+                const saved = JSON.parse(localStorage.getItem('dungeonReflection_' + teamName));
+                if (saved) {
+                    // Populate form with saved data
+                    Object.keys(saved).forEach(key => {
+                        if (key === 'challenges') {
+                            saved[key].forEach(val => {
+                                const checkbox = document.querySelector(`input[name="challenges"][value="${val}"]`);
+                                if (checkbox) checkbox.checked = true;
+                            });
+                        } else if (key !== 'timestamp') {
+                            const field = form.elements[key];
+                            if (field) {
+                                if (field.type === 'radio') {
+                                    const radio = form.querySelector(`input[name="${key}"][value="${saved[key]}"]`);
+                                    if (radio) radio.checked = true;
+                                } else {
+                                    field.value = saved[key];
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        // Save team name for next time
+        const teamNameField = form.elements['teamName'];
+        if (teamNameField) {
+            teamNameField.addEventListener('blur', function() {
+                if (this.value) {
+                    localStorage.setItem('lastTeamName', this.value);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

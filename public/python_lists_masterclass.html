@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Lists: The Complete Masterclass</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .presentation-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            background: white;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 100px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease-in-out;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .slide h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .title-slide h1 {
+            color: white;
+            font-size: 5rem;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .slide h2 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 40px;
+            letter-spacing: -1px;
+        }
+
+        .slide h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .slide h4 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .slide p {
+            font-size: 1.3rem;
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .title-slide p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.5rem;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .emoji {
+            margin-right: 10px;
+        }
+
+        .definition {
+            background: #e8f4f8;
+            border-left: 5px solid #0288d1;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .definition p {
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        ul, ol {
+            margin: 20px 0 20px 40px;
+            font-size: 1.2rem;
+            line-height: 1.9;
+            color: #333;
+        }
+
+        li {
+            margin-bottom: 12px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: #d4d4d4;
+            overflow-x: auto;
+            line-height: 1.7;
+        }
+
+        .code-block code {
+            display: block;
+            line-height: 1.7;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 80px;
+            background: #1e293b;
+            gap: 20px;
+        }
+
+        .control-btn {
+            padding: 12px 24px;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .control-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        .slide-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #d4d4d4;
+        }
+
+        .slide-title {
+            font-size: 0.9rem;
+            color: #a0aec0;
+            margin-top: 5px;
+        }
+
+        .method-card {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+
+        .method-card strong {
+            color: #667eea;
+            font-size: 1.15rem;
+        }
+
+        .practice-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .practice-box h4 {
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+
+        .practice-box p {
+            color: #78350f;
+            font-size: 1.2rem;
+        }
+
+        .hint-box {
+            background: #f0fdf4;
+            border: 2px solid #22c55e;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .hint-box p {
+            color: #166534;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-wrapper">
+        <div class="slide-container">
+            <!-- Slide 1: Title -->
+            <div class="slide active title-slide">
+                <h1>Python Lists</h1>
+                <div class="subtitle">The Complete Masterclass</div>
+                <p style="margin-top: 50px; font-size: 1.4rem; color: rgba(255,255,255,0.9);">Master lists with real-world examples, methods, slicing, and hands-on projects</p>
+            </div>
+
+            <!-- Slide 2: What Are Lists -->
+            <div class="slide">
+                <h2>What Are Lists?</h2>
+                <div class="definition">
+                    <p><strong>Definition:</strong> Lists are ordered, mutable collections that can hold multiple items of different data types.</p>
+                </div>
+                <h3>Key Characteristics:</h3>
+                <ul>
+                    <li><strong>Ordered:</strong> Items have a position (index)</li>
+                    <li><strong>Mutable:</strong> You can change, add, or remove items</li>
+                    <li><strong>Flexible:</strong> Can contain strings, numbers, other lists, etc.</li>
+                    <li><strong>Indexed:</strong> Access items by position (starting from 0)</li>
+                </ul>
+            </div>
+
+            <!-- Slide 3: Creating Lists - Copy Code -->
+            <div class="slide" style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);">
+                <h2><span class="emoji">📝</span>Creating Lists: Copy This Code</h2>
+                
+                <p style="margin-bottom: 20px; font-size: 1.1rem;"><strong>Type this code into your Python editor:</strong></p>
+
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: #d4d4d4; overflow-x: auto;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">shopping</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #ce9178;">\"milk\"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">\"eggs\"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">\"bread\"</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">prices</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">2.50</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">3.00</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">1.75</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">shopping</span><span style="color: #d4d4d4;">)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">prices</span><span style="color: #d4d4d4;">)</span></div>
+                    <div><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #dcdcaa;">len</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">shopping</span><span style="color: #d4d4d4;">))</span></div>
+                </div>
+
+                <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; border-radius: 8px;">
+                    <p style="margin: 10px 0; font-size: 0.95rem;"><strong>Q1: How many items are in the shopping list?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                    
+                    <p style="margin: 15px 0 10px 0; font-size: 0.95rem;"><strong>Q2: What is the first item in the shopping list?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                </div>
+            </div>
+
+            <!-- Slide 4: Creating Lists - Explanation -->
+            <div class="slide">
+                <h2><span class="emoji">🔍</span>Understanding Lists</h2>
+                <h3>How to Create a List:</h3>
+                <ul>
+                    <li>Use square brackets <code style="background: #f0f0f0; padding: 2px 6px;">[ ]</code></li>
+                    <li>Separate items with commas</li>
+                    <li>Can hold any data type</li>
+                </ul>
+                <h3>Important Functions:</h3>
+                <div class="method-card">
+                    <strong>len(list)</strong> - Returns the number of items in the list
+                </div>
+            </div>
+
+            <!-- Slide 5: Creating Lists - Examples -->
+            <div class="slide">
+                <h2><span class="emoji">📖</span>Creating Lists: Examples</h2>
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 25px; margin: 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: #d4d4d4; overflow-x: auto; line-height: 1.7;">
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Create different types of lists</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #ce9178;">"apple"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"banana"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"orange"</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">3</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">5</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">mixed</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #ce9178;">"Hello"</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">42</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">3.14</span><span style="color: #d4d4d4;">,</span> <span style="color: #569cd6;">True</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">empty</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Get length</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #dcdcaa;">len</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># Returns 3</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #dcdcaa;">len</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># Returns 5</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #dcdcaa;">len</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">mixed</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># Returns 4</span></div>
+                    <div><span style="color: #dcdcaa;">len</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">empty</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># Returns 0</span></div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Creating Lists - Practice -->
+            <div class="slide">
+                <h2><span class="emoji">🎯</span>Your Turn: Create a List</h2>
+                
+                <div class="practice-box">
+                    <h4>Problem: Create a Movies List</h4>
+                    <p>Create a list of your 3 favorite movies. Print the list. Print how many movies are in the list. <strong>What do you see?</strong></p>
+                </div>
+
+                <div class="hint-box">
+                    <p><strong>Hint:</strong> Use square brackets and commas to separate the movie names as strings.</p>
+                </div>
+            </div>
+
+            <!-- Slide 7: Indexing - Copy Code -->
+            <div class="slide" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);">
+                <h2><span class="emoji">📝</span>List Indexing: Copy This Code</h2>
+                
+                <p style="margin-bottom: 20px; font-size: 1.1rem;"><strong>Type this code into your Python editor:</strong></p>
+
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: #d4d4d4; overflow-x: auto;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #ce9178;">\"apple\"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">\"banana\"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">\"orange\"</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">])</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">])</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">-1</span><span style="color: #d4d4d4;">])</span></div>
+                    <div><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">-2</span><span style="color: #d4d4d4;">])</span></div>
+                </div>
+
+                <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; border-radius: 8px;">
+                    <p style="margin: 10px 0; font-size: 0.95rem;"><strong>Q1: What does fruits[0] return?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                    
+                    <p style="margin: 15px 0 10px 0; font-size: 0.95rem;"><strong>Q2: What does fruits[-1] return?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                </div>
+            </div>
+
+            <!-- Slide 8: Indexing - Explanation -->
+            <div class="slide">
+                <h2><span class="emoji">🔍</span>Understanding Indexing</h2>
+                <h3>Positive Indexing (left to right):</h3>
+                <ul>
+                    <li>Index 0 = First item</li>
+                    <li>Index 1 = Second item</li>
+                    <li>Index 2 = Third item</li>
+                </ul>
+                <h3>Negative Indexing (right to left):</h3>
+                <ul>
+                    <li>Index -1 = Last item</li>
+                    <li>Index -2 = Second-to-last item</li>
+                    <li>Index -3 = Third-to-last item</li>
+                </ul>
+            </div>
+
+            <!-- Slide 9: Indexing - Examples -->
+            <div class="slide">
+                <h2><span class="emoji">📖</span>Indexing: Examples</h2>
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 25px; margin: 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: #d4d4d4; overflow-x: auto; line-height: 1.7;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #ce9178;">"apple"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"banana"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"orange"</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;">#           0        1         2       (positive)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;">#          -3       -2        -1       (negative)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Positive indexing</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># "apple" (first)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># "banana" (second)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># "orange" (third)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Negative indexing</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">-1</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># "orange" (last)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">-2</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># "banana" (second-to-last)</span></div>
+                    <div><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">-3</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># "apple" (third-to-last)</span></div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Indexing - Practice -->
+            <div class="slide">
+                <h2><span class="emoji">🎯</span>Your Turn: Access List Items</h2>
+                
+                <div class="practice-box">
+                    <h4>Problem: Access Team Members</h4>
+                    <p>team = ["Alice", "Bob", "Charlie"]<br>Get the first person. Get the last person. <strong>Who are they?</strong></p>
+                </div>
+
+                <div class="hint-box">
+                    <p><strong>Hint:</strong> Use [0] for first and [-1] for last.</p>
+                </div>
+            </div>
+
+            <!-- Slide 11: Slicing - Copy Code -->
+            <div class="slide" style="background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);">
+                <h2><span class="emoji">📝</span>List Slicing: Copy This Code</h2>
+                
+                <p style="margin-bottom: 20px; font-size: 1.1rem;"><strong>Type this code into your Python editor:</strong></p>
+
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: #d4d4d4; overflow-x: auto;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">3</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">:</span><span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">])</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[:</span><span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">])</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">:])</span></div>
+                    <div><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[::2</span><span style="color: #d4d4d4;">])</span></div>
+                </div>
+
+                <div style="background: #fce4ec; border-left: 4px solid #ec407a; padding: 15px; border-radius: 8px;">
+                    <p style="margin: 10px 0; font-size: 0.95rem;"><strong>Q1: What does numbers[1:4] return?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                    
+                    <p style="margin: 15px 0 10px 0; font-size: 0.95rem;"><strong>Q2: What does numbers[::2] return?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                </div>
+            </div>
+
+            <!-- Slide 12: Slicing - Explanation -->
+            <div class="slide">
+                <h2><span class="emoji">🔍</span>Understanding Slicing</h2>
+                <h3>Slice Syntax: list[start:stop:step]</h3>
+                <ul>
+                    <li><strong>start:</strong> Where to begin (included)</li>
+                    <li><strong>stop:</strong> Where to end (NOT included)</li>
+                    <li><strong>step:</strong> Gap between items (default is 1)</li>
+                </ul>
+                <h3>Common Slice Patterns:</h3>
+                <div class="method-card">
+                    <strong>list[1:4]</strong> - Items at index 1, 2, 3
+                </div>
+                <div class="method-card">
+                    <strong>list[:3]</strong> - First 3 items (index 0, 1, 2)
+                </div>
+                <div class="method-card">
+                    <strong>list[2:]</strong> - From index 2 to the end
+                </div>
+                <div class="method-card">
+                    <strong>list[::2]</strong> - Every 2nd item (skip one, take one)
+                </div>
+            </div>
+
+            <!-- Slide 13: Slicing - Examples -->
+            <div class="slide">
+                <h2><span class="emoji">📖</span>Slicing: Examples</h2>
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 25px; margin: 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: #d4d4d4; overflow-x: auto; line-height: 1.7;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">3</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">5</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Basic slicing</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">:</span><span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># [1, 2, 3]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[:</span><span style="color: #b5cea8;">3</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># [0, 1, 2]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">:]</span> <span style="color: #6a9955;"># [2, 3, 4, 5]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Step parameter</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[::2]</span> <span style="color: #6a9955;"># [0, 2, 4] (every 2nd)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">::2]</span> <span style="color: #6a9955;"># [1, 3, 5]</span></div>
+                    <div><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">[::-1]</span> <span style="color: #6a9955;"># [5, 4, 3, 2, 1, 0] (reversed)</span></div>
+                </div>
+            </div>
+
+            <!-- Slide 14: Slicing - Practice -->
+            <div class="slide">
+                <h2><span class="emoji">🎯</span>Your Turn: Slice a List</h2>
+                
+                <div class="practice-box">
+                    <h4>Problem: Get First Half</h4>
+                    <p>alphabet = ["a", "b", "c", "d", "e", "f"]<br>Get the first 3 letters. <strong>What slice would you use?</strong></p>
+                </div>
+
+                <div class="hint-box">
+                    <p><strong>Hint:</strong> Use [:3] to get the first 3 items.</p>
+                </div>
+            </div>
+
+            <!-- Slide 15: List Methods Overview -->
+            <div class="slide">
+                <h2><span class="emoji">⚙️</span>Common List Methods</h2>
+                <p style="margin-bottom: 20px;">Methods are functions that belong to lists. Use <strong>dot notation</strong> to call them:</p>
+                <h3>Adding/Removing Items:</h3>
+                <ul>
+                    <li><code style="background: #f0f0f0; padding: 2px 6px;">append()</code> - Add one item to the end</li>
+                    <li><code style="background: #f0f0f0; padding: 2px 6px;">extend()</code> - Add multiple items to the end</li>
+                    <li><code style="background: #f0f0f0; padding: 2px 6px;">insert()</code> - Add item at specific position</li>
+                    <li><code style="background: #f0f0f0; padding: 2px 6px;">remove()</code> - Remove first matching item</li>
+                    <li><code style="background: #f0f0f0; padding: 2px 6px;">pop()</code> - Remove and return item at index</li>
+                </ul>
+                <h3>Finding/Sorting:</h3>
+                <ul>
+                    <li><code style="background: #f0f0f0; padding: 2px 6px;">index()</code> - Find position of item</li>
+                    <li><code style="background: #f0f0f0; padding: 2px 6px;">count()</code> - Count occurrences</li>
+                    <li><code style="background: #f0f0f0; padding: 2px 6px;">sort()</code> - Sort in place</li>
+                    <li><code style="background: #f0f0f0; padding: 2px 6px;">reverse()</code> - Reverse order</li>
+                </ul>
+            </div>
+
+            <!-- Slide 16: append() - Copy Code -->
+            <div class="slide" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);">
+                <h2><span class="emoji">📝</span>append(): Copy This Code</h2>
+                
+                <p style="margin-bottom: 20px; font-size: 1.1rem;"><strong>Type this code into your Python editor:</strong></p>
+
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: #d4d4d4; overflow-x: auto;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">to_do</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #ce9178;">\"study\"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">\"exercise\"</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">to_do</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">append</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">\"cook\"</span><span style="color: #d4d4d4;">)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">to_do</span><span style="color: #d4d4d4;">)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">to_do</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">append</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">\"sleep\"</span><span style="color: #d4d4d4;">)</span></div>
+                    <div><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">to_do</span><span style="color: #d4d4d4;">)</span></div>
+                </div>
+
+                <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 15px; border-radius: 8px;">
+                    <p style="margin: 10px 0; font-size: 0.95rem;"><strong>Q1: What does append() do?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                    
+                    <p style="margin: 15px 0 10px 0; font-size: 0.95rem;"><strong>Q2: How many items are in to_do after both appends?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                </div>
+            </div>
+
+            <!-- Slide 17: append() - Explanation -->
+            <div class="slide">
+                <h2><span class="emoji">🔍</span>Understanding append()</h2>
+                <h3>What it does:</h3>
+                <p>The <code style="background: #f0f0f0; padding: 2px 6px;">append()</code> method adds ONE item to the END of a list.</p>
+                <h3>Important Notes:</h3>
+                <ul>
+                    <li>Only takes ONE argument (the item to add)</li>
+                    <li>Modifies the original list (doesn't return anything)</li>
+                    <li>Adds to the end, not anywhere in the middle</li>
+                </ul>
+            </div>
+
+            <!-- Slide 18: append() - Examples -->
+            <div class="slide">
+                <h2><span class="emoji">📖</span>append(): Examples</h2>
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 25px; margin: 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: #d4d4d4; overflow-x: auto; line-height: 1.7;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">3</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">append</span><span style="color: #d4d4d4;">(</span><span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># [1, 2, 3, 4]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">append</span><span style="color: #d4d4d4;">(</span><span style="color: #b5cea8;">5</span><span style="color: #d4d4d4;">)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># [1, 2, 3, 4, 5]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Append different types</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #ce9178;">"apple"</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">append</span><span style="color: #d4d4d4;">(</span><span style="color: #ce9178;">"banana"</span><span style="color: #d4d4d4;">)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">append</span><span style="color: #d4d4d4;">(</span><span style="color: #b5cea8;">42</span><span style="color: #d4d4d4;">)</span></div>
+                    <div><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">fruits</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># ["apple", "banana", 42]</span></div>
+                </div>
+            </div>
+
+            <!-- Slide 19: append() - Practice -->
+            <div class="slide">
+                <h2><span class="emoji">🎯</span>Your Turn: Use append()</h2>
+                
+                <div class="practice-box">
+                    <h4>Problem: Build a Playlist</h4>
+                    <p>Start with songs = ["Song A"]. Append two more songs to the list. Print the final playlist. <strong>How many songs total?</strong></p>
+                </div>
+
+                <div class="hint-box">
+                    <p><strong>Hint:</strong> Use .append() twice to add songs one at a time.</p>
+                </div>
+            </div>
+
+            <!-- Slide 20: extend() vs append() -->
+            <div class="slide">
+                <h2><span class="emoji">⚖️</span>extend() vs append()</h2>
+                <div class="code-block"><code># append() - Adds ONE thing (even if it's a list)
+fruits = ["apple", "banana"]
+fruits.append(["orange", "grape"])
+print(fruits)
+# ["apple", "banana", ["orange", "grape"]]</code></div>
+                <div class="code-block"><code># extend() - Adds MULTIPLE items separately
+fruits = ["apple", "banana"]
+fruits.extend(["orange", "grape"])
+print(fruits)
+# ["apple", "banana", "orange", "grape"]</code></div>
+            </div>
+
+            <!-- Slide 21: insert() & remove() -->
+            <div class="slide">
+                <h2><span class="emoji">✏️</span>insert() & remove()</h2>
+                <h3>insert(index, item) - Add at specific position:</h3>
+                <div class="code-block"><code>letters = ["a", "c", "d"]
+letters.insert(1, "b")
+print(letters)  # ["a", "b", "c", "d"]</code></div>
+                <h3>remove(item) - Remove first matching item:</h3>
+                <div class="code-block"><code>colors = ["red", "blue", "red"]
+colors.remove("red")
+print(colors)  # ["blue", "red"]</code></div>
+            </div>
+
+            <!-- Slide 22: pop() - Copy Code -->
+            <div class="slide" style="background: linear-gradient(135deg, #f3e5f5 0%, #ede7f6 100%);">
+                <h2><span class="emoji">📝</span>pop(): Copy This Code</h2>
+                
+                <p style="margin-bottom: 20px; font-size: 1.1rem;"><strong>Type this code into your Python editor:</strong></p>
+
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: #d4d4d4; overflow-x: auto;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">stack</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #ce9178;">\"book1\"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">\"book2\"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">\"book3\"</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">removed</span> <span style="color: #d4d4d4;">=</span> <span style="color: #9cdcfe;">stack</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">pop</span><span style="color: #d4d4d4;">()</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">removed</span><span style="color: #d4d4d4;">)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">stack</span><span style="color: #d4d4d4;">)</span></div>
+                    <div><span style="color: #9cdcfe;">first</span> <span style="color: #d4d4d4;">=</span> <span style="color: #9cdcfe;">stack</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">pop</span><span style="color: #d4d4d4;">(</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">)</span></div>
+                </div>
+
+                <div style="background: #f3e5f5; border-left: 4px solid #9c27b0; padding: 15px; border-radius: 8px;">
+                    <p style="margin: 10px 0; font-size: 0.95rem;"><strong>Q1: What does pop() without an index do?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                    
+                    <p style="margin: 15px 0 10px 0; font-size: 0.95rem;"><strong>Q2: What does pop(0) do?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                </div>
+            </div>
+
+            <!-- Slide 23: pop() - Explanation -->
+            <div class="slide">
+                <h2><span class="emoji">🔍</span>Understanding pop()</h2>
+                <h3>What it does:</h3>
+                <p>The <code style="background: #f0f0f0; padding: 2px 6px;">pop()</code> method removes an item AND returns it.</p>
+                <h3>Key differences from remove():</h3>
+                <ul>
+                    <li><strong>pop():</strong> Uses index, returns the item removed</li>
+                    <li><strong>remove():</strong> Uses value, returns nothing</li>
+                </ul>
+            </div>
+
+            <!-- Slide 24: pop() - Examples -->
+            <div class="slide">
+                <h2><span class="emoji">📖</span>pop(): Examples</h2>
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 25px; margin: 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: #d4d4d4; overflow-x: auto; line-height: 1.7;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">10</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">20</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">30</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">40</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Pop without index (removes last)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">last</span> <span style="color: #d4d4d4;">=</span> <span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">pop</span><span style="color: #d4d4d4;">()</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">last</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># 40</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># [10, 20, 30]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Pop with index (removes at position)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">first</span> <span style="color: #d4d4d4;">=</span> <span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">pop</span><span style="color: #d4d4d4;">(</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">first</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># 10</span></div>
+                    <div><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">)</span> <span style="color: #6a9955;"># [20, 30]</span></div>
+                </div>
+            </div>
+
+            <!-- Slide 25: index() & count() -->
+            <div class="slide">
+                <h2><span class="emoji">🔎</span>index() & count()</h2>
+                <h3>index(item) - Find position:</h3>
+                <div class="code-block"><code>fruits = ["apple", "banana", "orange"]
+position = fruits.index("banana")
+print(position)  # 1</code></div>
+                <h3>count(item) - Count occurrences:</h3>
+                <div class="code-block"><code>numbers = [1, 2, 2, 3, 2]
+count = numbers.count(2)
+print(count)  # 3</code></div>
+            </div>
+
+            <!-- Slide 26: sort() & reverse() -->
+            <div class="slide">
+                <h2><span class="emoji">↕️</span>sort() & reverse()</h2>
+                <h3>sort() - Arrange in order:</h3>
+                <div class="code-block"><code>numbers = [3, 1, 4, 1, 5]
+numbers.sort()
+print(numbers)  # [1, 1, 3, 4, 5]</code></div>
+                <h3>reverse() - Reverse the order:</h3>
+                <div class="code-block"><code>numbers = [1, 2, 3, 4, 5]
+numbers.reverse()
+print(numbers)  # [5, 4, 3, 2, 1]</code></div>
+            </div>
+
+            <!-- Slide 27: Nested Lists - Copy Code -->
+            <div class="slide" style="background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);">
+                <h2><span class="emoji">📝</span>Nested Lists: Copy This Code</h2>
+                
+                <p style="margin-bottom: 20px; font-size: 1.1rem;"><strong>Type this code into your Python editor:</strong></p>
+
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: #d4d4d4; overflow-x: auto;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">matrix</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">],</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">3</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">]]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">matrix</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">])</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">matrix</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">][</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">])</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">matrix</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">][</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">])</span></div>
+                    <div><span style="color: #9cdcfe;">matrix</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">append</span><span style="color: #d4d4d4;">([</span><span style="color: #b5cea8;">5</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">6</span><span style="color: #d4d4d4;">])</span></div>
+                </div>
+
+                <div style="background: #e1f5fe; border-left: 4px solid #01579b; padding: 15px; border-radius: 8px;">
+                    <p style="margin: 10px 0; font-size: 0.95rem;"><strong>Q1: What does matrix[0][1] return?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                    
+                    <p style="margin: 15px 0 10px 0; font-size: 0.95rem;"><strong>Q2: How many rows in matrix after append?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                </div>
+            </div>
+
+            <!-- Slide 28: Nested Lists - Explanation -->
+            <div class="slide">
+                <h2><span class="emoji">🔍</span>Understanding Nested Lists</h2>
+                <h3>What are nested lists?</h3>
+                <p>Lists that contain other lists as elements.</p>
+                <h3>Accessing nested items:</h3>
+                <div class="code-block"><code>matrix = [[1, 2], [3, 4], [5, 6]]
+matrix[0]       # [1, 2] (first row)
+matrix[0][0]    # 1 (first item of first row)
+matrix[0][1]    # 2 (second item of first row)
+matrix[1][0]    # 3 (first item of second row)</code></div>
+            </div>
+
+            <!-- Slide 29: Nested Lists - Examples -->
+            <div class="slide">
+                <h2><span class="emoji">📖</span>Nested Lists: Examples</h2>
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 25px; margin: 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: #d4d4d4; overflow-x: auto; line-height: 1.7;">
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Create a tic-tac-toe board</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">board</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[[</span><span style="color: #ce9178;">"X"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"O"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"X"</span><span style="color: #d4d4d4;">],</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #d4d4d4;">         [</span><span style="color: #ce9178;">"O"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"X"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"O"</span><span style="color: #d4d4d4;">],</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #d4d4d4;">         [</span><span style="color: #ce9178;">"X"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"O"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"X"</span><span style="color: #d4d4d4;">]]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Access elements</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">board</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">][</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># "X" (top-left)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">board</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">][</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># "X" (center)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">board</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">][</span><span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">]</span> <span style="color: #6a9955;"># "X" (bottom-right)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Modify elements</span></div>
+                    <div><span style="color: #9cdcfe;">board</span><span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">][</span><span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">]</span> <span style="color: #d4d4d4;">=</span> <span style="color: #ce9178;">"O"</span></div>
+                </div>
+            </div>
+
+            <!-- Slide 30: List Comprehension - Copy Code -->
+            <div class="slide" style="background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);">
+                <h2><span class="emoji">📝</span>List Comprehension: Copy This Code</h2>
+                
+                <p style="margin-bottom: 20px; font-size: 1.1rem;"><strong>Type this code into your Python editor:</strong></p>
+
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: #d4d4d4; overflow-x: auto;">
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">numbers</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">3</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">squared</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #9cdcfe;">x</span> <span style="color: #d4d4d4;">*</span> <span style="color: #9cdcfe;">x</span> <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">x</span> <span style="color: #569cd6;">in</span> <span style="color: #9cdcfe;">numbers</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">squared</span><span style="color: #d4d4d4;">)</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">evens</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #9cdcfe;">x</span> <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">x</span> <span style="color: #569cd6;">in</span> <span style="color: #9cdcfe;">numbers</span> <span style="color: #569cd6;">if</span> <span style="color: #9cdcfe;">x</span> <span style="color: #d4d4d4;">%</span> <span style="color: #b5cea8;">2</span> <span style="color: #d4d4d4;">==</span> <span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">]</span></div>
+                    <div><span style="color: #569cd6;">print</span><span style="color: #d4d4d4;">(</span><span style="color: #9cdcfe;">evens</span><span style="color: #d4d4d4;">)</span></div>
+                </div>
+
+                <div style="background: #c8e6c9; border-left: 4px solid #388e3c; padding: 15px; border-radius: 8px;">
+                    <p style="margin: 10px 0; font-size: 0.95rem;"><strong>Q1: What does squared contain?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                    
+                    <p style="margin: 15px 0 10px 0; font-size: 0.95rem;"><strong>Q2: What does evens contain?</strong></p>
+                    <p style="color: #666; font-size: 0.9rem; margin: 5px 0;">Answer: _______________________________________________</p>
+                </div>
+            </div>
+
+            <!-- Slide 31: List Comprehension - Explanation & Examples -->
+            <div class="slide">
+                <h2><span class="emoji">🔍</span>Understanding List Comprehension</h2>
+                <h3>What is it?</h3>
+                <p>A concise way to create a new list by transforming or filtering an existing list.</p>
+                <h3>Basic Syntax:</h3>
+                <div class="code-block"><code>[expression for item in iterable]</code></div>
+                <h3>With condition:</h3>
+                <div class="code-block"><code>[expression for item in iterable if condition]</code></div>
+            </div>
+
+            <!-- Slide 32: List Comprehension - More Examples -->
+            <div class="slide">
+                <h2><span class="emoji">📖</span>List Comprehension: Examples</h2>
+                <div style="background: #1e1e1e; border-radius: 8px; padding: 25px; margin: 20px 0; font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: #d4d4d4; overflow-x: auto; line-height: 1.7;">
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Create squares</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">squared</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #9cdcfe;">x</span><span style="color: #d4d4d4;">*</span><span style="color: #9cdcfe;">x</span> <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">x</span> <span style="color: #569cd6;">in</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">3</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">]]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># [1, 4, 9, 16]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Filter even numbers</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">evens</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #9cdcfe;">x</span> <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">x</span> <span style="color: #569cd6;">in</span> <span style="color: #d4d4d4;">[</span><span style="color: #b5cea8;">1</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">2</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">3</span><span style="color: #d4d4d4;">,</span> <span style="color: #b5cea8;">4</span><span style="color: #d4d4d4;">]</span> <span style="color: #569cd6;">if</span> <span style="color: #9cdcfe;">x</span> <span style="color: #d4d4d4;">%</span> <span style="color: #b5cea8;">2</span> <span style="color: #d4d4d4;">==</span> <span style="color: #b5cea8;">0</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># [2, 4]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"></span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #6a9955;"># Create uppercase words</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">words</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #ce9178;">"hello"</span><span style="color: #d4d4d4;">,</span> <span style="color: #ce9178;">"world"</span><span style="color: #d4d4d4;">]</span></div>
+                    <div style="margin-bottom: 8px;"><span style="color: #9cdcfe;">upper</span> <span style="color: #d4d4d4;">=</span> <span style="color: #d4d4d4;">[</span><span style="color: #9cdcfe;">word</span><span style="color: #d4d4d4;">.</span><span style="color: #dcdcaa;">upper</span><span style="color: #d4d4d4;">()</span> <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">word</span> <span style="color: #569cd6;">in</span> <span style="color: #9cdcfe;">words</span><span style="color: #d4d4d4;">]</span></div>
+                    <div><span style="color: #6a9955;"># ["HELLO", "WORLD"]</span></div>
+                </div>
+            </div>
+
+            <!-- Slide 33: Summary -->
+            <div class="slide" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h2 style="color: white; text-align: center;">🎉 Lists Mastery Complete!</h2>
+                
+                <h3 style="color: rgba(255,255,255,0.95); margin-top: 30px;">Key Takeaways:</h3>
+                <ul style="color: rgba(255,255,255,0.9);">
+                    <li><strong>Create:</strong> Use square brackets to make lists</li>
+                    <li><strong>Index:</strong> Access items with [0], [1], etc.</li>
+                    <li><strong>Slice:</strong> Get portions with [start:stop:step]</li>
+                    <li><strong>Methods:</strong> Use dot notation (append, remove, pop, etc.)</li>
+                    <li><strong>Nested:</strong> Lists can contain other lists</li>
+                    <li><strong>Comprehension:</strong> Create lists concisely with conditions</li>
+                </ul>
+
+                <p style="margin-top: 40px; font-size: 1.3rem; text-align: center; color: rgba(255,255,255,0.95);">Now practice with real projects! 🚀</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" id="prevBtn" onclick="previousSlide()">← Previous</button>
+            <div class="slide-info">
+                <div class="slide-number"><span id="slideNum">1</span> / <span id="totalSlideCount">33</span></div>
+                <div class="slide-title" id="slideTitle">Python Lists</div>
+            </div>
+            <button class="control-btn" id="nextBtn" onclick="nextSlide()">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const slideTitles = [
+            'Python Lists',
+            'What Are Lists?',
+            'Creating Lists: Copy Code',
+            'Creating Lists: Explanation',
+            'Creating Lists: Examples',
+            'Creating Lists: Practice',
+            'List Indexing: Copy Code',
+            'List Indexing: Explanation',
+            'List Indexing: Examples',
+            'List Indexing: Practice',
+            'List Slicing: Copy Code',
+            'List Slicing: Explanation',
+            'List Slicing: Examples',
+            'List Slicing: Practice',
+            'List Methods Overview',
+            'append(): Copy Code',
+            'append(): Explanation',
+            'append(): Examples',
+            'append(): Practice',
+            'extend() vs append()',
+            'insert() & remove()',
+            'pop(): Copy Code',
+            'pop(): Explanation',
+            'pop(): Examples',
+            'index() & count()',
+            'sort() & reverse()',
+            'Nested Lists: Copy Code',
+            'Nested Lists: Explanation',
+            'Nested Lists: Examples',
+            'List Comprehension: Copy Code',
+            'List Comprehension: Explanation',
+            'List Comprehension: Examples',
+            'Summary'
+        ];
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n % totalSlides + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            document.getElementById('slideNum').textContent = currentSlide + 1;
+            document.getElementById('slideTitle').textContent = slideTitles[currentSlide];
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        showSlide(0);
+        document.getElementById('totalSlideCount').textContent = totalSlides;
+    </script>
+</body>
+</html>

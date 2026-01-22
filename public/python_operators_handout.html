@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Operators - Student Handout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: white;
+            line-height: 1.6;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .page {
+                page-break-after: always;
+                margin: 0;
+                padding: 0;
+            }
+            .page:last-child {
+                page-break-after: avoid;
+            }
+        }
+
+        .page {
+            width: 8.5in;
+            height: 11in;
+            margin: 0 auto;
+            padding: 0.3in;
+            background: white;
+            box-shadow: 0 0 0.2in rgba(0, 0, 0, 0.1);
+            font-size: 10pt;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 0.08in;
+            border-bottom: 1px solid #6366f1;
+            padding-bottom: 0.05in;
+        }
+
+        .header h1 {
+            font-size: 14pt;
+            color: #6366f1;
+            margin-bottom: 0.02in;
+        }
+
+        .header p {
+            font-size: 7pt;
+            color: #666;
+        }
+
+        .student-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.08in;
+            font-size: 7pt;
+            gap: 0.1in;
+        }
+
+        .student-info div {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .student-info label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.01in;
+        }
+
+        .student-info input {
+            border: none;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            font-size: 7pt;
+            padding: 0.01in 0;
+        }
+
+        .section {
+            margin-bottom: 0.12in;
+            page-break-inside: avoid;
+        }
+
+        .section-title {
+            font-size: 9pt;
+            font-weight: 700;
+            color: white;
+            background: #6366f1;
+            padding: 0.04in 0.08in;
+            margin-bottom: 0.08in;
+            border-radius: 2px;
+        }
+
+        .question {
+            margin-bottom: 0.08in;
+            padding: 0.02in 0.06in;
+            border-left: 1px solid #6366f1;
+            padding-left: 0.06in;
+            font-size: 8pt;
+            line-height: 1.2;
+        }
+
+        .question-num {
+            font-weight: 700;
+            color: #6366f1;
+            font-size: 7.5pt;
+        }
+
+        .question-text {
+            font-size: 8pt;
+            margin: 0.01in 0;
+        }
+
+        .answer-space {
+            border: 1px solid #ddd;
+            padding: 0.05in;
+            min-height: 0.45in;
+            background: #f9f9f9;
+            margin: 0.03in 0;
+            font-family: 'Courier New', monospace;
+            font-size: 7pt;
+        }
+
+        .code-example {
+            background: #f0f0f0;
+            border-left: 2px solid #8b5cf6;
+            padding: 0.08in 0.1in;
+            margin: 0.05in 0;
+            font-family: 'Courier New', monospace;
+            font-size: 8pt;
+            overflow-x: auto;
+        }
+
+        .divider {
+            border-top: 1px solid #ccc;
+            margin: 0.08in 0;
+            padding-top: 0.08in;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.1in;
+        }
+
+        .notes-section {
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
+            padding: 0.04in 0.06in;
+            margin: 0.04in 0;
+            font-size: 7pt;
+            line-height: 1.2;
+        }
+
+        .notes-section strong {
+            color: #b45309;
+            font-size: 7pt;
+        }
+
+        @media screen {
+            body {
+                background: #f0f0f0;
+                padding: 20px;
+            }
+            .page {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+            .print-button {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+                font-family: 'Poppins', sans-serif;
+                transition: all 0.3s ease;
+                z-index: 1000;
+            }
+            .print-button:hover {
+                background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+            }
+            .print-button:active {
+                transform: translateY(0);
+            }
+        }
+
+        @media print {
+            .print-button {
+                display: none;
+            }
+        }
+    </style>
+    <script>
+        function printHandout() {
+            window.print();
+        }
+    </script>
+</head>
+<body>
+    <button class="print-button" onclick="printHandout()">🖨️ Print Handout</button>
+    
+    <!-- FRONT PAGE -->
+    <div class="page">
+        <div class="header">
+            <h1>Python Operators</h1>
+            <p>Student Notes Worksheet - Page 1</p>
+        </div>
+
+        <div class="student-info">
+            <div>
+                <label>Name: ________________</label>
+            </div>
+            <div>
+                <label>Date: ________________</label>
+            </div>
+        </div>
+
+        <!-- ARITHMETIC OPERATORS -->
+        <div class="section">
+            <div class="section-title">Arithmetic Operators</div>
+            
+            <div class="question">
+                <span class="question-num">1.</span>
+                <span class="question-text">The <strong>+</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">2.</span>
+                <span class="question-text">The <strong>-</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">3.</span>
+                <span class="question-text">The <strong>*</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">4.</span>
+                <span class="question-text">The <strong>/</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">5.</span>
+                <span class="question-text">The <strong>//</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">6.</span>
+                <span class="question-text">The <strong>%</strong> (modulus) operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">7.</span>
+                <span class="question-text">The <strong>**</strong> operator means: ________________</span>
+            </div>
+        </div>
+
+        <!-- ASSIGNMENT OPERATORS -->
+        <div class="section">
+            <div class="section-title">Assignment Operators</div>
+            
+            <div class="question">
+                <span class="question-num">8.</span>
+                <span class="question-text">The <strong>=</strong> operator is used to: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">9.</span>
+                <span class="question-text">What is a compound assignment operator? ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">10.</span>
+                <span class="question-text">The <strong>+=</strong> operator does: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">11.</span>
+                <span class="question-text">The <strong>-=</strong> operator does: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">12.</span>
+                <span class="question-text">The <strong>*=</strong> operator does: ________________</span>
+            </div>
+        </div>
+
+        <!-- COMPARISON OPERATORS -->
+        <div class="section">
+            <div class="section-title">Comparison Operators</div>
+            
+            <div class="question">
+                <span class="question-num">13.</span>
+                <span class="question-text">The <strong>==</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">14.</span>
+                <span class="question-text">The <strong>!=</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">15.</span>
+                <span class="question-text">The <strong>></strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">16.</span>
+                <span class="question-text">The <strong><</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">17.</span>
+                <span class="question-text">The <strong>>=</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">18.</span>
+                <span class="question-text">The <strong><=</strong> operator means: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">19.</span>
+                <span class="question-text">Comparison operators return: <strong>True</strong> or <strong>False</strong></span>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <p style="text-align: center; font-size: 8pt; color: #999;">Page 1 of 2 - Continue on back →</p>
+    </div>
+
+    <!-- BACK PAGE -->
+    <div class="page">
+        <div class="header">
+            <h1>Python Operators</h1>
+            <p>Student Notes Worksheet - Page 2</p>
+        </div>
+
+        <!-- LOGICAL OPERATORS -->
+        <div class="section">
+            <div class="section-title">Logical Operators</div>
+            
+            <div class="question">
+                <span class="question-num">20.</span>
+                <span class="question-text">The <strong>and</strong> operator returns True when: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">21.</span>
+                <span class="question-text">The <strong>or</strong> operator returns True when: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">22.</span>
+                <span class="question-text">The <strong>not</strong> operator does: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">23.</span>
+                <span class="question-text">Example of when to use <strong>and</strong>: ________________</span>
+            </div>
+        </div>
+
+        <!-- IDENTITY OPERATORS -->
+        <div class="section">
+            <div class="section-title">Identity Operators</div>
+            
+            <div class="question">
+                <span class="question-num">24.</span>
+                <span class="question-text">The <strong>is</strong> operator checks: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">25.</span>
+                <span class="question-text">Difference between <strong>==</strong> and <strong>is</strong>: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">26.</span>
+                <span class="question-text">The <strong>is not</strong> operator means: ________________</span>
+            </div>
+        </div>
+
+        <!-- MEMBERSHIP OPERATORS -->
+        <div class="section">
+            <div class="section-title">Membership Operators</div>
+            
+            <div class="question">
+                <span class="question-num">27.</span>
+                <span class="question-text">The <strong>in</strong> operator checks: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">28.</span>
+                <span class="question-text">The <strong>not in</strong> operator checks: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">29.</span>
+                <span class="question-text">You would use <strong>in</strong> to check if something is in: ________________</span>
+            </div>
+        </div>
+
+        <!-- BITWISE OPERATORS -->
+        <div class="section">
+            <div class="section-title">Bitwise Operators</div>
+            
+            <div class="question">
+                <span class="question-num">30.</span>
+                <span class="question-text">Bitwise operators work on: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">31.</span>
+                <span class="question-text">The <strong>&</strong> (AND) operator does: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">32.</span>
+                <span class="question-text">The <strong>|</strong> (OR) operator does: ________________</span>
+            </div>
+
+            <div class="question">
+                <span class="question-num">33.</span>
+                <span class="question-text">Bitwise operators are useful for: ________________</span>
+            </div>
+        </div>
+
+        <!-- QUICK REFERENCE -->
+        <div class="section">
+            <div class="section-title">✓ My Favorite Operator Facts</div>
+            
+            <div class="question">
+                <span class="question-text">One thing I want to remember:</span>
+                <div class="answer-space" style="min-height: 0.45in;"></div>
+            </div>
+
+            <div class="question">
+                <span class="question-text">One I found confusing:</span>
+                <div class="answer-space" style="min-height: 0.45in;"></div>
+            </div>
+        </div>
+
+        <p style="text-align: center; font-size: 6pt; color: #999; margin-top: 0.04in;">Page 2 of 2</p>
+    </div>
+</body>
+</html>

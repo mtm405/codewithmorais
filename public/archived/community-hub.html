@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Hub - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="/firebase-config.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
+      color: #f0f6fc;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #21262d, #30363d);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #58a6ff, #79c0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header-nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .nav-tab {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #f0f6fc;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-tab:hover {
+      background: #30363d;
+      border-color: #58a6ff;
+    }
+    
+    .nav-tab.active {
+      background: #1f6feb;
+      border-color: #1f6feb;
+    }
+    
+    /* Main Layout */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+    }
+    
+    /* Content Sections */
+    .content-section {
+      display: none;
+    }
+    
+    .content-section.active {
+      display: block;
+    }
+    
+    /* Code Sharing Section */
+    .share-controls {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .share-form {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-group label {
+      color: #f0f6fc;
+      font-weight: 600;
+    }
+    
+    .form-input, .form-textarea, .form-select {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.75rem;
+      color: #f0f6fc;
+      font-family: inherit;
+    }
+    
+    .form-textarea {
+      font-family: 'Monaco', 'Consolas', monospace;
+      min-height: 200px;
+      resize: vertical;
+    }
+    
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: #58a6ff;
+      box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+    }
+    
+    .btn {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    
+    .btn:hover {
+      background: #2ea043;
+    }
+    
+    .btn.secondary {
+      background: #21262d;
+      border: 1px solid #30363d;
+    }
+    
+    .btn.secondary:hover {
+      background: #30363d;
+    }
+    
+    /* Code Cards */
+    .code-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+    
+    .code-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: all 0.2s ease;
+    }
+    
+    .code-card:hover {
+      border-color: #58a6ff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .code-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #58a6ff;
+      margin-bottom: 0.5rem;
+    }
+    
+    .code-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: #8b949e;
+    }
+    
+    .code-author {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #58a6ff, #79c0ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    
+    .code-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .tag {
+      background: #21262d;
+      color: #58a6ff;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      border: 1px solid #30363d;
+    }
+    
+    .code-preview {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 6px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      overflow-x: auto;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .code-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .action-btn {
+      background: none;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+    }
+    
+    .action-btn:hover {
+      border-color: #58a6ff;
+      color: #58a6ff;
+    }
+    
+    .action-btn.liked {
+      color: #f85149;
+      border-color: #f85149;
+    }
+    
+    /* Discussion Forum */
+    .discussion-item {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .discussion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .discussion-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f0f6fc;
+      margin-bottom: 0.5rem;
+    }
+    
+    .discussion-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: #8b949e;
+    }
+    
+    .reply-count {
+      background: #21262d;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .sidebar-section {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+    
+    .sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #f0f6fc;
+    }
+    
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #21262d;
+    }
+    
+    .leaderboard-item:last-child {
+      border-bottom: none;
+    }
+    
+    .rank {
+      background: #58a6ff;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin-right: 1rem;
+    }
+    
+    .rank.gold { background: #f1c40f; }
+    .rank.silver { background: #95a5a6; }
+    .rank.bronze { background: #cd7f32; }
+    
+    .user-info {
+      flex: 1;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      color: #f0f6fc;
+    }
+    
+    .user-points {
+      font-size: 0.8rem;
+      color: #8b949e;
+    }
+    
+    /* Challenges Section */
+    .challenge-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .challenge-difficulty {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .difficulty-easy {
+      background: #2ea043;
+      color: white;
+    }
+    
+    .difficulty-medium {
+      background: #fb8500;
+      color: white;
+    }
+    
+    .difficulty-hard {
+      background: #f85149;
+      color: white;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        order: -1;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header-nav {
+        flex-wrap: wrap;
+      }
+      
+      .nav-tab {
+        flex: 1;
+        justify-content: center;
+        min-width: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1><i class="fas fa-users"></i> Community Hub</h1>
+      <p>Share code, collaborate on projects, and learn together</p>
+      
+      <nav class="header-nav">
+        <a href="#" class="nav-tab active" onclick="showSection('share')" data-section="share">
+          <i class="fas fa-code"></i> Code Sharing
+        </a>
+        <a href="#" class="nav-tab" onclick="showSection('discussions')" data-section="discussions">
+          <i class="fas fa-comments"></i> Discussions
+        </a>
+        <a href="#" class="nav-tab" onclick="showSection('challenges')" data-section="challenges">
+          <i class="fas fa-trophy"></i> Challenges
+        </a>
+        <a href="#" class="nav-tab" onclick="showSection('showcase')" data-section="showcase">
+          <i class="fas fa-star"></i> Showcase
+        </a>
+      </nav>
+    </header>
+    
+    <div class="main-content">
+      <!-- Main Content Area -->
+      <main>
+        <!-- Code Sharing Section -->
+        <section class="content-section active" id="share-section">
+          <div class="share-controls">
+            <h2 style="margin-bottom: 1.5rem;">Share Your Code</h2>
+            <form class="share-form" onsubmit="shareCode(event)">
+              <div class="form-group">
+                <label for="code-title">Title</label>
+                <input type="text" id="code-title" class="form-input" placeholder="Give your code a descriptive title..." required>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label for="code-category">Category</label>
+                  <select id="code-category" class="form-select" required>
+                    <option value="">Select category...</option>
+                    <option value="beginner">Beginner Projects</option>
+                    <option value="algorithms">Algorithms</option>
+                    <option value="games">Games</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="web">Web Development</option>
+                    <option value="data">Data Analysis</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="code-difficulty">Difficulty</label>
+                  <select id="code-difficulty" class="form-select" required>
+                    <option value="">Select difficulty...</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="code-description">Description</label>
+                <textarea id="code-description" class="form-input" placeholder="Describe what your code does..." rows="3" required></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="code-content">Code</label>
+                <textarea id="code-content" class="form-textarea" placeholder="Paste your Python code here..." required></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="code-tags">Tags (comma-separated)</label>
+                <input type="text" id="code-tags" class="form-input" placeholder="python, functions, loops, beginner">
+              </div>
+              
+              <button type="submit" class="btn">
+                <i class="fas fa-share"></i> Share Code
+              </button>
+            </form>
+          </div>
+          
+          <!-- Shared Code Feed -->
+          <div class="code-grid" id="code-feed">
+            <!-- Code cards will be loaded here -->
+            <div class="code-card">
+              <div class="code-header">
+                <div>
+                  <div class="code-title">Simple Calculator Function</div>
+                  <div class="code-meta">
+                    <div class="code-author">
+                      <div class="avatar">JD</div>
+                      <span>John Doe</span>
+                    </div>
+                    <span>2 hours ago</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="code-tags">
+                <span class="tag">functions</span>
+                <span class="tag">math</span>
+                <span class="tag">beginner</span>
+              </div>
+              
+              <p style="margin-bottom: 1rem; color: #8b949e;">
+                A simple calculator function that performs basic arithmetic operations. Great for beginners learning about functions and user input.
+              </p>
+              
+              <div class="code-preview">def calculator():
+    operation = input("Enter operation (+, -, *, /): ")
+    num1 = float(input("Enter first number: "))
+    num2 = float(input("Enter second number: "))
+    
+    if operation == '+':
+        return num1 + num2
+    elif operation == '-':
+        return num1 - num2
+    elif operation == '*':
+        return num1 * num2
+    elif operation == '/':
+        return num1 / num2 if num2 != 0 else "Cannot divide by zero"
+    
+print(calculator())</div>
+              
+              <div class="code-actions">
+                <div class="action-buttons">
+                  <button class="action-btn" onclick="likeCode(this)">
+                    <i class="fas fa-heart"></i> <span>12</span>
+                  </button>
+                  <button class="action-btn" onclick="forkCode(this)">
+                    <i class="fas fa-code-branch"></i> Fork
+                  </button>
+                  <button class="action-btn" onclick="runCode(this)">
+                    <i class="fas fa-play"></i> Run
+                  </button>
+                </div>
+                <span class="difficulty-easy">Easy</span>
+              </div>
+            </div>
+            
+            <div class="code-card">
+              <div class="code-header">
+                <div>
+                  <div class="code-title">Password Generator</div>
+                  <div class="code-meta">
+                    <div class="code-author">
+                      <div class="avatar">AS</div>
+                      <span>Alice Smith</span>
+                    </div>
+                    <span>1 day ago</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="code-tags">
+                <span class="tag">security</span>
+                <span class="tag">random</span>
+                <span class="tag">strings</span>
+              </div>
+              
+              <p style="margin-bottom: 1rem; color: #8b949e;">
+                Generate secure passwords with customizable length and character sets. Includes options for letters, numbers, and symbols.
+              </p>
+              
+              <div class="code-preview">import random
+import string
+
+def generate_password(length=12, include_symbols=True):
+    characters = string.ascii_letters + string.digits
+    if include_symbols:
+        characters += "!@#$%^&*"
+    
+    password = ''.join(random.choice(characters) for _ in range(length))
+    return password
+
+# Usage
+print(generate_password(16, True))</div>
+              
+              <div class="code-actions">
+                <div class="action-buttons">
+                  <button class="action-btn liked" onclick="likeCode(this)">
+                    <i class="fas fa-heart"></i> <span>28</span>
+                  </button>
+                  <button class="action-btn" onclick="forkCode(this)">
+                    <i class="fas fa-code-branch"></i> Fork
+                  </button>
+                  <button class="action-btn" onclick="runCode(this)">
+                    <i class="fas fa-play"></i> Run
+                  </button>
+                </div>
+                <span class="difficulty-medium">Medium</span>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Discussions Section -->
+        <section class="content-section" id="discussions-section">
+          <div class="share-controls">
+            <h2 style="margin-bottom: 1.5rem;">Start a Discussion</h2>
+            <form class="share-form" onsubmit="createDiscussion(event)">
+              <div class="form-group">
+                <label for="discussion-title">Title</label>
+                <input type="text" id="discussion-title" class="form-input" placeholder="Ask a question or start a topic..." required>
+              </div>
+              
+              <div class="form-group">
+                <label for="discussion-category">Category</label>
+                <select id="discussion-category" class="form-select" required>
+                  <option value="">Select category...</option>
+                  <option value="help">Help & Support</option>
+                  <option value="general">General Discussion</option>
+                  <option value="projects">Project Ideas</option>
+                  <option value="resources">Learning Resources</option>
+                  <option value="careers">Career Advice</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="discussion-content">Description</label>
+                <textarea id="discussion-content" class="form-textarea" placeholder="Describe your question or topic in detail..." rows="4" required></textarea>
+              </div>
+              
+              <button type="submit" class="btn">
+                <i class="fas fa-plus"></i> Create Discussion
+              </button>
+            </form>
+          </div>
+          
+          <div id="discussions-feed">
+            <div class="discussion-item">
+              <div class="discussion-header">
+                <div>
+                  <div class="discussion-title">How to debug "IndexError: list index out of range"?</div>
+                  <div class="discussion-meta">
+                    <div class="code-author">
+                      <div class="avatar">BJ</div>
+                      <span>Bob Johnson</span>
+                    </div>
+                    <span>3 hours ago</span>
+                    <span class="tag">help</span>
+                  </div>
+                </div>
+                <div class="reply-count">
+                  <i class="fas fa-comment"></i> 5 replies
+                </div>
+              </div>
+              
+              <p style="color: #8b949e; line-height: 1.5;">
+                I keep getting this error when trying to access elements in my list. I've checked the length of the list but I'm still confused. Can someone help me understand what's happening?
+              </p>
+            </div>
+            
+            <div class="discussion-item">
+              <div class="discussion-header">
+                <div>
+                  <div class="discussion-title">Best practices for organizing Python project structure?</div>
+                  <div class="discussion-meta">
+                    <div class="code-author">
+                      <div class="avatar">ML</div>
+                      <span>Maria Lopez</span>
+                    </div>
+                    <span>1 day ago</span>
+                    <span class="tag">projects</span>
+                  </div>
+                </div>
+                <div class="reply-count">
+                  <i class="fas fa-comment"></i> 12 replies
+                </div>
+              </div>
+              
+              <p style="color: #8b949e; line-height: 1.5;">
+                I'm working on my first larger Python project and wondering about the best way to organize my files and folders. What naming conventions and directory structures do you recommend?
+              </p>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Challenges Section -->
+        <section class="content-section" id="challenges-section">
+          <h2 style="margin-bottom: 2rem;">Weekly Coding Challenges</h2>
+          
+          <div class="challenge-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+              <div>
+                <span class="challenge-difficulty difficulty-easy">Easy</span>
+                <h3 style="margin: 0.5rem 0;">FizzBuzz Challenge</h3>
+              </div>
+              <div style="text-align: right; color: #8b949e; font-size: 0.85rem;">
+                <div>Ends in 5 days</div>
+                <div>87 participants</div>
+              </div>
+            </div>
+            
+            <p style="color: #8b949e; margin-bottom: 1rem;">
+              Write a program that prints numbers 1 to 100, but for multiples of 3 print "Fizz", for multiples of 5 print "Buzz", and for multiples of both print "FizzBuzz".
+            </p>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="color: #58a6ff;">
+                <i class="fas fa-trophy"></i> Prize: 50 points
+              </div>
+              <button class="btn" onclick="joinChallenge('fizzbuzz')">
+                <i class="fas fa-code"></i> Join Challenge
+              </button>
+            </div>
+          </div>
+          
+          <div class="challenge-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+              <div>
+                <span class="challenge-difficulty difficulty-medium">Medium</span>
+                <h3 style="margin: 0.5rem 0;">Data Processing Pipeline</h3>
+              </div>
+              <div style="text-align: right; color: #8b949e; font-size: 0.85rem;">
+                <div>Ends in 12 days</div>
+                <div>34 participants</div>
+              </div>
+            </div>
+            
+            <p style="color: #8b949e; margin-bottom: 1rem;">
+              Build a data processing pipeline that reads CSV files, cleans the data, performs calculations, and generates a summary report.
+            </p>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="color: #58a6ff;">
+                <i class="fas fa-trophy"></i> Prize: 150 points
+              </div>
+              <button class="btn" onclick="joinChallenge('data-pipeline')">
+                <i class="fas fa-code"></i> Join Challenge
+              </button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Showcase Section -->
+        <section class="content-section" id="showcase-section">
+          <h2 style="margin-bottom: 2rem;">Student Showcase</h2>
+          <p style="color: #8b949e; margin-bottom: 2rem;">
+            Featuring the most creative and impressive projects from our community members.
+          </p>
+          
+          <div class="code-grid">
+            <div class="code-card" style="border: 2px solid #f1c40f;">
+              <div style="background: #f1c40f; color: #000; padding: 0.5rem 1rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 8px 8px 0 0; font-weight: 600; text-align: center;">
+                🏆 Featured Project
+              </div>
+              
+              <div class="code-header">
+                <div>
+                  <div class="code-title">Snake Game with AI</div>
+                  <div class="code-meta">
+                    <div class="code-author">
+                      <div class="avatar">EP</div>
+                      <span>Emma Parker</span>
+                    </div>
+                    <span>Featured this week</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="code-tags">
+                <span class="tag">pygame</span>
+                <span class="tag">ai</span>
+                <span class="tag">game</span>
+                <span class="tag">advanced</span>
+              </div>
+              
+              <p style="margin-bottom: 1rem; color: #8b949e;">
+                A complete Snake game implementation with an AI player that uses pathfinding algorithms to play automatically. Features smooth animations, score tracking, and multiple difficulty levels.
+              </p>
+              
+              <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <button class="btn" style="flex: 1;">
+                  <i class="fas fa-play"></i> Play Demo
+                </button>
+                <button class="btn secondary" style="flex: 1;">
+                  <i class="fas fa-code"></i> View Code
+                </button>
+              </div>
+              
+              <div style="color: #8b949e; font-size: 0.85rem; text-align: center;">
+                <i class="fas fa-heart"></i> 156 likes • <i class="fas fa-eye"></i> 2.1k views
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <!-- Leaderboard -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">
+            <i class="fas fa-trophy"></i> Top Contributors
+          </div>
+          
+          <div class="leaderboard-item">
+            <div class="rank gold">1</div>
+            <div class="user-info">
+              <div class="user-name">Alex Chen</div>
+              <div class="user-points">2,450 points</div>
+            </div>
+          </div>
+          
+          <div class="leaderboard-item">
+            <div class="rank silver">2</div>
+            <div class="user-info">
+              <div class="user-name">Sarah Wilson</div>
+              <div class="user-points">2,130 points</div>
+            </div>
+          </div>
+          
+          <div class="leaderboard-item">
+            <div class="rank bronze">3</div>
+            <div class="user-info">
+              <div class="user-name">Mike Rodriguez</div>
+              <div class="user-points">1,980 points</div>
+            </div>
+          </div>
+          
+          <div class="leaderboard-item">
+            <div class="rank">4</div>
+            <div class="user-info">
+              <div class="user-name">Lisa Zhang</div>
+              <div class="user-points">1,750 points</div>
+            </div>
+          </div>
+          
+          <div class="leaderboard-item">
+            <div class="rank">5</div>
+            <div class="user-info">
+              <div class="user-name">David Kim</div>
+              <div class="user-points">1,620 points</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">
+            <i class="fas fa-chart-line"></i> Community Stats
+          </div>
+          
+          <div style="display: grid; gap: 1rem;">
+            <div style="text-align: center; padding: 1rem; background: #0d1117; border-radius: 6px;">
+              <div style="font-size: 2rem; font-weight: bold; color: #58a6ff;">1,247</div>
+              <div style="color: #8b949e; font-size: 0.85rem;">Code Snippets Shared</div>
+            </div>
+            
+            <div style="text-align: center; padding: 1rem; background: #0d1117; border-radius: 6px;">
+              <div style="font-size: 2rem; font-weight: bold; color: #f85149;">89</div>
+              <div style="color: #8b949e; font-size: 0.85rem;">Active Discussions</div>
+            </div>
+            
+            <div style="text-align: center; padding: 1rem; background: #0d1117; border-radius: 6px;">
+              <div style="font-size: 2rem; font-weight: bold; color: #2ea043;">456</div>
+              <div style="color: #8b949e; font-size: 0.85rem;">Community Members</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">
+            <i class="fas fa-clock"></i> Recent Activity
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="font-size: 0.85rem;">
+              <div style="color: #58a6ff; font-weight: 600;">Alex Chen</div>
+              <div style="color: #8b949e;">shared "Binary Search Algorithm"</div>
+              <div style="color: #6e7681; font-size: 0.75rem;">5 minutes ago</div>
+            </div>
+            
+            <div style="font-size: 0.85rem;">
+              <div style="color: #58a6ff; font-weight: 600;">Sarah Wilson</div>
+              <div style="color: #8b949e;">replied to "Python Virtual Environments"</div>
+              <div style="color: #6e7681; font-size: 0.75rem;">12 minutes ago</div>
+            </div>
+            
+            <div style="font-size: 0.85rem;">
+              <div style="color: #58a6ff; font-weight: 600;">Mike Rodriguez</div>
+              <div style="color: #8b949e;">completed "Data Structures Challenge"</div>
+              <div style="color: #6e7681; font-size: 0.75rem;">1 hour ago</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">
+            <i class="fas fa-link"></i> Quick Links
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="/dashboard.html" class="nav-tab" style="justify-content: flex-start;">
+              <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="/lessons" class="nav-tab" style="justify-content: flex-start;">
+              <i class="fas fa-book"></i> Lessons
+            </a>
+            <a href="/ide-pro.html" class="nav-tab" style="justify-content: flex-start;">
+              <i class="fas fa-code"></i> IDE Pro
+            </a>
+            <a href="/assessment-center.html" class="nav-tab" style="justify-content: flex-start;">
+              <i class="fas fa-graduation-cap"></i> Assessments
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // Section switching
+    function showSection(sectionName) {
+      // Update nav tabs
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.section === sectionName);
+      });
+      
+      // Update content sections
+      document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(`${sectionName}-section`).classList.add('active');
+    }
+
+    // Code sharing
+    function shareCode(event) {
+      event.preventDefault();
+      
+      const title = document.getElementById('code-title').value;
+      const category = document.getElementById('code-category').value;
+      const difficulty = document.getElementById('code-difficulty').value;
+      const description = document.getElementById('code-description').value;
+      const code = document.getElementById('code-content').value;
+      const tags = document.getElementById('code-tags').value.split(',').map(tag => tag.trim());
+      
+      // Create new code card
+      const codeCard = createCodeCard({
+        title,
+        category,
+        difficulty,
+        description,
+        code,
+        tags,
+        author: 'You',
+        time: 'Just now',
+        likes: 0
+      });
+      
+      // Add to feed
+      const feed = document.getElementById('code-feed');
+      feed.insertBefore(codeCard, feed.firstChild);
+      
+      // Reset form
+      event.target.reset();
+      
+      // Show success message
+      alert('Code shared successfully! 🎉');
+    }
+
+    function createCodeCard(data) {
+      const card = document.createElement('div');
+      card.className = 'code-card';
+      
+      card.innerHTML = `
+        <div class="code-header">
+          <div>
+            <div class="code-title">${data.title}</div>
+            <div class="code-meta">
+              <div class="code-author">
+                <div class="avatar">${data.author.charAt(0)}</div>
+                <span>${data.author}</span>
+              </div>
+              <span>${data.time}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="code-tags">
+          ${data.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+        </div>
+        
+        <p style="margin-bottom: 1rem; color: #8b949e;">
+          ${data.description}
+        </p>
+        
+        <div class="code-preview">${data.code}</div>
+        
+        <div class="code-actions">
+          <div class="action-buttons">
+            <button class="action-btn" onclick="likeCode(this)">
+              <i class="fas fa-heart"></i> <span>${data.likes}</span>
+            </button>
+            <button class="action-btn" onclick="forkCode(this)">
+              <i class="fas fa-code-branch"></i> Fork
+            </button>
+            <button class="action-btn" onclick="runCode(this)">
+              <i class="fas fa-play"></i> Run
+            </button>
+          </div>
+          <span class="difficulty-${data.difficulty.toLowerCase()}">${data.difficulty}</span>
+        </div>
+      `;
+      
+      return card;
+    }
+
+    // Code interactions
+    function likeCode(button) {
+      const likeCount = button.querySelector('span');
+      const currentLikes = parseInt(likeCount.textContent);
+      
+      if (button.classList.contains('liked')) {
+        button.classList.remove('liked');
+        likeCount.textContent = currentLikes - 1;
+      } else {
+        button.classList.add('liked');
+        likeCount.textContent = currentLikes + 1;
+      }
+    }
+
+    function forkCode(button) {
+      const codeCard = button.closest('.code-card');
+      const codeContent = codeCard.querySelector('.code-preview').textContent;
+      
+      // Copy code to clipboard
+      navigator.clipboard.writeText(codeContent).then(() => {
+        // Create notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #2ea043;
+          color: white;
+          padding: 1rem;
+          border-radius: 8px;
+          z-index: 1000;
+          animation: slideIn 0.3s ease;
+        `;
+        notification.textContent = 'Code copied to clipboard! 📋';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => notification.remove(), 3000);
+      });
+    }
+
+    function runCode(button) {
+      const codeCard = button.closest('.code-card');
+      const codeContent = codeCard.querySelector('.code-preview').textContent;
+      
+      // Open IDE with the code
+      localStorage.setItem('sharedCode', codeContent);
+      window.open('/ide-pro.html?shared=true', '_blank');
+    }
+
+    // Discussion creation
+    function createDiscussion(event) {
+      event.preventDefault();
+      
+      const title = document.getElementById('discussion-title').value;
+      const category = document.getElementById('discussion-category').value;
+      const content = document.getElementById('discussion-content').value;
+      
+      // Create new discussion item
+      const discussion = document.createElement('div');
+      discussion.className = 'discussion-item';
+      discussion.innerHTML = `
+        <div class="discussion-header">
+          <div>
+            <div class="discussion-title">${title}</div>
+            <div class="discussion-meta">
+              <div class="code-author">
+                <div class="avatar">Y</div>
+                <span>You</span>
+              </div>
+              <span>Just now</span>
+              <span class="tag">${category}</span>
+            </div>
+          </div>
+          <div class="reply-count">
+            <i class="fas fa-comment"></i> 0 replies
+          </div>
+        </div>
+        
+        <p style="color: #8b949e; line-height: 1.5;">
+          ${content}
+        </p>
+      `;
+      
+      // Add to feed
+      const feed = document.getElementById('discussions-feed');
+      feed.insertBefore(discussion, feed.firstChild);
+      
+      // Reset form
+      event.target.reset();
+      
+      alert('Discussion created successfully! 💬');
+    }
+
+    // Challenge interactions
+    function joinChallenge(challengeId) {
+      alert(`Joining ${challengeId} challenge! You'll be redirected to the coding environment.`);
+      // In a real implementation, this would open the challenge in the IDE
+      window.open(`/ide-pro.html?challenge=${challengeId}`, '_blank');
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Community Hub loaded successfully!');
+      
+      // Load user data if authenticated
+      // This would integrate with Firebase Auth
+      
+      // Set up real-time listeners for new posts
+      // This would use Firebase Firestore real-time updates
+    });
+  </script>
+</body>
+</html>

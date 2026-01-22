@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Detective Activity - Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: #3498db;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .challenge-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .challenge-title {
+            color: #2c3e50;
+            font-size: 1.5em;
+        }
+
+        .difficulty-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .difficulty-easy { background: #27ae60; }
+        .difficulty-medium { background: #f39c12; }
+        .difficulty-hard { background: #e74c3c; }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .line-numbers {
+            position: absolute;
+            left: 10px;
+            color: #7f8c8d;
+            user-select: none;
+        }
+
+        .code-content {
+            margin-left: 40px;
+        }
+
+        .error-highlight {
+            background-color: rgba(231, 76, 60, 0.3);
+            border-left: 3px solid #e74c3c;
+            padding-left: 10px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .option {
+            background: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            border-color: #3498db;
+            background: #e8f4fd;
+        }
+
+        .option.correct {
+            border-color: #27ae60;
+            background: #d5f4e6;
+        }
+
+        .option.incorrect {
+            border-color: #e74c3c;
+            background: #fadbd8;
+        }
+
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success { background: #27ae60; }
+        .btn-danger { background: #e74c3c; }
+
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .feedback.success {
+            background: #d5f4e6;
+            border-left: 5px solid #27ae60;
+            color: #27ae60;
+        }
+
+        .feedback.error {
+            background: #fadbd8;
+            border-left: 5px solid #e74c3c;
+            color: #e74c3c;
+        }
+
+        .hint-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .final-score {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .score-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .score-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕵️ Error Detective Activity</h1>
+            <p>Find and identify different types of Python errors!</p>
+            
+            <div class="game-stats">
+                <div class="stat-box">
+                    <div id="current-challenge">Challenge 1</div>
+                    <div>of 10</div>
+                </div>
+                <div class="stat-box">
+                    <div id="score">0</div>
+                    <div>Points</div>
+                </div>
+                <div class="stat-box">
+                    <div id="streak">0</div>
+                    <div>Streak</div>
+                </div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+        </div>
+
+        <div class="challenge-card" id="challenge-container">
+            <!-- Challenge content will be loaded here -->
+        </div>
+
+        <div class="final-score" id="final-score">
+            <h2>🎉 Challenge Complete!</h2>
+            <div class="score-details">
+                <div class="score-item">
+                    <h3 id="final-points">0</h3>
+                    <p>Total Points</p>
+                </div>
+                <div class="score-item">
+                    <h3 id="correct-answers">0</h3>
+                    <p>Correct Answers</p>
+                </div>
+                <div class="score-item">
+                    <h3 id="accuracy">0%</h3>
+                    <p>Accuracy</p>
+                </div>
+                <div class="score-item">
+                    <h3 id="best-streak">0</h3>
+                    <p>Best Streak</p>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-success" onclick="restartGame()">🔄 Play Again</button>
+                <a href="lesson-troubleshooting.html" class="btn">📚 Back to Lesson</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let currentChallengeIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let bestStreak = 0;
+        let correctAnswers = 0;
+        let selectedOption = null;
+
+        // Challenge data
+        const challenges = [
+            {
+                id: 1,
+                title: "Syntax Error: Missing Parenthesis",
+                difficulty: "easy",
+                type: "syntax",
+                code: `def greet_user(name):
+    print(f"Hello, {name}!"
+    return "Greeting sent"`,
+                lineNumbers: [1, 2, 3],
+                errorLine: 2,
+                question: "What type of error is in this code?",
+                options: [
+                    "Runtime Error - The code will crash during execution",
+                    "Logic Error - The code runs but gives wrong results", 
+                    "Syntax Error - Python cannot parse this code",
+                    "No Error - This code is perfectly fine"
+                ],
+                correct: 2,
+                explanation: "Missing closing parenthesis in the print statement. Python cannot parse this code, making it a syntax error.",
+                hint: "Look carefully at line 2. Are all parentheses properly matched?"
+            },
+            {
+                id: 2,
+                title: "Runtime Error: Index Out of Range",
+                difficulty: "easy",
+                type: "runtime",
+                code: `numbers = [1, 2, 3, 4, 5]
+for i in range(10):
+    print(f"Number at index {i}: {numbers[i]}")`,
+                lineNumbers: [1, 2, 3],
+                errorLine: 3,
+                question: "What will happen when this code runs?",
+                options: [
+                    "Syntax Error - Python cannot parse the code",
+                    "Logic Error - Wrong output but no crash",
+                    "IndexError - Trying to access non-existent list index",
+                    "The code will run perfectly without issues"
+                ],
+                correct: 2,
+                explanation: "The loop tries to access indexes 0-9, but the list only has indexes 0-4. This causes an IndexError at runtime.",
+                hint: "Count the elements in the list and compare with the range in the loop."
+            },
+            {
+                id: 3,
+                title: "Logic Error: Wrong Formula",
+                difficulty: "medium",
+                type: "logic",
+                code: `def calculate_circle_area(radius):
+    pi = 3.14159
+    area = pi * radius  # Should be pi * radius^2
+    return area
+
+result = calculate_circle_area(5)
+print(f"Area of circle: {result}")`,
+                lineNumbers: [1, 2, 3, 4, 5, 6, 7],
+                errorLine: 3,
+                question: "What's wrong with this code?",
+                options: [
+                    "Syntax Error - Invalid Python syntax",
+                    "RuntimeError - Will crash during execution", 
+                    "Logic Error - Wrong mathematical formula",
+                    "No Error - Formula is correct"
+                ],
+                correct: 2,
+                explanation: "The formula for circle area is π × radius², but the code only uses π × radius. This is a logic error.",
+                hint: "Remember the formula for the area of a circle. What's missing?"
+            },
+            {
+                id: 4,
+                title: "Type Error: String and Integer",
+                difficulty: "easy",
+                type: "runtime",
+                code: `age = input("Enter your age: ")  # input() returns string
+birth_year = 2024 - age  # Can't subtract string from int
+print(f"You were born in {birth_year}")`,
+                lineNumbers: [1, 2, 3],
+                errorLine: 2,
+                question: "What error will this code produce?",
+                options: [
+                    "ValueError - Invalid value for conversion",
+                    "TypeError - Cannot subtract string from integer",
+                    "AttributeError - Missing method or attribute", 
+                    "SyntaxError - Invalid syntax structure"
+                ],
+                correct: 1,
+                explanation: "The input() function returns a string, but we're trying to subtract it from an integer. This causes a TypeError.",
+                hint: "What data type does input() return? What operation are we trying to perform?"
+            },
+            {
+                id: 5,
+                title: "Variable Scope Issue",
+                difficulty: "medium",
+                type: "runtime",
+                code: `def process_data():
+    if True:
+        temp_result = "Processing complete"
+    
+    # temp_result is accessible here in Python
+    return temp_result.upper()
+
+def another_function():
+    print(temp_result)  # Error: temp_result not defined here`,
+                lineNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                errorLine: 8,
+                question: "What error occurs in another_function()?",
+                options: [
+                    "SyntaxError - Invalid function definition",
+                    "NameError - Variable not defined in this scope",
+                    "AttributeError - Missing string method",
+                    "No Error - Code works fine"
+                ],
+                correct: 1,
+                explanation: "temp_result is defined inside process_data() and is not accessible in another_function(). This causes a NameError.",
+                hint: "Consider variable scope. Where is temp_result defined and where is it being used?"
+            },
+            {
+                id: 6,
+                title: "Division by Zero",
+                difficulty: "easy", 
+                type: "runtime",
+                code: `def calculate_average(numbers):
+    total = sum(numbers)
+    count = len(numbers)
+    return total / count
+
+# This will cause an error
+empty_list = []
+average = calculate_average(empty_list)`,
+                lineNumbers: [1, 2, 3, 4, 5, 6, 7, 8],
+                errorLine: 4,
+                question: "What happens when we pass an empty list?",
+                options: [
+                    "Returns 0 as the average",
+                    "Returns None",
+                    "ZeroDivisionError - Division by zero",
+                    "ValueError - Invalid input"
+                ],
+                correct: 2,
+                explanation: "An empty list has length 0, so we're dividing by zero which raises a ZeroDivisionError.",
+                hint: "What is the length of an empty list? What happens when you divide by that?"
+            },
+            {
+                id: 7,
+                title: "Indentation Error",
+                difficulty: "easy",
+                type: "syntax", 
+                code: `def check_password(password):
+    if len(password) < 8:
+        return False
+    elif password.isalpha():
+        return False
+       else:  # Wrong indentation!
+        return True`,
+                lineNumbers: [1, 2, 3, 4, 5, 6, 7],
+                errorLine: 6,
+                question: "What's wrong with this code structure?",
+                options: [
+                    "Logic Error - Wrong password validation",
+                    "IndentationError - Incorrect indentation", 
+                    "SyntaxError - Invalid elif statement",
+                    "NameError - Undefined variable"
+                ],
+                correct: 1,
+                explanation: "The 'else' statement has incorrect indentation. It should align with 'if' and 'elif'.",
+                hint: "Look at the indentation of the control flow statements. Do they line up properly?"
+            },
+            {
+                id: 8,
+                title: "Dictionary KeyError",
+                difficulty: "medium",
+                type: "runtime",
+                code: `student_grades = {
+    "Alice": 85,
+    "Bob": 92,
+    "Charlie": 78
+}
+
+# This will cause an error
+print(f"David's grade: {student_grades['David']}")
+print(f"Alice's grade: {student_grades['Alice']}")`,
+                lineNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                errorLine: 8,
+                question: "What error occurs when accessing 'David'?",
+                options: [
+                    "ValueError - Invalid dictionary value",
+                    "TypeError - Wrong data type",
+                    "KeyError - Dictionary key doesn't exist",
+                    "AttributeError - Missing dictionary method"
+                ],
+                correct: 2,
+                explanation: "The key 'David' doesn't exist in the dictionary, which raises a KeyError when trying to access it.",
+                hint: "Check if the key 'David' exists in the student_grades dictionary."
+            },
+            {
+                id: 9,
+                title: "Logic Error: Infinite Loop",
+                difficulty: "hard",
+                type: "logic",
+                code: `def countdown(n):
+    while n > 0:
+        print(f"Counting: {n}")
+        # Missing: n -= 1
+        # This creates an infinite loop!
+        
+    print("Done!")
+
+countdown(5)`,
+                lineNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                errorLine: 4,
+                question: "What's the problem with this countdown function?",
+                options: [
+                    "SyntaxError - Invalid while loop syntax",
+                    "Logic Error - Infinite loop, missing counter update", 
+                    "NameError - Variable n is not defined",
+                    "TypeError - Cannot compare integer with string"
+                ],
+                correct: 1,
+                explanation: "The variable n is never decremented, so the condition n > 0 never becomes false, creating an infinite loop.",
+                hint: "What needs to happen inside the loop to eventually make the condition false?"
+            },
+            {
+                id: 10,
+                title: "Complex Error Scenario",
+                difficulty: "hard",
+                type: "multiple",
+                code: `def process_file(filename):
+    file = open(filename, 'r')  # No error handling
+    data = file.read()
+    
+    # Logic error: not closing file
+    numbers = []
+    for line in data.split('\\n'):
+        if line.strip():  # Skip empty lines
+            numbers.append(int(line))  # Potential ValueError
+    
+    return sum(numbers) / len(numbers)  # Potential ZeroDivisionError`,
+                lineNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                errorLine: null,
+                question: "How many potential errors are in this code?",
+                options: [
+                    "1 error - Only the missing file close", 
+                    "2 errors - FileNotFoundError and unclosed file",
+                    "3 errors - FileNotFound, ValueError, ZeroDivisionError",
+                    "4+ errors - Multiple runtime and logic errors"
+                ],
+                correct: 3,
+                explanation: "This code has multiple potential errors: FileNotFoundError (file doesn't exist), ValueError (non-numeric data), ZeroDivisionError (empty file), and resource leak (unclosed file).",
+                hint: "Consider what could go wrong at each step: opening file, reading data, converting to numbers, calculating average."
+            }
+        ];
+
+        function loadChallenge() {
+            const challenge = challenges[currentChallengeIndex];
+            const container = document.getElementById('challenge-container');
+            
+            let codeHtml = '';
+            challenge.code.split('\n').forEach((line, index) => {
+                const lineNumber = index + 1;
+                const isErrorLine = challenge.errorLine === lineNumber;
+                const lineClass = isErrorLine ? 'error-highlight' : '';
+                
+                codeHtml += `<div class="${lineClass}">
+                    <span class="line-number">${lineNumber}</span>
+                    ${line}
+                </div>`;
+            });
+
+            container.innerHTML = `
+                <div class="challenge-header">
+                    <h2 class="challenge-title">${challenge.title}</h2>
+                    <span class="difficulty-badge difficulty-${challenge.difficulty}">${challenge.difficulty}</span>
+                </div>
+                
+                <div class="code-block">
+                    ${codeHtml}
+                </div>
+                
+                <h3>${challenge.question}</h3>
+                
+                <div class="options">
+                    ${challenge.options.map((option, index) => `
+                        <div class="option" onclick="selectOption(${index})" data-index="${index}">
+                            <strong>${String.fromCharCode(65 + index)}</strong>. ${option}
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="hint-box" id="hint-box">
+                    💡 <strong>Hint:</strong> ${challenge.hint}
+                </div>
+                
+                <div class="feedback" id="feedback"></div>
+                
+                <div class="buttons">
+                    <button class="btn" onclick="showHint()" id="hint-btn">💡 Show Hint</button>
+                    <button class="btn" onclick="checkAnswer()" id="check-btn" disabled>Check Answer</button>
+                    <button class="btn btn-success" onclick="nextChallenge()" id="next-btn" style="display: none;">Next Challenge →</button>
+                </div>
+            `;
+            
+            updateUI();
+        }
+
+        function selectOption(index) {
+            // Clear previous selections
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Select new option
+            document.querySelector(`[data-index="${index}"]`).classList.add('selected');
+            selectedOption = index;
+            
+            // Enable check button
+            document.getElementById('check-btn').disabled = false;
+        }
+
+        function showHint() {
+            const hintBox = document.getElementById('hint-box');
+            hintBox.style.display = 'block';
+            document.getElementById('hint-btn').style.display = 'none';
+        }
+
+        function checkAnswer() {
+            const challenge = challenges[currentChallengeIndex];
+            const feedback = document.getElementById('feedback');
+            const checkBtn = document.getElementById('check-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            checkBtn.disabled = true;
+            
+            if (selectedOption === challenge.correct) {
+                // Correct answer
+                score += getPoints(challenge.difficulty);
+                streak++;
+                correctAnswers++;
+                bestStreak = Math.max(bestStreak, streak);
+                
+                feedback.className = 'feedback success';
+                feedback.innerHTML = `
+                    <h4>✅ Correct!</h4>
+                    <p>${challenge.explanation}</p>
+                    <p><strong>+${getPoints(challenge.difficulty)} points!</strong> Streak: ${streak}</p>
+                `;
+                
+                document.querySelector(`[data-index="${selectedOption}"]`).classList.add('correct');
+            } else {
+                // Wrong answer
+                streak = 0;
+                
+                feedback.className = 'feedback error';
+                feedback.innerHTML = `
+                    <h4>❌ Incorrect</h4>
+                    <p>${challenge.explanation}</p>
+                    <p>The correct answer was: <strong>${String.fromCharCode(65 + challenge.correct)}</strong></p>
+                `;
+                
+                document.querySelector(`[data-index="${selectedOption}"]`).classList.add('incorrect');
+                document.querySelector(`[data-index="${challenge.correct}"]`).classList.add('correct');
+            }
+            
+            feedback.style.display = 'block';
+            nextBtn.style.display = 'inline-block';
+            
+            updateUI();
+        }
+
+        function getPoints(difficulty) {
+            switch(difficulty) {
+                case 'easy': return 10;
+                case 'medium': return 20;
+                case 'hard': return 30;
+                default: return 10;
+            }
+        }
+
+        function nextChallenge() {
+            currentChallengeIndex++;
+            selectedOption = null;
+            
+            if (currentChallengeIndex >= challenges.length) {
+                showFinalScore();
+            } else {
+                loadChallenge();
+            }
+        }
+
+        function showFinalScore() {
+            document.getElementById('challenge-container').style.display = 'none';
+            const finalScore = document.getElementById('final-score');
+            
+            const accuracy = Math.round((correctAnswers / challenges.length) * 100);
+            
+            document.getElementById('final-points').textContent = score;
+            document.getElementById('correct-answers').textContent = `${correctAnswers}/${challenges.length}`;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+            document.getElementById('best-streak').textContent = bestStreak;
+            
+            finalScore.style.display = 'block';
+            
+            // Update progress to 100%
+            document.getElementById('progress').style.width = '100%';
+        }
+
+        function restartGame() {
+            currentChallengeIndex = 0;
+            score = 0;
+            streak = 0;
+            bestStreak = 0;
+            correctAnswers = 0;
+            selectedOption = null;
+            
+            document.getElementById('challenge-container').style.display = 'block';
+            document.getElementById('final-score').style.display = 'none';
+            
+            loadChallenge();
+        }
+
+        function updateUI() {
+            document.getElementById('current-challenge').textContent = `Challenge ${currentChallengeIndex + 1}`;
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            
+            const progress = ((currentChallengeIndex) / challenges.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChallenge();
+        });
+    </script>
+</body>
+</html>

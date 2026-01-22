@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚫 Class 4: Troubleshooting and Error Handling | Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #f0f0f0;
+        }
+
+        .objectives {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .objectives h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .objectives ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .objectives li:before {
+            content: "✓";
+            position: absolute;
+            left: 5px;
+            color: #50fa7b;
+            font-weight: bold;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .section ul li {
+            font-size: 1.02rem;
+            line-height: 1.75;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            color: #ffd700;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subsection-title {
+            color: #8be9fd;
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+        }
+
+        .vocab-table, .error-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .vocab-table th, .error-table th {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .vocab-table td, .error-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vocab-table tr:last-child td, .error-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .vocab-table .term {
+            font-weight: bold;
+            color: #ff79c6;
+            width: 20%;
+        }
+
+        .code-block {
+            background: #282a36;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #50fa7b;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .code-block .keyword { color: #ff79c6; }
+        .code-block .function { color: #50fa7b; }
+        .code-block .string { color: #f1fa8c; }
+        .code-block .number { color: #bd93f9; }
+        .code-block .comment { color: #6272a4; font-style: italic; }
+        .code-block .operator { color: #ff79c6; }
+        .code-block .variable { color: #8be9fd; }
+
+        .example-box {
+            background: rgba(80, 250, 123, 0.1);
+            border-left: 4px solid #50fa7b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-title {
+            color: #50fa7b;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .activity-box {
+            background: rgba(189, 147, 249, 0.1);
+            border-left: 4px solid #bd93f9;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .activity-title {
+            color: #bd93f9;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .quiz-box {
+            background: rgba(255, 121, 198, 0.1);
+            border-left: 4px solid #ff79c6;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .quiz-question {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .quiz-question h4 {
+            color: #ff79c6;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .quiz-options li {
+            padding: 8px 0;
+            padding-left: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-options li:hover {
+            padding-left: 30px;
+            color: #ffd700;
+        }
+
+        .answer-reveal {
+            background: rgba(80, 250, 123, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .answer-reveal.show {
+            display: block;
+        }
+
+        .btn-show-answer {
+            background: #ff79c6;
+            color: #282a36;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-show-answer:hover {
+            background: #ff92d0;
+            transform: translateY(-2px);
+        }
+
+        .math-formula {
+            color: #f1fa8c;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            background: rgba(241, 250, 140, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffd700;
+        }
+
+        .error-type {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .error-syntax {
+            background: rgba(255, 121, 198, 0.3);
+            color: #ff79c6;
+        }
+
+        .error-logic {
+            background: rgba(241, 250, 140, 0.3);
+            color: #f1fa8c;
+        }
+
+        .error-runtime {
+            background: rgba(255, 85, 85, 0.3);
+            color: #ff5555;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+        <div style="text-align: center; margin-bottom: 10px;">
+            <h3 style="color: #8be9fd; font-size: 1.1rem; font-weight: 500; margin: 0;">🎓 Python Exam Review</h3>
+        </div>
+
+        <div class="header">
+            <h1>🚫 Troubleshooting and Error Handling</h1>
+            <p>Master error detection, exception handling, and unit testing techniques</p>
+        </div>
+
+        <div class="objectives">
+            <h2>🎯 Learning Objectives</h2>
+            <ul>
+                <li><strong>Objective 5.1:</strong> Analyze, detect, and fix code segments with errors</li>
+                <li><strong>Objective 5.2:</strong> Analyze and construct code segments that handle exceptions</li>
+                <li><strong>Objective 5.3:</strong> Perform unit testing</li>
+            </ul>
+        </div>
+
+        <!-- Key Vocabulary -->
+        <div class="section">
+            <h2 class="section-title">💡 Key Vocabulary</h2>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Definition</th>
+                        <th>Context/Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term">Syntax Error</td>
+                        <td>An error that occurs when the code violates the grammatical rules of the language</td>
+                        <td>Missing a colon or parentheses</td>
+                    </tr>
+                    <tr>
+                        <td class="term">Logic Error</td>
+                        <td>An error where the code is syntactically correct but produces an unintended or incorrect result</td>
+                        <td>Using multiplication when division was intended</td>
+                    </tr>
+                    <tr>
+                        <td class="term">Runtime Error (Exception)</td>
+                        <td>An error that occurs while the program is running, causing it to crash</td>
+                        <td><span class="math-formula">TypeError, ZeroDivisionError, FileNotFoundError</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">Exception Handling</td>
+                        <td>The process of responding to runtime errors in a controlled way to prevent the program from crashing</td>
+                        <td><span class="math-formula">try, except, else, finally</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">raise</td>
+                        <td>A keyword used to manually trigger an exception</td>
+                        <td><span class="math-formula">if age < 0: raise ValueError("Age cannot be negative")</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">Unit Testing</td>
+                        <td>A software testing method where individual units (functions, methods) are tested to ensure they are fit for use</td>
+                        <td>Using the <span class="math-formula">unittest</span> module</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detailed Information -->
+        <div class="section">
+            <h2 class="section-title">📝 Detailed Information and Examples</h2>
+
+            <h3 class="subsection-title">A. Error Analysis and Fixing (Objective 5.1)</h3>
+            <p>You must be able to differentiate between the three main types of errors and fix them:</p>
+
+            <div class="example-box">
+                <div class="example-title">Example 1: Error Identification</div>
+                <table class="error-table">
+                    <thead>
+                        <tr>
+                            <th>Error Type</th>
+                            <th>Code Example</th>
+                            <th>Fix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="error-type error-syntax">Syntax Error</span></td>
+                            <td><span class="math-formula">if x > 10</span></td>
+                            <td>Add a colon: <span class="math-formula">if x > 10:</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="error-type error-logic">Logic Error</span></td>
+                            <td><span class="math-formula">avg = sum(data) * len(data)</span></td>
+                            <td>Use division: <span class="math-formula">avg = sum(data) / len(data)</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="error-type error-runtime">Runtime Error</span></td>
+                            <td><span class="math-formula">print(10 / 0)</span> (ZeroDivisionError)</td>
+                            <td>Use <span class="math-formula">try/except</span> to handle it</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="subsection-title">B. Exception Handling (Objective 5.2)</h3>
+            <p>The <span class="math-formula">try/except/else/finally</span> block allows for graceful error management.</p>
+
+            <div class="example-box">
+                <div class="example-title">Example 2: Exception Handling with try/except/finally</div>
+                <div class="code-block"><span class="keyword">try</span>:
+    <span class="variable">num1</span> <span class="operator">=</span> <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter number 1: "</span>))
+    <span class="variable">num2</span> <span class="operator">=</span> <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter number 2: "</span>))
+    <span class="variable">result</span> <span class="operator">=</span> <span class="variable">num1</span> <span class="operator">/</span> <span class="variable">num2</span>
+
+<span class="keyword">except</span> <span class="variable">ValueError</span>:
+    <span class="function">print</span>(<span class="string">"Invalid input. Please enter integers only."</span>)
+
+<span class="keyword">except</span> <span class="variable">ZeroDivisionError</span>:
+    <span class="function">print</span>(<span class="string">"Cannot divide by zero!"</span>)
+
+<span class="keyword">else</span>:
+    <span class="comment"># Runs only if NO exception occurred</span>
+    <span class="function">print</span>(<span class="string">f"Result is: <span class="variable">{result}</span>"</span>)
+
+<span class="keyword">finally</span>:
+    <span class="comment"># Always runs for cleanup</span>
+    <span class="function">print</span>(<span class="string">"Execution attempt finished."</span>)</div>
+            </div>
+
+            <div style="background: rgba(139, 233, 253, 0.1); border-left: 4px solid #8be9fd; border-radius: 10px; padding: 15px; margin: 20px 0;">
+                <strong style="color: #8be9fd;">💡 Exception Handling Flow:</strong><br>
+                • <span class="math-formula">try</span>: Code that might cause an error<br>
+                • <span class="math-formula">except</span>: Handle specific error types<br>
+                • <span class="math-formula">else</span>: Runs if no errors occurred<br>
+                • <span class="math-formula">finally</span>: Always runs (cleanup code)
+            </div>
+
+            <h3 class="subsection-title">C. Unit Testing (Objective 5.3)</h3>
+            <p>Using the <span class="math-formula">unittest</span> module is standard for unit testing, employing assert methods to check expected outcomes.</p>
+
+            <div class="example-box">
+                <div class="example-title">Example 3: Unit Testing (Conceptual)</div>
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">unittest</span>
+
+
+<span class="comment"># Function to test</span>
+<span class="keyword">def</span> <span class="function">add_numbers</span>(<span class="variable">a</span>, <span class="variable">b</span>):
+    <span class="keyword">return</span> <span class="variable">a</span> <span class="operator">+</span> <span class="variable">b</span>
+
+
+<span class="comment"># Test class inherits from unittest.TestCase</span>
+<span class="keyword">class</span> <span class="function">TestMath</span>(<span class="variable">unittest</span>.<span class="variable">TestCase</span>):
+    
+    <span class="keyword">def</span> <span class="function">test_addition</span>(<span class="variable">self</span>):
+        <span class="variable">result</span> <span class="operator">=</span> <span class="function">add_numbers</span>(<span class="number">2</span>, <span class="number">3</span>)
+        <span class="variable">self</span>.<span class="function">assertEqual</span>(<span class="variable">result</span>, <span class="number">5</span>)
+    
+    <span class="keyword">def</span> <span class="function">test_type</span>(<span class="variable">self</span>):
+        <span class="variable">result</span> <span class="operator">=</span> <span class="function">add_numbers</span>(<span class="number">1</span>, <span class="number">1</span>)
+        <span class="variable">self</span>.<span class="function">assertIsInstance</span>(<span class="variable">result</span>, <span class="function">int</span>)</div>
+                <p style="margin-top: 15px;"><strong>Common assert methods:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>• <span class="math-formula">assertEqual(a, b)</span> - Check if a == b</li>
+                    <li>• <span class="math-formula">assertTrue(x)</span> - Check if x is True</li>
+                    <li>• <span class="math-formula">assertIsInstance(a, type)</span> - Check if a is of type</li>
+                    <li>• <span class="math-formula">assertRaises(exception)</span> - Check if exception is raised</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Practical Activities -->
+        <div class="section">
+            <h2 class="section-title">🛠️ Practical Activities</h2>
+
+            <div class="activity-box">
+                <div class="activity-title">Activity 1: Debugging and Fixing</div>
+                <p><strong>Instructions:</strong> The following code is supposed to calculate the average of three numbers entered by the user. Find and fix the errors.</p>
+                <div class="code-block"><span class="comment"># Original Code with errors</span>
+<span class="keyword">try</span>:
+    <span class="variable">num1</span> <span class="operator">=</span> <span class="function">input</span>(<span class="string">"Enter first number:"</span>) <span class="comment"># Error 1: Value is str</span>
+    <span class="variable">num2</span> <span class="operator">=</span> <span class="function">input</span>(<span class="string">"Enter second number"</span>) <span class="comment"># Error 2: Missing colon (Syntax Error)</span>
+    <span class="variable">num3</span> <span class="operator">=</span> <span class="function">input</span>(<span class="string">"Enter third number: "</span>)
+    <span class="variable">avg</span> <span class="operator">=</span> <span class="variable">num1</span> <span class="operator">+</span> <span class="variable">num2</span> <span class="operator">+</span> <span class="variable">num3</span> <span class="operator">/</span> <span class="number">3.0</span> <span class="comment"># Error 3: Logic error (order of ops)</span>
+<span class="keyword">except</span> <span class="variable">ZeroDivisionError</span>: <span class="comment"># Error 4: This exception is not possible here</span>
+    <span class="function">print</span>(<span class="string">"Math error."</span>)
+finally <span class="comment"># Error 5: Missing colon (Syntax Error)</span>
+    <span class="function">print</span>(<span class="string">"Calculation finished!"</span>)</div>
+                <button class="btn-show-answer" onclick="toggleAnswer('activity1-answer')">Show Solution</button>
+                <div id="activity1-answer" class="answer-reveal">
+                    <strong>Errors Found:</strong><br>
+                    1. <span class="error-type error-logic">Logic Error</span>: input() returns string, need int() conversion<br>
+                    2. <span class="error-type error-syntax">Syntax Error</span>: Missing colon after string<br>
+                    3. <span class="error-type error-logic">Logic Error</span>: Division happens first, need parentheses<br>
+                    4. <span class="error-type error-logic">Logic Error</span>: ZeroDivisionError won't occur, should catch ValueError<br>
+                    5. <span class="error-type error-syntax">Syntax Error</span>: Missing colon after finally<br><br>
+                    <div class="code-block"><span class="comment"># Corrected Code</span>
+<span class="keyword">try</span>:
+    <span class="variable">num1</span> <span class="operator">=</span> <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter first number: "</span>))
+    <span class="variable">num2</span> <span class="operator">=</span> <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter second number: "</span>))
+    <span class="variable">num3</span> <span class="operator">=</span> <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter third number: "</span>))
+    
+    <span class="variable">avg</span> <span class="operator">=</span> (<span class="variable">num1</span> <span class="operator">+</span> <span class="variable">num2</span> <span class="operator">+</span> <span class="variable">num3</span>) <span class="operator">/</span> <span class="number">3.0</span>
+    <span class="function">print</span>(<span class="string">f"Average: <span class="variable">{avg}</span>"</span>)
+
+<span class="keyword">except</span> <span class="variable">ValueError</span>:
+    <span class="function">print</span>(<span class="string">"Invalid input. Please enter integers only."</span>)
+
+<span class="keyword">finally</span>:
+    <span class="function">print</span>(<span class="string">"Calculation finished!"</span>)</div>
+                </div>
+            </div>
+
+            <div class="activity-box">
+                <div class="activity-title">Activity 2: Raise and Handle</div>
+                <p><strong>Instructions:</strong> Write a function <span class="math-formula">check_positive(num)</span> that uses <span class="math-formula">raise</span> to throw a ValueError if the input number is less than or equal to 0. Then, call the function inside a <span class="math-formula">try...except</span> block and handle the specific ValueError exception.</p>
+                <button class="btn-show-answer" onclick="toggleAnswer('activity2-answer')">Show Solution</button>
+                <div id="activity2-answer" class="answer-reveal">
+                    <div class="code-block"><span class="keyword">def</span> <span class="function">check_positive</span>(<span class="variable">num</span>):
+    <span class="string">"""
+    Validates that a number is positive.
+    Raises ValueError if number is not positive.
+    """</span>
+    <span class="keyword">if</span> <span class="variable">num</span> <span class="operator"><=</span> <span class="number">0</span>:
+        <span class="keyword">raise</span> <span class="function">ValueError</span>(<span class="string">"Number must be positive!"</span>)
+    <span class="keyword">return</span> <span class="keyword">True</span>
+
+
+<span class="comment"># Test with exception handling</span>
+<span class="keyword">try</span>:
+    <span class="function">check_positive</span>(<span class="operator">-</span><span class="number">5</span>)
+    <span class="function">print</span>(<span class="string">"Number is valid"</span>)
+
+<span class="keyword">except</span> <span class="variable">ValueError</span> <span class="keyword">as</span> <span class="variable">e</span>:
+    <span class="function">print</span>(<span class="string">f"Error: <span class="variable">{e}</span>"</span>)
+
+<span class="comment"># Output: Error: Number must be positive!</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="section">
+            <h2 class="section-title">❓ Quiz: Review Check</h2>
+
+            <div class="quiz-box">
+                <div class="quiz-question">
+                    <h4>Question 1: What type of error is typically raised when you try to access a key that does not exist in a dictionary?</h4>
+                    <ul class="quiz-options">
+                        <li>a) Syntax Error</li>
+                        <li>b) Logic Error</li>
+                        <li>c) Runtime Error (Exception) ✓</li>
+                        <li>d) Indentation Error</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q1-answer')">Show Explanation</button>
+                    <div id="q1-answer" class="answer-reveal">
+                        <strong>Answer: c) Runtime Error (Exception)</strong><br>
+                        Accessing a non-existent dictionary key raises a <span class="math-formula">KeyError</span>, which is a runtime exception.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 2: Which keyword must you use to manually terminate a program's execution by generating an exception?</h4>
+                    <ul class="quiz-options">
+                        <li>a) <span class="math-formula">throw</span></li>
+                        <li>b) <span class="math-formula">except</span></li>
+                        <li>c) <span class="math-formula">finally</span></li>
+                        <li>d) <span class="math-formula">raise</span> ✓</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q2-answer')">Show Explanation</button>
+                    <div id="q2-answer" class="answer-reveal">
+                        <strong>Answer: d) raise</strong><br>
+                        The <span class="math-formula">raise</span> keyword is used to manually trigger an exception.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 3: The assertEqual method is part of which Python testing framework?</h4>
+                    <ul class="quiz-options">
+                        <li>a) <span class="math-formula">pydoc</span></li>
+                        <li>b) <span class="math-formula">os</span></li>
+                        <li>c) <span class="math-formula">unittest</span> ✓</li>
+                        <li>d) <span class="math-formula">sys</span></li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q3-answer')">Show Explanation</button>
+                    <div id="q3-answer" class="answer-reveal">
+                        <strong>Answer: c) unittest</strong><br>
+                        <span class="math-formula">assertEqual</span> is an assertion method from Python's <span class="math-formula">unittest</span> module.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 4: Code in the else block of a try...except structure is executed when:</h4>
+                    <ul class="quiz-options">
+                        <li>a) An exception occurs</li>
+                        <li>b) No exception occurs ✓</li>
+                        <li>c) The program terminates</li>
+                        <li>d) The finally block finishes</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q4-answer')">Show Explanation</button>
+                    <div id="q4-answer" class="answer-reveal">
+                        <strong>Answer: b) No exception occurs</strong><br>
+                        The <span class="math-formula">else</span> block runs only if the try block completes without raising an exception.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 5: What is the purpose of a Logic Error?</h4>
+                    <ul class="quiz-options">
+                        <li>a) To crash the program</li>
+                        <li>b) To violate Python's syntax rules</li>
+                        <li>c) To produce an incorrect result despite correct syntax ✓</li>
+                        <li>d) To prevent the program from starting</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q5-answer')">Show Explanation</button>
+                    <div id="q5-answer" class="answer-reveal">
+                        <strong>Answer: c) To produce an incorrect result despite correct syntax</strong><br>
+                        Logic errors don't cause crashes or syntax errors, but they produce wrong results because the logic is flawed.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

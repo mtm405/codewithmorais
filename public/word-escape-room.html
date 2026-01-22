@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Word Escape Room - Office Challenge! 📝</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3c72 50%, #0f2847 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 2px solid #2b579a;
+            box-shadow: 0 0 30px rgba(43,87,154,0.3);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(43,87,154,0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(43,87,154,0.5); }
+            to { text-shadow: 0 0 30px rgba(43,87,154,0.8), 0 0 40px rgba(43,87,154,0.5); }
+        }
+
+        .timer {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer.warning {
+            color: #ff9800;
+            animation: pulse 1s infinite;
+        }
+
+        .timer.danger {
+            color: #f44336;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .progress-bar {
+            background: rgba(0,0,0,0.3);
+            height: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            border: 2px solid #2b579a;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2b579a, #4CAF50);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .room {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .room.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .room-content {
+            background: rgba(0,0,0,0.5);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid #2b579a;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .room-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #2b579a;
+        }
+
+        .room-icon {
+            font-size: 4em;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .room-title {
+            flex: 1;
+        }
+
+        .room-title h2 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .room-title p {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+
+        .puzzle {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #2b579a;
+        }
+
+        .puzzle h3 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .word-interface {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+        }
+
+        .toolbar {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            padding: 8px 15px;
+            background: #e0e0e0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .tool-btn:hover {
+            background: #d0d0d0;
+        }
+
+        .tool-btn.active {
+            background: #2b579a;
+            color: white;
+        }
+
+        .document {
+            background: white;
+            min-height: 150px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Calibri', sans-serif;
+            line-height: 1.6;
+        }
+
+        input[type="text"], input[type="number"], textarea, select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            border: 2px solid #2b579a;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            margin: 10px 0;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(43,87,154,0.5);
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            margin: 10px 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2b579a, #4CAF50);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(43,87,154,0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid #2b579a;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(43,87,154,0.2);
+        }
+
+        .hint-box {
+            background: rgba(255,152,0,0.2);
+            border: 2px solid #ff9800;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .hint-box.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .success-message {
+            background: rgba(76,175,80,0.3);
+            border: 2px solid #4caf50;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: fadeIn 0.5s;
+        }
+
+        .error-message {
+            background: rgba(244,67,54,0.3);
+            border: 2px solid #f44336;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .choices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .choice {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #2b579a;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .choice:hover {
+            background: rgba(43,87,154,0.2);
+            transform: scale(1.05);
+        }
+
+        .choice.selected {
+            background: rgba(43,87,154,0.3);
+            border-color: #4CAF50;
+        }
+
+        .completion-screen {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .completion-screen.show {
+            display: block;
+            animation: fadeIn 1s;
+        }
+
+        .trophy {
+            font-size: 10em;
+            animation: bounce 2s infinite, rotate 3s infinite;
+        }
+
+        @keyframes rotate {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #2b579a;
+        }
+
+        .stat-value {
+            font-size: 3em;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .start-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .start-screen.hide {
+            display: none;
+        }
+
+        .story {
+            background: rgba(0,0,0,0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #ff9800;
+            font-size: 1.2em;
+            line-height: 1.8;
+        }
+
+        .image-clue {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 3px solid #2b579a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+            <div class="header">
+                <h1>📝 MICROSOFT WORD ESCAPE ROOM</h1>
+                <p style="font-size: 1.5em; margin-top: 15px;">Can you master Word to escape?</p>
+            </div>
+
+            <div class="story">
+                <p>⚠️ <strong>URGENT!</strong> You're trapped in the Microsoft Word office!</p>
+                <p style="margin-top: 15px;">Your teacher left important files locked, and you need to solve Word puzzles to unlock them and escape before the school day ends.</p>
+                <p style="margin-top: 15px;">Each room tests your Microsoft Word knowledge. Use what you know about formatting, tools, and features!</p>
+                <p style="margin-top: 15px; color: #4CAF50;">🎯 <strong>Goal:</strong> Solve all 5 Word challenges to escape!</p>
+                <p style="margin-top: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; border-left: 3px solid #4CAF50;">
+                    <strong>🔑 ANSWER KEY (For Testing):</strong><br>
+                    Room 1: Bold, Italic, Underline<br>
+                    Room 2: Bold, Save, Print, Undo<br>
+                    Room 3: Select Pictures, Tables, Shapes (not Games)<br>
+                    Room 4: Portrait, Landscape, Landscape<br>
+                    Room 5: Spell Check, Thesaurus, Word Count, Find & Replace
+                </p>
+            </div>
+
+            <button class="btn btn-primary" onclick="startGame()" style="font-size: 1.5em; padding: 20px 60px;">
+                📝 START ESCAPE ROOM
+            </button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" style="display: none;">
+            <div class="header">
+                <h1>📝 WORD ESCAPE ROOM</h1>
+                <div class="timer" id="timer">15:00</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar">Room 0 of 5</div>
+                </div>
+            </div>
+
+            <!-- Room 1: Font Formatting -->
+            <div class="room active" id="room1">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">🔤</div>
+                        <div class="room-title">
+                            <h2>Room 1: Font Formatting Lab</h2>
+                            <p>Master the font tools to unlock the door</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: Identify the Font Format</h3>
+                        <p>Look at this Word document. What formatting is applied to the text?</p>
+                        
+                        <div class="word-interface">
+                            <div class="toolbar">
+                                <span class="tool-btn">File</span>
+                                <span class="tool-btn">Home</span>
+                                <span class="tool-btn">Insert</span>
+                                <span class="tool-btn active">📄 Font</span>
+                            </div>
+                            <div class="document">
+                                <p style="font-weight: bold; font-size: 18px;">Microsoft Word</p>
+                                <p style="font-style: italic;">is a powerful tool</p>
+                                <p style="text-decoration: underline;">for creating documents!</p>
+                            </div>
+                        </div>
+
+                        <p><strong>Match each line with its formatting:</strong></p>
+                        
+                        <div style="margin: 20px 0;">
+                            <label>Line 1 "Microsoft Word" is:</label>
+                            <select id="q1_line1">
+                                <option value="">Choose...</option>
+                                <option value="bold">Bold</option>
+                                <option value="italic">Italic</option>
+                                <option value="underline">Underline</option>
+                                <option value="normal">Normal</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>Line 2 "is a powerful tool" is:</label>
+                            <select id="q1_line2">
+                                <option value="">Choose...</option>
+                                <option value="bold">Bold</option>
+                                <option value="italic">Italic</option>
+                                <option value="underline">Underline</option>
+                                <option value="normal">Normal</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>Line 3 "for creating documents!" is:</label>
+                            <select id="q1_line3">
+                                <option value="">Choose...</option>
+                                <option value="bold">Bold</option>
+                                <option value="italic">Italic</option>
+                                <option value="underline">Underline</option>
+                                <option value="normal">Normal</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="checkRoom1()">📝 Submit Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(1)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint1">
+                        <strong>💡 Hint:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Bold text is <strong>thick and dark</strong></li>
+                            <li>Italic text is <em>slanted</em></li>
+                            <li>Underline text has a <u>line under it</u></li>
+                        </ul>
+                    </div>
+
+                    <div id="room1_feedback"></div>
+                </div>
+            </div>
+
+            <!-- Room 2: Keyboard Shortcuts -->
+            <div class="room" id="room2">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">⌨️</div>
+                        <div class="room-title">
+                            <h2>Room 2: Shortcut Speedway</h2>
+                            <p>Know your keyboard shortcuts to advance</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: Keyboard Shortcut Challenge</h3>
+                        <p>What do these common Word shortcuts do?</p>
+                        
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + B</strong> does what?</label>
+                            <select id="q2_ctrlb">
+                                <option value="">Choose...</option>
+                                <option value="bold">Makes text Bold</option>
+                                <option value="copy">Copies text</option>
+                                <option value="save">Saves document</option>
+                                <option value="print">Prints document</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + S</strong> does what?</label>
+                            <select id="q2_ctrls">
+                                <option value="">Choose...</option>
+                                <option value="bold">Makes text Bold</option>
+                                <option value="copy">Copies text</option>
+                                <option value="save">Saves document</option>
+                                <option value="print">Prints document</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + P</strong> does what?</label>
+                            <select id="q2_ctrlp">
+                                <option value="">Choose...</option>
+                                <option value="paste">Pastes text</option>
+                                <option value="copy">Copies text</option>
+                                <option value="save">Saves document</option>
+                                <option value="print">Prints document</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + Z</strong> does what?</label>
+                            <select id="q2_ctrlz">
+                                <option value="">Choose...</option>
+                                <option value="undo">Undo last action</option>
+                                <option value="redo">Redo last action</option>
+                                <option value="zoom">Zoom in</option>
+                                <option value="close">Close document</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + C</strong> does what?</label>
+                            <select id="q2_ctrlc">
+                                <option value="">Choose...</option>
+                                <option value="copy">Copies text</option>
+                                <option value="cut">Cuts text</option>
+                                <option value="paste">Pastes text</option>
+                                <option value="close">Closes document</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + V</strong> does what?</label>
+                            <select id="q2_ctrlv">
+                                <option value="">Choose...</option>
+                                <option value="copy">Copies text</option>
+                                <option value="cut">Cuts text</option>
+                                <option value="paste">Pastes text</option>
+                                <option value="view">Changes view</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + X</strong> does what?</label>
+                            <select id="q2_ctrlx">
+                                <option value="">Choose...</option>
+                                <option value="copy">Copies text</option>
+                                <option value="cut">Cuts text</option>
+                                <option value="paste">Pastes text</option>
+                                <option value="exit">Exits Word</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + A</strong> does what?</label>
+                            <select id="q2_ctrla">
+                                <option value="">Choose...</option>
+                                <option value="selectall">Selects all text</option>
+                                <option value="align">Aligns text</option>
+                                <option value="about">Shows About</option>
+                                <option value="add">Adds page</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + I</strong> does what?</label>
+                            <select id="q2_ctrli">
+                                <option value="">Choose...</option>
+                                <option value="italic">Makes text Italic</option>
+                                <option value="insert">Inserts object</option>
+                                <option value="info">Shows info</option>
+                                <option value="indent">Indents text</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label><strong>Ctrl + U</strong> does what?</label>
+                            <select id="q2_ctrlu">
+                                <option value="">Choose...</option>
+                                <option value="underline">Makes text Underline</option>
+                                <option value="undo">Undoes action</option>
+                                <option value="update">Updates document</option>
+                                <option value="upload">Uploads file</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="checkRoom2()">⌨️ Submit Shortcuts</button>
+                        <button class="btn btn-secondary" onclick="showHint(2)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint2">
+                        <strong>💡 Hint:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>B = Bold, I = Italic, U = Underline</li>
+                            <li>C = Copy, V = Paste (like pouring from a V), X = Cut (like scissors)</li>
+                            <li>A = All, S = Save, P = Print, Z = Undo</li>
+                        </ul>
+                    </div>
+
+                    <div id="room2_feedback"></div>
+                </div>
+            </div>
+
+            <!-- Room 3: Insert Tab -->
+            <div class="room" id="room3">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">🖼️</div>
+                        <div class="room-title">
+                            <h2>Room 3: Insert Inspector</h2>
+                            <p>Master the Insert tab features</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: What Can You Insert?</h3>
+                        <p>Which of these can you insert using the Insert tab in Word?</p>
+                        
+                        <div class="choices">
+                            <div class="choice" onclick="toggleChoice(this, 'pictures')">
+                                <h3>🖼️</h3>
+                                <p>Pictures</p>
+                            </div>
+                            <div class="choice" onclick="toggleChoice(this, 'tables')">
+                                <h3>📊</h3>
+                                <p>Tables</p>
+                            </div>
+                            <div class="choice" onclick="toggleChoice(this, 'shapes')">
+                                <h3>⭐</h3>
+                                <p>Shapes</p>
+                            </div>
+                            <div class="choice" onclick="toggleChoice(this, 'games')">
+                                <h3>🎮</h3>
+                                <p>Video Games</p>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 20px;"><strong>Select ALL that can be inserted in Word</strong></p>
+
+                        <button class="btn btn-primary" onclick="checkRoom3()">🖼️ Submit Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(3)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint3">
+                        <strong>💡 Hint:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Think about what you use in school reports</li>
+                            <li>Pictures ✓ Tables ✓ Shapes ✓</li>
+                            <li>Can you really insert video games into a Word doc? 🤔</li>
+                        </ul>
+                    </div>
+
+                    <div id="room3_feedback"></div>
+                </div>
+            </div>
+
+            <!-- Room 4: Page Layout -->
+            <div class="room" id="room4">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">📄</div>
+                        <div class="room-title">
+                            <h2>Room 4: Page Puzzle</h2>
+                            <p>Understanding page layout and orientation</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: Portrait or Landscape?</h3>
+                        <p>A page can be in Portrait or Landscape orientation. Which is which?</p>
+                        
+                        <div style="margin: 30px 0; text-align: center;">
+                            <div style="display: inline-block; margin: 20px;">
+                                <div style="background: white; width: 150px; height: 200px; border: 3px solid #2b579a; display: inline-block;"></div>
+                                <p style="margin-top: 10px;"><strong>Page A</strong></p>
+                            </div>
+                            <div style="display: inline-block; margin: 20px;">
+                                <div style="background: white; width: 200px; height: 150px; border: 3px solid #2b579a; display: inline-block;"></div>
+                                <p style="margin-top: 10px;"><strong>Page B</strong></p>
+                            </div>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>Page A (tall and narrow) is:</label>
+                            <select id="q4_pageA">
+                                <option value="">Choose...</option>
+                                <option value="portrait">Portrait</option>
+                                <option value="landscape">Landscape</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>Page B (wide and short) is:</label>
+                            <select id="q4_pageB">
+                                <option value="">Choose...</option>
+                                <option value="portrait">Portrait</option>
+                                <option value="landscape">Landscape</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>Which orientation is good for wide tables?</label>
+                            <select id="q4_tables">
+                                <option value="">Choose...</option>
+                                <option value="portrait">Portrait</option>
+                                <option value="landscape">Landscape</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="checkRoom4()">📄 Submit Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(4)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint4">
+                        <strong>💡 Hint:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Portrait = Like a portrait painting (tall)</li>
+                            <li>Landscape = Like a landscape photo (wide)</li>
+                            <li>Wide tables fit better in wide orientation!</li>
+                        </ul>
+                    </div>
+
+                    <div id="room4_feedback"></div>
+                </div>
+            </div>
+
+            <!-- Room 5: Word Tools -->
+            <div class="room" id="room5">
+                <div class="room-content">
+                    <div class="room-header">
+                        <div class="room-icon">🔧</div>
+                        <div class="room-title">
+                            <h2>Room 5: Tools & Features</h2>
+                            <p>Final challenge - know your Word tools!</p>
+                        </div>
+                    </div>
+
+                    <div class="puzzle">
+                        <h3>🧩 Puzzle: Match the Tool to the Job</h3>
+                        <p>What Word tool would you use for each task?</p>
+                        
+                        <div style="margin: 20px 0;">
+                            <label>To check spelling mistakes:</label>
+                            <select id="q5_spelling">
+                                <option value="">Choose...</option>
+                                <option value="spellcheck">Spell Check</option>
+                                <option value="thesaurus">Thesaurus</option>
+                                <option value="wordcount">Word Count</option>
+                                <option value="find">Find & Replace</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>To find a different word with same meaning:</label>
+                            <select id="q5_synonym">
+                                <option value="">Choose...</option>
+                                <option value="spellcheck">Spell Check</option>
+                                <option value="thesaurus">Thesaurus</option>
+                                <option value="wordcount">Word Count</option>
+                                <option value="find">Find & Replace</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>To see how many words in your essay:</label>
+                            <select id="q5_words">
+                                <option value="">Choose...</option>
+                                <option value="spellcheck">Spell Check</option>
+                                <option value="thesaurus">Thesaurus</option>
+                                <option value="wordcount">Word Count</option>
+                                <option value="find">Find & Replace</option>
+                            </select>
+                        </div>
+
+                        <div style="margin: 20px 0;">
+                            <label>To change all "Mr. Smith" to "Mrs. Jones":</label>
+                            <select id="q5_replace">
+                                <option value="">Choose...</option>
+                                <option value="spellcheck">Spell Check</option>
+                                <option value="thesaurus">Thesaurus</option>
+                                <option value="wordcount">Word Count</option>
+                                <option value="find">Find & Replace</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="checkRoom5()">🔧 ESCAPE!</button>
+                        <button class="btn btn-secondary" onclick="showHint(5)">💡 Need a Hint?</button>
+                    </div>
+
+                    <div class="hint-box" id="hint5">
+                        <strong>💡 Hint:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Spell Check = fixes spelling 📝</li>
+                            <li>Thesaurus = finds synonyms (similar words) 📚</li>
+                            <li>Word Count = counts words 🔢</li>
+                            <li>Find & Replace = changes one word to another everywhere 🔄</li>
+                        </ul>
+                    </div>
+
+                    <div id="room5_feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="completion-screen" id="completionScreen">
+            <div class="trophy">🏆</div>
+            <h1 style="font-size: 3em; margin: 20px 0;">YOU ESCAPED!</h1>
+            <p style="font-size: 1.5em; margin-bottom: 30px;">You're a Microsoft Word Master!</p>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="finalTime">12:15</div>
+                    <div>Time Taken</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">5/5</div>
+                    <div>Rooms Solved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="hintsUsed">1</div>
+                    <div>Hints Used</div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="location.reload()" style="font-size: 1.5em; padding: 20px 60px; margin-top: 30px;">
+                🔄 Play Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentRoom = 1;
+        let timeLeft = 900; // 15 minutes
+        let timerInterval;
+        let hintsUsedCount = 0;
+        let room3Selected = new Set();
+
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hide');
+            document.getElementById('gameScreen').style.display = 'block';
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    gameOver();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const timerEl = document.getElementById('timer');
+            timerEl.textContent = display;
+            
+            if (timeLeft <= 300 && timeLeft > 60) {
+                timerEl.className = 'timer warning';
+            } else if (timeLeft <= 60) {
+                timerEl.className = 'timer danger';
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentRoom / 5) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressBar').textContent = `Room ${currentRoom} of 5`;
+        }
+
+        function showHint(room) {
+            document.getElementById('hint' + room).classList.add('show');
+            hintsUsedCount++;
+        }
+
+        function nextRoom() {
+            document.getElementById('room' + currentRoom).classList.remove('active');
+            currentRoom++;
+            if (currentRoom <= 5) {
+                document.getElementById('room' + currentRoom).classList.add('active');
+                updateProgress();
+            } else {
+                completeGame();
+            }
+        }
+
+        function showFeedback(roomId, success, message) {
+            const feedbackEl = document.getElementById(roomId + '_feedback');
+            feedbackEl.className = success ? 'success-message' : 'error-message';
+            feedbackEl.innerHTML = `<strong>${success ? '✅ Correct!' : '❌ Incorrect!'}</strong><p>${message}</p>`;
+            
+            if (success) {
+                setTimeout(() => nextRoom(), 2000);
+            }
+        }
+
+        // Room 1: Font Formatting
+        function checkRoom1() {
+            const line1 = document.getElementById('q1_line1').value;
+            const line2 = document.getElementById('q1_line2').value;
+            const line3 = document.getElementById('q1_line3').value;
+            
+            if (line1 === 'bold' && line2 === 'italic' && line3 === 'underline') {
+                showFeedback('room1', true, 'Perfect! You know your font formatting! The door unlocks!');
+            } else {
+                showFeedback('room1', false, 'Look carefully at how each line appears. Bold is thick, Italic is slanted, Underline has a line beneath.');
+            }
+        }
+
+        // Room 2: Shortcuts (now 11 total shortcuts)
+        function checkRoom2() {
+            const ctrlb = document.getElementById('q2_ctrlb').value;
+            const ctrls = document.getElementById('q2_ctrls').value;
+            const ctrlp = document.getElementById('q2_ctrlp').value;
+            const ctrlz = document.getElementById('q2_ctrlz').value;
+            const ctrlc = document.getElementById('q2_ctrlc').value;
+            const ctrlv = document.getElementById('q2_ctrlv').value;
+            const ctrlx = document.getElementById('q2_ctrlx').value;
+            const ctrla = document.getElementById('q2_ctrla').value;
+            const ctrli = document.getElementById('q2_ctrli').value;
+            const ctrlu = document.getElementById('q2_ctrlu').value;
+            
+            if (ctrlb === 'bold' && ctrls === 'save' && ctrlp === 'print' && ctrlz === 'undo' &&
+                ctrlc === 'copy' && ctrlv === 'paste' && ctrlx === 'cut' && ctrla === 'selectall' &&
+                ctrli === 'italic' && ctrlu === 'underline') {
+                showFeedback('room2', true, 'Excellent! You\'re a keyboard shortcut master! All 11 shortcuts correct!');
+            } else {
+                showFeedback('room2', false, 'Check your shortcuts: B=Bold, I=Italic, U=Underline, C=Copy, V=Paste, X=Cut, A=Select All, S=Save, P=Print, Z=Undo');
+            }
+        }
+
+        // Room 3: Insert Tab
+        function toggleChoice(element, value) {
+            if (room3Selected.has(value)) {
+                room3Selected.delete(value);
+                element.classList.remove('selected');
+            } else {
+                room3Selected.add(value);
+                element.classList.add('selected');
+            }
+        }
+
+        function checkRoom3() {
+            const correct = new Set(['pictures', 'tables', 'shapes']);
+            const isCorrect = room3Selected.size === correct.size && 
+                             [...room3Selected].every(item => correct.has(item));
+            
+            if (isCorrect) {
+                showFeedback('room3', true, 'Perfect! Pictures, Tables, and Shapes can all be inserted! (But not video games 😄)');
+            } else if (room3Selected.has('games')) {
+                showFeedback('room3', false, 'Video games can\'t be inserted in Word! Try selecting the correct three.');
+            } else {
+                showFeedback('room3', false, 'You can insert Pictures, Tables, AND Shapes. Make sure all three are selected!');
+            }
+        }
+
+        // Room 4: Page Layout
+        function checkRoom4() {
+            const pageA = document.getElementById('q4_pageA').value;
+            const pageB = document.getElementById('q4_pageB').value;
+            const tables = document.getElementById('q4_tables').value;
+            
+            if (pageA === 'portrait' && pageB === 'landscape' && tables === 'landscape') {
+                showFeedback('room4', true, 'Excellent! Portrait is tall, Landscape is wide. Perfect for wide tables!');
+            } else {
+                showFeedback('room4', false, 'Remember: Portrait is tall (like a portrait painting), Landscape is wide (like a landscape photo).');
+            }
+        }
+
+        // Room 5: Tools
+        function checkRoom5() {
+            const spelling = document.getElementById('q5_spelling').value;
+            const synonym = document.getElementById('q5_synonym').value;
+            const words = document.getElementById('q5_words').value;
+            const replace = document.getElementById('q5_replace').value;
+            
+            if (spelling === 'spellcheck' && synonym === 'thesaurus' && 
+                words === 'wordcount' && replace === 'find') {
+                showFeedback('room5', true, '🎉 AMAZING! You\'re a Word Master! You\'ve escaped!');
+            } else {
+                showFeedback('room5', false, 'Match each tool to what it does. Spell Check for spelling, Thesaurus for synonyms, etc.');
+            }
+        }
+
+        function completeGame() {
+            clearInterval(timerInterval);
+            const timeTaken = 900 - timeLeft;
+            const minutes = Math.floor(timeTaken / 60);
+            const seconds = timeTaken % 60;
+            
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('completionScreen').classList.add('show');
+            document.getElementById('finalTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('hintsUsed').textContent = hintsUsedCount;
+        }
+
+        function gameOver() {
+            alert('⏰ Time\'s up! The office stays locked. Try again?');
+            location.reload();
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>

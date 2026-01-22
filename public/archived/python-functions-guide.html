@@ -1,0 +1,2860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐍 Python Functions Guide: Using def</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .guide-intro {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 2px solid #2196f3;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .lesson-section {
+            background: white;
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+            border-left: 5px solid #28a745;
+        }
+        
+        .lesson-title {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .concept-card {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .concept-card h3 {
+            color: #d35400;
+            margin-top: 0;
+        }
+        
+        .syntax-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .syntax-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: left;
+        }
+        
+        .syntax-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        
+        .syntax-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .syntax-table code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d73a49;
+        }
+        
+        .code-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: 2px solid #6c5ce7;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .code-example::before {
+            content: '🐍 Python Code';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+        }
+        
+        .output-example {
+            background: #0d1117;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            font-size: 14px;
+            white-space: pre-line;
+        }
+        
+        .output-example::before {
+            content: '▶️ Output';
+            display: block;
+            color: #00ff00;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12px;
+        }
+        
+        /* Python syntax highlighting */
+        .keyword { color: #569cd6; font-weight: bold; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .number { color: #b5cea8; }
+        .function { color: #dcdcaa; }
+        .operator { color: #d4d4d4; }
+        .variable { color: #9cdcfe; }
+        .builtin { color: #4ec9b0; }
+        .docstring { color: #ce9178; font-style: italic; }
+        
+        .assignment-section {
+            background: linear-gradient(135deg, #ffebee 0%, #fce4ec 100%);
+            border: 3px solid #e91e63;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .assignment-section::before {
+            content: '🎯';
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            background: #e91e63;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .assignment-section h3 {
+            color: #c2185b;
+            margin-top: 0;
+        }
+        
+        .vs-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .vs-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+        
+        .vs-card.print-card {
+            border-left-color: #ff6b6b;
+        }
+        
+        .vs-card.return-card {
+            border-left-color: #28a745;
+        }
+        
+        .vs-card h4 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .best-practice {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .best-practice::before {
+            content: '💡 ';
+            font-size: 18px;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 2px solid #dc3545;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .warning-box::before {
+            content: '⚠️ ';
+            font-size: 18px;
+        }
+        
+        .try-button {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .try-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .hidden-content {
+            display: none;
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .export-button {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 10px 10px 0;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .export-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .nav-button {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .vs-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .syntax-table {
+                font-size: 14px;
+            }
+            
+            .code-example {
+                font-size: 12px;
+                padding: 15px;
+            }
+        }
+
+        /* Submission System Styles */
+        .submission-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #007bff;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.15);
+        }
+
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .student-info {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .submission-stats {
+            background: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+
+        .code-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            background: #f8f9fa;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .code-textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+        }
+
+        .submission-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-clear {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-change-name {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            color: #212529;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-change-name:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);
+        }
+    </style>
+    
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="function-submissions.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐍 Python Functions Guide: Using <code>def</code></h1>
+            <p style="font-size: 18px; margin: 10px 0;">Master Function Definition, Arguments, Returns, and Scope</p>
+        </div>
+
+        <div class="guide-intro">
+            <h2>📚 Guide Overview</h2>
+            <p>This guide is designed to introduce students to defining and using functions in Python, covering basic syntax, arguments, returns, and scope.</p>
+            <p><strong>You'll learn:</strong> Function definition • Arguments & parameters • Return statements • Variable scope • Best practices</p>
+        </div>
+
+        <!-- Lesson 1 -->
+        <div class="lesson-section">
+            <div class="lesson-title">
+                Lesson 1: The Basics of <code>def</code> and Arguments 🛠️
+            </div>
+
+            <div class="concept-card">
+                <h3>Why Use Functions?</h3>
+                <p>Functions are like mini-programs that perform specific tasks. They help keep code organized (<strong>modularity</strong>) and allow us to reuse the same code block without rewriting it.</p>
+            </div>
+
+            <h3>Key Syntax: Defining a Function</h3>
+            <p>The <code>def</code> keyword is used to define a function, followed by a name, parentheses for arguments, and a colon.</p>
+
+            <table class="syntax-table">
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>Explanation</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Definition</strong></td>
+                        <td>Starts the function block.</td>
+                        <td><code>def say_hello(name):</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arguments</strong></td>
+                        <td>Inputs the function needs (optional).</td>
+                        <td><code>name</code> in the example.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Body</strong></td>
+                        <td>Indented code that runs when called.</td>
+                        <td><code>print(f"Hi, {name}!")</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Calling</strong></td>
+                        <td>Executing the function.</td>
+                        <td><code>say_hello("Jamie")</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="code-example">
+<span class="comment"># Complete example</span>
+<span class="keyword">def</span> <span class="function">say_hello</span>(<span class="variable">name</span>):
+    <span class="builtin">print</span>(<span class="string">f"Hi, <span class="variable">{name}</span>!"</span>)
+
+<span class="comment"># Calling the function</span>
+<span class="function">say_hello</span>(<span class="string">"Jamie"</span>)</div>
+
+            <div class="output-example">Hi, Jamie!</div>
+
+            <div class="assignment-section">
+                <h3>Assignment 1: Simple Greetings</h3>
+                <p><strong>Task:</strong> Define a function called <code>print_info</code> that takes two arguments: <code>topic</code> and <code>day</code>.</p>
+                
+                <ul>
+                    <li><strong>Function Body:</strong> Inside the function, print a sentence using both arguments.</li>
+                    <li><strong>Call:</strong> Call the function twice with different arguments.</li>
+                </ul>
+
+                <button class="try-button" onclick="toggleContent('assignment1')">Show Example Solution</button>
+                <div id="assignment1" class="hidden-content">
+                    <div class="code-example">
+<span class="keyword">def</span> <span class="function">print_info</span>(<span class="variable">topic</span>, <span class="variable">day</span>):
+    <span class="docstring">"""Prints a message about a learning topic on a specific day."""</span>
+    <span class="builtin">print</span>(<span class="string">f"We are learning about **<span class="variable">{topic}</span>** today, which is **<span class="variable">{day}</span>**."</span>)
+
+<span class="comment"># 1. Call the function</span>
+<span class="function">print_info</span>(<span class="string">"Python Functions"</span>, <span class="string">"Monday"</span>)
+
+<span class="comment"># 2. Call it again</span>
+<span class="function">print_info</span>(<span class="string">"Arguments"</span>, <span class="string">"Tuesday"</span>)</div>
+
+                    <div class="output-example">We are learning about **Python Functions** today, which is **Monday**.
+We are learning about **Arguments** today, which is **Tuesday**.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 2 -->
+        <div class="lesson-section">
+            <div class="lesson-title">
+                Lesson 2: The Power of <code>return</code> 🔄
+            </div>
+
+            <div class="concept-card">
+                <h3>print vs. return</h3>
+                <div class="vs-comparison">
+                    <div class="vs-card print-card">
+                        <h4>🖨️ print()</h4>
+                        <p><strong>What it does:</strong> Shows a result to the user in the console. The value is <strong>not stored</strong> for later use.</p>
+                        <p><strong>Returns:</strong> <code>None</code></p>
+                    </div>
+                    <div class="vs-card return-card">
+                        <h4>↩️ return</h4>
+                        <p><strong>What it does:</strong> Sends a value back to the place where the function was called. This value can be stored in a variable or used in other calculations.</p>
+                        <p><strong>Returns:</strong> The specified value</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Key Syntax: Returning a Value</h3>
+            <p>Use the <code>return</code> keyword to specify the output of the function.</p>
+
+            <div class="code-example">
+<span class="comment"># Function that returns a value</span>
+<span class="keyword">def</span> <span class="function">add_numbers</span>(<span class="variable">a</span>, <span class="variable">b</span>):
+    <span class="variable">result</span> = <span class="variable">a</span> + <span class="variable">b</span>
+    <span class="keyword">return</span> <span class="variable">result</span>
+
+<span class="comment"># Using the returned value</span>
+<span class="variable">sum_result</span> = <span class="function">add_numbers</span>(<span class="number">5</span>, <span class="number">3</span>)
+<span class="builtin">print</span>(<span class="string">f"The sum is: <span class="variable">{sum_result}</span>"</span>)</div>
+
+            <div class="output-example">The sum is: 8</div>
+
+            <div class="assignment-section">
+                <h3>Assignment 2: The Calculation Hub</h3>
+                <p><strong>Task A (Print):</strong> Define a function <code>print_sum(a, b)</code> that prints the result of <code>a+b</code>.</p>
+                <p><strong>Task B (Return):</strong> Define a function <code>get_sum(a, b)</code> that returns the result of <code>a+b</code>.</p>
+                <p><strong>Demonstration:</strong> Try to multiply the result of each function by 5.</p>
+
+                <button class="try-button" onclick="toggleContent('assignment2')">Show Example Solution</button>
+                <div id="assignment2" class="hidden-content">
+                    <div class="code-example">
+<span class="comment"># Task A: Prints the value</span>
+<span class="keyword">def</span> <span class="function">print_sum</span>(<span class="variable">a</span>, <span class="variable">b</span>):
+    <span class="builtin">print</span>(<span class="variable">a</span> + <span class="variable">b</span>)
+
+<span class="comment"># Task B: Returns the value</span>
+<span class="keyword">def</span> <span class="function">get_sum</span>(<span class="variable">a</span>, <span class="variable">b</span>):
+    <span class="keyword">return</span> <span class="variable">a</span> + <span class="variable">b</span>
+
+<span class="comment"># Demonstration:</span>
+<span class="variable">result_a</span> = <span class="function">print_sum</span>(<span class="number">3</span>, <span class="number">7</span>)
+<span class="builtin">print</span>(<span class="string">f"Result A (print function) is: <span class="variable">{result_a}</span>"</span>) <span class="comment"># result_a will be None</span>
+
+<span class="comment"># Try to use the result (will fail or give unexpected result)</span>
+<span class="comment"># print(result_a * 5) # ERROR: Cannot multiply NoneType</span>
+
+<span class="builtin">print</span>(<span class="string">"\n---"</span>)
+
+<span class="variable">result_b</span> = <span class="function">get_sum</span>(<span class="number">3</span>, <span class="number">7</span>) <span class="comment"># result_b is 10</span>
+<span class="builtin">print</span>(<span class="string">f"Result B (return function) is: <span class="variable">{result_b}</span>"</span>)
+
+<span class="comment"># Use the returned result in a new calculation (SUCCESS!)</span>
+<span class="variable">final_value</span> = <span class="variable">result_b</span> * <span class="number">5</span>
+<span class="builtin">print</span>(<span class="string">f"Final value (result_b * 5) is: <span class="variable">{final_value}</span>"</span>)</div>
+
+                    <div class="output-example">10
+Result A (print function) is: None
+
+---
+Result B (return function) is: 10
+Final value (result_b * 5) is: 50</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 3 -->
+        <div class="lesson-section">
+            <div class="lesson-title">
+                Lesson 3: Scope and Best Practices 🖼️
+            </div>
+
+            <div class="concept-card">
+                <h3>Local vs. Global Scope</h3>
+                <p><strong>Local Scope:</strong> Variables defined inside a function (including its arguments) are local. They exist only while the function is running and cannot be accessed outside it.</p>
+                <p><strong>Global Scope:</strong> Variables defined outside any function are global and can be read anywhere in the code.</p>
+            </div>
+
+            <div class="best-practice">
+                <strong>Best Practice:</strong> Avoid using global variables inside functions. Always pass data into a function using arguments and get data out using return.
+            </div>
+
+            <div class="assignment-section">
+                <h3>Assignment 3: The Secret Variable</h3>
+                <p><strong>Task:</strong> Predict and explain the outcome of the following code.</p>
+                <p><strong>Fix:</strong> Rewrite the <code>change_value</code> function so that it correctly updates the <code>my_number</code> in the global scope using a return statement.</p>
+
+                <h4>Initial Code (Illustrates Local Scope):</h4>
+                <div class="code-example">
+<span class="variable">my_number</span> = <span class="number">10</span> <span class="comment"># This is a GLOBAL variable</span>
+
+<span class="keyword">def</span> <span class="function">change_value</span>(<span class="variable">num</span>):
+    <span class="comment"># 'new_num' is a LOCAL variable, defined only here</span>
+    <span class="variable">new_num</span> = <span class="variable">num</span> + <span class="number">5</span>
+    <span class="builtin">print</span>(<span class="string">f"Inside function, new_num is: <span class="variable">{new_num}</span>"</span>)
+
+<span class="function">change_value</span>(<span class="variable">my_number</span>)
+
+<span class="comment"># The line below is the key test:</span>
+<span class="builtin">print</span>(<span class="string">f"Outside function, my_number is still: <span class="variable">{my_number}</span>"</span>)
+<span class="comment"># Why didn't my_number change? (Answer: Local scope)</span>
+<span class="comment"># Try to print(new_num) here and see what happens (Answer: NameError)</span></div>
+
+                <div class="output-example">Inside function, new_num is: 15
+Outside function, my_number is still: 10</div>
+
+                <div class="warning-box">
+                    <strong>Why didn't <code>my_number</code> change?</strong> Because <code>new_num</code> is a local variable that only exists inside the function. The global <code>my_number</code> remains unchanged.
+                </div>
+
+                <button class="try-button" onclick="toggleContent('assignment3')">Show Fixed Code</button>
+                <div id="assignment3" class="hidden-content">
+                    <h4>Fixed Code (Using return):</h4>
+                    <div class="code-example">
+<span class="variable">my_number</span> = <span class="number">10</span>
+
+<span class="keyword">def</span> <span class="function">change_value</span>(<span class="variable">num</span>):
+    <span class="comment"># Calculate the new value</span>
+    <span class="variable">new_num</span> = <span class="variable">num</span> + <span class="number">5</span>
+    <span class="comment"># Return the new value</span>
+    <span class="keyword">return</span> <span class="variable">new_num</span>
+
+<span class="comment"># Call the function and assign the RETURNED value back to the global variable</span>
+<span class="variable">my_number</span> = <span class="function">change_value</span>(<span class="variable">my_number</span>)
+
+<span class="builtin">print</span>(<span class="string">f"Outside function, my_number is now: <span class="variable">{my_number}</span>"</span>)</div>
+
+                    <div class="output-example">Outside function, my_number is now: 15</div>
+
+                    <div class="best-practice">
+                        <strong>Key Learning:</strong> To modify a global variable, return the new value from the function and assign it back to the global variable.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced CSS for Activities -->
+        <style>
+            .activities-container {
+                margin: 40px 0;
+                padding: 0;
+            }
+            
+            .activities-header {
+                text-align: center;
+                padding: 40px 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 20px;
+                margin-bottom: 40px;
+                color: white;
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .activities-header::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+                animation: shimmer 3s ease-in-out infinite;
+            }
+            
+            @keyframes shimmer {
+                0%, 100% { transform: rotate(0deg); }
+                50% { transform: rotate(180deg); }
+            }
+            
+            .activities-header h2 {
+                font-size: 2.5em;
+                margin: 0 0 15px 0;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                position: relative;
+                z-index: 2;
+            }
+            
+            .activities-subtitle {
+                font-size: 1.2em;
+                opacity: 0.9;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .activity-card {
+                margin: 30px 0;
+                border-radius: 20px;
+                box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+                transition: all 0.4s ease;
+                position: relative;
+                overflow: hidden;
+                cursor: pointer;
+                border: 2px solid transparent;
+            }
+            
+            .activity-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+                border-color: rgba(255,255,255,0.3);
+            }
+            
+            .activity-header {
+                padding: 30px;
+                color: white;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .activity-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+                transform: translateX(-100%);
+                transition: transform 0.6s ease;
+            }
+            
+            .activity-card:hover .activity-header::before {
+                transform: translateX(100%);
+            }
+            
+            .activity-number {
+                display: inline-block;
+                width: 50px;
+                height: 50px;
+                background: rgba(255,255,255,0.2);
+                border-radius: 50%;
+                text-align: center;
+                line-height: 50px;
+                font-size: 1.5em;
+                font-weight: bold;
+                margin-right: 15px;
+                backdrop-filter: blur(10px);
+                border: 2px solid rgba(255,255,255,0.3);
+            }
+            
+            .activity-title {
+                display: inline-block;
+                vertical-align: top;
+                margin: 8px 0;
+                font-size: 1.8em;
+                font-weight: 600;
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            }
+            
+            .activity-content {
+                background: white;
+                padding: 0;
+                position: relative;
+            }
+            
+            .activity-goal {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                padding: 25px;
+                border-bottom: 3px solid #dee2e6;
+                position: relative;
+            }
+            
+            .activity-goal::before {
+                content: '🎯';
+                font-size: 2em;
+                position: absolute;
+                top: 15px;
+                right: 25px;
+                opacity: 0.3;
+            }
+            
+            .collapsible-section {
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .section-header {
+                padding: 20px 25px;
+                background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                transition: all 0.3s ease;
+                border-left: 4px solid transparent;
+            }
+            
+            .section-header:hover {
+                background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+                border-left-color: #007bff;
+            }
+            
+            .section-header h4 {
+                margin: 0;
+                color: #495057;
+                font-size: 1.2em;
+                display: flex;
+                align-items: center;
+            }
+            
+            .section-icon {
+                margin-right: 10px;
+                font-size: 1.3em;
+            }
+            
+            .expand-icon {
+                font-size: 1.5em;
+                transition: transform 0.3s ease;
+                color: #6c757d;
+            }
+            
+            .section-content {
+                padding: 25px;
+                display: none;
+                background: white;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            .section-content.active {
+                display: block;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .info-box {
+                padding: 20px;
+                border-radius: 12px;
+                margin: 20px 0;
+                position: relative;
+                border-left: 5px solid;
+                transition: all 0.3s ease;
+            }
+            
+            .info-box:hover {
+                transform: translateX(5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            
+            .info-box.formula {
+                background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+                border-left-color: #2196f3;
+            }
+            
+            .info-box.success {
+                background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+                border-left-color: #4caf50;
+            }
+            
+            .info-box.usage {
+                background: linear-gradient(135deg, #fff8e1 0%, #f3e5f5 100%);
+                border-left-color: #ff9800;
+            }
+            
+            .info-box.hint {
+                background: linear-gradient(135deg, #e0f2f1 0%, #f1f8e9 100%);
+                border-left-color: #009688;
+            }
+            
+            .code-block {
+                background: #1e1e1e;
+                color: #d4d4d4;
+                padding: 20px;
+                border-radius: 8px;
+                margin: 15px 0;
+                position: relative;
+                overflow-x: auto;
+                border: 1px solid #3c3c3c;
+            }
+            
+            .code-block::before {
+                content: '{ }';
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                color: #4fc3f7;
+                font-weight: bold;
+                opacity: 0.5;
+            }
+            
+            .code-block pre {
+                margin: 0;
+                font-family: 'Fira Code', 'Courier New', monospace;
+                font-size: 14px;
+                line-height: 1.6;
+                white-space: pre-wrap;
+            }
+            
+            .progress-tracker {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 30px;
+                border-radius: 20px;
+                margin: 40px 0;
+                color: white;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .progress-tracker::before {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+                border-radius: 20px;
+                z-index: -1;
+                animation: gradientShift 3s ease infinite;
+            }
+            
+            @keyframes gradientShift {
+                0%, 100% { filter: hue-rotate(0deg); }
+                50% { filter: hue-rotate(180deg); }
+            }
+            
+            .progress-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+                margin: 25px 0;
+            }
+            
+            .progress-item {
+                background: rgba(255,255,255,0.15);
+                padding: 20px;
+                border-radius: 15px;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.2);
+                transition: all 0.3s ease;
+            }
+            
+            .progress-item:hover {
+                background: rgba(255,255,255,0.25);
+                transform: scale(1.05);
+            }
+            
+            .progress-item h4 {
+                margin-top: 0;
+                font-size: 1.3em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+            
+            .checklist {
+                text-align: left;
+                list-style: none;
+                padding: 0;
+            }
+            
+            .checklist li {
+                padding: 8px 0;
+                position: relative;
+                padding-left: 25px;
+                transition: all 0.3s ease;
+            }
+            
+            .checklist li::before {
+                content: '☐';
+                position: absolute;
+                left: 0;
+                color: rgba(255,255,255,0.7);
+                font-size: 1.2em;
+            }
+            
+            .checklist li:hover {
+                color: #ffd700;
+                transform: translateX(5px);
+            }
+            
+            .difficulty-indicator {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: rgba(0,0,0,0.2);
+                padding: 8px 15px;
+                border-radius: 20px;
+                font-size: 0.9em;
+                font-weight: 500;
+                backdrop-filter: blur(10px);
+            }
+            
+            .difficulty-1 { border-left: 4px solid #4caf50; }
+            .difficulty-2 { border-left: 4px solid #ff9800; }
+            .difficulty-3 { border-left: 4px solid #f44336; }
+            
+            @media (max-width: 768px) {
+                .activity-header {
+                    padding: 20px;
+                }
+                
+                .activity-title {
+                    font-size: 1.4em;
+                    display: block;
+                    margin-top: 15px;
+                }
+                
+                .activity-number {
+                    display: block;
+                    margin: 0 auto 15px auto;
+                }
+                
+                .progress-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+
+        <!-- Function Creation Activities -->
+        <div class="activities-container">
+            <div class="activities-header">
+                <h2>🔧 Simple Function Practice</h2>
+                <p class="activities-subtitle">Practice the basics: create simple functions using def, parameters, and print/return statements.</p>
+            </div>
+
+            <!-- Activity 1: Simple Greeting Function -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #ff6b6b;">
+                <h3 style="color: #d32f2f; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">1</span>
+                    👋 Create a Personal Greeting Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); border: 2px solid #2196f3; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #1976d2;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>greet_student</code> that takes a student's name and age, then prints a friendly welcome message.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>greet_student</code></li>
+                    <li>Give it two parameters: <code>name</code> and <code>age</code></li>
+                    <li>Inside the function, print a message using both parameters</li>
+                    <li>Call the function with different names and ages to test it</li>
+                </ol>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">💡 Example Template:</h4>
+                <div style="background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; font-family: 'Courier New', monospace; margin: 15px 0;">
+<pre style="margin: 0; white-space: pre-wrap;">def greet_student(name, age):
+    print(f"Hello {name}! You are {age} years old.")
+    print(f"Welcome to our Python class, {name}!")
+
+# Test your function:
+greet_student("Alice", 15)
+greet_student("Bob", 16)</pre>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">✅ Expected Output:</h4>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745; font-family: 'Courier New', monospace;">
+                    Hello Alice! You are 15 years old.<br>
+                    Welcome to our Python class, Alice!<br>
+                    Hello Bob! You are 16 years old.<br>
+                    Welcome to our Python class, Bob!
+                </div>
+
+                <!-- Code Submission Box -->
+                <div class="submission-box">
+                    <div class="submission-header">
+                        <h4 style="margin: 0; color: #007bff;">📝 Submit Your Code</h4>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <div class="student-info">
+                                Student: <span class="student-name-display">Loading...</span>
+                            </div>
+                            <button class="btn-change-name" onclick="changeStudentName()">Change Name</button>
+                            <div class="submission-stats">
+                                Submissions: <span id="submission-count-1">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <textarea 
+                        id="code-input-1" 
+                        class="code-textarea" 
+                        placeholder="Type your greet_student function here...
+
+Example:
+def greet_student(name, age):
+    # Your code here
+    pass
+
+greet_student('Alice', 15)
+greet_student('Bob', 16)"></textarea>
+                    
+                    <div class="submission-buttons">
+                        <button class="btn-submit" onclick="submitActivityCode(1, 'Simple Greeting Function')">
+                            🚀 Submit Code to Teacher
+                        </button>
+                        <button class="btn-clear" onclick="clearActivityCode(1)">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 2: Simple Calculator Function -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #4facfe;">
+                <h3 style="color: #1976d2; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">2</span>
+                    🧮 Create a Simple Calculator Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>add_numbers</code> that takes two numbers and <strong>returns</strong> their sum (not just prints it).</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>add_numbers</code></li>
+                    <li>Give it two parameters: <code>num1</code> and <code>num2</code></li>
+                    <li>Calculate the sum inside the function</li>
+                    <li>Use <code>return</code> to send the result back</li>
+                    <li>Test the function by storing its result in a variable</li>
+                </ol>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">✅ Expected Output:</h4>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745; font-family: 'Courier New', monospace;">
+                    5 + 3 = 8<br>
+                    10 + 7 = 17
+                </div>
+                
+                <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 15px; margin: 20px 0;">
+                    <h5 style="margin: 0 0 10px 0; color: #856404;">🔑 Key Learning Point:</h5>
+                    <p style="margin: 0; color: #856404;">Notice how we use <code>return</code> instead of <code>print</code>. This lets us store the result in a variable and use it later!</p>
+                </div>
+
+                <!-- Code Submission Box -->
+                <div class="submission-box">
+                    <div class="submission-header">
+                        <h4 style="margin: 0; color: #007bff;">📝 Submit Your Code</h4>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <div class="student-info">
+                                Student: <span class="student-name-display">Loading...</span>
+                            </div>
+                            <div class="submission-stats">
+                                Submissions: <span id="submission-count-2">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <textarea 
+                        id="code-input-2" 
+                        class="code-textarea" 
+                        placeholder="Type your add_numbers function here...
+
+Example:
+def add_numbers(a, b):
+    # Your code here
+    return # Complete this line
+
+result1 = add_numbers(5, 3)
+result2 = add_numbers(10, 7)
+print(f'{5} + {3} = {result1}')
+print(f'{10} + {7} = {result2}')"></textarea>
+                    
+                    <div class="submission-buttons">
+                        <button class="btn-submit" onclick="submitActivityCode(2, 'Simple Calculator Function')">
+                            🚀 Submit Code to Teacher
+                        </button>
+                        <button class="btn-clear" onclick="clearActivityCode(2)">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 3: Function with Multiple Parameters -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #fa709a;">
+                <h3 style="color: #c2185b; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">3</span>
+                    📊 Create a Student Info Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #f3e5f5 0%, #fce4ec 100%); border: 2px solid #e91e63; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #ad1457;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>student_info</code> that takes a name, grade, and favorite subject, then prints a formatted summary.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>student_info</code></li>
+                    <li>Give it three parameters: <code>name</code>, <code>grade</code>, and <code>subject</code></li>
+                    <li>Print a nicely formatted report using all three parameters</li>
+                    <li>Test with different student information</li>
+                </ol>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">✅ Expected Output:</h4>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745; font-family: 'Courier New', monospace;">
+                    ==============================<br>
+                    Student Name: Emma<br>
+                    Grade Level: 10<br>
+                    Favorite Subject: Math<br>
+                    ==============================<br>
+                    ==============================<br>
+                    Student Name: Carlos<br>
+                    Grade Level: 11<br>
+                    Favorite Subject: Science<br>
+                    ==============================
+                </div>
+
+                <!-- Code Submission Box -->
+                <div class="submission-box">
+                    <div class="submission-header">
+                        <h4 style="margin: 0; color: #007bff;">📝 Submit Your Code</h4>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <div class="student-info">
+                                Student: <span class="student-name-display">Loading...</span>
+                            </div>
+                            <div class="submission-stats">
+                                Submissions: <span id="submission-count-3">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <textarea 
+                        id="code-input-3" 
+                        class="code-textarea" 
+                        placeholder="Type your student_info function here...
+
+Example:
+def student_info(name, grade, subject):
+    # Your code here - print the formatted report
+    pass
+
+student_info('Emma', 10, 'Math')
+student_info('Carlos', 11, 'Science')"></textarea>
+                    
+                    <div class="submission-buttons">
+                        <button class="btn-submit" onclick="submitActivityCode(3, 'Function with Multiple Parameters')">
+                            🚀 Submit Code to Teacher
+                        </button>
+                        <button class="btn-clear" onclick="clearActivityCode(3)">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 4: Simple Multiplier -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #9c27b0 0%, #e1bee7 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">4</span>
+                    ✖️ Create a Simple Multiplier Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #f3e5f5 0%, #fce4ec 100%); border: 2px solid #9c27b0; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #7b1fa2;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>multiply</code> that takes two numbers and returns their product.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>multiply</code></li>
+                    <li>Give it two parameters: <code>x</code> and <code>y</code></li>
+                    <li>Return the result of x × y</li>
+                    <li>Test with different number pairs</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">print(multiply(5, 3))     # Should show: 15
+print(multiply(7, 8))     # Should show: 56
+print(multiply(2, 10))    # Should show: 20</div>
+                </div>
+
+                <!-- Code Submission Box -->
+                <div class="submission-box">
+                    <div class="submission-header">
+                        <h4 style="margin: 0; color: #007bff;">📝 Submit Your Code</h4>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <div class="student-info">
+                                Student: <span class="student-name-display">Loading...</span>
+                            </div>
+                            <div class="submission-stats">
+                                Submissions: <span id="submission-count-4">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <textarea 
+                        id="code-input-4" 
+                        class="code-textarea" 
+                        placeholder="Type your multiply function here...
+
+Example:
+def multiply(x, y):
+    # Your code here
+    return # Complete this line
+
+print(multiply(5, 3))
+print(multiply(7, 8))
+print(multiply(2, 10))"></textarea>
+                    
+                    <div class="submission-buttons">
+                        <button class="btn-submit" onclick="submitActivityCode(4, 'Simple Multiplier Function')">
+                            🚀 Submit Code to Teacher
+                        </button>
+                        <button class="btn-clear" onclick="clearActivityCode(4)">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 5: Age Calculator -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #ff5722;">
+                <h3 style="color: #d84315; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #ff5722 0%, #ffccbc 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">5</span>
+                    🎂 Age Calculator Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #fbe9e7 0%, #ffccbc 100%); border: 2px solid #ff5722; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #d84315;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>calculate_age</code> that takes birth year and current year, then returns the age.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>calculate_age</code></li>
+                    <li>Give it two parameters: <code>birth_year</code> and <code>current_year</code></li>
+                    <li>Calculate and return the age (current_year - birth_year)</li>
+                    <li>Test with different birth years</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">print(calculate_age(2000, 2025))  # Should show: 25
+print(calculate_age(1995, 2025))  # Should show: 30
+print(calculate_age(2010, 2025))  # Should show: 15</div>
+                </div>
+
+                <!-- Code Submission Box -->
+                <div class="submission-box">
+                    <div class="submission-header">
+                        <h4 style="margin: 0; color: #007bff;">📝 Submit Your Code</h4>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <div class="student-info">
+                                Student: <span class="student-name-display">Loading...</span>
+                            </div>
+                            <div class="submission-stats">
+                                Submissions: <span id="submission-count-5">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <textarea 
+                        id="code-input-5" 
+                        class="code-textarea" 
+                        placeholder="Type your calculate_age function here...
+
+Example:
+def calculate_age(birth_year, current_year):
+    # Your code here
+    return # Complete this line
+
+print(calculate_age(2000, 2025))
+print(calculate_age(1995, 2025))
+print(calculate_age(2010, 2025))"></textarea>
+                    
+                    <div class="submission-buttons">
+                        <button class="btn-submit" onclick="submitActivityCode(5, 'Age Calculator Function')">
+                            🚀 Submit Code to Teacher
+                        </button>
+                        <button class="btn-clear" onclick="clearActivityCode(5)">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 6: Simple Formatter -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #795548;">
+                <h3 style="color: #5d4037; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #795548 0%, #d7ccc8 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">6</span>
+                    💬 Message Formatter Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #efebe9 0%, #d7ccc8 100%); border: 2px solid #795548; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #5d4037;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>format_message</code> that takes a message and prints it with decorative borders.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>format_message</code></li>
+                    <li>Give it one parameter: <code>message</code></li>
+                    <li>Print the message with stars or dashes around it</li>
+                    <li>Test with different messages</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">format_message("Hello World")
+# Should show: 
+*** Hello World ***
+
+format_message("Welcome")
+# Should show:
+*** Welcome ***</div>
+                </div>
+            </div>
+
+            <!-- Activity 7: Simple Circle Area -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #607d8b;">
+                <h3 style="color: #455a64; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #607d8b 0%, #cfd8dc 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">7</span>
+                    ⭕ Circle Area Calculator
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #eceff1 0%, #cfd8dc 100%); border: 2px solid #607d8b; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #455a64;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>circle_area</code> that takes a radius and returns the area (use 3.14 for π).</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>circle_area</code></li>
+                    <li>Give it one parameter: <code>radius</code></li>
+                    <li>Calculate area = 3.14 × radius × radius</li>
+                    <li>Return the calculated area</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">print(circle_area(5))    # Should show: 78.5
+print(circle_area(3))    # Should show: 28.26
+print(circle_area(10))   # Should show: 314.0</div>
+                </div>
+            </div>
+
+            <!-- Activity 8: Book Info -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #3f51b5;">
+                <h3 style="color: #303f9f; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #3f51b5 0%, #c5cae9 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">8</span>
+                    📚 Book Information Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%); border: 2px solid #3f51b5; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #303f9f;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>book_info</code> that takes title, author, and pages, then prints book details.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>book_info</code></li>
+                    <li>Give it three parameters: <code>title</code>, <code>author</code>, <code>pages</code></li>
+                    <li>Print a formatted summary of the book information</li>
+                    <li>Test with your favorite books</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">book_info("Harry Potter", "J.K. Rowling", 309)
+# Should show:
+Book: Harry Potter
+Author: J.K. Rowling
+Pages: 309</div>
+                </div>
+            </div>
+
+            <!-- Activity 9: Rectangle Perimeter -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #009688;">
+                <h3 style="color: #00695c; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #009688 0%, #b2dfdb 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">9</span>
+                    📐 Rectangle Perimeter Calculator
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%); border: 2px solid #009688; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #00695c;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>rectangle_perimeter</code> that calculates perimeter using length and width.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>rectangle_perimeter</code></li>
+                    <li>Give it two parameters: <code>length</code> and <code>width</code></li>
+                    <li>Calculate perimeter = 2 × (length + width)</li>
+                    <li>Return the perimeter value</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">print(rectangle_perimeter(5, 3))   # Should show: 16
+print(rectangle_perimeter(10, 4))  # Should show: 28
+print(rectangle_perimeter(7, 7))   # Should show: 28</div>
+                </div>
+            </div>
+
+            <!-- Activity 10: Grade Reporter -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #ff9800;">
+                <h3 style="color: #e65100; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #ff9800 0%, #ffe0b2 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">10</span>
+                    📊 Grade Report Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border: 2px solid #ff9800; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #e65100;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>grade_report</code> that takes student name and three test scores, then prints an average.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>grade_report</code></li>
+                    <li>Give it four parameters: <code>name</code>, <code>test1</code>, <code>test2</code>, <code>test3</code></li>
+                    <li>Calculate the average of the three test scores</li>
+                    <li>Print the student's name and their average grade</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">grade_report("Alice", 85, 90, 88)
+# Should show:
+Student: Alice
+Average Grade: 87.67
+
+grade_report("Bob", 78, 82, 80)
+# Should show:
+Student: Bob
+Average Grade: 80.0</div>
+                </div>
+            </div>
+
+            <!-- Activity 11: Simple Countdown -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #e91e63;">
+                <h3 style="color: #ad1457; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #e91e63 0%, #f8bbd9 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">11</span>
+                    ⏰ Simple Timer Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); border: 2px solid #e91e63; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #ad1457;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>countdown_message</code> that takes seconds and prints a countdown message.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>countdown_message</code></li>
+                    <li>Give it one parameter: <code>seconds</code></li>
+                    <li>Print a message like "Timer set for [seconds] seconds!"</li>
+                    <li>Test with different time values</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">countdown_message(30)
+# Should show: Timer set for 30 seconds!
+
+countdown_message(120)
+# Should show: Timer set for 120 seconds!</div>
+                </div>
+            </div>
+
+            <!-- Activity 12: Name Length Checker -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #673ab7;">
+                <h3 style="color: #4527a0; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #673ab7 0%, #d1c4e9 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">12</span>
+                    📏 Name Length Function
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #ede7f6 0%, #d1c4e9 100%); border: 2px solid #673ab7; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #4527a0;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>name_length</code> that takes a name and returns how many letters it has.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>name_length</code></li>
+                    <li>Give it one parameter: <code>name</code></li>
+                    <li>Use <code>len(name)</code> to count the letters</li>
+                    <li>Return the length number</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">print(name_length("Alice"))     # Should show: 5
+print(name_length("Bob"))       # Should show: 3
+print(name_length("Elizabeth")) # Should show: 9</div>
+                </div>
+            </div>
+
+            <!-- Activity 13: Pizza Cost Calculator -->
+            <div style="background: white; margin: 20px 0; padding: 30px; border-radius: 15px; box-shadow: 0 6px 25px rgba(0,0,0,0.12); border-left: 5px solid #8bc34a;">
+                <h3 style="color: #558b2f; margin-top: 0; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(135deg, #8bc34a 0%, #dcedc8 100%); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold;">13</span>
+                    🍕 Pizza Cost Calculator
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #f1f8e9 0%, #dcedc8 100%); border: 2px solid #8bc34a; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #558b2f;">🎯 Your Mission</h4>
+                    <p style="margin: 0; font-size: 1.1em;">Create a function called <code>pizza_cost</code> that calculates total cost with number of pizzas and price per pizza.</p>
+                </div>
+                
+                <h4 style="color: #333; margin: 25px 0 15px 0;">📝 What You Need to Do:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                    <li>Define a function named <code>pizza_cost</code></li>
+                    <li>Give it two parameters: <code>num_pizzas</code> and <code>price_each</code></li>
+                    <li>Calculate total = num_pizzas × price_each</li>
+                    <li>Return the total cost</li>
+                </ol>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%); border: 2px solid #4caf50; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #2e7d32;">✅ Expected Output:</h4>
+                    <div style="background: #1e1e1e; color: #f8f8f2; padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; white-space: pre-wrap;">print(pizza_cost(3, 12.50))  # Should show: 37.5
+print(pizza_cost(2, 15.00))  # Should show: 30.0
+print(pizza_cost(5, 10.99))  # Should show: 54.95</div>
+                </div>
+            </div>
+
+            <!-- Simple Progress Tracker -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 20px; margin: 40px 0; color: white; text-align: center;">
+                <h3 style="margin-top: 0; font-size: 1.8em;">🏆 Practice Complete!</h3>
+                <p style="font-size: 1.1em; margin: 20px 0;">Great job practicing the fundamentals of Python functions!</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 25px 0;">
+                    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; backdrop-filter: blur(10px);">
+                        <div style="font-size: 2em; margin-bottom: 10px;">✏️</div>
+                        <h4 style="margin: 0;">Function Definition</h4>
+                        <p style="margin: 5px 0; font-size: 0.9em;">You learned to use <code>def</code> keyword</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; backdrop-filter: blur(10px);">
+                        <div style="font-size: 2em; margin-bottom: 10px;">📥</div>
+                        <h4 style="margin: 0;">Parameters</h4>
+                        <p style="margin: 5px 0; font-size: 0.9em;">Functions can accept input values</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; backdrop-filter: blur(10px);">
+                        <div style="font-size: 2em; margin-bottom: 10px;">📤</div>
+                        <h4 style="margin: 0;">Return Values</h4>
+                        <p style="margin: 5px 0; font-size: 0.9em;">Functions can send results back</p>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 15px; margin-top: 25px;">
+                    <h4 style="margin: 0 0 10px 0;">🎯 What You've Mastered:</h4>
+                    <p style="margin: 0; text-align: left; max-width: 600px; margin: 0 auto;">
+                        ✅ Creating functions with the <code>def</code> keyword<br>
+                        ✅ Using parameters to make functions flexible<br>
+                        ✅ Printing output from functions<br>
+                        ✅ Returning values for reuse<br>
+                        ✅ Calling functions with different arguments
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary and Resources -->
+            <div class="activity-card difficulty-1" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);">
+                <div class="difficulty-indicator">⭐ Beginner</div>
+                <div class="activity-header">
+                    <span class="activity-number">1</span>
+                    <span class="activity-title">👋 Personal Greeting Function</span>
+                </div>
+                
+                <div class="activity-content">
+                    <div class="activity-goal">
+                        <h4 style="margin: 0 0 10px 0; color: #2c3e50;">🎯 Challenge Goal</h4>
+                        <p style="margin: 0; font-size: 1.1em; color: #495057;">Create a simple function that takes a name and age, then prints a personalized greeting message!</p>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">�</span>Step-by-Step Instructions</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div style="display: grid; gap: 15px;">
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
+                                    <span style="font-size: 2em; margin-right: 15px;">1️⃣</span>
+                                    <div>
+                                        <strong>Function Definition:</strong> Create a function named <code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">greet_student</code> with parameters <code>name</code> and <code>age</code>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
+                                    <span style="font-size: 2em; margin-right: 15px;">2️⃣</span>
+                                    <div>
+                                        <strong>Print Message:</strong> Inside the function, print a welcome message using both parameters
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffc107;">
+                                    <span style="font-size: 2em; margin-right: 15px;">3️⃣</span>
+                                    <div>
+                                        <strong>Call the Function:</strong> Test your function by calling it with different names and ages
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Just-in-Time Learning: Conditional Logic -->
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">📝</span>Example Template</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box hint" style="border-left-color: #9c27b0;">
+                                <h5 style="margin-top: 0; color: #7b1fa2; display: flex; align-items: center;">
+                                    <span style="margin-right: 10px;">🚀</span>New Concept: Making Decisions with if/elif/else
+                                </h5>
+                                <p style="margin-bottom: 20px; color: #555; font-style: italic;">
+                                    Since this is your first time using conditional logic in functions, let's learn how to make decisions in your code!
+                                </p>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #e1bee7;">
+                                    <h6 style="margin: 0 0 15px 0; color: #4a148c;">🔍 How Conditional Statements Work</h6>
+                                    <div style="display: grid; gap: 10px;">
+                                        <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border-left: 3px solid #2196f3;">
+                                            <code style="color: #1976d2;"><strong>if condition:</strong></code> - Execute code if condition is True
+                                        </div>
+                                        <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border-left: 3px solid #ff9800;">
+                                            <code style="color: #f57c00;"><strong>elif condition:</strong></code> - Check another condition if first was False
+                                        </div>
+                                        <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; border-left: 3px solid #4caf50;">
+                                            <code style="color: #388e3c;"><strong>else:</strong></code> - Execute if all previous conditions were False
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #e1bee7;">
+                                    <h6 style="margin: 0 0 15px 0; color: #4a148c;">📝 Template for Your Temperature Function</h6>
+                                    <div class="code-block">
+<pre>def convert_temperature(temp, unit):
+    # Check what unit we're converting FROM
+    if unit == "C":
+        # Convert from Celsius to Fahrenheit
+        result = (temp * 9/5) + 32
+        return round(result, 2)
+    elif unit == "F":
+        # Convert from Fahrenheit to Celsius  
+        result = (temp - 32) * 5/9
+        return round(result, 2)
+    else:
+        # Handle invalid unit (bonus feature!)
+        return "Error: Unit must be 'C' or 'F'"</pre>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #e1bee7;">
+                                    <h6 style="margin: 0 0 15px 0; color: #4a148c;">🔑 Key Concepts You're Learning</h6>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                            <div style="font-size: 2em; margin-bottom: 10px;">==</div>
+                                            <strong>String Comparison</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">unit == "C" checks if strings are exactly equal</span>
+                                        </div>
+                                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                            <div style="font-size: 2em; margin-bottom: 10px;">🔄</div>
+                                            <strong>Decision Flow</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Code follows different paths based on input</span>
+                                        </div>
+                                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                            <div style="font-size: 2em; margin-bottom: 10px;">📊</div>
+                                            <strong>round() Function</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">round(number, 2) gives 2 decimal places</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%); padding: 15px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                                    <strong style="color: #2e7d32;">💡 Practice Tip:</strong> Start by writing the if/elif structure first, then add the math formulas inside each block!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🧮</span>Conversion Formulas</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box formula">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
+                                    <div style="text-align: center;">
+                                        <h5 style="margin: 0 0 10px 0; color: #1976d2;">🌡️ Celsius → Fahrenheit</h5>
+                                        <div style="background: white; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 1.2em; font-weight: bold; color: #d32f2f;">
+                                            °F = (°C × 9/5) + 32
+                                        </div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <h5 style="margin: 0 0 10px 0; color: #1976d2;">❄️ Fahrenheit → Celsius</h5>
+                                        <div style="background: white; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 1.2em; font-weight: bold; color: #1976d2;">
+                                            °C = (°F - 32) × 5/9
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">✅</span>Success Criteria</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box success">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                                    <div style="text-align: center; padding: 15px; background: white; border-radius: 8px;">
+                                        <div style="font-size: 2em; margin-bottom: 10px;">🧊</div>
+                                        <strong>Freezing Point Test</strong><br>
+                                        32°F → 0.0°C
+                                    </div>
+                                    <div style="text-align: center; padding: 15px; background: white; border-radius: 8px;">
+                                        <div style="font-size: 2em; margin-bottom: 10px;">💨</div>
+                                        <strong>Boiling Point Test</strong><br>
+                                        100°C → 212.0°F
+                                    </div>
+                                    <div style="text-align: center; padding: 15px; background: white; border-radius: 8px;">
+                                        <div style="font-size: 2em; margin-bottom: 10px;">🔄</div>
+                                        <strong>Dual Input Support</strong><br>
+                                        Handles both "C" and "F"
+                                    </div>
+                                    <div style="text-align: center; padding: 15px; background: white; border-radius: 8px;">
+                                        <div style="font-size: 2em; margin-bottom: 10px;">📊</div>
+                                        <strong>Precision Results</strong><br>
+                                        Rounded to 2 decimal places
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🧪</span>Test Your Function</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box usage">
+                                <h5 style="margin-top: 0; display: flex; align-items: center;">
+                                    <span style="margin-right: 10px;">🎯</span>Expected Function Usage
+                                </h5>
+                                <div class="code-block">
+<pre># Test your function with these calls:
+result1 = convert_temperature(32, "F")    # Should return 0.0
+result2 = convert_temperature(100, "C")   # Should return 212.0
+result3 = convert_temperature(98.6, "F")  # Should return 37.0
+
+# Print results to verify
+print(f"32°F = {result1}°C")
+print(f"100°C = {result2}°F")
+print(f"98.6°F = {result3}°C (Normal body temperature)")</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 2: Password Validator -->
+            <div class="activity-card difficulty-2" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="difficulty-indicator">⭐⭐ Intermediate</div>
+                <div class="activity-header">
+                    <span class="activity-number">2</span>
+                    <span class="activity-title">🔐 Password Strength Validator</span>
+                </div>
+                
+                <div class="activity-content">
+                    <div class="activity-goal">
+                        <h4 style="margin: 0 0 10px 0; color: #2c3e50;">🎯 Challenge Goal</h4>
+                        <p style="margin: 0; font-size: 1.1em; color: #495057;">Build a security-focused function that validates password strength using multiple criteria and conditional logic!</p>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">📋</span>Step-by-Step Instructions</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div style="display: grid; gap: 15px;">
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
+                                    <span style="font-size: 2em; margin-right: 15px;">1️⃣</span>
+                                    <div>
+                                        <strong>Function Signature:</strong> Create <code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">validate_password(password)</code> that accepts a password string
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
+                                    <span style="font-size: 2em; margin-right: 15px;">2️⃣</span>
+                                    <div>
+                                        <strong>Length Validation:</strong> Check if password has minimum 8 characters for basic security
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffc107;">
+                                    <span style="font-size: 2em; margin-right: 15px;">3️⃣</span>
+                                    <div>
+                                        <strong>Character Analysis:</strong> Verify presence of uppercase, lowercase, and digit characters
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #dc3545;">
+                                    <span style="font-size: 2em; margin-right: 15px;">4️⃣</span>
+                                    <div>
+                                        <strong>Conditional Returns:</strong> Return specific messages based on what's missing or "Strong" if perfect
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #6f42c1;">
+                                    <span style="font-size: 2em; margin-right: 15px;">5️⃣</span>
+                                    <div>
+                                        <strong>Logic Flow:</strong> Use if-elif-else statements to handle different validation scenarios
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Just-in-Time Learning: String Methods -->
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🎓</span>Just-in-Time Learning: String Analysis Tools</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box hint" style="border-left-color: #00bcd4;">
+                                <h5 style="margin-top: 0; color: #00838f; display: flex; align-items: center;">
+                                    <span style="margin-right: 10px;">🔬</span>New Concepts: String Methods & Advanced Functions
+                                </h5>
+                                <p style="margin-bottom: 20px; color: #555; font-style: italic;">
+                                    This activity introduces powerful string analysis tools and advanced Python functions you haven't seen yet!
+                                </p>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #b2ebf2;">
+                                    <h6 style="margin: 0 0 15px 0; color: #006064;">🔍 Essential String Methods</h6>
+                                    <div style="display: grid; gap: 15px;">
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #2196f3;">
+                                            <strong style="color: #1976d2;">len(password)</strong> - Counts the characters in a string<br>
+                                            <code style="background: #e3f2fd; padding: 4px 8px; border-radius: 4px; margin: 5px 0; display: inline-block;">len("hello") → 5</code>
+                                        </div>
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50;">
+                                            <strong style="color: #388e3c;">char.isupper()</strong> - Checks if a character is uppercase<br>
+                                            <code style="background: #e8f5e8; padding: 4px 8px; border-radius: 4px; margin: 5px 0; display: inline-block;">"A".isupper() → True, "a".isupper() → False</code>
+                                        </div>
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #ff9800;">
+                                            <strong style="color: #f57c00;">char.islower()</strong> - Checks if a character is lowercase<br>
+                                            <code style="background: #fff3e0; padding: 4px 8px; border-radius: 4px; margin: 5px 0; display: inline-block;">"a".islower() → True, "A".islower() → False</code>
+                                        </div>
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #9c27b0;">
+                                            <strong style="color: #7b1fa2;">char.isdigit()</strong> - Checks if a character is a number<br>
+                                            <code style="background: #fce4ec; padding: 4px 8px; border-radius: 4px; margin: 5px 0; display: inline-block;">"5".isdigit() → True, "a".isdigit() → False</code>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #b2ebf2;">
+                                    <h6 style="margin: 0 0 15px 0; color: #006064;">⚡ The Magic any() Function</h6>
+                                    <p style="color: #555; margin-bottom: 15px;">The <code>any()</code> function is like having a super-smart assistant that checks multiple things at once!</p>
+                                    
+                                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                                        <strong>What it does:</strong> Returns <code>True</code> if ANY item in a list/sequence is <code>True</code>
+                                    </div>
+                                    
+                                    <div class="code-block" style="margin: 15px 0;">
+<pre># Example: Check if password has ANY uppercase letters
+password = "Hello123"
+
+# Long way (what any() does internally):
+has_upper = False
+for char in password:
+    if char.isupper():
+        has_upper = True
+        break
+
+# Short way using any():
+has_upper = any(char.isupper() for char in password)
+print(has_upper)  # True (because 'H' is uppercase)</pre>
+                                    </div>
+                                    
+                                    <div style="background: linear-gradient(135deg, #e1f5fe 0%, #f3e5f5 100%); padding: 15px; border-radius: 8px; margin: 10px 0;">
+                                        <strong>🎯 Pattern for your function:</strong><br>
+                                        <code>any(char.isupper() for char in password)</code> ← Checks every character, returns True if any are uppercase
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #b2ebf2;">
+                                    <h6 style="margin: 0 0 15px 0; color: #006064;">🏗️ Password Validation Template</h6>
+                                    <div class="code-block">
+<pre>def validate_password(password):
+    # Check length first (easiest check)
+    if len(password) < 8:
+        return "Weak - Too short"
+    
+    # Check for uppercase letters
+    if not any(char.isupper() for char in password):
+        return "Weak - Missing uppercase"
+    
+    # Check for lowercase letters  
+    if not any(char.islower() for char in password):
+        return "Weak - Missing lowercase"
+    
+    # Check for digits
+    if not any(char.isdigit() for char in password):
+        return "Weak - Missing digit"
+    
+    # If all checks pass
+    return "Strong"</pre>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #b2ebf2;">
+                                    <h6 style="margin: 0 0 15px 0; color: #006064;">🧠 Understanding the Logic Flow</h6>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid #ffeb3b;">
+                                            <div style="font-size: 2em; margin-bottom: 10px;">1️⃣</div>
+                                            <strong>Check Length</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Fastest check - do this first!</span>
+                                        </div>
+                                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid #4caf50;">
+                                            <div style="font-size: 2em; margin-bottom: 10px;">2️⃣</div>
+                                            <strong>Check Characters</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Use any() for each requirement</span>
+                                        </div>
+                                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid #2196f3;">
+                                            <div style="font-size: 2em; margin-bottom: 10px;">3️⃣</div>
+                                            <strong>Return Result</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Early return on failure, "Strong" if all pass</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: linear-gradient(135def, #e8f5e8 0%, #f1f8e9 100%); padding: 15px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                                    <strong style="color: #2e7d32;">💡 Pro Strategy:</strong> Start with the template above and modify it step by step. Test each check individually first!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🔍</span>Validation Requirements</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box formula">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                                    <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border: 2px solid #e3f2fd;">
+                                        <div style="font-size: 2.5em; margin-bottom: 10px;">📏</div>
+                                        <h5 style="margin: 0; color: #1976d2;">Length</h5>
+                                        <p style="margin: 5px 0; color: #666;">Minimum 8 characters</p>
+                                    </div>
+                                    <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border: 2px solid #e8f5e8;">
+                                        <div style="font-size: 2.5em; margin-bottom: 10px;">🔠</div>
+                                        <h5 style="margin: 0; color: #388e3c;">Uppercase</h5>
+                                        <p style="margin: 5px 0; color: #666;">At least one A-Z</p>
+                                    </div>
+                                    <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border: 2px solid #fff3e0;">
+                                        <div style="font-size: 2.5em; margin-bottom: 10px;">🔡</div>
+                                        <h5 style="margin: 0; color: #f57c00;">Lowercase</h5>
+                                        <p style="margin: 5px 0; color: #666;">At least one a-z</p>
+                                    </div>
+                                    <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border: 2px solid #fce4ec;">
+                                        <div style="font-size: 2.5em; margin-bottom: 10px;">🔢</div>
+                                        <h5 style="margin: 0; color: #c2185b;">Numbers</h5>
+                                        <p style="margin: 5px 0; color: #666;">At least one 0-9</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">📤</span>Return Values</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box success">
+                                <div style="display: grid; gap: 10px;">
+                                    <div style="display: flex; align-items: center; background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #4caf50;">
+                                        <span style="font-size: 2em; margin-right: 15px;">💪</span>
+                                        <div>
+                                            <strong style="color: #2e7d32;">"Strong"</strong> - All security criteria met perfectly!
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #f44336;">
+                                        <span style="font-size: 2em; margin-right: 15px;">📏</span>
+                                        <div>
+                                            <strong style="color: #c62828;">"Weak - Too short"</strong> - Password needs at least 8 characters
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #ff9800;">
+                                        <span style="font-size: 2em; margin-right: 15px;">🔠</span>
+                                        <div>
+                                            <strong style="color: #ef6c00;">"Weak - Missing uppercase"</strong> - Need at least one capital letter
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #9c27b0;">
+                                        <span style="font-size: 2em; margin-right: 15px;">🔡</span>
+                                        <div>
+                                            <strong style="color: #7b1fa2;">"Weak - Missing lowercase"</strong> - Need at least one lowercase letter
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #3f51b5;">
+                                        <span style="font-size: 2em; margin-right: 15px;">🔢</span>
+                                        <div>
+                                            <strong style="color: #303f9f;">"Weak - Missing digit"</strong> - Need at least one number
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🧪</span>Test Your Function</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box usage">
+                                <h5 style="margin-top: 0; display: flex; align-items: center;">
+                                    <span style="margin-right: 10px;">🎯</span>Expected Function Usage
+                                </h5>
+                                <div class="code-block">
+<pre># Test your function with these passwords:
+result1 = validate_password("Password123")    # Should return "Strong"
+result2 = validate_password("pass")           # Should return "Weak - Too short"
+result3 = validate_password("password123")    # Should return "Weak - Missing uppercase"
+result4 = validate_password("PASSWORD")       # Should return "Weak - Missing lowercase"
+result5 = validate_password("Password")       # Should return "Weak - Missing digit"
+
+# Print results to verify
+print(f"Password123: {result1}")
+print(f"pass: {result2}")
+print(f"password123: {result3}")</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">💡</span>Python String Methods</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box hint">
+                                <h5 style="margin-top: 0;">🐍 Built-in Methods for Character Analysis</h5>
+                                <div style="display: grid; gap: 15px;">
+                                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #00bcd4;">
+                                        <strong>Check Length:</strong> <code>len(password) >= 8</code>
+                                    </div>
+                                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50;">
+                                        <strong>Has Uppercase:</strong> <code>any(c.isupper() for c in password)</code>
+                                    </div>
+                                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #ff9800;">
+                                        <strong>Has Lowercase:</strong> <code>any(c.islower() for c in password)</code>
+                                    </div>
+                                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #9c27b0;">
+                                        <strong>Has Digit:</strong> <code>any(c.isdigit() for c in password)</code>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #e1f5fe 0%, #f3e5f5 100%); border-radius: 8px;">
+                                    <strong>💡 Pro Tip:</strong> The <code>any()</code> function returns <code>True</code> if at least one element in the iterable is <code>True</code>!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity 3: Function Composition -->
+            <div class="activity-card difficulty-3" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                <div class="difficulty-indicator">⭐⭐⭐ Advanced</div>
+                <div class="activity-header">
+                    <span class="activity-number">3</span>
+                    <span class="activity-title">🔗 Function Composition Calculator</span>
+                </div>
+                
+                <div class="activity-content">
+                    <div class="activity-goal">
+                        <h4 style="margin: 0 0 10px 0; color: #2c3e50;">🎯 Challenge Goal</h4>
+                        <p style="margin: 0; font-size: 1.1em; color: #495057;">Master advanced programming by creating multiple interconnected functions that work together like a well-oiled machine!</p>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">📋</span>Step-by-Step Instructions</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div style="display: grid; gap: 15px;">
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
+                                    <span style="font-size: 2em; margin-right: 15px;">1️⃣</span>
+                                    <div>
+                                        <strong>Helper Function 1:</strong> Create <code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">calculate_area(length, width)</code> for rectangle area calculation
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
+                                    <span style="font-size: 2em; margin-right: 15px;">2️⃣</span>
+                                    <div>
+                                        <strong>Helper Function 2:</strong> Create <code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">calculate_cost_per_sqft(total_cost, area)</code> for cost analysis
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffc107;">
+                                    <span style="font-size: 2em; margin-right: 15px;">3️⃣</span>
+                                    <div>
+                                        <strong>Main Function:</strong> Create <code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">room_renovation_cost()</code> that orchestrates the helper functions
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #dc3545;">
+                                    <span style="font-size: 2em; margin-right: 15px;">4️⃣</span>
+                                    <div>
+                                        <strong>Function Composition:</strong> Main function calls helper functions internally to build complex logic
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #6f42c1;">
+                                    <span style="font-size: 2em; margin-right: 15px;">5️⃣</span>
+                                    <div>
+                                        <strong>Data Flow:</strong> Demonstrate how function results flow seamlessly between functions
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Just-in-Time Learning: Function Composition -->
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🎓</span>Just-in-Time Learning: Function Composition</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box hint" style="border-left-color: #ff5722;">
+                                <h5 style="margin-top: 0; color: #d84315; display: flex; align-items: center;">
+                                    <span style="margin-right: 10px;">🚀</span>Advanced Concept: Functions Calling Other Functions
+                                </h5>
+                                <p style="margin-bottom: 20px; color: #555; font-style: italic;">
+                                    This activity teaches you how to build complex programs by combining simpler functions - a key skill in professional programming!
+                                </p>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ffccbc;">
+                                    <h6 style="margin: 0 0 15px 0; color: #bf360c;">🎯 What is Function Composition?</h6>
+                                    <p style="color: #555; margin-bottom: 15px;">
+                                        Function composition means <strong>calling one function from inside another function</strong>. It's like having a team where each person has a specific job, and they work together to accomplish a bigger task!
+                                    </p>
+                                    
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid #4caf50;">
+                                            <div style="font-size: 2em; margin-bottom: 10px;">👤</div>
+                                            <strong>Helper Functions</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Do one specific task very well</span>
+                                        </div>
+                                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid #2196f3;">
+                                            <div style="font-size: 2em; margin-bottom: 10px;">👥</div>
+                                            <strong>Main Function</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Coordinates all the helpers</span>
+                                        </div>
+                                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid #ff9800;">
+                                            <div style="font-size: 2em; margin-bottom: 10px;">🏆</div>
+                                            <strong>Final Result</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Complex task completed!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ffccbc;">
+                                    <h6 style="margin: 0 0 15px 0; color: #bf360c;">🔍 Step-by-Step Example</h6>
+                                    <p style="color: #555; margin-bottom: 15px;">Let's build our renovation calculator step by step:</p>
+                                    
+                                    <div class="code-block" style="margin: 15px 0;">
+<pre># Step 1: Create a helper function
+def calculate_area(length, width):
+    """Calculate rectangle area - this function has ONE job"""
+    area = length * width
+    return area
+
+# Step 2: Create the main function that USES the helper
+def room_renovation_cost(length, width, cost_per_sqft):
+    """Calculate total cost - this function coordinates everything"""
+    
+    # Call the helper function and store its result
+    room_area = calculate_area(length, width)
+    
+    # Use the helper's result in our calculation
+    total_cost = room_area * cost_per_sqft
+    
+    # Return our final answer
+    return total_cost
+
+# Step 3: Test both functions
+area_result = calculate_area(10, 12)        # Helper works independently
+total_result = room_renovation_cost(10, 12, 15)  # Main function uses helper
+
+print(f"Area: {area_result} sq ft")         # 120
+print(f"Total cost: ${total_result}")       # $1800</pre>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ffccbc;">
+                                    <h6 style="margin: 0 0 15px 0; color: #bf360c;">🔄 Data Flow Visualization</h6>
+                                    <div style="text-align: center; padding: 20px;">
+                                        <div style="display: inline-block; padding: 10px 20px; background: #e3f2fd; border-radius: 8px; margin: 5px;">
+                                            <strong>Input: 10, 12, 15</strong>
+                                        </div>
+                                        <div style="margin: 10px 0; font-size: 1.5em;">⬇️</div>
+                                        <div style="display: inline-block; padding: 10px 20px; background: #e8f5e8; border-radius: 8px; margin: 5px;">
+                                            <strong>room_renovation_cost()</strong>
+                                        </div>
+                                        <div style="margin: 10px 0; font-size: 1.5em;">⬇️</div>
+                                        <div style="display: inline-block; padding: 10px 20px; background: #fff3e0; border-radius: 8px; margin: 5px;">
+                                            <strong>calculate_area(10, 12)</strong>
+                                        </div>
+                                        <div style="margin: 10px 0; font-size: 1.5em;">⬇️</div>
+                                        <div style="display: inline-block; padding: 10px 20px; background: #fce4ec; border-radius: 8px; margin: 5px;">
+                                            <strong>Returns: 120</strong>
+                                        </div>
+                                        <div style="margin: 10px 0; font-size: 1.5em;">⬇️</div>
+                                        <div style="display: inline-block; padding: 10px 20px; background: #f3e5f5; border-radius: 8px; margin: 5px;">
+                                            <strong>120 × 15 = 1800</strong>
+                                        </div>
+                                        <div style="margin: 10px 0; font-size: 1.5em;">⬇️</div>
+                                        <div style="display: inline-block; padding: 10px 20px; background: #e8f5e8; border-radius: 8px; margin: 5px;">
+                                            <strong>Final Result: $1800</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ffccbc;">
+                                    <h6 style="margin: 0 0 15px 0; color: #bf360c;">🎯 Why This Approach is Powerful</h6>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50;">
+                                            <strong style="color: #2e7d32;">🔧 Reusability</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">calculate_area() can be used for floors, walls, gardens, etc.</span>
+                                        </div>
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #2196f3;">
+                                            <strong style="color: #1976d2;">🧪 Testability</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Each function can be tested independently</span>
+                                        </div>
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #ff9800;">
+                                            <strong style="color: #f57c00;">📖 Readability</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Code is easier to understand and maintain</span>
+                                        </div>
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #9c27b0;">
+                                            <strong style="color: #7b1fa2;">🚀 Scalability</strong><br>
+                                            <span style="color: #666; font-size: 0.9em;">Easy to add new features by combining functions</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid #ffccbc;">
+                                    <h6 style="margin: 0 0 15px 0; color: #bf360c;">✅ Your Mission Checklist</h6>
+                                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                        <ol style="margin: 0; color: #555;">
+                                            <li>Write <code>calculate_area(length, width)</code> function that returns length × width</li>
+                                            <li>Write <code>room_renovation_cost(length, width, cost_per_sqft)</code> function</li>
+                                            <li>Inside the main function, CALL the helper function: <code>area = calculate_area(length, width)</code></li>
+                                            <li>Use the returned area to calculate: <code>total = area * cost_per_sqft</code></li>
+                                            <li>Return the total cost</li>
+                                            <li>Test both functions to make sure they work!</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%); padding: 15px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                                    <strong style="color: #2e7d32;">💡 Pro Tip:</strong> Write and test your helper function first, then build the main function that uses it. This makes debugging much easier!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🏗️</span>Function Architecture</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box formula">
+                                <div style="display: grid; gap: 20px;">
+                                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #e3f2fd; text-align: center;">
+                                        <h5 style="margin: 0 0 15px 0; color: #1976d2;">📐 Function 1: Area Calculator</h5>
+                                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; font-family: monospace; margin: 10px 0;">
+                                            <strong>calculate_area(length, width)</strong><br>
+                                            Returns: length × width
+                                        </div>
+                                        <p style="color: #666; margin: 10px 0;">Foundation function for all area-based calculations</p>
+                                    </div>
+                                    
+                                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #e8f5e8; text-align: center;">
+                                        <h5 style="margin: 0 0 15px 0; color: #388e3c;">💰 Function 2: Cost Per SqFt</h5>
+                                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; font-family: monospace; margin: 10px 0;">
+                                            <strong>calculate_cost_per_sqft(total_cost, area)</strong><br>
+                                            Returns: total_cost ÷ area
+                                        </div>
+                                        <p style="color: #666; margin: 10px 0;">Optional helper for cost analysis (bonus feature)</p>
+                                    </div>
+                                    
+                                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #fff3e0; text-align: center;">
+                                        <h5 style="margin: 0 0 15px 0; color: #f57c00;">🏠 Main Function: Renovation Calculator</h5>
+                                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; font-family: monospace; margin: 10px 0;">
+                                            <strong>room_renovation_cost(length, width, cost_per_sqft)</strong><br>
+                                            Returns: area × cost_per_sqft
+                                        </div>
+                                        <p style="color: #666; margin: 10px 0;">Master function that combines helper functions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">✅</span>Success Criteria</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box success">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                                    <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border-left: 5px solid #4caf50;">
+                                        <div style="font-size: 2.5em; margin-bottom: 10px;">⚙️</div>
+                                        <h6 style="margin: 0; color: #2e7d32;">Function Independence</h6>
+                                        <p style="margin: 5px 0; color: #666; font-size: 0.9em;">All functions work individually</p>
+                                    </div>
+                                    <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border-left: 5px solid #2196f3;">
+                                        <div style="font-size: 2.5em; margin-bottom: 10px;">🔗</div>
+                                        <h6 style="margin: 0; color: #1976d2;">Function Composition</h6>
+                                        <p style="margin: 5px 0; color: #666; font-size: 0.9em;">Main function calls helpers</p>
+                                    </div>
+                                    <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border-left: 5px solid #ff9800;">
+                                        <div style="font-size: 2.5em; margin-bottom: 10px;">🧮</div>
+                                        <h6 style="margin: 0; color: #f57c00;">Correct Calculation</h6>
+                                        <p style="margin: 5px 0; color: #666; font-size: 0.9em;">10×12 room @ $15/sqft = $1800</p>
+                                    </div>
+                                    <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border-left: 5px solid #9c27b0;">
+                                        <div style="font-size: 2.5em; margin-bottom: 10px;">🔄</div>
+                                        <h6 style="margin: 0; color: #7b1fa2;">Data Flow</h6>
+                                        <p style="margin: 5px 0; color: #666; font-size: 0.9em;">Results pass between functions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🎯</span>Function Structure Template</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box usage">
+                                <h5 style="margin-top: 0; display: flex; align-items: center;">
+                                    <span style="margin-right: 10px;">📝</span>Expected Function Structure
+                                </h5>
+                                <div class="code-block">
+<pre># Helper Function 1: Area Calculator
+def calculate_area(length, width):
+    """Calculate the area of a rectangle"""
+    # Your implementation here
+    return length * width
+
+# Main Function: Renovation Cost Calculator  
+def room_renovation_cost(length, width, cost_per_sqft):
+    """Calculate total renovation cost using area function"""
+    # Call the helper function inside this function
+    area = calculate_area(length, width)
+    total_cost = area * cost_per_sqft
+    return total_cost</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🧪</span>Test Your Functions</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box usage">
+                                <h5 style="margin-top: 0; display: flex; align-items: center;">
+                                    <span style="margin-right: 10px;">🔬</span>Comprehensive Testing
+                                </h5>
+                                <div class="code-block">
+<pre># Test individual functions first:
+area = calculate_area(10, 12)              # Should return 120
+print(f"Room area: {area} sq ft")
+
+# Test function composition:
+total = room_renovation_cost(10, 12, 15)   # Should return 1800
+print(f"Total renovation cost: ${total}")
+
+# Test different room sizes:
+small_room = room_renovation_cost(8, 10, 12)    # Should return 960
+large_room = room_renovation_cost(15, 20, 25)   # Should return 7500
+
+print(f"Small room (8x10): ${small_room}")
+print(f"Large room (15x20): ${large_room}")</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><span class="section-icon">🎓</span>Learning Objectives</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="info-box hint">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                                    <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #4caf50; text-align: center;">
+                                        <div style="font-size: 2em; margin-bottom: 10px;">🎯</div>
+                                        <h6 style="margin: 0; color: #2e7d32;">Function Independence</h6>
+                                        <p style="margin: 10px 0; color: #666; font-size: 0.9em;">Each function has a single, clear purpose</p>
+                                    </div>
+                                    <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3; text-align: center;">
+                                        <div style="font-size: 2em; margin-bottom: 10px;">♻️</div>
+                                        <h6 style="margin: 0; color: #1976d2;">Code Reusability</h6>
+                                        <p style="margin: 10px 0; color: #666; font-size: 0.9em;">Helper functions work in multiple contexts</p>
+                                    </div>
+                                    <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #ff9800; text-align: center;">
+                                        <div style="font-size: 2em; margin-bottom: 10px;">🔗</div>
+                                        <h6 style="margin: 0; color: #f57c00;">Function Composition</h6>
+                                        <p style="margin: 10px 0; color: #666; font-size: 0.9em;">Complex problems solved by combining functions</p>
+                                    </div>
+                                    <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #9c27b0; text-align: center;">
+                                        <div style="font-size: 2em; margin-bottom: 10px;">🌊</div>
+                                        <h6 style="margin: 0; color: #7b1fa2;">Data Flow</h6>
+                                        <p style="margin: 10px 0; color: #666; font-size: 0.9em;">Understanding how values pass between functions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Activity Completion Tracker -->
+            <div class="progress-tracker">
+                <h3 style="margin-top: 0; font-size: 2.2em;">🏆 Master Function Programming</h3>
+                <p style="font-size: 1.2em; opacity: 0.9; margin-bottom: 30px;">Track your progress through these three essential function programming challenges</p>
+                
+                <div class="progress-grid">
+                    <div class="progress-item" onclick="toggleProgress(this)" style="cursor: pointer;">
+                        <h4>🌡️ Temperature Converter</h4>
+                        <div class="checklist">
+                            <li>Function accepts temp and unit parameters</li>
+                            <li>Correctly converts between C and F</li>
+                            <li>Returns properly rounded results</li>
+                            <li>Handles edge cases gracefully</li>
+                        </div>
+                        <div style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.9em;">
+                            <strong>Difficulty:</strong> ⭐ Beginner<br>
+                            <strong>Focus:</strong> Basic functions & parameters
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item" onclick="toggleProgress(this)" style="cursor: pointer;">
+                        <h4>🔐 Password Validator</h4>
+                        <div class="checklist">
+                            <li>Validates all password requirements</li>
+                            <li>Returns appropriate messages</li>
+                            <li>Uses conditional logic effectively</li>
+                            <li>Implements multiple return paths</li>
+                        </div>
+                        <div style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.9em;">
+                            <strong>Difficulty:</strong> ⭐⭐ Intermediate<br>
+                            <strong>Focus:</strong> Conditional logic & validation
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item" onclick="toggleProgress(this)" style="cursor: pointer;">
+                        <h4>🔗 Function Composition</h4>
+                        <div class="checklist">
+                            <li>Creates all required helper functions</li>
+                            <li>Main function calls helpers internally</li>
+                            <li>Demonstrates proper composition</li>
+                            <li>Shows advanced data flow patterns</li>
+                        </div>
+                        <div style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.9em;">
+                            <strong>Difficulty:</strong> ⭐⭐⭐ Advanced<br>
+                            <strong>Focus:</strong> Function composition & architecture
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.2); padding: 25px; border-radius: 15px; margin-top: 30px; backdrop-filter: blur(10px);">
+                    <h4 style="margin: 0 0 15px 0; font-size: 1.4em;">🎯 Learning Pathway</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="font-size: 2em; margin-bottom: 5px;">📚</div>
+                            <strong>Learn Concepts</strong><br>
+                            <span style="font-size: 0.9em;">Functions, parameters, returns</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 2em; margin-bottom: 5px;">🔨</div>
+                            <strong>Practice Skills</strong><br>
+                            <span style="font-size: 0.9em;">Build real-world functions</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 2em; margin-bottom: 5px;">🏆</div>
+                            <strong>Master Programming</strong><br>
+                            <span style="font-size: 0.9em;">Advanced composition techniques</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Interactive JavaScript for Activities -->
+            <script>
+                function toggleSection(element) {
+                    const content = element.nextElementSibling;
+                    const icon = element.querySelector('.expand-icon');
+                    
+                    if (content.classList.contains('active')) {
+                        content.classList.remove('active');
+                        content.style.display = 'none';
+                        icon.textContent = '▼';
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        content.classList.add('active');
+                        content.style.display = 'block';
+                        icon.textContent = '▲';
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                }
+                
+                function toggleProgress(element) {
+                    const checkboxes = element.querySelectorAll('.checklist li');
+                    let completedCount = 0;
+                    
+                    checkboxes.forEach((item, index) => {
+                        if (item.style.color === 'rgb(255, 215, 0)') {
+                            // Reset to default
+                            item.style.color = '';
+                            item.style.transform = '';
+                        } else {
+                            // Mark as completed with animation delay
+                            setTimeout(() => {
+                                item.style.color = '#ffd700';
+                                item.style.transform = 'translateX(5px)';
+                                item.querySelector('::before') ? 
+                                    (item.style.setProperty('--check-content', '"✅"')) : null;
+                            }, index * 200);
+                            completedCount++;
+                        }
+                    });
+                    
+                    // Add completion celebration
+                    if (completedCount === checkboxes.length) {
+                        setTimeout(() => {
+                            element.style.background = 'linear-gradient(135deg, #00c851 0%, #007e33 100%)';
+                            element.style.transform = 'scale(1.05)';
+                            
+                            setTimeout(() => {
+                                element.style.transform = 'scale(1)';
+                            }, 500);
+                        }, checkboxes.length * 200 + 300);
+                    }
+                }
+                
+                // Initialize all sections as collapsed
+                document.addEventListener('DOMContentLoaded', function() {
+                    const sections = document.querySelectorAll('.section-content');
+                    sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    // Add smooth scrolling to activity cards
+                    const activityCards = document.querySelectorAll('.activity-card');
+                    activityCards.forEach(card => {
+                        card.addEventListener('click', function(e) {
+                            if (!e.target.closest('.section-header')) {
+                                card.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
+
+        <!-- Summary and Resources -->
+        <div class="nav-section">
+            <h2>📋 Quick Reference Summary</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; text-align: left;">
+                <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #28a745;">
+                    <h4>Function Definition</h4>
+                    <code>def function_name(parameters):</code><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;# function body</code><br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;return value</code>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #007bff;">
+                    <h4>Key Differences</h4>
+                    <strong>print():</strong> Shows output, returns None<br>
+                    <strong>return:</strong> Sends value back to caller<br>
+                    <strong>Local:</strong> Variables inside function<br>
+                    <strong>Global:</strong> Variables outside functions
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #ffc107;">
+                    <h4>Best Practices</h4>
+                    • Use descriptive function names<br>
+                    • Pass data in via arguments<br>
+                    • Get data out via return<br>
+                    • Avoid global variables in functions
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #dc3545;">
+                    <h4>Common Mistakes</h4>
+                    • Forgetting to return values<br>
+                    • Trying to use local variables globally<br>
+                    • Modifying globals directly<br>
+                    • Incorrect indentation
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <a href="#" class="export-button" onclick="exportToSheets()">📊 Export to Sheets</a>
+                <a href="dashboard.html" class="nav-button">← Back to Dashboard</a>
+                <a href="lesson-control-flow.html" class="nav-button">Next: Control Flow →</a>
+            </div>
+        </div>
+
+        <!-- Teacher Access -->
+        <div style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;">
+            <a href="teacher-submissions-dashboard.html" 
+               style="background: linear-gradient(45deg, #666, #999); color: white; padding: 8px 12px; 
+                      border-radius: 20px; text-decoration: none; font-size: 12px; opacity: 0.7;
+                      transition: opacity 0.3s ease;" 
+               onmouseover="this.style.opacity='1'" 
+               onmouseout="this.style.opacity='0.7'"
+               title="Teacher Dashboard">
+                👨‍🏫 Teacher
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function toggleContent(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = element.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function exportToSheets() {
+            // Create CSV content from the syntax table
+            const table = document.querySelector('.syntax-table');
+            let csvContent = '';
+            
+            // Get headers
+            const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+            csvContent += headers.join(',') + '\n';
+            
+            // Get data rows
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('td')).map(td => {
+                    // Clean up the cell content and wrap in quotes for CSV
+                    return '"' + td.textContent.replace(/"/g, '""') + '"';
+                });
+                csvContent += cells.join(',') + '\n';
+            });
+            
+            // Create and download the file
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'python-functions-reference.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('📊 Reference table exported as CSV! You can now import this into Google Sheets.');
+        }
+
+        // Prevent copying of code examples
+        document.addEventListener('contextmenu', e => {
+            if (e.target.closest('.code-example')) {
+                e.preventDefault();
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && ['a','c','s'].includes(e.key)) {
+                if (e.target.closest('.code-example')) {
+                    e.preventDefault();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

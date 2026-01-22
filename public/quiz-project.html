@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyQuiz Project | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css">
+    <style>
+        :root {
+            --python-blue: #3776ab;
+            --python-yellow: #ffd43b;
+            --dark-bg: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent-green: #238636;
+            --accent-purple: #8957e5;
+            --accent-orange: #e8590c;
+            --accent-yellow: #d29922;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, var(--python-blue), var(--python-yellow));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .nav-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .header {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 0 2rem 2rem 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--python-blue), var(--python-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: var(--text-secondary);
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 1rem;
+        }
+
+        .content {
+            padding: 0 2rem 2rem 2rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .objective {
+            border-left: 4px solid var(--accent-yellow);
+        }
+
+        .concepts {
+            border-left: 4px solid var(--python-blue);
+        }
+
+        .phases {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .rubric {
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .stretch {
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .new-concepts {
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .section h2 {
+            color: var(--python-yellow);
+            margin-bottom: 1.5rem;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: var(--python-blue);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.3em;
+        }
+
+        .section h4 {
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .code-container {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            position: relative;
+            border: 1px solid var(--border-color);
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .code-container::after {
+            content: "📋 Reference Only";
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 196, 0, 0.15);
+            color: var(--accent-yellow);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            opacity: 0.6;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .code-container pre {
+            margin: 0;
+            color: #d4d4d4;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(55, 118, 171, 0.15);
+            color: var(--python-blue);
+            font-weight: 600;
+        }
+
+        td {
+            background: var(--card-bg);
+        }
+
+        tr:hover td {
+            background: rgba(55, 118, 171, 0.05);
+        }
+
+        .highlight-box {
+            background: rgba(210, 153, 34, 0.1);
+            border-left: 4px solid var(--accent-yellow);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+
+        .highlight-box strong {
+            color: var(--accent-yellow);
+        }
+
+        .tip-box {
+            background: rgba(35, 134, 54, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+
+        .tip-box strong {
+            color: var(--accent-green);
+        }
+
+        .warning-box {
+            background: rgba(232, 89, 12, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+
+        .warning-box strong {
+            color: var(--accent-orange);
+        }
+
+        .info-box {
+            background: rgba(55, 118, 171, 0.1);
+            border-left: 4px solid var(--python-blue);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 6px;
+        }
+
+        .info-box strong {
+            color: var(--python-blue);
+        }
+
+        ol {
+            margin-left: 1.5rem;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+        }
+
+        ol li {
+            margin: 0.75rem 0;
+            padding-left: 0.5rem;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-top: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        ul li {
+            margin: 0.5rem 0;
+        }
+
+        .phase-card {
+            background: rgba(55, 118, 171, 0.05);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--python-blue);
+        }
+
+        .phase-card h3 {
+            color: var(--python-blue);
+            margin-top: 0;
+        }
+
+        code {
+            background: rgba(110, 118, 129, 0.2);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            color: var(--python-yellow);
+        }
+
+        p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Copy-paste prevention - subtle */
+        body {
+            -webkit-touch-callout: none;
+        }
+
+        .no-copy {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <div class="container">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="nav-icon">🎯</div>
+                <span class="nav-title">PyQuiz Project</span>
+            </div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/unit-testing.html">Unit Testing</a>
+                <a href="/dashboard">Dashboard</a>
+            </div>
+        </nav>
+        <div class="header">
+            <div class="icon">🎯</div>
+            <h1>The Ultimate Python Quiz Builder</h1>
+            <p>PyQuiz Project - Build a Complete Quiz Application</p>
+            <div style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: rgba(232, 89, 12, 0.15); border: 1px solid var(--accent-orange); border-radius: 8px; display: inline-block;">
+                <span style="color: var(--accent-orange); font-weight: 600; font-size: 1.1rem;">📅 Due: October 31, 2025</span>
+            </div>
+        </div>        <div class="content">
+            <!-- Project Objective -->
+            <div class="section objective">
+                <h2>🎯 Project Objective</h2>
+                <p>The goal of this project is to build a functional, text-based quiz application from scratch. You will apply your knowledge of Python fundamentals (loops, conditionals, functions) and learn how to manage persistent data using Python's built-in <code>json</code> and <code>os</code> modules.</p>
+                
+                <h3>The application will have two main modes:</h3>
+                <ol>
+                    <li><strong>Take Quiz:</strong> Run a quiz from a saved data file, score the user's answers, and display results.</li>
+                    <li><strong>Edit Quiz:</strong> Allow the user to create new questions and save them to the data file.</li>
+                </ol>
+            </div>
+
+            <!-- Interactive Demo Section -->
+            <div class="section concepts">
+                <h2>🎬 Interactive Demo: What You'll Build</h2>
+                <p>Try out this live simulation to see exactly what your PyQuiz application should do. Click through the menu options to experience the full program flow!</p>
+                
+                <div class="info-box">
+                    <strong>💡 What to Notice:</strong>
+                    <ul>
+                        <li>The menu system that keeps looping until you exit</li>
+                        <li>How questions are displayed with lettered options</li>
+                        <li>The scoring system with personalized feedback</li>
+                        <li>How new questions are created step-by-step</li>
+                    </ul>
+                </div>
+
+                <!-- Interactive Demo Container -->
+                <div style="background: #1e1e1e; border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; font-family: 'JetBrains Mono', monospace;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
+                        <div style="color: var(--python-yellow); font-weight: 600;">PyQuiz Terminal Simulation</div>
+                        <button onclick="resetDemo()" style="background: rgba(232, 89, 12, 0.2); border: 1px solid var(--accent-orange); color: var(--accent-orange); padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-family: 'Inter', sans-serif;">🔄 Reset</button>
+                    </div>
+                    
+                    <div id="terminalOutput" style="min-height: 300px; max-height: 500px; overflow-y: auto; color: #d4d4d4; font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap;"></div>
+                    
+                    <div id="inputArea" style="display: none; margin-top: 1rem;">
+                        <input type="text" id="userInput" style="width: calc(100% - 120px); background: #0d1117; border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem; border-radius: 4px; font-family: 'JetBrains Mono', monospace;" placeholder="Type your answer here...">
+                        <button onclick="submitInput()" style="width: 100px; margin-left: 10px; background: var(--python-blue); border: none; color: white; padding: 0.6rem; border-radius: 4px; cursor: pointer; font-weight: 600;">Submit</button>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>🎯 Try This:</strong> Run through the entire quiz, then create a new question, and take the quiz again to see your new question appear. This demonstrates the persistence feature you'll implement with JSON files!
+                </div>
+            </div>
+
+            <!-- Question Helper Bot -->
+            <div class="section phases">
+                <h2>🤖 Question Helper Bot</h2>
+                <p>Need questions for your quiz? Use this bot to get random Python questions with multiple-choice options and answers! Click the button to get a new question each time.</p>
+                
+                <div class="info-box">
+                    <strong>💡 How to Use:</strong>
+                    <ul>
+                        <li>Click "Get Random Question" to receive a new Python quiz question</li>
+                        <li>Copy the question, options, and correct answer</li>
+                        <li>Use these in your PyQuiz program when creating questions</li>
+                        <li>Try to get at least 15 questions for a comprehensive quiz!</li>
+                    </ul>
+                </div>
+
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 2rem; margin: 1.5rem 0;">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <button onclick="getRandomQuestion()" style="background: linear-gradient(45deg, var(--accent-purple), var(--python-blue)); color: white; border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            🎲 Get Random Question
+                        </button>
+                        <button onclick="getMultipleQuestions()" style="background: linear-gradient(45deg, var(--accent-green), var(--python-yellow)); color: #000; border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; margin-left: 1rem;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            📚 Get 5 Random Questions
+                        </button>
+                    </div>
+
+                    <div id="questionBotOutput" style="background: #1e1e1e; border: 1px solid var(--border-color); border-radius: 6px; padding: 1.5rem; min-height: 200px; font-family: 'Inter', sans-serif; color: var(--text-secondary);">
+                        <div style="text-align: center; padding: 2rem;">
+                            Click the button above to get Python quiz questions! 🚀
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">Questions used: <strong style="color: var(--python-yellow);" id="questionCount">0</strong></span>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>🎯 Pro Tip:</strong> Mix different difficulty levels and topics to create a well-rounded quiz. Include questions about variables, loops, functions, conditionals, data types, and operators!
+                </div>
+            </div>
+
+            <!-- New Concepts Section -->
+            <div class="section new-concepts">
+                <h2>📘 New Concepts: Working with Files</h2>
+                
+                <h3>The <code>os</code> Module</h3>
+                <p>The <code>os</code> module provides functions for interacting with the operating system, including file and directory operations.</p>
+                
+                <div class="info-box">
+                    <strong>📌 Key Function:</strong> <code>os.path.exists(filename)</code>
+                    <ul>
+                        <li>Returns <code>True</code> if the file exists</li>
+                        <li>Returns <code>False</code> if the file does not exist</li>
+                        <li>Helps prevent errors when trying to open files that might not be there</li>
+                    </ul>
+                </div>
+
+                <div class="code-container no-copy">
+                    <pre><code class="language-python">import os
+
+# Check if a file exists before opening it
+if os.path.exists("quiz_data.json"):
+    print("File found!")
+else:
+    print("File not found. Using defaults.")</code></pre>
+                </div>
+
+                <h3>The <code>json</code> Module</h3>
+                <p>JSON (JavaScript Object Notation) is a popular format for storing and exchanging data. Python's <code>json</code> module lets you convert Python data structures (like lists and dictionaries) to JSON format and back.</p>
+
+                <div class="info-box">
+                    <strong>📌 Key Functions:</strong>
+                    <ul>
+                        <li><code>json.load(file)</code> - Reads JSON data from a file and converts it to Python data structures</li>
+                        <li><code>json.dump(data, file)</code> - Converts Python data structures to JSON and writes to a file</li>
+                        <li><code>json.loads(string)</code> - Converts a JSON string to Python data</li>
+                    </ul>
+                </div>
+
+                <h4>Reading from a JSON File:</h4>
+                <div class="code-container no-copy">
+                    <pre><code class="language-python">import json
+
+# Open and read from a JSON file
+with open("quiz_data.json", "r") as file:
+    data = json.load(file)
+    print(data)  # Now you have a Python list or dictionary!</code></pre>
+                </div>
+
+                <h4>Writing to a JSON File:</h4>
+                <div class="code-container no-copy">
+                    <pre><code class="language-python">import json
+
+questions = [
+    {"question": "What is 2+2?", "answer": "4"},
+    {"question": "What is Python?", "answer": "A programming language"}
+]
+
+# Save to a JSON file
+with open("quiz_data.json", "w") as file:
+    json.dump(questions, file, indent=4)  # indent makes it pretty!</code></pre>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Why JSON?</strong> JSON files are human-readable, easy to edit, and work across different programming languages. They're perfect for storing quiz questions, game data, user settings, and more!
+                </div>
+            </div>
+
+            <!-- Core Concepts -->
+            <div class="section concepts">
+                <h2>🐍 Core Concepts You Will Practice</h2>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th>Application in PyQuiz</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Functions (def)</strong></td>
+                                <td>Creating modular code for loading, running, and displaying results.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Conditionals (if/elif/else)</strong></td>
+                                <td>Checking if an answer is correct; handling menu navigation.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Loops (for/while)</strong></td>
+                                <td>Iterating through all questions; implementing the main program loop.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Types</strong></td>
+                                <td>Working with lists (of questions) and dictionaries (individual questions).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>File Handling (New!)</strong></td>
+                                <td>Using the json module to read (load) and write (save) the quiz data.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>User Input</strong></td>
+                                <td>Gathering answers and menu choices.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Project Phases -->
+            <div class="section phases">
+                <h2>🏗️ Project Phases & Guidance</h2>
+
+                <div class="phase-card">
+                    <h3>Phase 1: Setup and Data Structure</h3>
+                    <p>The quiz needs questions, and those questions need a structure.</p>
+                    
+                    <h4>Tasks:</h4>
+                    <ol>
+                        <li><strong>Define the Data:</strong> Use a list of dictionaries to store the questions.
+                            <ul>
+                                <li>Each dictionary must contain at least three keys: <code>question</code>, <code>options</code> (a list), and <code>correct_answer</code>.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Implement <code>load_quiz()</code>:</strong>
+                            <ul>
+                                <li>This function should attempt to load a list of questions from a file (e.g., <code>quiz_data.json</code>).</li>
+                                <li>If the file doesn't exist or is empty, it should return a default list of questions.</li>
+                                <li><strong>Required Module:</strong> You will need <code>import json</code> and <code>import os</code>. Use <code>json.load()</code> and <code>with open(...)</code>.</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <strong>💡 Starter Tip:</strong> The STARTER_QUESTIONS list shows the correct data structure. Study it carefully!
+                    </div>
+                </div>
+
+                <div class="phase-card">
+                    <h3>Phase 2: The Quiz Engine</h3>
+                    <p>This is where the user interacts with the application.</p>
+                    
+                    <h4>Tasks:</h4>
+                    <ol>
+                        <li><strong>Implement <code>run_quiz(questions)</code>:</strong>
+                            <ul>
+                                <li>Loop through the list of questions using a <code>for</code> loop.</li>
+                                <li>For each question:
+                                    <ul>
+                                        <li>Print the question text.</li>
+                                        <li>Print the options clearly (e.g., <code>1: Option A</code>, <code>2: Option B</code>).</li>
+                                        <li>Use <code>input()</code> to get the user's answer.</li>
+                                        <li>Check the answer using <code>if/else</code>.</li>
+                                        <li>Keep track of the user's score.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><strong>Implement <code>display_score(score, total)</code>:</strong>
+                            <ul>
+                                <li>Calculate the percentage score.</li>
+                                <li>Print the final score and a concluding message based on the performance (e.g., "Excellent job!" for > 90%, "Keep studying!" for < 50%).</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <strong>💡 Pro Tip:</strong> Use <code>enumerate()</code> in your loop to get both the index and the question at the same time!
+                    </div>
+                </div>
+
+                <div class="phase-card">
+                    <h3>Phase 3: Quiz Editor (The Creator's Role)</h3>
+                    <p>Allow the user to extend the program without modifying the code itself.</p>
+                    
+                    <h4>Tasks:</h4>
+                    <ol>
+                        <li><strong>Implement <code>create_question()</code>:</strong>
+                            <ul>
+                                <li>Use <code>input()</code> to prompt the user for:
+                                    <ul>
+                                        <li>The question text</li>
+                                        <li>All the multiple-choice options (4 options recommended)</li>
+                                        <li>The single correct answer</li>
+                                    </ul>
+                                </li>
+                                <li>Package this information into a new question dictionary that matches the structure from Phase 1.</li>
+                                <li>Return the new question dictionary.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Implement <code>save_quiz(questions)</code>:</strong>
+                            <ul>
+                                <li>This function must save the current list of all questions (old and new) back to the <code>quiz_data.json</code> file.</li>
+                                <li><strong>Required Module:</strong> Use <code>json.dump()</code> and <code>with open(...)</code>.</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Important:</strong> When saving, make sure to open the file in write mode (<code>'w'</code>). Also, use <code>indent=4</code> in json.dump() to make the file readable!
+                    </div>
+                </div>
+
+                <div class="phase-card">
+                    <h3>Phase 4: Main Application Flow</h3>
+                    <p>Connect everything together with a menu system.</p>
+                    
+                    <h4>Tasks:</h4>
+                    <ol>
+                        <li><strong>Implement <code>main_menu()</code>:</strong>
+                            <ul>
+                                <li>Present the user with a text-based menu (e.g., "1. Take Quiz", "2. Create New Question", "3. Exit").</li>
+                                <li>Use a main <code>while True</code> loop to keep the program running until the user chooses 'Exit'.</li>
+                                <li>Use <code>if/elif/else</code> to route the user's choice to the correct function (<code>run_quiz</code> or <code>create_question</code>).</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <strong>💡 Design Tip:</strong> Make your menu visually appealing with ASCII art or decorative lines. First impressions matter!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grading Rubric -->
+            <div class="section rubric">
+                <h2>💯 PyQuiz Grading Rubric</h2>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Criteria</th>
+                                <th>Max Points</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Functionality (50%)</strong></td>
+                                <td>50</td>
+                                <td>The core program runs without crashing. All menu options work. The quiz loops through all questions and accurately records the user's input.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Control Structures (20%)</strong></td>
+                                <td>20</td>
+                                <td>Effective use of <code>for</code> loops to iterate questions, <code>while</code> loop for the main application, and <code>if/elif/else</code> for scoring and menu logic.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Persistence (json) (20%)</strong></td>
+                                <td>20</td>
+                                <td>The application successfully loads questions from <code>quiz_data.json</code> on startup and saves new questions back to the file. <strong>(Critical Certiport Skill)</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Readability & Comments (10%)</strong></td>
+                                <td>10</td>
+                                <td>Code is well-formatted, variable names are descriptive, and functions have clear docstrings or comments explaining their purpose.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td><strong>100</strong></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Stretch Goals -->
+            <div class="section stretch">
+                <h2>⭐ Stretch Goals (Optional, for Advanced Students)</h2>
+                
+                <ol>
+                    <li><strong>Quiz Categories:</strong> Implement a feature to allow the user to choose a quiz based on a category (e.g., "History," "Science") by adding a <code>category</code> key to the question dictionary.</li>
+                    
+                    <li><strong>Statistics:</strong> Keep track of how many times a user has taken the quiz and their average score, saving this data in a separate file.</li>
+                    
+                    <li><strong>Timed Mode:</strong> Use the built-in <code>time</code> module to track how long the user takes to complete the quiz and display the time taken.</li>
+                    
+                    <li><strong>Difficulty Levels:</strong> Add a <code>difficulty</code> field to each question (Easy, Medium, Hard) and let users filter by difficulty.</li>
+                    
+                    <li><strong>Edit Existing Questions:</strong> Add functionality to view all questions and edit or delete them.</li>
+                </ol>
+            </div>
+
+            <!-- Starter Code Reference -->
+            <div class="section concepts">
+                <h2>📝 Starter Code Reference</h2>
+                
+                <div class="warning-box">
+                    <strong>⚠️ IMPORTANT:</strong> This code is for reference only. You MUST type it yourself. Copy-pasting is disabled and defeats the purpose of learning. Typing code helps you understand it better and builds muscle memory!
+                </div>
+
+                <h3>Complete Starter Template</h3>
+                <div class="code-container no-copy">
+                    <pre><code class="language-python">import json
+import os  # Used to check if the quiz data file exists
+
+# --- GLOBAL CONFIGURATION ---
+QUIZ_FILE = "quiz_data.json"
+
+# --- STARTER DATA (Used if the file does not exist) ---
+STARTER_QUESTIONS = [
+    {
+        "question": "What is the result of 5 % 2 in Python?",
+        "options": ["A) 2.5", "B) 1", "C) 2", "D) 0"],
+        "correct_answer": "B"
+    },
+    {
+        "question": "Which loop is best used when you know exactly how many times you want to iterate?",
+        "options": ["A) while", "B) for", "C) do-while", "D) infinite"],
+        "correct_answer": "B"
+    },
+    {
+        "question": "How do you define a function in Python?",
+        "options": ["A) function my_func():", "B) define my_func():", "C) def my_func():", "D) start my_func():"],
+        "correct_answer": "C"
+    }
+]
+
+# --- PHASE 1: Data Handling Functions ---
+
+def load_quiz():
+    """
+    Loads questions from the JSON file. If the file is not found,
+    it returns the STARTER_QUESTIONS list.
+    """
+    try:
+        # STUDENT TASK: Use the 'with open' structure and json.load() here.
+        # If the file exists, load and return the data.
+        if os.path.exists(QUIZ_FILE):
+            with open(QUIZ_FILE, 'r') as file:
+                file_content = file.read().strip()
+                if file_content:
+                    questions = json.loads(file_content)
+                    print(f"Loaded {len(questions)} questions from {QUIZ_FILE}.")
+                    return questions
+                else:
+                    print("Quiz file is empty. Using starter questions.")
+                    return STARTER_QUESTIONS
+        else:
+            print("Quiz file not found. Using starter questions.")
+            return STARTER_QUESTIONS
+    except json.JSONDecodeError:
+        print(f"Error reading {QUIZ_FILE}. Using starter questions.")
+        return STARTER_QUESTIONS
+    except Exception as e:
+        print(f"Unexpected error: {e}. Using starter questions.")
+        return STARTER_QUESTIONS
+
+def save_quiz(questions):
+    """
+    Saves the complete list of questions back to the JSON file.
+    """
+    # STUDENT TASK: Use 'with open' and json.dump() here.
+    # Ensure you open the file in 'w' (write) mode.
+    try:
+        with open(QUIZ_FILE, 'w') as file:
+            json.dump(questions, file, indent=4)
+        print(f"\nSuccessfully saved {len(questions)} questions to {QUIZ_FILE}.")
+    except Exception as e:
+        print(f"\nERROR: Could not save quiz data. {e}")
+
+
+# --- PHASE 2: Quiz Engine Functions ---
+
+def run_quiz(questions):
+    """
+    Runs the quiz, iterates through questions, collects answers, 
+    and tracks the score.
+    """
+    # STUDENT TASK: Initialize score and write the main quiz loop logic here.
+    
+    score = 0
+    total_questions = len(questions)
+
+    if total_questions == 0:
+        print("\nNo questions available! Try creating some first!")
+        return
+
+    print("\n--- Starting Quiz ---")
+    
+    for i, q in enumerate(questions):
+        print(f"\nQuestion {i + 1}/{total_questions}: {q['question']}")
+        
+        # Print options
+        for option in q['options']:
+            print(f"  {option}")
+
+        # Get user input
+        while True:
+            user_answer = input("Your answer (e.g., A, B, C, D): ").strip().upper()
+            
+            # Validation check
+            valid_options = [opt[0] for opt in q['options'] if opt[0].isalpha()]
+            if user_answer in valid_options:
+                break
+            else:
+                print("Invalid input. Please choose a valid option.")
+
+        # Check answer using conditional logic
+        if user_answer == q['correct_answer'].upper():
+            print("✓ Correct!")
+            score += 1
+        else:
+            print(f"✗ Incorrect. The correct answer was: {q['correct_answer']}")
+
+    # After the loop, display the final score
+    display_score(score, total_questions)
+
+def display_score(score, total):
+    """
+    Calculates and displays the final score and percentage.
+    """
+    # STUDENT TASK: Add conditional logic (if/elif/else) for feedback.
+    
+    percent = (score / total) * 100 if total > 0 else 0
+    print("\n" + "="*40)
+    print("--- Quiz Results ---")
+    print(f"You answered {score} out of {total} questions correctly.")
+    print(f"Final Score: {percent:.2f}%")
+
+    if percent >= 90:
+        print("🎉 Outstanding! You are a Python master!")
+    elif percent >= 70:
+        print("👍 Good job! You have a solid understanding.")
+    elif percent >= 50:
+        print("📖 Keep studying to improve your score.")
+    else:
+        print("💡 Time to review the basics!")
+    print("="*40)
+
+
+# --- PHASE 3: Quiz Editor Function ---
+
+def create_question():
+    """
+    Prompts the user for details and creates a new question dictionary.
+    """
+    # STUDENT TASK: Use multiple input() calls to gather all data.
+    
+    print("\n--- New Question Creator ---")
+    
+    q_text = input("Enter the question text: ").strip()
+    
+    # Loop to gather options
+    options = []
+    option_letters = ['A', 'B', 'C', 'D']
+    print("Enter the 4 multiple-choice options:")
+    for letter in option_letters:
+        option_text = input(f"Option {letter}: ").strip()
+        options.append(f"{letter}) {option_text}")
+        
+    # Get the correct answer
+    while True:
+        correct_ans = input("Enter the letter of the correct answer (A, B, C, or D): ").strip().upper()
+        if correct_ans in option_letters:
+            break
+        else:
+            print("Invalid choice. Please use A, B, C, or D.")
+
+    new_question = {
+        "question": q_text,
+        "options": options,
+        "correct_answer": correct_ans
+    }
+    
+    print("\n✓ Question created successfully!")
+    return new_question
+
+# --- PHASE 4: Main Application Flow ---
+
+def main_menu():
+    """
+    The main control function that displays the menu and handles user choices.
+    Uses a while loop to keep the program running.
+    """
+    questions = load_quiz()
+
+    while True:
+        print("\n" + "="*40)
+        print("  WELCOME TO PYQUIZ")
+        print("="*40)
+        print("1. Take Quiz")
+        print("2. Create New Question")
+        print("3. Exit")
+        print("="*40)
+        
+        # STUDENT TASK: Use input() and if/elif/else to handle choices.
+        
+        choice = input("Enter your choice (1, 2, or 3): ").strip()
+
+        if choice == '1':
+            run_quiz(questions)
+        elif choice == '2':
+            new_q = create_question()
+            questions.append(new_q)
+            save_quiz(questions)  # Save after adding
+        elif choice == '3':
+            print("\nThank you for using PyQuiz! Goodbye.")
+            break
+        else:
+            print("Invalid choice. Please enter 1, 2, or 3.")
+
+# Check for the typical Python entry point
+if __name__ == "__main__":
+    main_menu()</code></pre>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 How to Use This Code:</strong>
+                    <ol>
+                        <li>Read through the entire code carefully to understand the structure</li>
+                        <li>Create a new Python file called <code>pyquiz.py</code></li>
+                        <li>Type out the code yourself - do NOT copy and paste</li>
+                        <li>Pay attention to the comments that say "STUDENT TASK"</li>
+                        <li>Test your code frequently as you build each phase</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Tips and Best Practices -->
+            <div class="section concepts">
+                <h2>💡 Tips and Best Practices</h2>
+                
+                <div class="tip-box">
+                    <strong>🎯 Development Strategy:</strong>
+                    <ul>
+                        <li><strong>Start Small:</strong> Get one function working before moving to the next</li>
+                        <li><strong>Test Often:</strong> Run your code after every few lines to catch errors early</li>
+                        <li><strong>Use Print Statements:</strong> Add <code>print()</code> statements to debug and see what's happening</li>
+                        <li><strong>Read Error Messages:</strong> Python's error messages tell you exactly what's wrong and where</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>🐛 Common Pitfalls to Avoid:</strong>
+                    <ul>
+                        <li>Forgetting to import <code>json</code> and <code>os</code> at the top</li>
+                        <li>Not using <code>with open()</code> - this automatically closes files</li>
+                        <li>Opening file in wrong mode ('r' for reading, 'w' for writing)</li>
+                        <li>Forgetting to convert user input to uppercase when comparing answers</li>
+                        <li>Not validating user input (what if they type 'Z' when only A-D are valid?)</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <strong>📚 Testing Your Program:</strong>
+                    <ol>
+                        <li>Test taking a quiz with the starter questions</li>
+                        <li>Test creating a new question and verify it saves</li>
+                        <li>Test that the new question appears when you take the quiz again</li>
+                        <li>Test invalid inputs (wrong letters, numbers where letters expected)</li>
+                        <li>Test the exit option to make sure it works cleanly</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="section objective">
+                <h2>🎓 What You'll Learn</h2>
+                <p>By completing this project, you will have demonstrated mastery of:</p>
+                <ul>
+                    <li>✓ Function definition and modular programming</li>
+                    <li>✓ Loop control (for and while loops)</li>
+                    <li>✓ Conditional logic (if/elif/else statements)</li>
+                    <li>✓ Working with complex data structures (lists of dictionaries)</li>
+                    <li>✓ File I/O operations with JSON</li>
+                    <li>✓ User input validation and error handling</li>
+                    <li>✓ Program flow control and menu systems</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <strong>🏆 This project mirrors real-world application development</strong> and the skills you'll use on the Certiport Python certification exam. Take your time, code carefully, and don't hesitate to ask questions!
+                </div>
+            </div>
+
+            <!-- Submission Section -->
+            <div class="section phases">
+                <h2>📤 Submit Your Project</h2>
+                <p>Once you've completed your PyQuiz application and tested all features, submit your code here. Make sure your code includes all phases and runs without errors!</p>
+                
+                <div class="warning-box">
+                    <strong>⚠️ Before Submitting:</strong>
+                    <ul>
+                        <li>Test your program thoroughly - try all menu options</li>
+                        <li>Make sure you can take the quiz, create questions, and exit properly</li>
+                        <li>Verify that questions are saved to and loaded from the JSON file</li>
+                        <li>Check that your code has proper comments and formatting</li>
+                        <li>Include your name at the top of the file as a comment</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(55, 118, 171, 0.05); padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color); margin: 1.5rem 0;">
+                    <h3 style="margin-top: 0; color: var(--python-blue);">Submit Your Code</h3>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-primary); font-weight: 600;">Your Name:</label>
+                        <input type="text" id="studentName" placeholder="Enter your full name" style="width: 100%; background: var(--dark-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.75rem; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 1rem;">
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-primary); font-weight: 600;">Paste Your Complete Code:</label>
+                        <textarea id="studentCode" placeholder="Paste your entire pyquiz.py code here..." style="width: 100%; min-height: 300px; background: var(--dark-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 1rem; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; line-height: 1.5; resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-primary); font-weight: 600;">CodeHS Link (Optional):</label>
+                        <input type="text" id="codehsLink" placeholder="https://codehs.com/..." style="width: 100%; background: var(--dark-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.75rem; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 1rem;">
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-primary); font-weight: 600;">Any Notes or Comments:</label>
+                        <textarea id="studentNotes" placeholder="Any challenges you faced, features you added, etc." style="width: 100%; min-height: 100px; background: var(--dark-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.75rem; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.95rem; resize: vertical;"></textarea>
+                    </div>
+
+                    <button onclick="submitProject()" style="background: linear-gradient(45deg, var(--python-blue), var(--python-yellow)); color: #000; border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; width: 100%;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        🚀 Submit Project
+                    </button>
+
+                    <div id="submissionStatus" style="margin-top: 1rem; padding: 1rem; border-radius: 6px; display: none;"></div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 After Submitting:</strong> Your submission will be saved and your teacher can review it on the teacher dashboard. You'll receive feedback on your implementation!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-python.min.js"></script>
+    
+    <script>
+        // Subtle copy-paste prevention (except for question bot output)
+        function isInQuestionBot(element) {
+            // Check if the selection is within the question bot output area
+            while (element) {
+                if (element.id === 'questionBotOutput') {
+                    return true;
+                }
+                element = element.parentElement;
+            }
+            return false;
+        }
+
+        document.addEventListener('copy', function(e) {
+            const selection = window.getSelection();
+            const selectedText = selection.toString();
+            
+            // Allow copying from question bot
+            if (selection.anchorNode && isInQuestionBot(selection.anchorNode.parentElement)) {
+                return; // Allow copy
+            }
+            
+            if (selectedText.length > 10) {
+                e.preventDefault();
+                showNotification('Type code yourself for better learning 💡');
+            }
+        });
+
+        // Disable right-click context menu (except on question bot)
+        document.addEventListener('contextmenu', function(e) {
+            // Allow right-click on question bot output
+            if (e.target && isInQuestionBot(e.target)) {
+                return true;
+            }
+            e.preventDefault();
+            return false;
+        });
+
+        // Disable keyboard shortcuts for copying (except in question bot)
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+C or Cmd+C
+            if ((e.ctrlKey || e.metaKey) && e.keyCode === 67) {
+                const selection = window.getSelection();
+                const selectedText = selection.toString();
+                
+                // Allow copying from question bot
+                if (selection.anchorNode && isInQuestionBot(selection.anchorNode.parentElement)) {
+                    return; // Allow copy
+                }
+                
+                if (selectedText.length > 10) {
+                    e.preventDefault();
+                    showNotification('Type code yourself for better learning 💡');
+                }
+            }
+        });
+
+        // Subtle notification function
+        function showNotification(message) {
+            // Check if notification already exists
+            if (document.querySelector('.copy-notification')) return;
+            
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification';
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                background: rgba(55, 118, 171, 0.95);
+                color: #f0f6fc;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                z-index: 10000;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                animation: slideIn 0.3s ease;
+                font-family: 'Inter', sans-serif;
+                border: 1px solid rgba(255, 196, 0, 0.3);
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2500);
+        }
+
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ===== QUESTION HELPER BOT =====
+        const questionDatabase = [
+            // Variables & Data Types
+            {
+                question: "What is the correct way to create a variable in Python?",
+                options: ["A) var x = 5", "B) int x = 5", "C) x = 5", "D) dim x = 5"],
+                correct: "C",
+                topic: "Variables"
+            },
+            {
+                question: "Which data type is used to store True or False values?",
+                options: ["A) int", "B) bool", "C) str", "D) float"],
+                correct: "B",
+                topic: "Data Types"
+            },
+            {
+                question: "What is the output of: type(3.14)?",
+                options: ["A) <class 'int'>", "B) <class 'float'>", "C) <class 'decimal'>", "D) <class 'number'>"],
+                correct: "B",
+                topic: "Data Types"
+            },
+            {
+                question: "Which of these is NOT a valid variable name?",
+                options: ["A) my_var", "B) _var", "C) 2var", "D) var2"],
+                correct: "C",
+                topic: "Variables"
+            },
+            {
+                question: "What type of value is 'Hello World'?",
+                options: ["A) int", "B) float", "C) str", "D) bool"],
+                correct: "C",
+                topic: "Data Types"
+            },
+
+            // Operators
+            {
+                question: "What is the result of 5 % 2 in Python?",
+                options: ["A) 2.5", "B) 1", "C) 2", "D) 0"],
+                correct: "B",
+                topic: "Operators"
+            },
+            {
+                question: "What does the // operator do in Python?",
+                options: ["A) Division", "B) Floor division", "C) Modulo", "D) Comment"],
+                correct: "B",
+                topic: "Operators"
+            },
+            {
+                question: "What is the result of 2 ** 3?",
+                options: ["A) 6", "B) 5", "C) 8", "D) 9"],
+                correct: "C",
+                topic: "Operators"
+            },
+            {
+                question: "Which operator is used to check if two values are equal?",
+                options: ["A) =", "B) ==", "C) !=", "D) ==="],
+                correct: "B",
+                topic: "Operators"
+            },
+            {
+                question: "What does the += operator do?",
+                options: ["A) Adds and assigns", "B) Compares values", "C) Multiplies", "D) Divides"],
+                correct: "A",
+                topic: "Operators"
+            },
+
+            // Conditionals
+            {
+                question: "Which keyword is used to start a conditional statement?",
+                options: ["A) then", "B) if", "C) when", "D) case"],
+                correct: "B",
+                topic: "Conditionals"
+            },
+            {
+                question: "What comes after 'if' in a multi-condition statement?",
+                options: ["A) else if", "B) elseif", "C) elif", "D) fi"],
+                correct: "C",
+                topic: "Conditionals"
+            },
+            {
+                question: "What is the correct syntax for an if statement?",
+                options: ["A) if x > 5:", "B) if (x > 5)", "C) if x > 5 then:", "D) if x > 5 {"],
+                correct: "A",
+                topic: "Conditionals"
+            },
+            {
+                question: "Which keyword executes code when no conditions are true?",
+                options: ["A) default", "B) else", "C) otherwise", "D) finally"],
+                correct: "B",
+                topic: "Conditionals"
+            },
+            {
+                question: "What does 'and' do in conditional statements?",
+                options: ["A) Checks if any condition is true", "B) Checks if all conditions are true", "C) Negates a condition", "D) Compares values"],
+                correct: "B",
+                topic: "Conditionals"
+            },
+
+            // Loops
+            {
+                question: "Which loop is best when you know exactly how many times to iterate?",
+                options: ["A) while", "B) for", "C) do-while", "D) infinite"],
+                correct: "B",
+                topic: "Loops"
+            },
+            {
+                question: "What does range(5) produce?",
+                options: ["A) [1, 2, 3, 4, 5]", "B) [0, 1, 2, 3, 4]", "C) [0, 1, 2, 3, 4, 5]", "D) [1, 2, 3, 4]"],
+                correct: "B",
+                topic: "Loops"
+            },
+            {
+                question: "Which keyword exits a loop immediately?",
+                options: ["A) exit", "B) stop", "C) break", "D) end"],
+                correct: "C",
+                topic: "Loops"
+            },
+            {
+                question: "What does 'continue' do in a loop?",
+                options: ["A) Exits the loop", "B) Skips to next iteration", "C) Restarts the loop", "D) Pauses the loop"],
+                correct: "B",
+                topic: "Loops"
+            },
+            {
+                question: "What is the output of: for i in range(3): print(i)",
+                options: ["A) 1 2 3", "B) 0 1 2", "C) 0 1 2 3", "D) 1 2"],
+                correct: "B",
+                topic: "Loops"
+            },
+            {
+                question: "Which loop continues while a condition is true?",
+                options: ["A) for", "B) while", "C) until", "D) loop"],
+                correct: "B",
+                topic: "Loops"
+            },
+
+            // Functions
+            {
+                question: "How do you define a function in Python?",
+                options: ["A) function my_func():", "B) define my_func():", "C) def my_func():", "D) func my_func():"],
+                correct: "C",
+                topic: "Functions"
+            },
+            {
+                question: "What keyword is used to return a value from a function?",
+                options: ["A) give", "B) return", "C) output", "D) send"],
+                correct: "B",
+                topic: "Functions"
+            },
+            {
+                question: "What are the values passed to a function called?",
+                options: ["A) variables", "B) arguments", "C) inputs", "D) data"],
+                correct: "B",
+                topic: "Functions"
+            },
+            {
+                question: "What happens if a function doesn't have a return statement?",
+                options: ["A) Error occurs", "B) Returns 0", "C) Returns None", "D) Returns empty string"],
+                correct: "C",
+                topic: "Functions"
+            },
+            {
+                question: "Which of these correctly calls a function named calculate?",
+                options: ["A) call calculate()", "B) calculate()", "C) run calculate", "D) execute calculate()"],
+                correct: "B",
+                topic: "Functions"
+            },
+
+            // Lists
+            {
+                question: "How do you create an empty list in Python?",
+                options: ["A) list = {}", "B) list = []", "C) list = ()", "D) list = <>"],
+                correct: "B",
+                topic: "Lists"
+            },
+            {
+                question: "What method adds an item to the end of a list?",
+                options: ["A) add()", "B) insert()", "C) append()", "D) push()"],
+                correct: "C",
+                topic: "Lists"
+            },
+            {
+                question: "How do you access the first element of a list?",
+                options: ["A) list[0]", "B) list[1]", "C) list.first()", "D) list.get(0)"],
+                correct: "A",
+                topic: "Lists"
+            },
+            {
+                question: "What does len(my_list) return?",
+                options: ["A) The last element", "B) The first element", "C) The number of items", "D) The largest item"],
+                correct: "C",
+                topic: "Lists"
+            },
+            {
+                question: "How do you remove the last item from a list?",
+                options: ["A) list.remove()", "B) list.delete()", "C) list.pop()", "D) list.removeLast()"],
+                correct: "C",
+                topic: "Lists"
+            },
+
+            // Strings
+            {
+                question: "Which method converts a string to uppercase?",
+                options: ["A) toUpper()", "B) uppercase()", "C) upper()", "D) capitalize()"],
+                correct: "C",
+                topic: "Strings"
+            },
+            {
+                question: "How do you get the length of a string?",
+                options: ["A) string.length()", "B) len(string)", "C) string.size()", "D) length(string)"],
+                correct: "B",
+                topic: "Strings"
+            },
+            {
+                question: "What does string.split() do?",
+                options: ["A) Divides string in half", "B) Converts to list of characters", "C) Splits string into list of words", "D) Removes spaces"],
+                correct: "C",
+                topic: "Strings"
+            },
+            {
+                question: "How do you concatenate strings in Python?",
+                options: ["A) string1 + string2", "B) string1 & string2", "C) concat(string1, string2)", "D) string1.add(string2)"],
+                correct: "A",
+                topic: "Strings"
+            },
+            {
+                question: "What is the result of 'Hello'[1]?",
+                options: ["A) H", "B) e", "C) l", "D) o"],
+                correct: "B",
+                topic: "Strings"
+            },
+
+            // Dictionaries
+            {
+                question: "How do you create an empty dictionary?",
+                options: ["A) dict = []", "B) dict = ()", "C) dict = {}", "D) dict = <>"],
+                correct: "C",
+                topic: "Dictionaries"
+            },
+            {
+                question: "How do you access a value in a dictionary?",
+                options: ["A) dict[key]", "B) dict.get[key]", "C) dict(key)", "D) dict->key"],
+                correct: "A",
+                topic: "Dictionaries"
+            },
+            {
+                question: "Which method returns all keys in a dictionary?",
+                options: ["A) dict.getKeys()", "B) dict.keys()", "C) dict.allKeys()", "D) keys(dict)"],
+                correct: "B",
+                topic: "Dictionaries"
+            },
+            {
+                question: "What happens if you access a non-existent key?",
+                options: ["A) Returns None", "B) Returns empty string", "C) KeyError occurs", "D) Returns 0"],
+                correct: "C",
+                topic: "Dictionaries"
+            },
+            {
+                question: "How do you add a new key-value pair to a dictionary?",
+                options: ["A) dict.add(key, value)", "B) dict[key] = value", "C) dict.insert(key, value)", "D) dict.put(key, value)"],
+                correct: "B",
+                topic: "Dictionaries"
+            },
+
+            // Input/Output
+            {
+                question: "Which function is used to get user input?",
+                options: ["A) get()", "B) input()", "C) read()", "D) scan()"],
+                correct: "B",
+                topic: "Input/Output"
+            },
+            {
+                question: "What type does input() always return?",
+                options: ["A) int", "B) float", "C) str", "D) bool"],
+                correct: "C",
+                topic: "Input/Output"
+            },
+            {
+                question: "How do you convert input to an integer?",
+                options: ["A) integer(input())", "B) int(input())", "C) toInt(input())", "D) input().int()"],
+                correct: "B",
+                topic: "Input/Output"
+            },
+            {
+                question: "Which function displays output to the console?",
+                options: ["A) display()", "B) output()", "C) print()", "D) show()"],
+                correct: "C",
+                topic: "Input/Output"
+            },
+            {
+                question: "How do you print without a newline?",
+                options: ["A) print(x, end='')", "B) print(x, newline=false)", "C) print(x, nl=false)", "D) println(x)"],
+                correct: "A",
+                topic: "Input/Output"
+            },
+
+            // File Handling
+            {
+                question: "Which mode opens a file for writing?",
+                options: ["A) 'r'", "B) 'w'", "C) 'a'", "D) 'x'"],
+                correct: "B",
+                topic: "File Handling"
+            },
+            {
+                question: "What does 'with open()' do?",
+                options: ["A) Creates a file", "B) Deletes a file", "C) Opens and automatically closes a file", "D) Renames a file"],
+                correct: "C",
+                topic: "File Handling"
+            },
+            {
+                question: "Which mode is used to append to a file?",
+                options: ["A) 'r'", "B) 'w'", "C) 'a'", "D) 'p'"],
+                correct: "C",
+                topic: "File Handling"
+            },
+            {
+                question: "What module is used to work with JSON files?",
+                options: ["A) file", "B) json", "C) data", "D) parse"],
+                correct: "B",
+                topic: "File Handling"
+            },
+            {
+                question: "Which function loads data from a JSON file?",
+                options: ["A) json.read()", "B) json.load()", "C) json.get()", "D) json.parse()"],
+                correct: "B",
+                topic: "File Handling"
+            },
+
+            // Error Handling
+            {
+                question: "Which keyword is used to handle exceptions?",
+                options: ["A) catch", "B) handle", "C) except", "D) error"],
+                correct: "C",
+                topic: "Error Handling"
+            },
+            {
+                question: "What keyword starts exception handling?",
+                options: ["A) attempt", "B) try", "C) test", "D) check"],
+                correct: "B",
+                topic: "Error Handling"
+            },
+            {
+                question: "Which block always executes in exception handling?",
+                options: ["A) else", "B) always", "C) finally", "D) end"],
+                correct: "C",
+                topic: "Error Handling"
+            },
+            {
+                question: "What exception occurs when dividing by zero?",
+                options: ["A) ValueError", "B) TypeError", "C) ZeroDivisionError", "D) MathError"],
+                correct: "C",
+                topic: "Error Handling"
+            },
+            {
+                question: "How do you manually raise an exception?",
+                options: ["A) throw Exception", "B) raise Exception", "C) error Exception", "D) create Exception"],
+                correct: "B",
+                topic: "Error Handling"
+            },
+
+            // Modules & Libraries
+            {
+                question: "Which keyword is used to import a module?",
+                options: ["A) include", "B) require", "C) import", "D) using"],
+                correct: "C",
+                topic: "Modules"
+            },
+            {
+                question: "How do you import only specific functions from a module?",
+                options: ["A) import module.function", "B) from module import function", "C) import function from module", "D) get function from module"],
+                correct: "B",
+                topic: "Modules"
+            },
+            {
+                question: "What module is used for random number generation?",
+                options: ["A) rand", "B) random", "C) math", "D) numbers"],
+                correct: "B",
+                topic: "Modules"
+            },
+            {
+                question: "Which module provides mathematical functions?",
+                options: ["A) math", "B) numbers", "C) calc", "D) arithmetic"],
+                correct: "A",
+                topic: "Modules"
+            },
+            {
+                question: "How do you create an alias when importing?",
+                options: ["A) import module alias name", "B) import module as name", "C) import module = name", "D) import module -> name"],
+                correct: "B",
+                topic: "Modules"
+            }
+        ];
+
+        let usedQuestions = new Set();
+        let questionCount = 0;
+
+        function getRandomQuestion() {
+            const availableQuestions = questionDatabase.filter((_, index) => !usedQuestions.has(index));
+            
+            if (availableQuestions.length === 0) {
+                document.getElementById('questionBotOutput').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--accent-green);">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">🎉</div>
+                        <div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;">You've used all ${questionDatabase.length} questions!</div>
+                        <div style="color: var(--text-secondary); margin-top: 1rem;">
+                            <button onclick="resetQuestionBot()" style="background: var(--python-blue); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 1rem;">
+                                🔄 Reset Bot
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            const originalIndex = questionDatabase.indexOf(availableQuestions[randomIndex]);
+            const q = availableQuestions[randomIndex];
+            
+            usedQuestions.add(originalIndex);
+            questionCount++;
+            document.getElementById('questionCount').textContent = questionCount;
+
+            displayQuestion(q);
+        }
+
+        function getMultipleQuestions() {
+            const availableQuestions = questionDatabase.filter((_, index) => !usedQuestions.has(index));
+            
+            if (availableQuestions.length === 0) {
+                getRandomQuestion();
+                return;
+            }
+
+            const numQuestions = Math.min(5, availableQuestions.length);
+            let output = '<div style="color: var(--text-primary);">';
+            output += '<div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--python-yellow);">📚 Here are ' + numQuestions + ' random questions:</div>';
+
+            for (let i = 0; i < numQuestions; i++) {
+                const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+                const originalIndex = questionDatabase.indexOf(availableQuestions[randomIndex]);
+                const q = availableQuestions[randomIndex];
+                
+                availableQuestions.splice(randomIndex, 1);
+                usedQuestions.add(originalIndex);
+                questionCount++;
+
+                output += `
+                    <div style="background: rgba(55, 118, 171, 0.1); border: 1px solid var(--border-color); border-radius: 6px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <div style="font-weight: 600; color: var(--python-blue); margin-bottom: 0.75rem;">Question ${i + 1}:</div>
+                        <div style="font-size: 1.05rem; margin-bottom: 1rem; color: var(--text-primary);">${q.question}</div>
+                        <div style="margin: 0.5rem 0; color: var(--text-secondary);">${q.options[0]}</div>
+                        <div style="margin: 0.5rem 0; color: var(--text-secondary);">${q.options[1]}</div>
+                        <div style="margin: 0.5rem 0; color: var(--text-secondary);">${q.options[2]}</div>
+                        <div style="margin: 0.5rem 0; color: var(--text-secondary);">${q.options[3]}</div>
+                        <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(35, 134, 54, 0.15); border-radius: 4px;">
+                            <strong style="color: var(--accent-green);">✓ Correct Answer:</strong> 
+                            <span style="color: var(--text-primary); font-weight: 600;">${q.correct}</span>
+                        </div>
+                        <div style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">
+                            📌 Topic: ${q.topic}
+                        </div>
+                    </div>
+                `;
+            }
+
+            output += '</div>';
+            document.getElementById('questionBotOutput').innerHTML = output;
+            document.getElementById('questionCount').textContent = questionCount;
+        }
+
+        function displayQuestion(q) {
+            const output = `
+                <div style="color: var(--text-primary);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color);">
+                        <div style="font-size: 1.2rem; font-weight: 600; color: var(--python-yellow);">🎯 Random Question</div>
+                        <div style="background: rgba(137, 87, 229, 0.2); padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.85rem; color: var(--accent-purple);">
+                            ${q.topic}
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 1.5rem 0;">
+                        <div style="font-weight: 600; color: var(--python-blue); margin-bottom: 0.75rem;">Question:</div>
+                        <div style="font-size: 1.1rem; padding: 1rem; background: rgba(55, 118, 171, 0.1); border-radius: 6px; border-left: 3px solid var(--python-blue);">
+                            ${q.question}
+                        </div>
+                    </div>
+
+                    <div style="margin: 1.5rem 0;">
+                        <div style="font-weight: 600; color: var(--python-blue); margin-bottom: 0.75rem;">Options:</div>
+                        <div style="padding: 1rem; background: rgba(55, 118, 171, 0.05); border-radius: 6px;">
+                            <div style="margin: 0.5rem 0; padding: 0.5rem; background: var(--card-bg); border-radius: 4px;">${q.options[0]}</div>
+                            <div style="margin: 0.5rem 0; padding: 0.5rem; background: var(--card-bg); border-radius: 4px;">${q.options[1]}</div>
+                            <div style="margin: 0.5rem 0; padding: 0.5rem; background: var(--card-bg); border-radius: 4px;">${q.options[2]}</div>
+                            <div style="margin: 0.5rem 0; padding: 0.5rem; background: var(--card-bg); border-radius: 4px;">${q.options[3]}</div>
+                        </div>
+                    </div>
+
+                    <div style="margin: 1.5rem 0; padding: 1rem; background: rgba(35, 134, 54, 0.15); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+                        <strong style="color: var(--accent-green);">✓ Correct Answer:</strong> 
+                        <span style="color: var(--text-primary); font-weight: 600; font-size: 1.1rem;">${q.correct}</span>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(210, 153, 34, 0.1); border-radius: 6px; font-size: 0.9rem; color: var(--text-secondary);">
+                        💡 Copy this question and add it to your PyQuiz application!
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('questionBotOutput').innerHTML = output;
+        }
+
+        function resetQuestionBot() {
+            usedQuestions.clear();
+            questionCount = 0;
+            document.getElementById('questionCount').textContent = '0';
+            document.getElementById('questionBotOutput').innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                    Bot reset! Click the button above to get Python quiz questions! 🚀
+                </div>
+            `;
+        }
+
+        window.getRandomQuestion = getRandomQuestion;
+        window.getMultipleQuestions = getMultipleQuestions;
+        window.resetQuestionBot = resetQuestionBot;
+
+        // ===== INTERACTIVE PYQUIZ DEMO =====
+        let demoQuestions = [
+            {
+                question: "What is the result of 5 % 2 in Python?",
+                options: ["A) 2.5", "B) 1", "C) 2", "D) 0"],
+                correct_answer: "B"
+            },
+            {
+                question: "Which loop is best used when you know exactly how many times you want to iterate?",
+                options: ["A) while", "B) for", "C) do-while", "D) infinite"],
+                correct_answer: "B"
+            },
+            {
+                question: "How do you define a function in Python?",
+                options: ["A) function my_func():", "B) define my_func():", "C) def my_func():", "D) start my_func():"],
+                correct_answer: "C"
+            }
+        ];
+
+        let demoState = 'menu';
+        let quizScore = 0;
+        let currentQuestionIndex = 0;
+        let newQuestion = {};
+        let newQuestionStep = 0;
+
+        function printToTerminal(text, color = '#d4d4d4') {
+            const output = document.getElementById('terminalOutput');
+            const line = document.createElement('div');
+            line.style.color = color;
+            line.textContent = text;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function clearTerminal() {
+            document.getElementById('terminalOutput').innerHTML = '';
+        }
+
+        function showInput(placeholder = 'Type your answer here...') {
+            const inputArea = document.getElementById('inputArea');
+            const input = document.getElementById('userInput');
+            inputArea.style.display = 'block';
+            input.placeholder = placeholder;
+            input.value = '';
+            input.focus();
+        }
+
+        function hideInput() {
+            document.getElementById('inputArea').style.display = 'none';
+        }
+
+        function showMenu() {
+            printToTerminal('\n===============================');
+            printToTerminal('  W E L C O M E   T O   P Y Q U I Z', '#ffd43b');
+            printToTerminal('===============================');
+            printToTerminal('1. Take Quiz');
+            printToTerminal('2. Create New Question');
+            printToTerminal('3. Exit');
+            printToTerminal('');
+            showInput('Enter your choice (1, 2, or 3)');
+            demoState = 'menu';
+        }
+
+        function startQuiz() {
+            quizScore = 0;
+            currentQuestionIndex = 0;
+            printToTerminal('\n--- Starting Quiz ---', '#238636');
+            demoState = 'quiz';
+            setTimeout(() => askQuestion(), 500);
+        }
+
+        function askQuestion() {
+            if (currentQuestionIndex >= demoQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const q = demoQuestions[currentQuestionIndex];
+            printToTerminal(`\nQuestion ${currentQuestionIndex + 1}/${demoQuestions.length}: ${q.question}`, '#3776ab');
+            q.options.forEach(opt => printToTerminal(`  ${opt}`));
+            showInput('Your answer (e.g., A, B, C, D)');
+        }
+
+        function checkAnswer(userAnswer) {
+            const q = demoQuestions[currentQuestionIndex];
+            const correct = userAnswer.toUpperCase() === q.correct_answer.toUpperCase();
+            
+            if (correct) {
+                printToTerminal('✓ Correct!', '#238636');
+                quizScore++;
+            } else {
+                printToTerminal(`✗ Incorrect. The correct answer was: ${q.correct_answer}`, '#e8590c');
+            }
+
+            currentQuestionIndex++;
+            setTimeout(() => askQuestion(), 800);
+        }
+
+        function showResults() {
+            const total = demoQuestions.length;
+            const percent = (quizScore / total) * 100;
+            
+            printToTerminal('\n========================================');
+            printToTerminal('--- Quiz Results ---', '#ffd43b');
+            printToTerminal(`You answered ${quizScore} out of ${total} questions correctly.`);
+            printToTerminal(`Final Score: ${percent.toFixed(2)}%`, '#3776ab');
+
+            if (percent >= 90) {
+                printToTerminal('🎉 Outstanding! You are a Python master!', '#238636');
+            } else if (percent >= 70) {
+                printToTerminal('👍 Good job! You have a solid understanding.', '#238636');
+            } else if (percent >= 50) {
+                printToTerminal('📖 Keep studying to improve your score.', '#d29922');
+            } else {
+                printToTerminal('💡 Time to review the basics!', '#e8590c');
+            }
+            printToTerminal('========================================');
+
+            demoState = 'menu';
+            setTimeout(() => showMenu(), 1500);
+        }
+
+        function startCreateQuestion() {
+            newQuestion = { options: [] };
+            newQuestionStep = 0;
+            printToTerminal('\n--- New Question Creator ---', '#8957e5');
+            printToTerminal('Enter the question text:');
+            showInput('Type your question here...');
+            demoState = 'create';
+        }
+
+        function handleCreateQuestionInput(input) {
+            if (newQuestionStep === 0) {
+                newQuestion.question = input;
+                printToTerminal(`Question: ${input}`, '#8b949e');
+                printToTerminal('\nEnter the 4 multiple-choice options:');
+                printToTerminal('Option A:');
+                showInput('Type option A...');
+                newQuestionStep = 1;
+            } else if (newQuestionStep >= 1 && newQuestionStep <= 4) {
+                const letter = String.fromCharCode(64 + newQuestionStep);
+                newQuestion.options.push(`${letter}) ${input}`);
+                printToTerminal(`${letter}) ${input}`, '#8b949e');
+                
+                if (newQuestionStep < 4) {
+                    const nextLetter = String.fromCharCode(65 + newQuestionStep);
+                    printToTerminal(`Option ${nextLetter}:`);
+                    showInput(`Type option ${nextLetter}...`);
+                    newQuestionStep++;
+                } else {
+                    printToTerminal('\nEnter the letter of the correct answer (A, B, C, or D):');
+                    showInput('Enter A, B, C, or D');
+                    newQuestionStep = 5;
+                }
+            } else if (newQuestionStep === 5) {
+                const answer = input.toUpperCase();
+                if (['A', 'B', 'C', 'D'].includes(answer)) {
+                    newQuestion.correct_answer = answer;
+                    printToTerminal(`\n✓ Question created successfully!`, '#238636');
+                    printToTerminal(`Successfully saved ${demoQuestions.length + 1} questions to quiz_data.json.`, '#238636');
+                    
+                    demoQuestions.push(newQuestion);
+                    
+                    demoState = 'menu';
+                    setTimeout(() => showMenu(), 1000);
+                } else {
+                    printToTerminal('Invalid choice. Please use A, B, C, or D.', '#e8590c');
+                    showInput('Enter A, B, C, or D');
+                }
+            }
+        }
+
+        function submitInput() {
+            const input = document.getElementById('userInput').value.trim();
+            if (!input) return;
+
+            printToTerminal(`> ${input}`, '#ffd43b');
+            hideInput();
+
+            if (demoState === 'menu') {
+                if (input === '1') {
+                    startQuiz();
+                } else if (input === '2') {
+                    startCreateQuestion();
+                } else if (input === '3') {
+                    printToTerminal('\nThank you for using PyQuiz! Goodbye.', '#238636');
+                    printToTerminal('\n💡 Click "Reset" to try again!', '#8b949e');
+                } else {
+                    printToTerminal('Invalid choice. Please enter 1, 2, or 3.', '#e8590c');
+                    setTimeout(() => showMenu(), 1000);
+                }
+            } else if (demoState === 'quiz') {
+                const validOptions = ['A', 'B', 'C', 'D'];
+                if (validOptions.includes(input.toUpperCase())) {
+                    hideInput();
+                    checkAnswer(input);
+                } else {
+                    printToTerminal('Invalid input. Please choose A, B, C, or D.', '#e8590c');
+                    showInput('Your answer (e.g., A, B, C, D)');
+                }
+            } else if (demoState === 'create') {
+                handleCreateQuestionInput(input);
+            }
+        }
+
+        function resetDemo() {
+            demoQuestions = [
+                {
+                    question: "What is the result of 5 % 2 in Python?",
+                    options: ["A) 2.5", "B) 1", "C) 2", "D) 0"],
+                    correct_answer: "B"
+                },
+                {
+                    question: "Which loop is best used when you know exactly how many times you want to iterate?",
+                    options: ["A) while", "B) for", "C) do-while", "D) infinite"],
+                    correct_answer: "B"
+                },
+                {
+                    question: "How do you define a function in Python?",
+                    options: ["A) function my_func():", "B) define my_func():", "C) def my_func():", "D) start my_func():"],
+                    correct_answer: "C"
+                }
+            ];
+            clearTerminal();
+            printToTerminal('Quiz file not found. Using starter questions.', '#8b949e');
+            printToTerminal('Loaded 3 questions from quiz_data.json.', '#238636');
+            showMenu();
+        }
+
+        // Handle Enter key in input
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('userInput');
+            if (input) {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        submitInput();
+                    }
+                });
+            }
+            
+            // Start the demo
+            resetDemo();
+        });
+    </script>
+
+    <!-- Firebase Submission System -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Initialize Firebase
+        let db, auth;
+        
+        async function initFirebase() {
+            try {
+                const response = await fetch('/firebase-config.js');
+                const configText = await response.text();
+                const configMatch = configText.match(/const firebaseConfig = ({[\s\S]*?});/);
+                if (configMatch) {
+                    const firebaseConfig = eval('(' + configMatch[1] + ')');
+                    const app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+                }
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+            }
+        }
+
+        initFirebase();
+
+        async function submitProjectInternal() {
+            const name = document.getElementById('studentName').value.trim();
+            const code = document.getElementById('studentCode').value.trim();
+            const link = document.getElementById('codehsLink').value.trim();
+            const notes = document.getElementById('studentNotes').value.trim();
+
+            // Validation
+            if (!name) {
+                showSubmissionStatusInternal('Please enter your name', 'error');
+                return;
+            }
+
+            if (!code) {
+                showSubmissionStatusInternal('Please paste your code', 'error');
+                return;
+            }
+
+            if (code.length < 100) {
+                showSubmissionStatusInternal('Your code seems too short. Please paste your complete code.', 'error');
+                return;
+            }
+
+            // Show loading
+            showSubmissionStatusInternal('Submitting your project...', 'loading');
+
+            try {
+                // Get current user email if logged in
+                const userEmail = auth?.currentUser?.email || 'anonymous';
+
+                // Save to Firestore
+                const docRef = await addDoc(collection(db, 'pyquiz_submissions'), {
+                    studentName: name,
+                    studentEmail: userEmail,
+                    code: code,
+                    codehsLink: link,
+                    notes: notes,
+                    submittedAt: serverTimestamp(),
+                    dueDate: '2025-10-31',
+                    project: 'PyQuiz',
+                    status: 'submitted',
+                    grade: null,
+                    feedback: null
+                });
+
+                console.log('Submission saved with ID:', docRef.id);
+
+                // Success message
+                showSubmissionStatusInternal('✅ Project submitted successfully! Your teacher will review it soon.', 'success');
+
+                // Clear form after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('studentName').value = '';
+                    document.getElementById('studentCode').value = '';
+                    document.getElementById('codehsLink').value = '';
+                    document.getElementById('studentNotes').value = '';
+                }, 3000);
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                showSubmissionStatusInternal('❌ Error submitting project. Please try again or contact your teacher.', 'error');
+            }
+        }
+
+        function showSubmissionStatusInternal(message, type) {
+            const statusDiv = document.getElementById('submissionStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = message;
+
+            if (type === 'success') {
+                statusDiv.style.background = 'rgba(35, 134, 54, 0.2)';
+                statusDiv.style.border = '1px solid var(--accent-green)';
+                statusDiv.style.color = 'var(--accent-green)';
+            } else if (type === 'error') {
+                statusDiv.style.background = 'rgba(232, 89, 12, 0.2)';
+                statusDiv.style.border = '1px solid var(--accent-orange)';
+                statusDiv.style.color = 'var(--accent-orange)';
+            } else if (type === 'loading') {
+                statusDiv.style.background = 'rgba(55, 118, 171, 0.2)';
+                statusDiv.style.border = '1px solid var(--python-blue)';
+                statusDiv.style.color = 'var(--python-blue)';
+            }
+        }
+
+        // Make function available globally
+        window.submitProject = submitProjectInternal;
+    </script>
+</body>
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyQuiz Submissions | Teacher Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --python-blue: #3776ab;
+            --python-yellow: #ffd43b;
+            --dark-bg: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent-green: #238636;
+            --accent-purple: #8957e5;
+            --accent-orange: #e8590c;
+            --accent-yellow: #d29922;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, var(--python-blue), var(--python-yellow));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .nav-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem 2rem;
+        }
+
+        .header {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--python-blue), var(--python-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--python-yellow);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .submissions-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .submission-card {
+            background: rgba(55, 118, 171, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .submission-card:hover {
+            border-color: var(--python-blue);
+            background: rgba(55, 118, 171, 0.1);
+        }
+
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .student-info h3 {
+            color: var(--python-blue);
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .student-email {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .submission-meta {
+            text-align: right;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .code-preview {
+            background: #1e1e1e;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #d4d4d4;
+        }
+
+        .notes-section {
+            background: rgba(210, 153, 34, 0.1);
+            border-left: 3px solid var(--accent-yellow);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .notes-section strong {
+            color: var(--accent-yellow);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--python-blue);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(55, 118, 171, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-section {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--python-blue);
+            color: white;
+            border-color: var(--python-blue);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .badge-success {
+            background: rgba(35, 134, 54, 0.2);
+            color: var(--accent-green);
+        }
+
+        .badge-warning {
+            background: rgba(232, 89, 12, 0.2);
+            color: var(--accent-orange);
+        }
+
+        @media (max-width: 768px) {
+            .submission-header {
+                flex-direction: column;
+            }
+
+            .submission-meta {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="nav-icon">📊</div>
+            <span class="nav-title">PyQuiz Submissions</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/quiz-project">Project Page</a>
+            <a href="/dashboard">Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>PyQuiz Project Submissions</h1>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Review student submissions and provide feedback</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalSubmissions">0</div>
+                <div class="stat-label">Total Submissions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="todaySubmissions">0</div>
+                <div class="stat-label">Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pendingSubmissions">0</div>
+                <div class="stat-label">Pending Review</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgCodeLength">0</div>
+                <div class="stat-label">Avg Lines of Code</div>
+            </div>
+        </div>
+
+        <div class="submissions-container">
+            <h2 style="margin-bottom: 1.5rem; color: var(--text-primary);">Student Submissions</h2>
+            
+            <div class="filter-section">
+                <button class="filter-btn active" onclick="filterSubmissions('all')">All</button>
+                <button class="filter-btn" onclick="filterSubmissions('today')">Today</button>
+                <button class="filter-btn" onclick="filterSubmissions('pending')">Pending</button>
+                <button class="filter-btn" onclick="filterSubmissions('graded')">Graded</button>
+            </div>
+
+            <div id="loadingState" class="loading">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
+                <div>Loading submissions...</div>
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📭</div>
+                <h3>No Submissions Yet</h3>
+                <p>Student submissions will appear here once they submit their projects.</p>
+            </div>
+
+            <div id="submissionsList"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, getDocs, query, orderBy, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        let db;
+        let allSubmissions = [];
+
+        async function initFirebase() {
+            try {
+                const response = await fetch('/firebase-config.js');
+                const configText = await response.text();
+                const configMatch = configText.match(/const firebaseConfig = ({[\s\S]*?});/);
+                if (configMatch) {
+                    const firebaseConfig = eval('(' + configMatch[1] + ')');
+                    const app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    loadSubmissions();
+                }
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+                document.getElementById('loadingState').innerHTML = '<div style="color: var(--accent-orange);">Error loading submissions. Please refresh the page.</div>';
+            }
+        }
+
+        async function loadSubmissions() {
+            try {
+                const q = query(collection(db, 'pyquiz_submissions'), orderBy('submittedAt', 'desc'));
+                const querySnapshot = await getDocs(q);
+                
+                allSubmissions = [];
+                querySnapshot.forEach((doc) => {
+                    allSubmissions.push({ id: doc.id, ...doc.data() });
+                });
+
+                updateStats();
+                displaySubmissions(allSubmissions);
+
+                document.getElementById('loadingState').style.display = 'none';
+                
+                if (allSubmissions.length === 0) {
+                    document.getElementById('emptyState').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                document.getElementById('loadingState').innerHTML = '<div style="color: var(--accent-orange);">Error loading submissions.</div>';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalSubmissions').textContent = allSubmissions.length;
+            
+            const today = new Date().toDateString();
+            const todayCount = allSubmissions.filter(sub => {
+                const subDate = sub.submittedAt?.toDate?.();
+                return subDate && subDate.toDateString() === today;
+            }).length;
+            document.getElementById('todaySubmissions').textContent = todayCount;
+
+            const pendingCount = allSubmissions.filter(sub => !sub.grade).length;
+            document.getElementById('pendingSubmissions').textContent = pendingCount;
+
+            const avgLines = allSubmissions.length > 0 
+                ? Math.round(allSubmissions.reduce((sum, sub) => sum + (sub.code?.split('\n').length || 0), 0) / allSubmissions.length)
+                : 0;
+            document.getElementById('avgCodeLength').textContent = avgLines;
+        }
+
+        function displaySubmissions(submissions) {
+            const container = document.getElementById('submissionsList');
+            container.innerHTML = '';
+
+            if (submissions.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('emptyState').style.display = 'none';
+
+            submissions.forEach(sub => {
+                const card = document.createElement('div');
+                card.className = 'submission-card';
+                
+                const submittedDate = sub.submittedAt?.toDate?.();
+                const dateStr = submittedDate ? submittedDate.toLocaleString() : 'Unknown';
+                const linesOfCode = sub.code?.split('\n').length || 0;
+                
+                const statusBadge = sub.grade 
+                    ? `<span class="badge badge-success">Graded: ${sub.grade}</span>`
+                    : `<span class="badge badge-warning">Pending</span>`;
+
+                card.innerHTML = `
+                    <div class="submission-header">
+                        <div class="student-info">
+                            <h3>${sub.studentName} ${statusBadge}</h3>
+                            <div class="student-email">${sub.studentEmail}</div>
+                        </div>
+                        <div class="submission-meta">
+                            <div>📅 ${dateStr}</div>
+                            <div>📝 ${linesOfCode} lines of code</div>
+                        </div>
+                    </div>
+
+                    ${sub.codehsLink ? `
+                        <div style="margin-bottom: 1rem;">
+                            <strong style="color: var(--python-blue);">CodeHS Link:</strong> 
+                            <a href="${sub.codehsLink}" target="_blank" style="color: var(--python-yellow); text-decoration: none;">
+                                ${sub.codehsLink}
+                            </a>
+                        </div>
+                    ` : ''}
+
+                    ${sub.notes ? `
+                        <div class="notes-section">
+                            <strong>📌 Student Notes:</strong>
+                            <div style="margin-top: 0.5rem; color: var(--text-secondary);">${sub.notes}</div>
+                        </div>
+                    ` : ''}
+
+                    <details style="margin-top: 1rem;">
+                        <summary style="cursor: pointer; color: var(--python-blue); font-weight: 600; padding: 0.5rem; background: rgba(55, 118, 171, 0.1); border-radius: 4px;">
+                            👁️ View Code
+                        </summary>
+                        <div class="code-preview">
+                            <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">${escapeHtml(sub.code)}</pre>
+                        </div>
+                    </details>
+
+                    ${sub.feedback ? `
+                        <div style="background: rgba(35, 134, 54, 0.1); border-left: 3px solid var(--accent-green); padding: 1rem; margin-top: 1rem; border-radius: 4px;">
+                            <strong style="color: var(--accent-green);">✅ Teacher Feedback:</strong>
+                            <div style="margin-top: 0.5rem; color: var(--text-secondary);">${sub.feedback}</div>
+                        </div>
+                    ` : ''}
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="window.open('${sub.codehsLink || '#'}', '_blank')" ${!sub.codehsLink ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                            🔗 Open CodeHS
+                        </button>
+                        <button class="btn btn-success" onclick="provideGrade('${sub.id}')">
+                            ✏️ ${sub.grade ? 'Update Grade' : 'Grade Submission'}
+                        </button>
+                        <button class="btn btn-secondary" onclick="copyCode('${sub.id}')">
+                            📋 Copy Code
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        window.filterSubmissions = function(filter) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            let filtered = allSubmissions;
+
+            if (filter === 'today') {
+                const today = new Date().toDateString();
+                filtered = allSubmissions.filter(sub => {
+                    const subDate = sub.submittedAt?.toDate?.();
+                    return subDate && subDate.toDateString() === today;
+                });
+            } else if (filter === 'pending') {
+                filtered = allSubmissions.filter(sub => !sub.grade);
+            } else if (filter === 'graded') {
+                filtered = allSubmissions.filter(sub => sub.grade);
+            }
+
+            displaySubmissions(filtered);
+        };
+
+        window.provideGrade = async function(submissionId) {
+            const grade = prompt('Enter grade (e.g., 95/100, A, Pass):');
+            if (!grade) return;
+
+            const feedback = prompt('Enter feedback for the student (optional):');
+
+            try {
+                const docRef = doc(db, 'pyquiz_submissions', submissionId);
+                await updateDoc(docRef, {
+                    grade: grade,
+                    feedback: feedback || '',
+                    gradedAt: new Date()
+                });
+
+                alert('Grade saved successfully!');
+                loadSubmissions();
+            } catch (error) {
+                console.error('Error saving grade:', error);
+                alert('Error saving grade. Please try again.');
+            }
+        };
+
+        window.copyCode = function(submissionId) {
+            const submission = allSubmissions.find(sub => sub.id === submissionId);
+            if (submission) {
+                navigator.clipboard.writeText(submission.code);
+                alert('Code copied to clipboard!');
+            }
+        };
+
+        initFirebase();
+    </script>
+</body>
+</html>

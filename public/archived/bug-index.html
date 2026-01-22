@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Bug Hunt - 20 Debugging Challenges</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background: var(--primary);
+            color: var(--text-inverse);
+            padding: var(--space-xl);
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin: 0 0 var(--space);
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space);
+        }
+
+        .navigation {
+            display: flex;
+            gap: var(--space);
+            margin-bottom: var(--space-lg);
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: var(--bg-primary);
+            color: var(--primary);
+            padding: var(--space-sm) var(--space-md);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: var(--text-inverse);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            background: var(--bg-primary);
+            padding: var(--space-md);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: var(--space-xs);
+        }
+
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .challenge-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .challenge-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space);
+        }
+
+        .challenge-number {
+            background: var(--primary);
+            color: var(--text-inverse);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .difficulty-badge {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .difficulty-EASY {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .difficulty-MEDIUM {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .difficulty-HARD {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .challenge-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .challenge-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: var(--space);
+            line-height: 1.6;
+        }
+
+        .challenge-goal {
+            background: var(--gray-50);
+            padding: var(--space-sm);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space);
+            font-style: italic;
+        }
+
+        .start-btn {
+            background: var(--secondary);
+            color: var(--text-inverse);
+            padding: var(--space-sm) var(--space-md);
+            border: none;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .start-btn:hover {
+            background: var(--secondary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: var(--space-lg);
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space);
+            }
+            
+            .challenges-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space);
+            }
+            
+            .container {
+                padding: 0 var(--space-sm);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat {
+                min-width: auto;
+            }
+        }
+
+        .challenge-goal {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .challenge-goal strong {
+            color: var(--primary-blue);
+        }
+
+        .start-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-blue);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .start-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .stats-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-MEDIUM);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 1100px) {
+            .container {
+                max-width: 95%;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .navigation-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .bugs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-bug"></i> Python Bug Hunt</h1>
+        <p>Master debugging skills with 20 carefully crafted Python challenges</p>
+    </div>
+
+    <div class="container">
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="/dashboard.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="/loops-presentation.html" class="nav-btn">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">20</span>
+                <span class="stat-label">Bug Challenges</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Difficulty Levels</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Real Python Code</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">∞</span>
+                <span class="stat-label">Learning Opportunities</span>
+            </div>
+        </div>
+
+        <!-- Challenges Grid -->
+        <div class="challenges-grid">
+            <!-- Challenge 1: Incorrect Elif Order -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">1</div>
+                    <div class="difficulty-badge difficulty-EASY">EASY</div>
+                </div>
+                <div class="challenge-title">Incorrect Elif Order</div>
+                <div class="challenge-description">Conditional statements not checking in the right order</div>
+                <div class="challenge-goal">
+                    Goal: For a score of 95, the correct grade must be 'A'.
+                </div>
+                <a href="/bug-01.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Challenge 2: Assignment vs. Comparison -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">2</div>
+                    <div class="difficulty-badge difficulty-EASY">EASY</div>
+                </div>
+                <div class="challenge-title">Assignment vs. Comparison</div>
+                <div class="challenge-description">Syntax error in conditional statement</div>
+                <div class="challenge-goal">
+                    Goal: The code must correctly identify the year 2024 as a leap year.
+                </div>
+                <a href="/bug-02.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Challenge 3: Wrong Logical Operator -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">3</div>
+                    <div class="difficulty-badge difficulty-EASY">EASY</div>
+                </div>
+                <div class="challenge-title">Wrong Logical Operator</div>
+                <div class="challenge-description">Incorrect logical operator usage</div>
+                <div class="challenge-goal">
+                    Goal: The code must correctly identify the number 5 as "Outside" the range of 10-20.
+                </div>
+                <a href="/bug-03.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 4: Missing Colon -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">4</div>
+                    <div class="difficulty-badge difficulty-EASY">EASY</div>
+                </div>
+                <div class="challenge-title">Missing Colon</div>
+                <div class="challenge-description">Syntax error in if statement</div>
+                <div class="challenge-goal">
+                    Goal: The code block should run, printing "Success".
+                </div>
+                <a href="/bug-04.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 5: Off-by-one Condition -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">5</div>
+                    <div class="difficulty-badge difficulty-EASY">EASY</div>
+                </div>
+                <div class="challenge-title">Off-by-one Condition</div>
+                <div class="challenge-description">Boundary condition error</div>
+                <div class="challenge-goal">
+                    Goal: An age of exactly 18 must result in "Full Price".
+                </div>
+                <a href="/bug-05.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 6: Infinite Loop -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">6</div>
+                    <div class="difficulty-badge difficulty-MEDIUM">MEDIUM</div>
+                </div>
+                <div class="challenge-title">Infinite Loop</div>
+                <div class="challenge-description">Loop variable not being updated correctly</div>
+                <div class="challenge-goal">
+                    Goal: The loop must print numbers 1 through 5 and then stop naturally.
+                </div>
+                <a href="/bug-06.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 7: Wrong Initialization -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">7</div>
+                    <div class="difficulty-badge difficulty-MEDIUM">MEDIUM</div>
+                </div>
+                <div class="challenge-title">Wrong Initialization</div>
+                <div class="challenge-description">Loop condition never allows execution</div>
+                <div class="challenge-goal">
+                    Goal: The loop must prompt the user to enter the password at least once.
+                </div>
+                <a href="/bug-07.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 8: Wrong Loop Direction -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">8</div>
+                    <div class="difficulty-badge difficulty-MEDIUM">MEDIUM</div>
+                </div>
+                <div class="challenge-title">Wrong Loop Direction</div>
+                <div class="challenge-description">Counter going in wrong direction</div>
+                <div class="challenge-goal">
+                    Goal: The loop must perform a countdown, printing 10 down to 1.
+                </div>
+                <a href="/bug-08.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 9: Missing Assignment -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">9</div>
+                    <div class="difficulty-badge difficulty-MEDIUM">MEDIUM</div>
+                </div>
+                <div class="challenge-title">Missing Assignment</div>
+                <div class="challenge-description">Variable calculation without assignment</div>
+                <div class="challenge-goal">
+                    Goal: The number 5 must be correctly doubled until it reaches or exceeds 100.
+                </div>
+                <a href="/bug-09.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 10: Loop Stops Too Early -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">10</div>
+                    <div class="difficulty-badge difficulty-EASY">EASY</div>
+                </div>
+                <div class="challenge-title">Loop Stops Too Early</div>
+                <div class="challenge-description">Off-by-one error in loop condition</div>
+                <div class="challenge-goal">
+                    Goal: The loop must run exactly 5 times, printing 1 through 5.
+                </div>
+                <a href="/bug-10.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 11: Range Start Error -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">11</div>
+                    <div class="difficulty-badge difficulty-EASY">EASY</div>
+                </div>
+                <div class="challenge-title">Range Start Error</div>
+                <div class="challenge-description">Range function not starting from 1</div>
+                <div class="challenge-goal">
+                    Goal: The loop must print the numbers 1, 2, 3, 4, 5.
+                </div>
+                <a href="/bug-11.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 12: Index Out of Bounds -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">12</div>
+                    <div class="difficulty-badge difficulty-MEDIUM">MEDIUM</div>
+                </div>
+                <div class="challenge-title">Index Out of Bounds</div>
+                <div class="challenge-description">Accessing list index beyond bounds</div>
+                <div class="challenge-goal">
+                    Goal: The loop must print all items in the list without an IndexError.
+                </div>
+                <a href="/bug-12.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 13: Break vs. Continue -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">13</div>
+                    <div class="difficulty-badge difficulty-MEDIUM">MEDIUM</div>
+                </div>
+                <div class="challenge-title">Break vs. Continue</div>
+                <div class="challenge-description">Using break instead of continue</div>
+                <div class="challenge-goal">
+                    Goal: The loop must print all letters of "hello" except 'l', and finish the word.
+                </div>
+                <a href="/bug-13.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 14: Looping Over Length -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">14</div>
+                    <div class="difficulty-badge difficulty-MEDIUM">MEDIUM</div>
+                </div>
+                <div class="challenge-title">Looping Over Length</div>
+                <div class="challenge-description">Iterating over indices instead of items</div>
+                <div class="challenge-goal">
+                    Goal: The code should print each item in the list of animals ("cat", "dog", "bird").
+                </div>
+                <a href="/bug-14.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 15: Modifying Loop Variable -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">15</div>
+                    <div class="difficulty-badge difficulty-HARD">HARD</div>
+                </div>
+                <div class="challenge-title">Modifying Loop Variable</div>
+                <div class="challenge-description">Trying to modify list through loop variable</div>
+                <div class="challenge-goal">
+                    Goal: The list elements must be multiplied by 2, resulting in [2, 4, 6].
+                </div>
+                <a href="/bug-15.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 16: Uninitialized Variable -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">16</div>
+                    <div class="difficulty-badge difficulty-EASY">EASY</div>
+                </div>
+                <div class="challenge-title">Uninitialized Variable</div>
+                <div class="challenge-description">Variable declared but not assigned</div>
+                <div class="challenge-goal">
+                    Goal: The code must calculate the sum of odd numbers from 1 to 10 (Result: 25).
+                </div>
+                <a href="/bug-16.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 17: Incorrect Inequality Check -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">17</div>
+                    <div class="difficulty-badge difficulty-EASY">EASY</div>
+                </div>
+                <div class="challenge-title">Incorrect Inequality Check</div>
+                <div class="challenge-description">Wrong syntax for not equal operator</div>
+                <div class="challenge-goal">
+                    Goal: The code must check if a variable is NOT equal to "exit".
+                </div>
+                <a href="/bug-17.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 18: Checking for Non-empty List -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">18</div>
+                    <div class="difficulty-badge difficulty-MEDIUM">MEDIUM</div>
+                </div>
+                <div class="challenge-title">Non-empty List Check</div>
+                <div class="challenge-description">Wrong condition for checking list contents</div>
+                <div class="challenge-goal">
+                    Goal: The code should correctly determine if a list is NOT empty.
+                </div>
+                <a href="/bug-18.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 19: Logical Placeholder -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">19</div>
+                    <div class="difficulty-badge difficulty-MEDIUM">MEDIUM</div>
+                </div>
+                <div class="challenge-title">Unreachable Code</div>
+                <div class="challenge-description">Logical error in conditional chain</div>
+                <div class="challenge-goal">
+                    Goal: When the value is -5, the code should print "Negative".
+                </div>
+                <a href="/bug-19.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+            <!-- Bug 20: Final Variable Confusion -->
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-number">20</div>
+                    <div class="difficulty-badge difficulty-HARD">HARD</div>
+                </div>
+                <div class="challenge-title">Variable Scope Confusion</div>
+                <div class="challenge-description">Misunderstanding loop variable final value</div>
+                <div class="challenge-goal">
+                    Goal: The final counter value (which should be 6) must be printed after the loop finishes.
+                </div>
+                <a href="/bug-20.html" class="start-btn">
+                    <i class="fas fa-play"></i> Start Debug
+                </a>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

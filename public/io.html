@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering File Input/Output (I/O) | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+        }
+
+        .bell-ringer {
+            background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+            border-left-color: #f39c12;
+        }
+
+        .notes {
+            background: linear-gradient(145deg, #d1ecf1, #74b9ff);
+            border-left-color: #0984e3;
+        }
+
+        .application {
+            background: linear-gradient(145deg, #d4edda, #55a3ff);
+            border-left-color: #00b894;
+        }
+
+        .activity {
+            background: linear-gradient(145deg, #f8d7da, #fd79a8);
+            border-left-color: #e84393;
+        }
+
+        .exit-ticket {
+            background: linear-gradient(145deg, #e2e3e5, #636e72);
+            border-left-color: #2d3436;
+            color: #2d3436;
+        }
+
+        .section h2 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #636e72;
+            margin: 20px 0 15px 0;
+            font-size: 1.4rem;
+        }
+
+        .section h4 {
+            color: #636e72;
+            margin: 15px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .code-container {
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-container pre {
+            margin: 0;
+            color: #e2e8f0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .highlight-box {
+            background: #fff5f5;
+            border: 2px solid #e53e3e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .highlight-box strong {
+            color: #e53e3e;
+        }
+
+        .analogy-box {
+            background: #f0fff4;
+            border: 2px solid #38a169;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .analogy-box strong {
+            color: #38a169;
+        }
+
+        .interactive-demo {
+            background: #f7fafc;
+            border: 2px solid #4299e1;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .demo-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #cbd5e0;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .demo-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .demo-output {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            min-height: 50px;
+            white-space: pre-wrap;
+        }
+
+        .learning-objectives {
+            background: #e6fffa;
+            border: 2px solid #319795;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .learning-objectives ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .learning-objectives li {
+            padding: 8px 0;
+            border-bottom: 1px solid #b2f5ea;
+        }
+
+        .learning-objectives li:before {
+            content: "✓ ";
+            color: #319795;
+            font-weight: bold;
+        }
+
+        .challenge-task {
+            background: #fef5e7;
+            border: 2px solid #d69e2e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .question-box {
+            background: #edf2f7;
+            border: 2px solid #718096;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .math {
+            background: #2d3748;
+            color: #ffd700;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .timer {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .section {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💾 Mastering File Input/Output (I/O)</h1>
+            <p>Learn to give your programs long-term memory and communication skills</p>
+        </div>
+
+        <div class="content">
+            <!-- Learning Objectives -->
+            <div class="learning-objectives">
+                <h3>🎯 Learning Objectives</h3>
+                <p><strong>Students will be able to:</strong></p>
+                <ul>
+                    <li>Explain why File I/O is critical for program persistence (long-term memory)</li>
+                    <li>Construct and analyze code segments using the core I/O functions: open, close, read, write, and append</li>
+                    <li>Implement the with statement to safely manage file connections, guaranteeing closure</li>
+                    <li>Integrate file I/O operations into custom functions and control flow using conditionals (if/else)</li>
+                </ul>
+            </div>
+
+            <!-- Bell Ringer -->
+            <div class="section bell-ringer">
+                <h2>🔔 Bell Ringer: The Save Button</h2>
+                
+                <div class="question-box">
+                    <h4>Think about a game you play that has a High Score list.</h4>
+                    <p>When the game ends, your score is saved. If you close the game and reopen it, the score is still there.</p>
+                    
+                    <br>
+                    <p><strong>Question 1:</strong> Where is that High Score data physically stored (if not in the game's running memory)?</p>
+                    <br>
+                    <p><strong>Question 2:</strong> What two primary operations (actions) must the program perform to manage that score (e.g., when you set a new record)?</p>
+                </div>
+
+                <div class="analogy-box">
+                    <strong>Think About It:</strong> Your game needs to remember your high score even after you turn off your computer. RAM (memory) is like your short-term memory - it forgets everything when power is lost. Files are like writing something down in a notebook - permanent storage!
+                </div>
+            </div>
+
+            <!-- Notes Section -->
+            <div class="section notes">
+                <h2>📝 Notes Taking: The "Why" and "How" of File I/O</h2>
+
+                <h3>I. The Conceptual "Why": Persistence and Communication</h3>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th>Analogy</th>
+                                <th>Why it's Important (The "Why")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Persistence (Memory)</strong></td>
+                                <td>Program's Long-Term Memory. RAM is short-term; a file is a permanent record.</td>
+                                <td>File I/O is the only way a program can remember settings, user data, or history after it has been closed and restarted.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Communication</strong></td>
+                                <td>A Bridge between your code and the outside world.</td>
+                                <td>Allows programs to exchange data with other applications (e.g., exporting a CSV for a spreadsheet) or communicate with the user over time.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>II. Core File Operations and Modes</h3>
+                <p>The first step is creating a file object (a connection) using the <span class="math">open(filename, mode)</span> function.</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Mode</th>
+                                <th>Purpose</th>
+                                <th>Impact on Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Read</strong></td>
+                                <td><span class="math">'r'</span></td>
+                                <td>Input: Pulls data from the file.</td>
+                                <td>ERROR if file doesn't exist.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Write</strong></td>
+                                <td><span class="math">'w'</span></td>
+                                <td>Output: Pushes data to the file.</td>
+                                <td><strong style="color: #e53e3e;">DELETES ALL</strong> existing content and overwrites.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Append</strong></td>
+                                <td><span class="math">'a'</span></td>
+                                <td>Output: Pushes data to the end.</td>
+                                <td><strong style="color: #38a169;">PRESERVES</strong> existing content.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>III. Data Flow Mechanics</h3>
+                
+                <div class="highlight-box">
+                    <strong>The String Rule:</strong> The <span class="math">read()</span> function always returns data as a string (<span class="math">str</span>). If you read a number, you must cast it: <span class="math">int(data)</span>. 
+                    <br><br>
+                    The <span class="math">write()</span> function only accepts strings; you must cast numbers before saving: <span class="math">str(number)</span>.
+                </div>
+
+                <div class="highlight-box">
+                    <strong>The Newline Rule:</strong> To force a line break in the file, you must manually include the newline character: <span class="math">\n</span>.
+                </div>
+
+                <h3>IV. The Safest Practice: The <span class="math">with</span> Statement</h3>
+                
+                <p>The <span class="math">with</span> statement is the professional standard because it automatically guarantees the file connection is closed, even if errors occur.</p>
+
+                <div class="code-container">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code class="language-python">with open("data.txt", "w") as f:
+    f.write("Safe data") 
+# File is GUARANTEED to be closed immediately after this line.</code></pre>
+                </div>
+            </div>
+
+            <!-- Real-World Application -->
+            <div class="section application">
+                <h2>💻 Basic File I/O Examples</h2>
+                
+                <p>Let's start with simple, clear examples of each file operation before moving to more complex applications.</p>
+
+                <h3>1. Writing to a File (Output)</h3>
+                <p>The most basic operation - save some text to a file.</p>
+
+                <div class="code-container">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code class="language-python"># Writing text to a file
+with open("my_message.txt", "w") as f:
+    f.write("Hello, World!")
+    
+print("Message saved to file!")</code></pre>
+                </div>
+
+                <h3>2. Reading from a File (Input)</h3>
+                <p>Read the text back from the file we just created.</p>
+
+                <div class="code-container">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code class="language-python"># Reading text from a file
+with open("my_message.txt", "r") as f:
+    message = f.read()
+    
+print("Message from file:", message)</code></pre>
+                </div>
+
+                <h3>3. Appending to a File</h3>
+                <p>Add more text to the end without deleting what's already there.</p>
+
+                <div class="code-container">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code class="language-python"># Adding more text to the file
+with open("my_message.txt", "a") as f:
+    f.write("\nThis is a second line!")
+    
+# Read the updated file
+with open("my_message.txt", "r") as f:
+    full_message = f.read()
+    
+print("Full message:", full_message)</code></pre>
+                </div>
+
+                <h3>4. Working with Numbers</h3>
+                <p>Remember: files store everything as text, so we need to convert numbers.</p>
+
+                <div class="code-container">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code class="language-python"># Saving a number
+score = 1500
+with open("score.txt", "w") as f:
+    f.write(str(score))  # Convert number to string
+    
+# Reading the number back
+with open("score.txt", "r") as f:
+    saved_score = f.read()
+    number_score = int(saved_score)  # Convert string back to number
+    
+print("Your score is:", number_score)</code></pre>
+                </div>
+
+                <div class="analogy-box">
+                    <strong>💡 Key Point:</strong> Files are like notebooks - they only understand text (strings). When you want to save numbers, you must convert them to text first with <span class="math">str()</span>. When you read them back, convert to numbers with <span class="math">int()</span>.
+                </div>
+
+                <h3>🏆 Advanced Example: Simple High Score System</h3>
+                <p><em>Once you're comfortable with the basics above, here's how to combine them:</em></p>
+
+                <div class="code-container">
+                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                    <pre><code class="language-python"># Advanced: Simple high score manager
+def check_high_score(new_score):
+    # Try to read current high score
+    try:
+        with open("highscore.txt", "r") as f:
+            current_high = int(f.read())
+    except FileNotFoundError:
+        # File doesn't exist yet, so this is the first score
+        current_high = 0
+    
+    print(f"Your score: {new_score}, Current high score: {current_high}")
+    
+    # Check if it's a new high score
+    if new_score > current_high:
+        with open("highscore.txt", "w") as f:
+            f.write(str(new_score))
+        print("🎉 NEW HIGH SCORE!")
+    else:
+        print("Try again to beat the high score!")
+
+# Test it out
+check_high_score(1200)
+check_high_score(800)
+check_high_score(1500)</code></pre>
+                </div>
+
+                <!-- Interactive Demo -->
+                <div class="interactive-demo">
+                    <h4>🎮 Interactive Basic File Demo</h4>
+                    <p>Try basic file operations yourself:</p>
+                    
+                    <label for="textInput">Enter some text to save:</label>
+                    <input type="text" id="textInput" class="demo-input" placeholder="Enter text (e.g., Hello World)" value="Hello World">
+                    
+                    <button class="demo-button" onclick="simulateWrite()">Write to File</button>
+                    <button class="demo-button" onclick="simulateRead()">Read from File</button>
+                    <button class="demo-button" onclick="simulateAppend()">Append to File</button>
+                    <button class="demo-button" onclick="clearDemo()">Clear Demo</button>
+                    
+                    <div>File Contents: <span id="fileContents">Empty</span></div>
+                    
+                    <div class="demo-output" id="basicDemoOutput">Welcome to the Basic File Demo!
+Enter some text and try the different file operations.</div>
+                </div>
+            </div>
+
+            <!-- Activity Section -->
+            <div class="section activity">
+                <h2>🔨 Activity: Code Challenge - Simple Message Logger</h2>
+
+                <div class="challenge-task">
+                    <h4>🎯 Objective</h4>
+                    <p>Write a simple Python script that saves messages to a file and reads them back. Start simple!</p>
+                </div>
+
+                <h3>Part 1: Save a Message</h3>
+                <ul>
+                    <li>Use <span class="math">with open("messages.txt", "w")</span> to create/open the file</li>
+                    <li>Write a simple message like "My first file message!"</li>
+                    <li>Print a confirmation that the message was saved</li>
+                </ul>
+
+                <h3>Part 2: Read the Message Back</h3>
+                <ul>
+                    <li>Use <span class="math">with open("messages.txt", "r")</span> to open the file for reading</li>
+                    <li>Read the content and store it in a variable</li>
+                    <li>Print the message you read from the file</li>
+                </ul>
+
+                <h3>Part 3: Add Another Message</h3>
+                <ul>
+                    <li>Use <span class="math">with open("messages.txt", "a")</span> to append</li>
+                    <li>Add a second message (don't forget <span class="math">\n</span> for a new line!)</li>
+                    <li>Read and print the entire file to see both messages</li>
+                </ul>
+
+                <!-- Interactive Code Practice -->
+                <div class="interactive-demo">
+                    <h4>💻 Practice Area - Write Your Code</h4>
+                    <p>Try writing the simple message logger code here:</p>
+                    
+                    <textarea id="codeInput" class="demo-input" rows="12" placeholder="# Write your simple message logger here
+# Part 1: Save a message
+# Part 2: Read the message back  
+# Part 3: Add another message
+
+# Your code here..."># Part 1: Save a message
+with open("messages.txt", "w") as f:
+    f.write("My first file message!")
+print("Message saved!")
+
+# Part 2: Read the message back
+with open("messages.txt", "r") as f:
+    message = f.read()
+print("Message from file:", message)
+
+# Part 3: Add another message
+with open("messages.txt", "a") as f:
+    f.write("\nThis is my second message!")
+
+# Read both messages
+with open("messages.txt", "r") as f:
+    all_messages = f.read()
+print("All messages:")
+print(all_messages)</textarea>
+                    
+                    <button class="demo-button" onclick="simulateSimpleLogger()">Test Your Code</button>
+                    <button class="demo-button" onclick="showSimpleSolution()">Show Solution</button>
+                    
+                    <div class="demo-output" id="logOutput">Click "Test Your Code" to see how your simple message logger works!</div>
+                </div>
+            </div>
+
+            <!-- Exit Ticket -->
+            <div class="section exit-ticket">
+                <h2>🎟️ Exit Ticket</h2>
+
+                <div class="question-box">
+                    <h4>Question 1:</h4>
+                    <p>If you use write mode (<span class="math">'w'</span>) on a file that already has 100 lines of data, what is the major risk? What single line of code could you use instead to keep all the file's existing data?</p>
+                    
+                    <details style="margin-top: 15px;">
+                        <summary style="cursor: pointer; font-weight: bold; color: #667eea;">Click to reveal answer</summary>
+                        <div style="margin-top: 10px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                            <strong>Answer:</strong> The major risk is that write mode ('w') will <strong>delete all 100 lines</strong> and replace them with new content. To keep existing data, use append mode instead: <span class="math">open("file.txt", "a")</span>
+                        </div>
+                    </details>
+                </div>
+
+                <div class="question-box">
+                    <h4>Question 2:</h4>
+                    <p>In the High Score Manager, why was the logic for updating the score placed inside a function instead of just being written as standalone code?</p>
+                    
+                    <details style="margin-top: 15px;">
+                        <summary style="cursor: pointer; font-weight: bold; color: #667eea;">Click to reveal answer</summary>
+                        <div style="margin-top: 10px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                            <strong>Answer:</strong> Functions make code <strong>reusable and organized</strong>. The high score logic can be called multiple times with different scores without repeating code. It also makes the code easier to test, debug, and maintain. Plus, we can call <span class="math">update_high_score()</span> whenever needed instead of copying the same code multiple times.
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Summary Box -->
+            <div class="learning-objectives">
+                <h3>📚 Key Takeaways</h3>
+                <ul>
+                    <li>Files provide <strong>persistence</strong> - your programs can remember data after closing</li>
+                    <li>Use <span class="math">'r'</span> to read, <span class="math">'w'</span> to write (overwrites!), <span class="math">'a'</span> to append</li>
+                    <li>Always use <span class="math">with</span> statements for safe file handling</li>
+                    <li>Remember: <span class="math">read()</span> returns strings, <span class="math">write()</span> expects strings</li>
+                    <li>Functions + file I/O + conditionals = powerful persistent programs!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        // Demo variables
+        let demoFileContents = "";
+        let messageEntries = [];
+
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling.textContent;
+            navigator.clipboard.writeText(codeBlock).then(() => {
+                button.textContent = 'Copied!';
+                button.style.background = '#38a169';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.style.background = '#4299e1';
+                }, 2000);
+            });
+        }
+
+        function simulateWrite() {
+            const textInput = document.getElementById('textInput');
+            const output = document.getElementById('basicDemoOutput');
+            const fileContentsSpan = document.getElementById('fileContents');
+            
+            const text = textInput.value || "Hello World";
+            demoFileContents = text; // Write mode overwrites
+            
+            fileContentsSpan.textContent = demoFileContents;
+            output.textContent = `Writing to file: "${text}"\nFile now contains: "${demoFileContents}"`;
+        }
+
+        function simulateRead() {
+            const output = document.getElementById('basicDemoOutput');
+            
+            if (demoFileContents === "") {
+                output.textContent = "Error: File is empty or doesn't exist!\nTry writing to the file first.";
+            } else {
+                output.textContent = `Reading from file...\nContent read: "${demoFileContents}"`;
+            }
+        }
+
+        function simulateAppend() {
+            const textInput = document.getElementById('textInput');
+            const output = document.getElementById('basicDemoOutput');
+            const fileContentsSpan = document.getElementById('fileContents');
+            
+            const text = textInput.value || "Hello World";
+            
+            if (demoFileContents === "") {
+                demoFileContents = text; // First write
+            } else {
+                demoFileContents += "\n" + text; // Append with newline
+            }
+            
+            fileContentsSpan.textContent = demoFileContents;
+            output.textContent = `Appending to file: "${text}"\nFile now contains:\n"${demoFileContents}"`;
+        }
+
+        function clearDemo() {
+            demoFileContents = "";
+            document.getElementById('fileContents').textContent = "Empty";
+            document.getElementById('basicDemoOutput').textContent = 'Demo cleared! File is now empty.\nTry writing some text to get started.';
+            document.getElementById('textInput').value = '';
+        }
+
+        function simulateSimpleLogger() {
+            const output = document.getElementById('logOutput');
+            
+            messageEntries = []; // Reset
+            messageEntries.push("My first file message!");
+            messageEntries.push("This is my second message!");
+            
+            let result = "=== Simulating your simple message logger ===\n\n";
+            result += "Part 1: Save a message\n";
+            result += "Message saved!\n\n";
+            result += "Part 2: Read the message back\n";
+            result += "Message from file: My first file message!\n\n";
+            result += "Part 3: Add another message\n";
+            result += "All messages:\n";
+            result += messageEntries.join('\n');
+            
+            output.textContent = result;
+        }
+
+        function showSimpleSolution() {
+            const codeInput = document.getElementById('codeInput');
+            const solution = `# Part 1: Save a message
+with open("messages.txt", "w") as f:
+    f.write("My first file message!")
+print("Message saved!")
+
+# Part 2: Read the message back
+with open("messages.txt", "r") as f:
+    message = f.read()
+print("Message from file:", message)
+
+# Part 3: Add another message
+with open("messages.txt", "a") as f:
+    f.write("\\nThis is my second message!")
+
+# Read both messages
+with open("messages.txt", "r") as f:
+    all_messages = f.read()
+print("All messages:")
+print(all_messages)`;
+            
+            codeInput.value = solution;
+            
+            const output = document.getElementById('logOutput');
+            output.textContent = "Solution code has been loaded above! ⬆️\nYou can now test it by clicking 'Test Your Code'.";
+        }
+
+        // Initialize Prism highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>

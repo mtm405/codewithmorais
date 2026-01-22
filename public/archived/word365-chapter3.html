@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: Tables and Lists - Word 365 Learning System</title>
+    <style>
+        :root {
+            --primary-blue: #0078d4;
+            --secondary-blue: #106ebe;
+            --accent-orange: #ff8c00;
+            --success-green: #107c10;
+            --warning-yellow: #ffb900;
+            --error-red: #d13438;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e1e1e1;
+            --dark-gray: #323130;
+            --chapter-color: #ff8c00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            line-height: 1.6;
+        }
+
+        .chapter-header {
+            background: linear-gradient(135deg, var(--chapter-color), #e67e00);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(255, 140, 0, 0.3);
+        }
+
+        .chapter-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .breadcrumb {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .objectives-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid var(--chapter-color);
+        }
+
+        .objectives-card h2 {
+            color: var(--chapter-color);
+            margin-top: 0;
+        }
+
+        .lab-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid var(--chapter-color);
+        }
+
+        .lab-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .lab-icon {
+            font-size: 2rem;
+            background: var(--chapter-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lab-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin: 0;
+        }
+
+        .lab-difficulty {
+            background: var(--light-gray);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .scenario-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .scenario-box h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .steps-container {
+            background: var(--light-gray);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--chapter-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            background: var(--chapter-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step-content {
+            display: inline-block;
+            vertical-align: top;
+            width: calc(100% - 50px);
+        }
+
+        .ribbon-path {
+            background: var(--chapter-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .demo-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .demo-table th,
+        .demo-table td {
+            border: 1px solid var(--medium-gray);
+            padding: 10px;
+            text-align: left;
+        }
+
+        .demo-table th {
+            background: var(--light-gray);
+            font-weight: 600;
+        }
+
+        .demo-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .list-demo {
+            background: white;
+            border: 1px solid var(--medium-gray);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .tip-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .warning-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .checkpoint {
+            background: linear-gradient(135deg, var(--chapter-color), #e67e00);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success {
+            background: var(--chapter-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #e67e00;
+            transform: translateY(-2px);
+        }
+
+        .completion-tracker {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            background: var(--light-gray);
+            height: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--chapter-color), var(--primary-blue));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .lab-checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .lab-checklist li {
+            padding: 10px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--medium-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lab-checklist li.completed {
+            border-left-color: var(--chapter-color);
+            background: #fff3cd;
+        }
+
+        .practical-exercise {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .exercise-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .table-style-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .style-card {
+            background: white;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .style-card h5 {
+            margin-top: 0;
+            color: var(--chapter-color);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .chapter-header h1 {
+                font-size: 2rem;
+            }
+            
+            .step-content {
+                width: 100%;
+                display: block;
+                margin-top: 10px;
+            }
+
+            .demo-table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chapter-header">
+        <h1>📊 Chapter 3: Manage Tables and Lists</h1>
+        <p>Master data organization with professional tables and structured lists</p>
+    </div>
+
+    <div class="breadcrumb">
+        <a href="word365-learning-system.html">📚 Learning System</a> → 
+        <a href="word365-chapter1.html">Chapter 1</a> →
+        <a href="word365-chapter2.html">Chapter 2</a> →
+        <span style="color: var(--dark-gray);"><strong>Chapter 3: Tables and Lists</strong></span>
+    </div>
+
+    <div class="objectives-card">
+        <h2>🎯 Learning Objectives</h2>
+        <p>By the end of this chapter, you will be able to:</p>
+        <ul>
+            <li>Create professional tables with proper structure and formatting</li>
+            <li>Convert existing text to table format efficiently</li>
+            <li>Convert tables back to text when needed</li>
+            <li>Sort table data in multiple ways for better organization</li>
+            <li>Modify table layouts including rows, columns, and cell properties</li>
+            <li>Design effective bulleted and numbered lists</li>
+            <li>Create multi-level lists with proper hierarchy</li>
+            <li>Customize list formatting and numbering schemes</li>
+        </ul>
+    </div>
+
+    <div class="completion-tracker">
+        <h3>📊 Chapter Progress</h3>
+        <div class="progress-bar">
+            <div class="progress-fill" id="chapterProgress"></div>
+        </div>
+        <p id="progressText">0 of 8 labs completed</p>
+        
+        <ul class="lab-checklist">
+            <li data-lab="1">📋 Lab 1: Create Tables</li>
+            <li data-lab="2">🔄 Lab 2: Convert Text to Tables</li>
+            <li data-lab="3">📝 Lab 3: Convert Tables to Text</li>
+            <li data-lab="4">🔢 Lab 4: Sort Table Data</li>
+            <li data-lab="5">🏗️ Lab 5: Modify Table Layout</li>
+            <li data-lab="6">• Lab 6: Bulleted Lists</li>
+            <li data-lab="7">1. Lab 7: Numbered Lists</li>
+            <li data-lab="8">📚 Lab 8: Multi-Level Lists</li>
+        </ul>
+    </div>
+
+    <!-- Lab 1: Create Tables -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📋</div>
+            <div>
+                <h3 class="lab-title">Lab 1: Create Professional Tables</h3>
+                <span class="lab-difficulty">Beginner</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're creating a quarterly sales report that needs a table showing sales figures by region, product category, and month. The table must be professional, readable, and properly formatted for presentation to executives.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Insert Basic Table</strong>
+                    <div class="ribbon-path">Insert → Table → Insert Table</div>
+                    <p>Choose method: drag grid (quick), Insert Table dialog (precise), or draw table (custom shapes).</p>
+                    <table class="demo-table">
+                        <tr>
+                            <th>Region</th>
+                            <th>Q1 Sales</th>
+                            <th>Q2 Sales</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <td>North</td>
+                            <td>$125,000</td>
+                            <td>$135,000</td>
+                            <td>$260,000</td>
+                        </tr>
+                        <tr>
+                            <td>South</td>
+                            <td>$98,000</td>
+                            <td>$112,000</td>
+                            <td>$210,000</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Table Design Styles</strong>
+                    <div class="ribbon-path">Table Design → Table Styles</div>
+                    <p>Apply built-in table styles for professional appearance. Choose from Grid, List, or Plain tables with various color schemes.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Header Row and Formatting</strong>
+                    <div class="ribbon-path">Table Design → Header Row, Banded Rows</div>
+                    <p>Enable header row for column titles, banded rows for readability, and total row for calculations.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Quick Tables</strong>
+                    <div class="ribbon-path">Insert → Table → Quick Tables</div>
+                    <p>Use pre-designed table templates for common business needs: calendars, lists, comparisons.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-style-demo">
+            <div class="style-card">
+                <h5>Grid Tables</h5>
+                <p>Strong borders, professional look for data presentation</p>
+            </div>
+            <div class="style-card">
+                <h5>List Tables</h5>
+                <p>Minimal borders, clean look for simple lists</p>
+            </div>
+            <div class="style-card">
+                <h5>Plain Tables</h5>
+                <p>No borders, subtle shading for informal documents</p>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create a 4×5 table with headers, apply a professional style, and add sample sales data with proper formatting and alignment.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(1)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 2: Convert Text to Tables -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">🔄</div>
+            <div>
+                <h3 class="lab-title">Lab 2: Convert Text to Tables</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You've received employee data in text format from HR (names, departments, hire dates separated by commas or tabs). You need to convert this into a formatted table for easier reading and sorting.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Prepare Text Data</strong>
+                    <div class="ribbon-path">Ensure consistent separators</div>
+                    <p>Text should use consistent separators: commas, tabs, or other characters. Each row on a separate line.</p>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace; margin: 10px 0;">
+                        John Smith, Marketing, 2023-01-15<br>
+                        Jane Doe, Sales, 2022-11-08<br>
+                        Mike Johnson, IT, 2023-03-22
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Convert to Table</strong>
+                    <div class="ribbon-path">Select text → Insert → Table → Convert Text to Table</div>
+                    <p>Select your text, then use Convert Text to Table. Word automatically detects separators and suggests table dimensions.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Choose Separator</strong>
+                    <div class="ribbon-path">Convert Text to Table Dialog</div>
+                    <p>Select separator type: Paragraphs (line breaks), Commas, Tabs, or Other (specify custom character like semicolon).</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Adjust and Format</strong>
+                    <div class="ribbon-path">Table Design → Styles</div>
+                    <p>After conversion, add headers, apply table styles, and format data types (dates, numbers) appropriately.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-exercise">
+            <h4>🎯 Practice Exercise</h4>
+            <p>Convert this sample data to a table:</p>
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-family: monospace;">
+                Product Name, Category, Price, In Stock<br>
+                Laptop Pro, Electronics, $1299.99, Yes<br>
+                Office Chair, Furniture, $249.00, No<br>
+                Wireless Mouse, Electronics, $29.99, Yes<br>
+                Standing Desk, Furniture, $399.00, Yes
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Successfully convert comma-separated text to a formatted table with headers and appropriate styling. Verify all data is in correct columns.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(2)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 3: Convert Tables to Text -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📝</div>
+            <div>
+                <h3 class="lab-title">Lab 3: Convert Tables to Text</h3>
+                <span class="lab-difficulty">Beginner</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You need to export table data for use in another application that doesn't support tables, or you want to create a comma-separated values (CSV) file for database import.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Select Table</strong>
+                    <div class="ribbon-path">Click table selector or select entire table</div>
+                    <p>Click the table move handle (four-way arrow) in the top-left corner of the table to select the entire table.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Convert to Text</strong>
+                    <div class="ribbon-path">Table Layout → Convert to Text</div>
+                    <p>Choose how to separate the data: Paragraph marks (line breaks), Tabs, Commas, or Other separator.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Choose Separator Wisely</strong>
+                    <div class="ribbon-path">Separator Options</div>
+                    <p><strong>Tabs:</strong> Good for spreadsheets. <strong>Commas:</strong> Creates CSV format. <strong>Paragraphs:</strong> Each cell on new line.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Clean Up Text</strong>
+                    <div class="ribbon-path">Review and edit converted text</div>
+                    <p>Review the converted text for formatting issues, extra spaces, or alignment problems that may need manual cleanup.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Best Practices for Table Conversion</h5>
+            <p><strong>Commas:</strong> Perfect for CSV files and database imports. <strong>Tabs:</strong> Ideal for copying to Excel. <strong>Paragraphs:</strong> Good for simple lists. Choose separator based on your intended use.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Convert a sample table to comma-separated text, then to tab-separated text. Compare the results and understand when to use each format.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(3)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 4: Sort Table Data -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">🔢</div>
+            <div>
+                <h3 class="lab-title">Lab 4: Sort Table Data</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You have a table with employee information including names, departments, hire dates, and salaries. You need to sort this data by different criteria: alphabetically by name, by department, or by hire date to create different reports.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Simple Sort</strong>
+                    <div class="ribbon-path">Select column → Table Layout → Sort</div>
+                    <p>Click in any column, then use Sort Ascending (A-Z) or Sort Descending (Z-A) for quick single-column sorting.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Advanced Sort Dialog</strong>
+                    <div class="ribbon-path">Select table → Table Layout → Sort → More Options</div>
+                    <p>Use Sort dialog for multi-level sorting: primary sort (e.g., Department), then secondary sort (e.g., Name within department).</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Data Type Sorting</strong>
+                    <div class="ribbon-path">Sort Dialog → Type dropdown</div>
+                    <p>Specify data types: Text (alphabetical), Number (numerical order), Date (chronological order) for accurate sorting.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Header Row Handling</strong>
+                    <div class="ribbon-path">Sort Dialog → Header row option</div>
+                    <p>Tell Word whether your table has headers so they're not included in the sort. Check "Header row" if your first row contains column titles.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-exercise">
+            <h4>🎯 Multi-Level Sorting Exercise</h4>
+            <p>Create and sort a table with these requirements:</p>
+            <div class="exercise-grid">
+                <div class="exercise-card">
+                    <h5>Primary Sort</h5>
+                    <p>Department (alphabetical)</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Secondary Sort</h5>
+                    <p>Hire Date (newest first)</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Tertiary Sort</h5>
+                    <p>Employee Name (A-Z)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h5>⚠️ Sorting Caution</h5>
+            <p>Always select the entire table (including headers) before sorting to avoid misaligning data. Use Ctrl+Z immediately if sorting doesn't work as expected.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create a table with mixed data types (text, numbers, dates) and demonstrate sorting by each column correctly with proper data type recognition.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(4)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 5: Modify Table Layout -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">🏗️</div>
+            <div>
+                <h3 class="lab-title">Lab 5: Modify Table Layout</h3>
+                <span class="lab-difficulty">Advanced</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>Your initial table design needs adjustments: add columns for new data fields, merge cells for category headers, adjust column widths for better readability, and modify row heights to accommodate longer text.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Insert/Delete Rows and Columns</strong>
+                    <div class="ribbon-path">Table Layout → Insert Above/Below, Insert Left/Right</div>
+                    <p>Right-click for quick insert/delete options, or use ribbon commands. Insert rows above/below cursor, columns left/right of cursor.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Merge and Split Cells</strong>
+                    <div class="ribbon-path">Select cells → Table Layout → Merge Cells / Split Cells</div>
+                    <p>Merge cells for headers spanning multiple columns, or split cells to create subcategories within a column.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Adjust Column Width and Row Height</strong>
+                    <div class="ribbon-path">Drag borders or Table Layout → Cell Size</div>
+                    <p>Drag column borders for visual adjustment, or use ribbon for exact measurements. AutoFit options resize to content or window.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Table Properties</strong>
+                    <div class="ribbon-path">Right-click → Table Properties</div>
+                    <p>Control table alignment, text wrapping around table, borders, and advanced cell spacing options.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Layout Best Practices</h5>
+            <p><strong>AutoFit to Contents:</strong> Adjusts column width to fit text. <strong>AutoFit to Window:</strong> Stretches table across page width. <strong>Fixed Width:</strong> Maintains specific measurements regardless of content.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Modify a table by adding rows/columns, merging cells for a header, adjusting column widths proportionally, and setting a specific row height for better appearance.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(5)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 6: Bulleted Lists -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">•</div>
+            <div>
+                <h3 class="lab-title">Lab 6: Create and Format Bulleted Lists</h3>
+                <span class="lab-difficulty">Beginner</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're creating a policy document that needs bullet points for requirements, benefits, and procedures. Different sections need different bullet styles to create visual hierarchy and organization.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Basic Bullet Lists</strong>
+                    <div class="ribbon-path">Home → Bullets</div>
+                    <p>Click Bullets button for default bullets, or click dropdown arrow to choose from bullet library with different styles.</p>
+                    <div class="list-demo">
+                        <ul>
+                            <li>Standard bullet point</li>
+                            <li>Another bullet point</li>
+                            <li>Third bullet item</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Custom Bullet Symbols</strong>
+                    <div class="ribbon-path">Home → Bullets → Define New Bullet</div>
+                    <p>Choose symbols, pictures, or fonts for custom bullets. Use symbols like ➤, ✓, ★ for different document types.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Bullet Formatting</strong>
+                    <div class="ribbon-path">Home → Bullets → Define New Bullet → Format</div>
+                    <p>Change bullet color, size, and alignment. Font formatting affects bullet appearance independently of text.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Picture Bullets</strong>
+                    <div class="ribbon-path">Home → Bullets → Define New Bullet → Picture</div>
+                    <p>Use small images as bullets for creative documents. Keep images small and simple for best results.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-exercise">
+            <h4>🎯 Bullet Style Exercise</h4>
+            <p>Create lists with different bullet styles for different purposes:</p>
+            <div class="exercise-grid">
+                <div class="exercise-card">
+                    <h5>Standard Business</h5>
+                    <p>• Round bullets, black color</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Action Items</h5>
+                    <p>➤ Arrow bullets, blue color</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Completed Tasks</h5>
+                    <p>✓ Checkmark bullets, green color</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create three different bullet lists using standard, symbol, and custom-formatted bullets. Demonstrate changing bullet styles within the same document.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(6)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 7: Numbered Lists -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">1.</div>
+            <div>
+                <h3 class="lab-title">Lab 7: Numbered Lists and Sequences</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're writing step-by-step procedures, legal documents with numbered clauses, and training materials that need sequential numbering with different formats (1, 2, 3 vs. a, b, c vs. i, ii, iii).</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Basic Numbered Lists</strong>
+                    <div class="ribbon-path">Home → Numbering</div>
+                    <p>Click Numbering for default 1, 2, 3 format, or dropdown for Roman numerals, letters, or other number styles.</p>
+                    <div class="list-demo">
+                        <ol>
+                            <li>First numbered item</li>
+                            <li>Second numbered item</li>
+                            <li>Third numbered item</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Custom Number Formats</strong>
+                    <div class="ribbon-path">Home → Numbering → Define New Number Format</div>
+                    <p>Create custom formats: "Step 1:", "(1)", "1)", or "Article 1." with specific font and alignment settings.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Start Number and Restart</strong>
+                    <div class="ribbon-path">Home → Numbering → Set Numbering Value</div>
+                    <p>Start numbering at specific value, continue from previous list, or restart numbering within document sections.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Legal and Outline Numbering</strong>
+                    <div class="ribbon-path">Home → Multilevel List → Legal/Outline styles</div>
+                    <p>Use predefined legal (1., 1.1, 1.1.1) or outline (I., A., 1., a.) numbering for complex documents.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Numbering Best Practices</h5>
+            <p><strong>Procedures:</strong> Use simple 1, 2, 3 numbering. <strong>Legal Documents:</strong> Use hierarchical 1.1, 1.2 format. <strong>Outlines:</strong> Use Roman/letter combinations. <strong>Continue Lists:</strong> Right-click to continue or restart numbering.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create numbered lists with three different formats: standard numbering, Roman numerals, and custom "Step #:" format. Demonstrate restarting and continuing numbering.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(7)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <!-- Lab 8: Multi-Level Lists -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📚</div>
+            <div>
+                <h3 class="lab-title">Lab 8: Multi-Level Lists and Hierarchies</h3>
+                <span class="lab-difficulty">Advanced</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're creating a comprehensive project plan with main tasks, subtasks, and sub-subtasks. The document needs clear hierarchical structure with different numbering/bullet styles at each level for easy navigation and understanding.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Create Multilevel List</strong>
+                    <div class="ribbon-path">Home → Multilevel List</div>
+                    <p>Choose from built-in multilevel styles or define custom hierarchy with different numbering/bullet styles per level.</p>
+                    <div class="list-demo">
+                        <ol>
+                            <li>Main Topic
+                                <ol style="list-style-type: lower-alpha;">
+                                    <li>Subtopic A</li>
+                                    <li>Subtopic B
+                                        <ol style="list-style-type: lower-roman;">
+                                            <li>Detail 1</li>
+                                            <li>Detail 2</li>
+                                        </ol>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>Second Main Topic</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Adjust List Levels</strong>
+                    <div class="ribbon-path">Tab key (increase level) / Shift+Tab (decrease level)</div>
+                    <p>Use Tab to indent (create sublevel), Shift+Tab to outdent (move to higher level). Or use Increase/Decrease Indent buttons.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Define Custom Multilevel</strong>
+                    <div class="ribbon-path">Home → Multilevel List → Define New Multilevel List</div>
+                    <p>Set different number formats, fonts, indentation, and alignment for each level (up to 9 levels available).</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Link Levels to Styles</strong>
+                    <div class="ribbon-path">Multilevel List → Link level to style</div>
+                    <p>Connect list levels to heading styles (Level 1 = Heading 1, Level 2 = Heading 2) for automatic formatting and navigation.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="practical-exercise">
+            <h4>🎯 Project Outline Exercise</h4>
+            <p>Create a project plan with this structure:</p>
+            <div class="exercise-grid">
+                <div class="exercise-card">
+                    <h5>Level 1: Projects</h5>
+                    <p>1, 2, 3... (Arabic numerals)</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Level 2: Tasks</h5>
+                    <p>a, b, c... (lowercase letters)</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Level 3: Subtasks</h5>
+                    <p>i, ii, iii... (Roman numerals)</p>
+                </div>
+                <div class="exercise-card">
+                    <h5>Level 4: Details</h5>
+                    <p>• Bullet points</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Hierarchy Management Tips</h5>
+            <p><strong>Consistent Indentation:</strong> Use Tab/Shift+Tab for level changes. <strong>Visual Hierarchy:</strong> Make higher levels more prominent. <strong>Navigation:</strong> Link to heading styles for outline view. <strong>Restart Numbering:</strong> Use "Restart at 1" for new sections.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create a complex multilevel list with at least 4 levels, different formatting for each level, and demonstrate promoting/demoting items between levels efficiently.</p>
+        </div>
+
+        <button class="btn btn-success" onclick="markLabComplete(8)">
+            <span>✅</span> Mark Complete
+        </button>
+    </div>
+
+    <div class="checkpoint" style="background: linear-gradient(135deg, var(--chapter-color), #e67e00); margin-top: 40px;">
+        <h3>🎉 Chapter 3 Complete!</h3>
+        <p>Outstanding! You've mastered tables and lists. Ready to tackle Chapter 4 on References and Citations?</p>
+        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+            <a href="word365-chapter3-project.html" class="btn" style="background: white; color: var(--chapter-color);">
+                <span>📋</span> Chapter Project
+            </a>
+            <a href="word365-chapter3-assessment.html" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;">
+                <span>📝</span> Post-Assessment
+            </a>
+            <a href="word365-chapter4.html" class="btn" style="background: var(--warning-yellow); color: var(--dark-gray);">
+                <span>➡️</span> Next: Chapter 4
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let completedLabs = JSON.parse(localStorage.getItem('word365_chapter3_labs') || '[]');
+
+        function markLabComplete(labNumber) {
+            if (!completedLabs.includes(labNumber)) {
+                completedLabs.push(labNumber);
+                localStorage.setItem('word365_chapter3_labs', JSON.stringify(completedLabs));
+                updateProgress();
+                
+                // Visual feedback
+                const labItem = document.querySelector(`[data-lab="${labNumber}"]`);
+                labItem.classList.add('completed');
+                
+                // Show success message
+                alert(`✅ Lab ${labNumber} completed! Excellent work!`);
+                
+                // Check if all labs completed
+                if (completedLabs.length === 8) {
+                    localStorage.setItem('word365_chapter3_completed', 'true');
+                    setTimeout(() => {
+                        alert('🎉 All Chapter 3 labs completed! You can now proceed to the chapter project and assessment.');
+                    }, 500);
+                }
+            }
+        }
+
+        function updateProgress() {
+            const progress = (completedLabs.length / 8) * 100;
+            document.getElementById('chapterProgress').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${completedLabs.length} of 8 labs completed`;
+            
+            // Mark completed labs in checklist
+            completedLabs.forEach(labNumber => {
+                const labItem = document.querySelector(`[data-lab="${labNumber}"]`);
+                if (labItem) labItem.classList.add('completed');
+            });
+        }
+
+        // Initialize progress on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            
+            // Add click handlers to checklist items
+            document.querySelectorAll('.lab-checklist li').forEach(item => {
+                item.addEventListener('click', function() {
+                    const labNumber = parseInt(this.dataset.lab);
+                    if (!this.classList.contains('completed')) {
+                        this.classList.add('completed');
+                        markLabComplete(labNumber);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

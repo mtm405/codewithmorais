@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Reel Quality Checker - @marcotmorais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-number {
+            font-size: 72px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .score-label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .score-verdict {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .score-prediction {
+            margin-top: 15px;
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .section-score {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .question-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9ff;
+        }
+
+        .history-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .history-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .history-table th {
+            background: #f8f9ff;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .history-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .history-table tr:hover {
+            background: #f8f9ff;
+        }
+
+        .performance-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-excellent { background: #10b981; color: white; }
+        .badge-good { background: #3b82f6; color: white; }
+        .badge-mediocre { background: #f59e0b; color: white; }
+        .badge-poor { background: #ef4444; color: white; }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .score-number {
+                font-size: 48px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Instagram Reel Quality Checker</h1>
+        <p class="subtitle">Optimized for @marcotmorais - Cultural Travel Content</p>
+
+        <div class="score-display" id="scoreDisplay">
+            <div class="score-label">Your Reel Score</div>
+            <div class="score-number" id="totalScore">0</div>
+            <div class="score-verdict" id="verdict">Start scoring your reel below</div>
+            <div class="score-prediction" id="prediction"></div>
+        </div>
+
+        <!-- SECTION 1: Hook Strength -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">🎣 Hook Strength</span>
+                <span class="section-score"><span id="hookScore">0</span>/40</span>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Frame 1 Visual Quality (20 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="visual" value="20" onchange="calculateScore()">
+                        <span>Stunning/iconic landmark or unique perspective (stops 80% of scrollers)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="visual" value="15" onchange="calculateScore()">
+                        <span>Very good photo, clear subject, professional quality</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="visual" value="10" onchange="calculateScore()">
+                        <span>Good photo but not extraordinary (similar to other travel accounts)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="visual" value="5" onchange="calculateScore()">
+                        <span>Mediocre/boring visual (generic sky, ocean, street)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="visual" value="0" onchange="calculateScore()">
+                        <span>Blurry, dark, or unclear subject</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Frame 1 Text Hook (10 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="textHook" value="10" onchange="calculateScore()">
+                        <span>Specific number + location ("$39 view", "300 steps", "UNESCO site")</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="textHook" value="7" onchange="calculateScore()">
+                        <span>Good hook but less specific ("Amazing view", "Hidden gem")</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="textHook" value="4" onchange="calculateScore()">
+                        <span>Generic text ("Check this out", "Beautiful place")</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="textHook" value="0" onchange="calculateScore()">
+                        <span>No text OR question format ("Should you visit?")</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Hook Timing (10 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="timing" value="10" onchange="calculateScore()">
+                        <span>Text appears in first 0.3 seconds + visual is strong immediately</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="timing" value="7" onchange="calculateScore()">
+                        <span>Text appears within 0.5 seconds</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="timing" value="4" onchange="calculateScore()">
+                        <span>Text delayed 1-2 seconds (people already skipping)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="timing" value="0" onchange="calculateScore()">
+                        <span>Text appears after 2+ seconds OR no text</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: Retention Strength -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">⏱️ Retention Strength</span>
+                <span class="section-score"><span id="retentionScore">0</span>/30</span>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Frame Quality Consistency (15 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="frameQuality" value="15" onchange="calculateScore()">
+                        <span>Every frame is visually strong (no weak/boring shots)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frameQuality" value="10" onchange="calculateScore()">
+                        <span>2/3 frames are strong, 1 is mediocre</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frameQuality" value="5" onchange="calculateScore()">
+                        <span>Only Frame 1 is strong, rest are filler</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frameQuality" value="0" onchange="calculateScore()">
+                        <span>Multiple weak frames (ocean with ships, generic landscape)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Duration (10 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="duration" value="10" onchange="calculateScore()">
+                        <span>5-6 seconds total (optimal for cultural travel)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="duration" value="7" onchange="calculateScore()">
+                        <span>7-8 seconds (acceptable but risky)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="duration" value="4" onchange="calculateScore()">
+                        <span>9-10 seconds (too long, skip rate will suffer)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="duration" value="0" onchange="calculateScore()">
+                        <span>11+ seconds (guaranteed 75%+ skip rate)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Frame Variety (5 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="variety" value="5" onchange="calculateScore()">
+                        <span>Each frame shows different angle (wide → close-up → detail)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="variety" value="3" onchange="calculateScore()">
+                        <span>Some variety but frames feel similar</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="variety" value="0" onchange="calculateScore()">
+                        <span>All frames look the same OR random/disconnected</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: Value Delivery -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">💎 Value Delivery</span>
+                <span class="section-score"><span id="valueScore">0</span>/20</span>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Caption Quality (10 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="caption" value="10" onchange="calculateScore()">
+                        <span>Specific logistics (train line, price, hours, how to get there)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="caption" value="7" onchange="calculateScore()">
+                        <span>Some practical info but vague ("Go in the morning")</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="caption" value="4" onchange="calculateScore()">
+                        <span>Personal story only, no actionable tips</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="caption" value="0" onchange="calculateScore()">
+                        <span>Generic caption or just hashtags</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Saveability - Would a stranger save this for trip planning? (10 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="saveability" value="10" onchange="calculateScore()">
+                        <span>YES - Contains info they can't easily Google (entrance hack, timing tip)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="saveability" value="5" onchange="calculateScore()">
+                        <span>MAYBE - Has some value but not essential</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="saveability" value="0" onchange="calculateScore()">
+                        <span>NO - Just aesthetic/personal, no planning value</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: Algorithm Optimization -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">🤖 Algorithm Optimization</span>
+                <span class="section-score"><span id="algorithmScore">0</span>/10</span>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Music Choice (3 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="music" value="3" onchange="calculateScore()">
+                        <span>Soft instrumental (matches cultural travel vibe)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="music" value="2" onchange="calculateScore()">
+                        <span>Trending audio (works but generic)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="music" value="0" onchange="calculateScore()">
+                        <span>No audio OR wrong mood (upbeat pop for historical site)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Text Readability (4 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="readability" value="4" onchange="calculateScore()">
+                        <span>Bold font, white text with outline, top/bottom third placement</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="readability" value="2" onchange="calculateScore()">
+                        <span>Readable but not optimal (small font, center placement)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="readability" value="0" onchange="calculateScore()">
+                        <span>Hard to read (low contrast, covering subject)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label class="question-label">Brand Consistency (3 points)</label>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="brand" value="3" onchange="calculateScore()">
+                        <span>Matches "cultural travel" identity (landmarks, history, logistics)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="brand" value="1" onchange="calculateScore()">
+                        <span>Somewhat on-brand but confusing (aesthetic sunset, lifestyle)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="brand" value="0" onchange="calculateScore()">
+                        <span>Off-brand (beach party, food review, personal vlog)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="resetForm()">Reset Score</button>
+            <button class="btn btn-primary" onclick="saveToHistory()">Save to History</button>
+        </div>
+
+        <!-- History Section -->
+        <div class="history-section">
+            <h2 class="history-title">📈 Performance History</h2>
+            <table class="history-table" id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Reel Topic</th>
+                        <th>Score</th>
+                        <th>Predicted</th>
+                        <th>Actual Views</th>
+                        <th>Skip Rate</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody">
+                    <tr>
+                        <td>Dec 11</td>
+                        <td>Tarragona</td>
+                        <td>49</td>
+                        <td>200-300 views</td>
+                        <td>212</td>
+                        <td>79%</td>
+                        <td><span class="performance-badge badge-poor">Poor</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Add selection highlighting
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                
+                // Remove selected class from siblings
+                const parent = this.closest('.options');
+                parent.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to this option
+                this.classList.add('selected');
+                
+                calculateScore();
+            });
+        });
+
+        function calculateScore() {
+            // Section 1: Hook
+            const visual = parseInt(document.querySelector('input[name="visual"]:checked')?.value || 0);
+            const textHook = parseInt(document.querySelector('input[name="textHook"]:checked')?.value || 0);
+            const timing = parseInt(document.querySelector('input[name="timing"]:checked')?.value || 0);
+            const hookScore = visual + textHook + timing;
+
+            // Section 2: Retention
+            const frameQuality = parseInt(document.querySelector('input[name="frameQuality"]:checked')?.value || 0);
+            const duration = parseInt(document.querySelector('input[name="duration"]:checked')?.value || 0);
+            const variety = parseInt(document.querySelector('input[name="variety"]:checked')?.value || 0);
+            const retentionScore = frameQuality + duration + variety;
+
+            // Section 3: Value
+            const caption = parseInt(document.querySelector('input[name="caption"]:checked')?.value || 0);
+            const saveability = parseInt(document.querySelector('input[name="saveability"]:checked')?.value || 0);
+            const valueScore = caption + saveability;
+
+            // Section 4: Algorithm
+            const music = parseInt(document.querySelector('input[name="music"]:checked')?.value || 0);
+            const readability = parseInt(document.querySelector('input[name="readability"]:checked')?.value || 0);
+            const brand = parseInt(document.querySelector('input[name="brand"]:checked')?.value || 0);
+            const algorithmScore = music + readability + brand;
+
+            // Total
+            const totalScore = hookScore + retentionScore + valueScore + algorithmScore;
+
+            // Update displays
+            document.getElementById('hookScore').textContent = hookScore;
+            document.getElementById('retentionScore').textContent = retentionScore;
+            document.getElementById('valueScore').textContent = valueScore;
+            document.getElementById('algorithmScore').textContent = algorithmScore;
+            document.getElementById('totalScore').textContent = totalScore;
+
+            // Update verdict and prediction
+            const verdictElement = document.getElementById('verdict');
+            const predictionElement = document.getElementById('prediction');
+            
+            if (totalScore >= 90) {
+                verdictElement.textContent = '🔥 EXCELLENT - Post Immediately';
+                verdictElement.style.color = '#10b981';
+                predictionElement.innerHTML = `<strong>Expected:</strong> 400-800 views, 50-60% skip rate, 5-10 saves<br><strong>Growth:</strong> 5-15 new followers`;
+            } else if (totalScore >= 75) {
+                verdictElement.textContent = '✅ GOOD - Post It';
+                verdictElement.style.color = '#3b82f6';
+                predictionElement.innerHTML = `<strong>Expected:</strong> 300-500 views, 60-70% skip rate, 3-5 saves<br><strong>Growth:</strong> 2-5 new followers`;
+            } else if (totalScore >= 60) {
+                verdictElement.textContent = '⚠️ MEDIOCRE - Improve Before Posting';
+                verdictElement.style.color = '#f59e0b';
+                predictionElement.innerHTML = `<strong>Expected:</strong> 200-300 views, 70-75% skip rate, 1-2 saves<br><strong>Fix the weakest section before posting</strong>`;
+            } else {
+                verdictElement.textContent = '❌ DO NOT POST';
+                verdictElement.style.color = '#ef4444';
+                predictionElement.innerHTML = `<strong>Expected:</strong> <200 views, 75%+ skip rate, 0 saves<br><strong>Will hurt your algorithm profile - completely re-edit</strong>`;
+            }
+        }
+
+        function resetForm() {
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            calculateScore();
+        }
+
+        function saveToHistory() {
+            const totalScore = parseInt(document.getElementById('totalScore').textContent);
+            
+            if (totalScore === 0) {
+                alert('Please score your reel first!');
+                return;
+            }
+
+            const reelTopic = prompt('Enter reel topic (e.g., "NYC Summit One"):');
+            if (!reelTopic) return;
+
+            const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            
+            let predicted = '';
+            if (totalScore >= 90) predicted = '400-800 views';
+            else if (totalScore >= 75) predicted = '300-500 views';
+            else if (totalScore >= 60) predicted = '200-300 views';
+            else predicted = '<200 views';
+
+            const tbody = document.getElementById('historyBody');
+            const row = tbody.insertRow(0);
+            row.innerHTML = `
+                <td>${today}</td>
+                <td>${reelTopic}</td>
+                <td><strong>${totalScore}</strong></td>
+                <td>${predicted}</td>
+                <td><input type="number" placeholder="Update later" style="width: 80px; padding: 4px;"></td>
+                <td><input type="text" placeholder="%" style="width: 60px; padding: 4px;"></td>
+                <td><span class="performance-badge ${totalScore >= 90 ? 'badge-excellent' : totalScore >= 75 ? 'badge-good' : totalScore >= 60 ? 'badge-mediocre' : 'badge-poor'}">
+                    ${totalScore >= 90 ? 'Excellent' : totalScore >= 75 ? 'Good' : totalScore >= 60 ? 'Mediocre' : 'Poor'}
+                </span></td>
+            `;
+
+            alert(`✅ Saved to history!\n\nReel: ${reelTopic}\nScore: ${totalScore}/100\nPrediction: ${predicted}\n\nUpdate actual results after posting.`);
+        }
+
+        // Initialize on load
+        calculateScore();
+    </script>
+</body>
+</html>

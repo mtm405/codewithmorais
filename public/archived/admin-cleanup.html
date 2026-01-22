@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧹 Admin Data Cleanup - Reset All Student Progress</title>
+    
+    <!-- Firebase SDK -->
+    <script src="firebase-config.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .warning-banner {
+            background: #ff6b6b;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            background: #f8f9fa;
+        }
+
+        .section h3 {
+            color: #dc3545;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .data-info {
+            flex: 1;
+        }
+
+        .data-count {
+            background: #007bff;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-refresh {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .clear-all-section {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            text-align: center;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .clear-all-btn {
+            background: #fff;
+            color: #dc3545;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            border: 3px solid #fff;
+            margin-top: 20px;
+        }
+
+        .clear-all-btn:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        .login-section {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .google-login-btn {
+            background: #4285f4;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧹 Admin Data Cleanup</h1>
+            <p>Reset All Student Progress & Data</p>
+        </div>
+
+        <div class="warning-banner">
+            ⚠️ ADMIN ONLY - This will permanently delete ALL student data! ⚠️
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="login-section">
+            <h2>🔐 Admin Authentication Required</h2>
+            <p style="margin: 20px 0;">You must be logged in as admin to access data cleanup tools.</p>
+            <button class="google-login-btn" onclick="handleGoogleSignIn()">
+                🔑 Sign in with Google
+            </button>
+            <br><br>
+            <button class="btn btn-secondary" onclick="debugPageState()" style="background: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                🔍 Debug Status
+            </button>
+        </div>
+
+        <!-- Admin Content -->
+        <div id="adminContent" class="content hidden">
+            <div class="section">
+                <h3>📊 Current Data Status</h3>
+                <button class="btn btn-refresh" onclick="refreshDataCounts()">🔄 Refresh Counts</button>
+                
+                <div id="loadingCounts" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>Loading data counts...</p>
+                </div>
+
+                <div id="dataCounts">
+                    <div class="data-item">
+                        <div class="data-info">
+                            <strong>Quiz Results</strong><br>
+                            <small>Formal quiz submissions from def-quiz.html</small>
+                        </div>
+                        <div class="data-count" id="quizResultsCount">0</div>
+                        <button class="btn btn-danger" onclick="clearCollection('quizResults')">Clear Quiz Results</button>
+                    </div>
+
+                    <div class="data-item">
+                        <div class="data-info">
+                            <strong>Live Leaderboard</strong><br>
+                            <small>Practice arena rankings and scores</small>
+                        </div>
+                        <div class="data-count" id="liveLeaderboardCount">0</div>
+                        <button class="btn btn-danger" onclick="clearCollection('liveLeaderboard')">Clear Leaderboard</button>
+                    </div>
+
+                    <div class="data-item">
+                        <div class="data-info">
+                            <strong>Security Violations</strong><br>
+                            <small>Logged security incidents and violations</small>
+                        </div>
+                        <div class="data-count" id="securityViolationsCount">0</div>
+                        <button class="btn btn-danger" onclick="clearCollection('securityViolations')">Clear Violations</button>
+                    </div>
+
+                    <div class="data-item">
+                        <div class="data-info">
+                            <strong>Quiz Progress</strong><br>
+                            <small>Student progress in def-practice.html sessions</small>
+                        </div>
+                        <div class="data-count" id="quizProgressCount">0</div>
+                        <button class="btn btn-danger" onclick="clearCollection('quizProgress')">Clear Progress</button>
+                    </div>
+
+                    <div class="data-item">
+                        <div class="data-info">
+                            <strong>Browser Storage</strong><br>
+                            <small>Local progress states saved in browser storage</small>
+                        </div>
+                        <div class="data-count" id="localStorageCount">-</div>
+                        <button class="btn btn-danger" onclick="clearLocalStorage()">Clear Browser Data</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clear-all-section">
+                <h2>🗑️ Nuclear Option</h2>
+                <p>Clear ALL student data at once - quiz results, leaderboard, security logs, and browser storage</p>
+                <button class="btn clear-all-btn" onclick="clearAllData()">
+                    💥 CLEAR EVERYTHING
+                </button>
+            </div>
+
+            <div class="status-log" id="statusLog">
+                <strong>📋 Activity Log:</strong><br>
+                Ready to clean data. Click refresh to see current counts.
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore, collection, query, getDocs, deleteDoc, doc, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        let app, auth, db;
+        let currentUser = null;
+        const ADMIN_EMAIL = 'morais.irving@isd622.org';
+
+        // Log status to the activity log
+        function logStatus(message) {
+            console.log('ADMIN STATUS:', message);
+            const log = document.getElementById('statusLog');
+            if (log) {
+                const timestamp = new Date().toLocaleTimeString();
+                log.innerHTML += `<br>[${timestamp}] ${message}`;
+                log.scrollTop = log.scrollHeight;
+            }
+        }
+
+        // Debug function to check page state
+        function debugPageState() {
+            logStatus('🔍 Debug: Checking page state...');
+            logStatus(`🔍 Firebase config loaded: ${!!window.firebaseConfig}`);
+            logStatus(`🔍 Auth object: ${!!auth}`);
+            logStatus(`🔍 DB object: ${!!db}`);
+            logStatus(`🔍 Current user: ${currentUser ? currentUser.email : 'None'}`);
+            logStatus(`🔍 Login section visible: ${!document.getElementById('loginSection').classList.contains('hidden')}`);
+            logStatus(`🔍 Admin content visible: ${!document.getElementById('adminContent').classList.contains('hidden')}`);
+        }
+
+        // Make debug function globally available
+        window.debugPageState = debugPageState;
+
+        // Immediate startup message
+        logStatus('🚀 Admin cleanup page loaded - JavaScript is working');
+        logStatus('⏳ Initializing Firebase...');
+
+        // Initialize Firebase
+        async function initFirebase() {
+            try {
+                // Wait for Firebase config to load
+                let retries = 0;
+                while (!window.firebaseConfig && retries < 50) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    retries++;
+                }
+                
+                if (!window.firebaseConfig) {
+                    throw new Error('Firebase configuration failed to load after 5 seconds');
+                }
+                
+                app = initializeApp(window.firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                
+                logStatus('🔧 Firebase initialized successfully');
+                
+                // Check for redirect result first
+                try {
+                    const redirectResult = await getRedirectResult(auth);
+                    if (redirectResult) {
+                        logStatus(`✅ Redirect auth successful: ${redirectResult.user.displayName}`);
+                    }
+                } catch (redirectError) {
+                    console.warn('Redirect result error:', redirectError);
+                    logStatus('⚠️ Redirect authentication had issues, but continuing...');
+                }
+                
+                // Set up auth state listener
+                onAuthStateChanged(auth, (user) => {
+                    currentUser = user;
+                    if (user && user.email === ADMIN_EMAIL) {
+                        document.getElementById('loginSection').classList.add('hidden');
+                        document.getElementById('adminContent').classList.remove('hidden');
+                        logStatus(`✅ Admin authenticated: ${user.displayName}`);
+                        refreshDataCounts();
+                    } else {
+                        document.getElementById('loginSection').classList.remove('hidden');
+                        document.getElementById('adminContent').classList.add('hidden');
+                        if (user) {
+                            logStatus(`❌ Access denied: ${user.email} is not an admin`);
+                        } else {
+                            logStatus('ℹ️ Please sign in with your admin account');
+                        }
+                    }
+                });
+                
+                console.log('Firebase initialized successfully');
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+                logStatus('❌ Error loading Firebase configuration: ' + error.message);
+            }
+        }
+
+        // Google Sign In with COOP error handling
+        window.handleGoogleSignIn = async function() {
+            try {
+                const provider = new GoogleAuthProvider();
+                
+                // Try popup first
+                logStatus('🔑 Attempting popup authentication...');
+                try {
+                    const result = await signInWithPopup(auth, provider);
+                    logStatus(`✅ Popup auth successful: ${result.user.displayName}`);
+                    return;
+                } catch (popupError) {
+                    console.warn('Popup authentication failed:', popupError);
+                    
+                    // Check if it's a COOP/popup-related error
+                    if (popupError.code === 'auth/popup-blocked' || 
+                        popupError.code === 'auth/popup-closed-by-user' ||
+                        popupError.message.includes('Cross-Origin-Opener-Policy') ||
+                        popupError.message.includes('popup')) {
+                        
+                        logStatus('⚠️ Popup blocked, trying redirect method...');
+                        
+                        // Fallback to redirect
+                        await signInWithRedirect(auth, provider);
+                        logStatus('🔄 Redirecting for authentication...');
+                        return;
+                    } else {
+                        // Re-throw non-popup errors
+                        throw popupError;
+                    }
+                }
+            } catch (error) {
+                console.error('Sign in error:', error);
+                logStatus('❌ Sign in failed: ' + error.message);
+                
+                // Provide user guidance
+                if (error.message.includes('Cross-Origin-Opener-Policy')) {
+                    logStatus('💡 Try refreshing the page or use a different browser');
+                }
+            }
+        };
+
+        // Refresh data counts
+        window.refreshDataCounts = async function() {
+            if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+                logStatus('❌ Admin access required');
+                return;
+            }
+
+            document.getElementById('loadingCounts').classList.remove('hidden');
+            document.getElementById('dataCounts').style.opacity = '0.5';
+            
+            try {
+                logStatus('🔄 Refreshing data counts...');
+                
+                // Count quiz results
+                const quizResultsQuery = query(collection(db, 'quizResults'));
+                const quizResultsSnapshot = await getDocs(quizResultsQuery);
+                document.getElementById('quizResultsCount').textContent = quizResultsSnapshot.size;
+                
+                // Count leaderboard entries
+                const leaderboardQuery = query(collection(db, 'liveLeaderboard'));
+                const leaderboardSnapshot = await getDocs(leaderboardQuery);
+                document.getElementById('liveLeaderboardCount').textContent = leaderboardSnapshot.size;
+                
+                // Count security violations
+                const violationsQuery = query(collection(db, 'securityViolations'));
+                const violationsSnapshot = await getDocs(violationsQuery);
+                document.getElementById('securityViolationsCount').textContent = violationsSnapshot.size;
+                
+                // Count quiz progress entries
+                const progressQuery = query(collection(db, 'quizProgress'));
+                const progressSnapshot = await getDocs(progressQuery);
+                document.getElementById('quizProgressCount').textContent = progressSnapshot.size;
+                
+                // Count localStorage entries
+                const localStorageKeys = Object.keys(localStorage);
+                const quizKeys = localStorageKeys.filter(key => 
+                    key.startsWith('quizState_') || 
+                    key.startsWith('userProgress_') || 
+                    key.startsWith('userPeriod_') ||
+                    key.includes('leaderboard')
+                );
+                document.getElementById('localStorageCount').textContent = quizKeys.length;
+                
+                const totalRecords = quizResultsSnapshot.size + leaderboardSnapshot.size + violationsSnapshot.size + progressSnapshot.size + quizKeys.length;
+                logStatus(`📊 Data counts updated - Total records: ${totalRecords}`);
+                
+            } catch (error) {
+                console.error('Error refreshing counts:', error);
+                logStatus('❌ Error refreshing counts: ' + error.message);
+            } finally {
+                document.getElementById('loadingCounts').classList.add('hidden');
+                document.getElementById('dataCounts').style.opacity = '1';
+            }
+        };
+
+        // Clear a specific collection
+        window.clearCollection = async function(collectionName) {
+            if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+                logStatus('❌ Admin access required');
+                return;
+            }
+
+            const confirmation = confirm(
+                `⚠️ WARNING ⚠️\n\n` +
+                `This will permanently delete ALL data in the "${collectionName}" collection!\n\n` +
+                `This action cannot be undone.\n\n` +
+                `Are you sure you want to proceed?`
+            );
+            
+            if (!confirmation) {
+                logStatus('❌ Collection clear cancelled by user');
+                return;
+            }
+
+            try {
+                logStatus(`🗑️ Clearing ${collectionName} collection...`);
+                
+                const q = query(collection(db, collectionName));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    logStatus(`ℹ️ ${collectionName} collection is already empty`);
+                    return;
+                }
+                
+                logStatus(`📋 Found ${snapshot.size} documents to delete...`);
+                
+                // Delete all documents
+                const deletePromises = [];
+                snapshot.forEach((doc) => {
+                    deletePromises.push(deleteDoc(doc.ref));
+                });
+                
+                await Promise.all(deletePromises);
+                
+                logStatus(`✅ Successfully deleted ${snapshot.size} documents from ${collectionName}`);
+                
+                // Refresh counts
+                await refreshDataCounts();
+                
+            } catch (error) {
+                console.error(`Error clearing ${collectionName}:`, error);
+                logStatus(`❌ Error clearing ${collectionName}: ${error.message}`);
+            }
+        };
+
+        // Clear browser localStorage data
+        window.clearLocalStorage = function() {
+            if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+                logStatus('❌ Admin access required');
+                return;
+            }
+
+            const confirmation = confirm(
+                `⚠️ WARNING ⚠️\n\n` +
+                `This will clear ALL quiz-related data from browser storage!\n` +
+                `This includes:\n` +
+                `• Saved quiz states\n` +
+                `• User progress data\n` +
+                `• Period selections\n` +
+                `• Leaderboard preferences\n\n` +
+                `Students will need to start fresh.\n\n` +
+                `Are you sure you want to proceed?`
+            );
+            
+            if (!confirmation) {
+                logStatus('❌ localStorage clear cancelled by user');
+                return;
+            }
+
+            try {
+                logStatus('🗑️ Clearing browser localStorage...');
+                
+                const keys = Object.keys(localStorage);
+                const quizKeys = keys.filter(key => 
+                    key.startsWith('quizState_') || 
+                    key.startsWith('userProgress_') || 
+                    key.startsWith('userPeriod_') ||
+                    key.includes('leaderboard')
+                );
+                
+                if (quizKeys.length === 0) {
+                    logStatus('ℹ️ No quiz-related localStorage data found');
+                    return;
+                }
+                
+                logStatus(`📋 Found ${quizKeys.length} localStorage entries to delete...`);
+                
+                quizKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                });
+                
+                logStatus(`✅ Successfully cleared ${quizKeys.length} localStorage entries`);
+                
+                // Refresh counts
+                refreshDataCounts();
+                
+            } catch (error) {
+                console.error('Error clearing localStorage:', error);
+                logStatus(`❌ Error clearing localStorage: ${error.message}`);
+            }
+        };
+
+        // Clear all data
+        window.clearAllData = async function() {
+            if (!currentUser || currentUser.email !== ADMIN_EMAIL) {
+                logStatus('❌ Admin access required');
+                return;
+            }
+
+            const confirmation = confirm(
+                `🚨 NUCLEAR OPTION WARNING 🚨\n\n` +
+                `This will permanently delete ALL student data:\n` +
+                `• All quiz results\n` +
+                `• All leaderboard entries\n` +
+                `• All security violation logs\n` +
+                `• All browser storage data\n\n` +
+                `This action cannot be undone!\n\n` +
+                `Are you absolutely sure?`
+            );
+            
+            if (!confirmation) {
+                logStatus('❌ Complete data clear cancelled');
+                return;
+            }
+            
+            const doubleConfirm = confirm(
+                `🔥 FINAL CONFIRMATION 🔥\n\n` +
+                `Type "DELETE ALL" in the next prompt to confirm complete data wipe:`
+            );
+            
+            if (!doubleConfirm) {
+                logStatus('❌ Complete data clear cancelled');
+                return;
+            }
+            
+            const finalConfirm = prompt('Type "DELETE ALL" to confirm complete data wipe:');
+            if (finalConfirm !== 'DELETE ALL') {
+                logStatus('❌ Complete data clear cancelled - incorrect confirmation');
+                return;
+            }
+
+            try {
+                logStatus('🔥 INITIATING COMPLETE DATA WIPE...');
+                
+                const collections = ['quizResults', 'liveLeaderboard', 'securityViolations'];
+                let totalDeleted = 0;
+                
+                for (const collectionName of collections) {
+                    logStatus(`🗑️ Clearing ${collectionName}...`);
+                    
+                    const q = query(collection(db, collectionName));
+                    const snapshot = await getDocs(q);
+                    
+                    if (!snapshot.empty) {
+                        const deletePromises = [];
+                        snapshot.forEach((doc) => {
+                            deletePromises.push(deleteDoc(doc.ref));
+                        });
+                        
+                        await Promise.all(deletePromises);
+                        totalDeleted += snapshot.size;
+                        logStatus(`✅ Deleted ${snapshot.size} documents from ${collectionName}`);
+                    } else {
+                        logStatus(`ℹ️ ${collectionName} was already empty`);
+                    }
+                }
+                
+                // Clear localStorage data
+                logStatus('🗑️ Clearing browser localStorage...');
+                const keys = Object.keys(localStorage);
+                const quizKeys = keys.filter(key => 
+                    key.startsWith('quizState_') || 
+                    key.startsWith('userProgress_') || 
+                    key.startsWith('userPeriod_') ||
+                    key.includes('leaderboard')
+                );
+                
+                if (quizKeys.length > 0) {
+                    quizKeys.forEach(key => {
+                        localStorage.removeItem(key);
+                    });
+                    logStatus(`✅ Cleared ${quizKeys.length} localStorage entries`);
+                    totalDeleted += quizKeys.length;
+                } else {
+                    logStatus('ℹ️ No localStorage data to clear');
+                }
+                
+                logStatus(`🎯 COMPLETE DATA WIPE FINISHED - ${totalDeleted} total items deleted`);
+                logStatus('🧹 All student progress has been reset to zero');
+                
+                // Refresh counts to show zeros
+                await refreshDataCounts();
+                
+                alert(`✅ Complete data wipe successful!\n\n${totalDeleted} total items deleted.\n\nAll student progress has been reset.`);
+                
+            } catch (error) {
+                console.error('Error during complete data wipe:', error);
+                logStatus(`❌ Error during complete data wipe: ${error.message}`);
+                alert('❌ Error during data wipe: ' + error.message);
+            }
+        };
+
+        // Initialize on page load
+        window.addEventListener('load', initFirebase);
+    </script>
+</body>
+</html>

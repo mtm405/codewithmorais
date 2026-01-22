@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOS Word Associate (MO-100) Study Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .instructions-banner {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px 40px;
+            border-left: 6px solid #c0392b;
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        .instructions-banner h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructions-banner ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions-banner li {
+            margin: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .instructions-banner li:before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+
+        .instructions-banner strong {
+            text-decoration: underline;
+            font-size: 1.1em;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #dee2e6;
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 1em;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .nav-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .domain-section {
+            margin-bottom: 40px;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .domain-section h2 {
+            color: #2b5876;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .objective-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .objective-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .objective-card h3 {
+            color: #4e4376;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .task-list {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .task-list li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .ribbon-location {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .quiz-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            color: white;
+        }
+
+        .quiz-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .quiz-question {
+            background: white;
+            color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-question h4 {
+            color: #2b5876;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .quiz-options {
+            list-style: none;
+        }
+
+        .quiz-option {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .quiz-option.selected {
+            border-color: #667eea;
+            background: #e7eaf6;
+        }
+
+        .quiz-option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .quiz-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .quiz-result {
+            background: white;
+            color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .quiz-result.excellent {
+            border: 3px solid #28a745;
+        }
+
+        .quiz-result.good {
+            border: 3px solid #ffc107;
+        }
+
+        .quiz-result.needs-improvement {
+            border: 3px solid #dc3545;
+        }
+
+        .explanation {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .tip-box strong {
+            color: #0c5460;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .nav-tab {
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+        }
+
+        .domain-icon {
+            font-size: 2em;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .keyboard-shortcut {
+            background: #343a40;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📑 MOS Word Associate (MO-100) Study Guide</h1>
+            <p>Master Microsoft Word with comprehensive ribbon navigation and practice quizzes</p>
+        </div>
+
+        <div class="instructions-banner">
+            <h3>🚨 INDIVIDUAL WORK REQUIRED</h3>
+            <ul>
+                <li><strong>This is an INDIVIDUAL assignment.</strong> You must complete all study materials and quizzes on your own.</li>
+                <li><strong>NO collaboration, copying, or sharing answers</strong> with other students is permitted.</li>
+                <li><strong>Academic integrity is expected.</strong> Any form of cheating will result in a zero and disciplinary action.</li>
+                <li><strong>Take your time and learn the material.</strong> This study guide is designed to help YOU succeed on the MOS certification exam.</li>
+            </ul>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab(0)">📄 Domain 1: Documents</button>
+            <button class="nav-tab" onclick="showTab(1)">✏️ Domain 2: Text & Paragraphs</button>
+            <button class="nav-tab" onclick="showTab(2)">📊 Domain 3: Tables & Lists</button>
+            <button class="nav-tab" onclick="showTab(3)">📚 Domain 4: References</button>
+            <button class="nav-tab" onclick="showTab(4)">🖼️ Domain 5: Graphics</button>
+            <button class="nav-tab" onclick="showTab(5)">👥 Domain 6: Collaboration</button>
+            <button class="nav-tab" onclick="showTab(6)">🎯 Practice Quiz</button>
+        </div>
+
+        <div class="content">
+            <!-- Domain 1: Manage Documents -->
+            <div class="tab-content active">
+                <div class="domain-section">
+                    <h2><span class="domain-icon">📄</span>Domain 1: Manage Documents</h2>
+                    <p style="margin-bottom: 20px;">This domain focuses on document settings, navigation, and properties.</p>
+
+                    <div class="objective-card">
+                        <h3>Navigate within documents</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Search for text:</strong> Use Find to locate specific content quickly
+                                <br><span class="ribbon-location">Home Tab → Editing Group → Find</span>
+                                <span class="keyboard-shortcut">Ctrl+F</span>
+                            </li>
+                            <li>
+                                <strong>Go To specific locations:</strong> Jump to pages, sections, bookmarks, or other objects
+                                <br><span class="ribbon-location">Home Tab → Editing Group → Go To</span>
+                                <span class="keyboard-shortcut">Ctrl+G</span>
+                            </li>
+                            <li>
+                                <strong>Insert Bookmarks:</strong> Create named locations for easy navigation
+                                <br><span class="ribbon-location">Insert Tab → Links Group → Bookmark</span>
+                            </li>
+                            <li>
+                                <strong>Insert Hyperlinks:</strong> Link to websites, files, or locations within the document
+                                <br><span class="ribbon-location">Insert Tab → Links Group → Hyperlink</span>
+                                <span class="keyboard-shortcut">Ctrl+K</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Use bookmarks for long documents to quickly jump between sections. Combine with hyperlinks for an interactive table of contents!
+                        </div>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Format documents</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Page Setup:</strong> Configure orientation (Portrait/Landscape), margins, and page size
+                                <br><span class="ribbon-location">Layout Tab → Page Setup Group</span>
+                            </li>
+                            <li>
+                                <strong>Headers and Footers:</strong> Insert and modify content that appears on every page
+                                <br><span class="ribbon-location">Insert Tab → Header & Footer Group</span>
+                            </li>
+                            <li>
+                                <strong>Page Background:</strong> Add watermarks, page color, or page borders
+                                <br><span class="ribbon-location">Design Tab → Page Background Group</span>
+                            </li>
+                            <li>
+                                <strong>Style Sets:</strong> Apply coordinated formatting themes to your document
+                                <br><span class="ribbon-location">Design Tab → Document Formatting Group</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Different headers/footers for odd and even pages can make your document look more professional!
+                        </div>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Save and share documents</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Save in alternative formats:</strong> Export to PDF, XPS, or other formats
+                                <br><span class="ribbon-location">File Tab → Save As</span>
+                            </li>
+                            <li>
+                                <strong>Document Properties:</strong> Edit title, author, subject, and other metadata
+                                <br><span class="ribbon-location">File Tab → Info → Properties</span>
+                            </li>
+                            <li>
+                                <strong>Print Settings:</strong> Configure pages, copies, orientation, and printer options
+                                <br><span class="ribbon-location">File Tab → Print</span>
+                                <span class="keyboard-shortcut">Ctrl+P</span>
+                            </li>
+                            <li>
+                                <strong>Share Options:</strong> Share via email, OneDrive, or other methods
+                                <br><span class="ribbon-location">File Tab → Share</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Inspect documents for issues</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Document Inspector:</strong> Find and remove hidden properties, comments, and personal information
+                                <br><span class="ribbon-location">File Tab → Info → Check for Issues → Inspect Document</span>
+                            </li>
+                            <li>
+                                <strong>Accessibility Checker:</strong> Identify accessibility issues for users with disabilities
+                                <br><span class="ribbon-location">File Tab → Info → Check for Issues → Check Accessibility</span>
+                            </li>
+                            <li>
+                                <strong>Compatibility Checker:</strong> Find features not supported in earlier Word versions
+                                <br><span class="ribbon-location">File Tab → Info → Check for Issues → Check Compatibility</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Always run Document Inspector before sharing sensitive documents to remove hidden metadata!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domain 2: Insert and Format Text, Paragraphs, and Sections -->
+            <div class="tab-content">
+                <div class="domain-section">
+                    <h2><span class="domain-icon">✏️</span>Domain 2: Insert and Format Text, Paragraphs, and Sections</h2>
+                    <p style="margin-bottom: 20px;">This domain covers the appearance and structure of text.</p>
+
+                    <div class="objective-card">
+                        <h3>Insert text and paragraphs</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Find and Replace:</strong> Search for text and replace it with different content
+                                <br><span class="ribbon-location">Home Tab → Editing Group → Replace</span>
+                                <span class="keyboard-shortcut">Ctrl+H</span>
+                            </li>
+                            <li>
+                                <strong>Symbols and Special Characters:</strong> Insert mathematical symbols, copyright marks, emojis, etc.
+                                <br><span class="ribbon-location">Insert Tab → Symbols Group → Symbol</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Format text and paragraphs</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Text Effects:</strong> Apply shadows, reflections, glow, and 3D effects to text
+                                <br><span class="ribbon-location">Home Tab → Font Group → Text Effects</span>
+                            </li>
+                            <li>
+                                <strong>Format Painter:</strong> Copy formatting from one location and apply it to another
+                                <br><span class="ribbon-location">Home Tab → Clipboard Group → Format Painter</span>
+                                <span class="keyboard-shortcut">Ctrl+Shift+C/V</span>
+                            </li>
+                            <li>
+                                <strong>Line and Paragraph Spacing:</strong> Adjust spacing between lines and paragraphs
+                                <br><span class="ribbon-location">Home Tab → Paragraph Group → Line Spacing</span>
+                            </li>
+                            <li>
+                                <strong>Indentation:</strong> Set left, right, first line, and hanging indents
+                                <br><span class="ribbon-location">Home Tab → Paragraph Group → Increase/Decrease Indent</span>
+                            </li>
+                            <li>
+                                <strong>Styles:</strong> Apply built-in formatting styles (Heading 1, Heading 2, etc.)
+                                <br><span class="ribbon-location">Home Tab → Styles Group</span>
+                            </li>
+                            <li>
+                                <strong>Clear Formatting:</strong> Remove all formatting and return to default text
+                                <br><span class="ribbon-location">Home Tab → Font Group → Clear All Formatting</span>
+                                <span class="keyboard-shortcut">Ctrl+Spacebar</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Double-click Format Painter to apply the same formatting to multiple locations!
+                        </div>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Create and configure document sections</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Multiple Columns:</strong> Format text in newspaper-style columns
+                                <br><span class="ribbon-location">Layout Tab → Page Setup Group → Columns</span>
+                            </li>
+                            <li>
+                                <strong>Page Breaks:</strong> Force content to start on a new page
+                                <br><span class="ribbon-location">Layout Tab → Page Setup Group → Breaks → Page</span>
+                                <span class="keyboard-shortcut">Ctrl+Enter</span>
+                            </li>
+                            <li>
+                                <strong>Section Breaks:</strong> Create sections with different formatting (orientation, columns, etc.)
+                                <br><span class="ribbon-location">Layout Tab → Page Setup Group → Breaks → Section Breaks</span>
+                            </li>
+                            <li>
+                                <strong>Column Breaks:</strong> Move text to the next column
+                                <br><span class="ribbon-location">Layout Tab → Page Setup Group → Breaks → Column</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domain 3: Manage Tables and Lists -->
+            <div class="tab-content">
+                <div class="domain-section">
+                    <h2><span class="domain-icon">📊</span>Domain 3: Manage Tables and Lists</h2>
+                    <p style="margin-bottom: 20px;">This domain covers creating and modifying structured data.</p>
+
+                    <div class="objective-card">
+                        <h3>Create tables</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Insert Table:</strong> Create tables by specifying rows and columns
+                                <br><span class="ribbon-location">Insert Tab → Tables Group → Table</span>
+                            </li>
+                            <li>
+                                <strong>Convert Text to Table:</strong> Transform comma or tab-separated text into a table
+                                <br><span class="ribbon-location">Insert Tab → Tables Group → Convert Text to Table</span>
+                            </li>
+                            <li>
+                                <strong>Convert Table to Text:</strong> Transform table data back to regular text
+                                <br><span class="ribbon-location">Table Tools Layout Tab → Data Group → Convert to Text</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Modify tables</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Sort Table Data:</strong> Arrange rows alphabetically or numerically
+                                <br><span class="ribbon-location">Table Tools Layout Tab → Data Group → Sort</span>
+                            </li>
+                            <li>
+                                <strong>Merge Cells:</strong> Combine multiple cells into one
+                                <br><span class="ribbon-location">Table Tools Layout Tab → Merge Group → Merge Cells</span>
+                            </li>
+                            <li>
+                                <strong>Split Cells:</strong> Divide a cell into multiple cells
+                                <br><span class="ribbon-location">Table Tools Layout Tab → Merge Group → Split Cells</span>
+                            </li>
+                            <li>
+                                <strong>Resize Columns/Rows:</strong> Adjust width and height precisely
+                                <br><span class="ribbon-location">Table Tools Layout Tab → Cell Size Group</span>
+                            </li>
+                            <li>
+                                <strong>Split Table:</strong> Divide one table into two separate tables
+                                <br><span class="ribbon-location">Table Tools Layout Tab → Table Group → Split Table</span>
+                            </li>
+                            <li>
+                                <strong>Repeat Header Rows:</strong> Automatically display header row on each page
+                                <br><span class="ribbon-location">Table Tools Layout Tab → Table Group → Repeat Header Rows</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Use AutoFit to automatically adjust column widths based on content!
+                        </div>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Create and modify lists</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Bulleted Lists:</strong> Create lists with bullet points
+                                <br><span class="ribbon-location">Home Tab → Paragraph Group → Bullets</span>
+                            </li>
+                            <li>
+                                <strong>Numbered Lists:</strong> Create sequential numbered lists
+                                <br><span class="ribbon-location">Home Tab → Paragraph Group → Numbering</span>
+                            </li>
+                            <li>
+                                <strong>Multilevel Lists:</strong> Create hierarchical lists with multiple levels
+                                <br><span class="ribbon-location">Home Tab → Paragraph Group → Multilevel List</span>
+                            </li>
+                            <li>
+                                <strong>Change List Formatting:</strong> Modify bullet characters, number formats, and colors
+                                <br><span class="ribbon-location">Home Tab → Paragraph Group → Define New Bullet/Number Format</span>
+                            </li>
+                            <li>
+                                <strong>Increase/Decrease Indent:</strong> Change list hierarchy levels
+                                <br><span class="ribbon-location">Home Tab → Paragraph Group → Increase/Decrease Indent</span>
+                                <span class="keyboard-shortcut">Tab / Shift+Tab</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domain 4: Create and Manage References -->
+            <div class="tab-content">
+                <div class="domain-section">
+                    <h2><span class="domain-icon">📚</span>Domain 4: Create and Manage References</h2>
+                    <p style="margin-bottom: 20px;">This domain covers formal document features like citations and tables of contents.</p>
+
+                    <div class="objective-card">
+                        <h3>Create and manage reference elements</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Insert Footnotes:</strong> Add notes at the bottom of the page
+                                <br><span class="ribbon-location">References Tab → Footnotes Group → Insert Footnote</span>
+                                <span class="keyboard-shortcut">Alt+Ctrl+F</span>
+                            </li>
+                            <li>
+                                <strong>Insert Endnotes:</strong> Add notes at the end of the document
+                                <br><span class="ribbon-location">References Tab → Footnotes Group → Insert Endnote</span>
+                                <span class="keyboard-shortcut">Alt+Ctrl+D</span>
+                            </li>
+                            <li>
+                                <strong>Modify Footnote/Endnote Properties:</strong> Change numbering format, location, and formatting
+                                <br><span class="ribbon-location">References Tab → Footnotes Group → Dialog Launcher</span>
+                            </li>
+                            <li>
+                                <strong>Insert Citations:</strong> Add source citations in various formats (APA, MLA, Chicago)
+                                <br><span class="ribbon-location">References Tab → Citations & Bibliography Group → Insert Citation</span>
+                            </li>
+                            <li>
+                                <strong>Manage Sources:</strong> Edit and organize your citation sources
+                                <br><span class="ribbon-location">References Tab → Citations & Bibliography Group → Manage Sources</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Change citation style before inserting citations to ensure consistency throughout your document!
+                        </div>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Create and manage reference tables</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Table of Contents:</strong> Automatically generate a TOC based on heading styles
+                                <br><span class="ribbon-location">References Tab → Table of Contents Group → Table of Contents</span>
+                            </li>
+                            <li>
+                                <strong>Update Table of Contents:</strong> Refresh to reflect document changes
+                                <br><span class="ribbon-location">References Tab → Table of Contents Group → Update Table</span>
+                            </li>
+                            <li>
+                                <strong>Custom TOC:</strong> Customize formatting, page numbers, and tab leaders
+                                <br><span class="ribbon-location">References Tab → Table of Contents Group → Custom Table of Contents</span>
+                            </li>
+                            <li>
+                                <strong>Bibliography:</strong> Generate a list of all sources cited in the document
+                                <br><span class="ribbon-location">References Tab → Citations & Bibliography Group → Bibliography</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Use Heading styles consistently to create accurate tables of contents automatically!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domain 5: Insert and Format Graphic Elements -->
+            <div class="tab-content">
+                <div class="domain-section">
+                    <h2><span class="domain-icon">🖼️</span>Domain 5: Insert and Format Graphic Elements</h2>
+                    <p style="margin-bottom: 20px;">This domain covers non-text visual elements.</p>
+
+                    <div class="objective-card">
+                        <h3>Insert illustrations and text boxes</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Shapes:</strong> Insert rectangles, circles, arrows, callouts, and more
+                                <br><span class="ribbon-location">Insert Tab → Illustrations Group → Shapes</span>
+                            </li>
+                            <li>
+                                <strong>Pictures:</strong> Insert images from your computer or online sources
+                                <br><span class="ribbon-location">Insert Tab → Illustrations Group → Pictures</span>
+                            </li>
+                            <li>
+                                <strong>SmartArt:</strong> Create diagrams, processes, hierarchies, and relationships
+                                <br><span class="ribbon-location">Insert Tab → Illustrations Group → SmartArt</span>
+                            </li>
+                            <li>
+                                <strong>Screenshots:</strong> Capture and insert screenshots of windows or screen clippings
+                                <br><span class="ribbon-location">Insert Tab → Illustrations Group → Screenshot</span>
+                            </li>
+                            <li>
+                                <strong>Text Boxes:</strong> Insert movable containers for text
+                                <br><span class="ribbon-location">Insert Tab → Text Group → Text Box</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Format illustrations</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Artistic Effects:</strong> Apply filters like blur, pencil sketch, or paint strokes
+                                <br><span class="ribbon-location">Picture Tools Format Tab → Adjust Group → Artistic Effects</span>
+                            </li>
+                            <li>
+                                <strong>Picture Effects:</strong> Add shadows, reflections, glows, soft edges, and 3D rotation
+                                <br><span class="ribbon-location">Picture Tools Format Tab → Picture Styles Group → Picture Effects</span>
+                            </li>
+                            <li>
+                                <strong>Picture Styles:</strong> Apply preset combinations of borders, effects, and layouts
+                                <br><span class="ribbon-location">Picture Tools Format Tab → Picture Styles Group</span>
+                            </li>
+                            <li>
+                                <strong>Remove Background:</strong> Automatically remove the background from pictures
+                                <br><span class="ribbon-location">Picture Tools Format Tab → Adjust Group → Remove Background</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Compress images to reduce file size: Picture Tools Format → Adjust → Compress Pictures!
+                        </div>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Modify graphic elements</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Position Objects:</strong> Set exact position or use quick position presets
+                                <br><span class="ribbon-location">Format Tab → Arrange Group → Position</span>
+                            </li>
+                            <li>
+                                <strong>Wrap Text:</strong> Control how text flows around objects (In Line, Square, Tight, Through, etc.)
+                                <br><span class="ribbon-location">Format Tab → Arrange Group → Wrap Text</span>
+                            </li>
+                            <li>
+                                <strong>Alt Text:</strong> Add alternative text descriptions for accessibility
+                                <br><span class="ribbon-location">Format Tab → Arrange Group → Alt Text</span>
+                            </li>
+                            <li>
+                                <strong>Bring Forward/Send Backward:</strong> Change the stacking order of overlapping objects
+                                <br><span class="ribbon-location">Format Tab → Arrange Group</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domain 6: Manage Document Collaboration -->
+            <div class="tab-content">
+                <div class="domain-section">
+                    <h2><span class="domain-icon">👥</span>Domain 6: Manage Document Collaboration</h2>
+                    <p style="margin-bottom: 20px;">This domain focuses on reviewing and tracking changes in collaborative documents.</p>
+
+                    <div class="objective-card">
+                        <h3>Add and manage comments</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Add Comments:</strong> Insert comments to provide feedback without changing the document
+                                <br><span class="ribbon-location">Review Tab → Comments Group → New Comment</span>
+                                <span class="keyboard-shortcut">Ctrl+Alt+M</span>
+                            </li>
+                            <li>
+                                <strong>Review Comments:</strong> Navigate through all comments in the document
+                                <br><span class="ribbon-location">Review Tab → Comments Group → Previous/Next</span>
+                            </li>
+                            <li>
+                                <strong>Reply to Comments:</strong> Respond to existing comments to start a discussion thread
+                                <br><span class="ribbon-location">Click on comment → Reply button</span>
+                            </li>
+                            <li>
+                                <strong>Resolve Comments:</strong> Mark comments as resolved when addressed
+                                <br><span class="ribbon-location">Click on comment → Resolve button</span>
+                            </li>
+                            <li>
+                                <strong>Delete Comments:</strong> Remove individual or all comments
+                                <br><span class="ribbon-location">Review Tab → Comments Group → Delete</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Use @mentions in comments to notify specific collaborators about important feedback!
+                        </div>
+                    </div>
+
+                    <div class="objective-card">
+                        <h3>Manage change tracking</h3>
+                        <ul class="task-list">
+                            <li>
+                                <strong>Track Changes:</strong> Record all edits made to the document
+                                <br><span class="ribbon-location">Review Tab → Tracking Group → Track Changes</span>
+                                <span class="keyboard-shortcut">Ctrl+Shift+E</span>
+                            </li>
+                            <li>
+                                <strong>Display for Review:</strong> Choose how to view tracked changes (Simple Markup, All Markup, No Markup, Original)
+                                <br><span class="ribbon-location">Review Tab → Tracking Group → Display for Review</span>
+                            </li>
+                            <li>
+                                <strong>Accept Changes:</strong> Incorporate tracked changes into the document
+                                <br><span class="ribbon-location">Review Tab → Changes Group → Accept</span>
+                            </li>
+                            <li>
+                                <strong>Reject Changes:</strong> Discard tracked changes and keep original content
+                                <br><span class="ribbon-location">Review Tab → Changes Group → Reject</span>
+                            </li>
+                            <li>
+                                <strong>Lock Tracking:</strong> Prevent others from turning off Track Changes
+                                <br><span class="ribbon-location">Review Tab → Tracking Group → Lock Tracking</span>
+                            </li>
+                            <li>
+                                <strong>Show Markup:</strong> Choose which types of markup to display (comments, insertions, deletions, formatting)
+                                <br><span class="ribbon-location">Review Tab → Tracking Group → Show Markup</span>
+                            </li>
+                        </ul>
+                        <div class="tip-box">
+                            <strong>💡 Pro Tip:</strong> Lock tracking with a password to ensure all reviewers' changes are recorded!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice Quiz -->
+            <div class="tab-content">
+                <div class="domain-section">
+                    <h2><span class="domain-icon">🎯</span>Practice Quiz</h2>
+                    <p style="margin-bottom: 20px;">Test your knowledge with these comprehensive practice questions!</p>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="quizProgress">0% Complete</div>
+                    </div>
+
+                    <div class="quiz-section">
+                        <h3>📝 MOS Word Associate Practice Questions</h3>
+                        
+                        <!-- Question 1 -->
+                        <div class="quiz-question" data-question="1" data-correct="b">
+                            <h4>1. What keyboard shortcut opens the Find feature to search for text in a document?</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Ctrl+H</li>
+                                <li class="quiz-option" data-answer="b">B) Ctrl+F</li>
+                                <li class="quiz-option" data-answer="c">C) Ctrl+G</li>
+                                <li class="quiz-option" data-answer="d">D) Ctrl+K</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Ctrl+F opens the Find feature. Ctrl+H is Replace, Ctrl+G is Go To, and Ctrl+K is Insert Hyperlink.
+                            </div>
+                        </div>
+
+                        <!-- Question 2 -->
+                        <div class="quiz-question" data-question="2" data-correct="c">
+                            <h4>2. Which tab contains the Document Inspector tool?</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Review Tab</li>
+                                <li class="quiz-option" data-answer="b">B) Home Tab</li>
+                                <li class="quiz-option" data-answer="c">C) File Tab (Backstage View)</li>
+                                <li class="quiz-option" data-answer="d">D) Insert Tab</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Document Inspector is located in File Tab → Info → Check for Issues → Inspect Document. It removes hidden properties and personal information.
+                            </div>
+                        </div>
+
+                        <!-- Question 3 -->
+                        <div class="quiz-question" data-question="3" data-correct="a">
+                            <h4>3. To copy formatting from one location and apply it elsewhere, you should use:</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Format Painter</li>
+                                <li class="quiz-option" data-answer="b">B) Text Effects</li>
+                                <li class="quiz-option" data-answer="c">C) Styles</li>
+                                <li class="quiz-option" data-answer="d">D) Clear Formatting</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Format Painter (Home Tab → Clipboard Group) copies formatting. Double-click it to apply formatting to multiple locations!
+                            </div>
+                        </div>
+
+                        <!-- Question 4 -->
+                        <div class="quiz-question" data-question="4" data-correct="d">
+                            <h4>4. Which keyboard shortcut inserts a page break?</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Ctrl+B</li>
+                                <li class="quiz-option" data-answer="b">B) Ctrl+Shift+Enter</li>
+                                <li class="quiz-option" data-answer="c">C) Alt+Enter</li>
+                                <li class="quiz-option" data-answer="d">D) Ctrl+Enter</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Ctrl+Enter inserts a page break, forcing content to start on a new page. You can also access this via Layout Tab → Page Setup → Breaks.
+                            </div>
+                        </div>
+
+                        <!-- Question 5 -->
+                        <div class="quiz-question" data-question="5" data-correct="b">
+                            <h4>5. To automatically display a table's header row on each page, you should use:</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Merge Cells</li>
+                                <li class="quiz-option" data-answer="b">B) Repeat Header Rows</li>
+                                <li class="quiz-option" data-answer="c">C) Split Table</li>
+                                <li class="quiz-option" data-answer="d">D) Sort Table</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Repeat Header Rows (Table Tools Layout Tab → Table Group) automatically shows the header row at the top of each page when a table spans multiple pages.
+                            </div>
+                        </div>
+
+                        <!-- Question 6 -->
+                        <div class="quiz-question" data-question="6" data-correct="a">
+                            <h4>6. Which tab contains the Table of Contents feature?</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) References Tab</li>
+                                <li class="quiz-option" data-answer="b">B) Insert Tab</li>
+                                <li class="quiz-option" data-answer="c">C) Design Tab</li>
+                                <li class="quiz-option" data-answer="d">D) Layout Tab</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Table of Contents is in References Tab → Table of Contents Group. It automatically generates based on heading styles in your document.
+                            </div>
+                        </div>
+
+                        <!-- Question 7 -->
+                        <div class="quiz-question" data-question="7" data-correct="c">
+                            <h4>7. To remove the background from a picture, which tool should you use?</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Artistic Effects</li>
+                                <li class="quiz-option" data-answer="b">B) Picture Effects</li>
+                                <li class="quiz-option" data-answer="c">C) Remove Background</li>
+                                <li class="quiz-option" data-answer="d">D) Crop</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Remove Background (Picture Tools Format Tab → Adjust Group) automatically detects and removes the background from images.
+                            </div>
+                        </div>
+
+                        <!-- Question 8 -->
+                        <div class="quiz-question" data-question="8" data-correct="d">
+                            <h4>8. What keyboard shortcut enables Track Changes?</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Ctrl+Alt+M</li>
+                                <li class="quiz-option" data-answer="b">B) Ctrl+T</li>
+                                <li class="quiz-option" data-answer="c">C) Alt+Shift+E</li>
+                                <li class="quiz-option" data-answer="d">D) Ctrl+Shift+E</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Ctrl+Shift+E toggles Track Changes on/off. Track Changes records all edits made to the document for review.
+                            </div>
+                        </div>
+
+                        <!-- Question 9 -->
+                        <div class="quiz-question" data-question="9" data-correct="b">
+                            <h4>9. To insert a footnote, you should press:</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Alt+Ctrl+D</li>
+                                <li class="quiz-option" data-answer="b">B) Alt+Ctrl+F</li>
+                                <li class="quiz-option" data-answer="c">C) Ctrl+Shift+F</li>
+                                <li class="quiz-option" data-answer="d">D) Alt+F</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Alt+Ctrl+F inserts a footnote (appears at page bottom), while Alt+Ctrl+D inserts an endnote (appears at document end).
+                            </div>
+                        </div>
+
+                        <!-- Question 10 -->
+                        <div class="quiz-question" data-question="10" data-correct="c">
+                            <h4>10. Which feature allows you to control how text flows around images?</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Position</li>
+                                <li class="quiz-option" data-answer="b">B) Alt Text</li>
+                                <li class="quiz-option" data-answer="c">C) Wrap Text</li>
+                                <li class="quiz-option" data-answer="d">D) Align</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Wrap Text (Format Tab → Arrange Group) controls text flow with options like Square, Tight, Through, Top and Bottom, etc.
+                            </div>
+                        </div>
+
+                        <!-- Question 11 -->
+                        <div class="quiz-question" data-question="11" data-correct="a">
+                            <h4>11. To convert comma-separated text into a table, which feature should you use?</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Convert Text to Table</li>
+                                <li class="quiz-option" data-answer="b">B) Insert Table</li>
+                                <li class="quiz-option" data-answer="c">C) Quick Tables</li>
+                                <li class="quiz-option" data-answer="d">D) Draw Table</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Convert Text to Table (Insert Tab → Tables Group) transforms delimited text into a table structure based on commas, tabs, or other separators.
+                            </div>
+                        </div>
+
+                        <!-- Question 12 -->
+                        <div class="quiz-question" data-question="12" data-correct="d">
+                            <h4>12. Which view option shows all tracked changes with detailed markup?</h4>
+                            <ul class="quiz-options">
+                                <li class="quiz-option" data-answer="a">A) Simple Markup</li>
+                                <li class="quiz-option" data-answer="b">B) No Markup</li>
+                                <li class="quiz-option" data-answer="c">C) Original</li>
+                                <li class="quiz-option" data-answer="d">D) All Markup</li>
+                            </ul>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> All Markup (Review Tab → Tracking Group → Display for Review) shows every change with full details including insertions, deletions, and formatting.
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button class="quiz-button" onclick="submitQuiz()">Submit Quiz</button>
+                            <button class="quiz-button" onclick="resetQuiz()">Reset Quiz</button>
+                        </div>
+
+                        <div id="quizResult" class="quiz-result" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabIndex) {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach((tab, index) => {
+                if (index === tabIndex) {
+                    tab.classList.add('active');
+                    contents[index].classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                    contents[index].classList.remove('active');
+                }
+            });
+
+            // Scroll to top when changing tabs
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Quiz functionality
+        let selectedAnswers = {};
+        let quizSubmitted = false;
+
+        // Handle option selection
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('quiz-option') && !quizSubmitted) {
+                const question = e.target.closest('.quiz-question');
+                const questionNum = question.dataset.question;
+                const answer = e.target.dataset.answer;
+
+                // Remove previous selection
+                question.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                // Add selection to clicked option
+                e.target.classList.add('selected');
+                selectedAnswers[questionNum] = answer;
+
+                // Update progress
+                updateProgress();
+            }
+        });
+
+        function updateProgress() {
+            const totalQuestions = document.querySelectorAll('.quiz-question').length;
+            const answeredQuestions = Object.keys(selectedAnswers).length;
+            const percentage = Math.round((answeredQuestions / totalQuestions) * 100);
+            
+            const progressFill = document.getElementById('quizProgress');
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = percentage + '% Complete';
+        }
+
+        function submitQuiz() {
+            const questions = document.querySelectorAll('.quiz-question');
+            const totalQuestions = questions.length;
+            
+            if (Object.keys(selectedAnswers).length < totalQuestions) {
+                alert('Please answer all questions before submitting!');
+                return;
+            }
+
+            quizSubmitted = true;
+            let correctCount = 0;
+
+            questions.forEach(question => {
+                const questionNum = question.dataset.question;
+                const correctAnswer = question.dataset.correct;
+                const userAnswer = selectedAnswers[questionNum];
+                const explanation = question.querySelector('.explanation');
+
+                // Show explanation
+                explanation.classList.add('show');
+
+                // Highlight correct/incorrect answers
+                question.querySelectorAll('.quiz-option').forEach(option => {
+                    const optionAnswer = option.dataset.answer;
+                    
+                    if (optionAnswer === correctAnswer) {
+                        option.classList.add('correct');
+                    }
+                    
+                    if (optionAnswer === userAnswer && userAnswer !== correctAnswer) {
+                        option.classList.add('incorrect');
+                    }
+                });
+
+                if (userAnswer === correctAnswer) {
+                    correctCount++;
+                }
+            });
+
+            // Calculate score
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            const resultDiv = document.getElementById('quizResult');
+            resultDiv.style.display = 'block';
+
+            let resultClass = '';
+            let resultMessage = '';
+
+            if (percentage >= 90) {
+                resultClass = 'excellent';
+                resultMessage = '🏆 Excellent! You scored ' + correctCount + '/' + totalQuestions + ' (' + percentage + '%)';
+            } else if (percentage >= 70) {
+                resultClass = 'good';
+                resultMessage = '👍 Good job! You scored ' + correctCount + '/' + totalQuestions + ' (' + percentage + '%). Review the explanations for questions you missed.';
+            } else {
+                resultClass = 'needs-improvement';
+                resultMessage = '📚 You scored ' + correctCount + '/' + totalQuestions + ' (' + percentage + '%). Study the content and try again!';
+            }
+
+            resultDiv.className = 'quiz-result ' + resultClass;
+            resultDiv.innerHTML = resultMessage;
+
+            // Scroll to results
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            selectedAnswers = {};
+            quizSubmitted = false;
+
+            // Reset all options
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // Hide explanations
+            document.querySelectorAll('.explanation').forEach(exp => {
+                exp.classList.remove('show');
+            });
+
+            // Hide result
+            document.getElementById('quizResult').style.display = 'none';
+
+            // Reset progress
+            updateProgress();
+
+            // Scroll to top of quiz
+            document.querySelector('.quiz-section').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

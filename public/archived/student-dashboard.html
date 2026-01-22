@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Learning Dashboard - Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --error: #f56565;
+            --info: #4299e1;
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Loading States */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .signout-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+        }
+
+        .signout-btn:hover {
+            background: var(--error);
+            color: white;
+            border-color: var(--error);
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            grid-column: 1 / -1;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .welcome-stat {
+            text-align: center;
+        }
+
+        .welcome-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .welcome-stat-label {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Progress Section */
+        .progress-overview {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+        }
+
+        .progress-info h4 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-info p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .progress-bar-container {
+            width: 100px;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success) 0%, var(--info) 100%);
+            transition: var(--transition);
+        }
+
+        .progress-percentage {
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 3rem;
+            text-align: right;
+        }
+
+        /* Learning Path */
+        .learning-path {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .path-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .path-item:hover {
+            background: var(--bg-primary);
+        }
+
+        .path-item.completed {
+            background: rgba(72, 187, 120, 0.1);
+        }
+
+        .path-item.current {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 2px solid var(--primary);
+        }
+
+        .path-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .path-icon.completed {
+            background: var(--success);
+        }
+
+        .path-icon.current {
+            background: var(--primary);
+        }
+
+        .path-icon.locked {
+            background: var(--text-muted);
+        }
+
+        .path-details h4 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .path-details p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .action-btn.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .action-btn:not(.primary) .action-icon {
+            background: var(--bg-primary);
+            color: var(--primary);
+        }
+
+        .action-btn.primary .action-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .action-details h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .action-details p {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        /* Achievements */
+        .achievements {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .achievement {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+        }
+
+        .achievement.earned {
+            background: linear-gradient(135deg, rgba(237, 137, 54, 0.1) 0%, rgba(245, 101, 101, 0.1) 100%);
+        }
+
+        .achievement-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: var(--warning);
+            color: white;
+        }
+
+        .achievement.earned .achievement-icon {
+            background: linear-gradient(135deg, var(--warning) 0%, var(--error) 100%);
+        }
+
+        .achievement-details h4 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .achievement-details p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Recent Activity */
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            background: var(--info);
+            color: white;
+        }
+
+        .activity-details h5 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-details p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+
+            .welcome-section {
+                padding: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .welcome-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Loading your dashboard...</h3>
+            <p>Please wait while we prepare your learning experience</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-code"></i>
+                Code with Morais
+            </a>
+            <div class="user-menu">
+                <span id="user-name" class="user-name">Loading...</span>
+                <img id="user-avatar" class="user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=default" alt="User Avatar">
+                <button id="signout-btn" class="signout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-container" style="opacity: 0; transition: opacity 0.3s ease;">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <div class="welcome-content">
+                <h1 class="welcome-title">Welcome back, <span id="welcome-name">Student</span>! 👋</h1>
+                <p class="welcome-subtitle">Ready to continue your Python learning journey?</p>
+                
+                <div class="welcome-stats">
+                    <div class="welcome-stat">
+                        <span id="completion-rate" class="welcome-stat-number">0%</span>
+                        <span class="welcome-stat-label">Course Progress</span>
+                    </div>
+                    <div class="welcome-stat">
+                        <span id="projects-completed" class="welcome-stat-number">0</span>
+                        <span class="welcome-stat-label">Projects Completed</span>
+                    </div>
+                    <div class="welcome-stat">
+                        <span id="study-streak" class="welcome-stat-number">0</span>
+                        <span class="welcome-stat-label">Day Streak</span>
+                    </div>
+                    <div class="welcome-stat">
+                        <span id="total-time" class="welcome-stat-number">0h</span>
+                        <span class="welcome-stat-label">Time Spent</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <div class="content-grid">
+            <!-- Current Progress -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Your Progress
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div id="progress-overview" class="progress-overview">
+                        <!-- Progress items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Path -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-road"></i>
+                        Learning Path
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div id="learning-path" class="learning-path">
+                        <!-- Learning path items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bolt"></i>
+                        Quick Actions
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div class="quick-actions">
+                        <a href="/projects.html" class="action-btn primary">
+                            <div class="action-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="action-details">
+                                <h4>Continue Learning</h4>
+                                <p>Resume your current lesson</p>
+                            </div>
+                        </a>
+                        
+                        <a href="/ide.html" class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="action-details">
+                                <h4>Practice IDE</h4>
+                                <p>Write and test Python code</p>
+                            </div>
+                        </a>
+                        
+                        <a href="/test.html" class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <div class="action-details">
+                                <h4>Take Assessment</h4>
+                                <p>Test your knowledge</p>
+                            </div>
+                        </a>
+                        
+                        <a href="/student-showcase.html" class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="action-details">
+                                <h4>Student Showcase</h4>
+                                <p>View amazing projects</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-medal"></i>
+                        Achievements
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div id="achievements" class="achievements">
+                        <!-- Achievements will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-history"></i>
+                        Recent Activity
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div id="recent-activity">
+                        <!-- Recent activity will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- JavaScript -->
+    <script type="module" src="student-dashboard.js"></script>
+</body>
+</html>

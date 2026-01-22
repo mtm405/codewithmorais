@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-On Python Projects</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+
+        .btn.next {
+            background: #28a745;
+        }
+
+        .btn.next:hover {
+            background: #1e7e34;
+        }
+
+        .btn.prev {
+            background: #6c757d;
+        }
+
+        .btn.prev:hover {
+            background: #545b62;
+        }
+
+        .btn.solution {
+            background: #fd7e14;
+        }
+
+        .btn.solution:hover {
+            background: #e65100;
+        }
+
+        .project-container {
+            padding: 40px;
+        }
+
+        .project {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .project.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .project-header {
+            margin-bottom: 30px;
+        }
+
+        .project-title {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .difficulty {
+            font-size: 0.5em;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: normal;
+        }
+
+        .difficulty.beginner {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .difficulty.intermediate {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty.advanced {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .project-description {
+            font-size: 1.2em;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .project-requirements {
+            background: #e7f3ff;
+            border: 2px solid #bee5eb;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .project-requirements h3 {
+            color: #0c5460;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .project-requirements ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .project-requirements li {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #bee5eb;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .project-requirements li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .starter-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+            white-space: pre;
+            border: 1px solid #3c3c3c;
+        }
+
+        .starter-code::before {
+            content: "🐍 Starter Code";
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .solution-section {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            display: none;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .solution-section.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .solution-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .solution-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre;
+            border: 1px solid #3c3c3c;
+        }
+
+        .tips-section {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .tips-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .tips-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .tips-section li {
+            margin: 8px 0;
+            padding: 5px 0;
+            color: #856404;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .tips-section li:before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+            top: 5px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .project-counter {
+            font-size: 1.1em;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .progress {
+            background: #e9ecef;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #007bff, #28a745);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #569cd6; font-weight: bold; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .function { color: #dcdcaa; }
+        .number { color: #b5cea8; }
+        .builtin { color: #4ec9b0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛠️ Hands-On Python Projects</h1>
+            <p>Build real programs using conditionals, functions, and logic!</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn prev" onclick="prevProject()">← Previous</button>
+            <button class="btn solution" onclick="toggleSolution()">💡 Show Solution</button>
+            <button class="btn next" onclick="nextProject()">Next →</button>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="project-container">
+            <!-- Project 1: Password Validator -->
+            <div class="project active" id="project1">
+                <div class="project-header">
+                    <h2 class="project-title">
+                        🔐 Project 1: Password Validator
+                        <span class="difficulty beginner">Beginner</span>
+                    </h2>
+                    <p class="project-description">
+                        Create a function that checks if a password meets security requirements. 
+                        This project practices if/else statements and string methods.
+                    </p>
+                </div>
+
+                <div class="project-requirements">
+                    <h3>📋 Requirements:</h3>
+                    <ul>
+                        <li>Password must be at least 8 characters long</li>
+                        <li>Must contain at least one number</li>
+                        <li>Must start with a capital letter</li>
+                        <li>Return "Strong" if all requirements met, "Weak" otherwise</li>
+                        <li>Test with: "Password1", "hello", "MyPass123"</li>
+                    </ul>
+                </div>
+
+                <div class="starter-code">def <span class="function">check_password</span>(password):
+    <span class="comment"># Your code here</span>
+    <span class="comment"># Hint: Use len(), password.isdigit(), password[0].isupper()</span>
+    pass
+
+<span class="comment"># Test cases</span>
+<span class="builtin">print</span>(<span class="function">check_password</span>(<span class="string">"Password1"</span>))  <span class="comment"># Should return "Strong"</span>
+<span class="builtin">print</span>(<span class="function">check_password</span>(<span class="string">"hello"</span>))      <span class="comment"># Should return "Weak"</span>
+<span class="builtin">print</span>(<span class="function">check_password</span>(<span class="string">"MyPass123"</span>)) <span class="comment"># Should return "Strong"</span></div>
+
+                <div class="tips-section">
+                    <h3>💡 Coding Tips:</h3>
+                    <ul>
+                        <li>Use <code>len(password)</code> to check length</li>
+                        <li>Use <code>any(char.isdigit() for char in password)</code> to find numbers</li>
+                        <li>Use <code>password[0].isupper()</code> to check first character</li>
+                        <li>Remember: ALL conditions must be True for a strong password</li>
+                    </ul>
+                </div>
+
+                <div class="solution-section" id="solution1">
+                    <h3>💡 Solution:</h3>
+                    <div class="solution-code">def <span class="function">check_password</span>(password):
+    <span class="comment"># Check length requirement</span>
+    if <span class="builtin">len</span>(password) < 8:
+        return <span class="string">"Weak"</span>
+    
+    <span class="comment"># Check if starts with capital letter</span>
+    if not password[0].isupper():
+        return <span class="string">"Weak"</span>
+    
+    <span class="comment"># Check if contains at least one number</span>
+    has_number = False
+    for char in password:
+        if char.isdigit():
+            has_number = True
+            break
+    
+    if not has_number:
+        return <span class="string">"Weak"</span>
+    
+    return <span class="string">"Strong"</span>
+
+<span class="comment"># Alternative shorter solution:</span>
+def <span class="function">check_password_v2</span>(password):
+    if (<span class="builtin">len</span>(password) >= 8 and 
+        password[0].isupper() and 
+        <span class="builtin">any</span>(char.isdigit() for char in password)):
+        return <span class="string">"Strong"</span>
+    return <span class="string">"Weak"</span></div>
+                </div>
+            </div>
+
+            <!-- Project 2: Grade Calculator -->
+            <div class="project" id="project2">
+                <div class="project-header">
+                    <h2 class="project-title">
+                        📊 Project 2: Grade Calculator
+                        <span class="difficulty beginner">Beginner</span>
+                    </h2>
+                    <p class="project-description">
+                        Build a function that calculates final grades based on different assignment types.
+                        Practice with multiple conditions and mathematical operations.
+                    </p>
+                </div>
+
+                <div class="project-requirements">
+                    <h3>📋 Requirements:</h3>
+                    <ul>
+                        <li>Take homework average, test average, and participation score</li>
+                        <li>Homework counts for 40%, tests for 50%, participation for 10%</li>
+                        <li>Return letter grade: A (90+), B (80-89), C (70-79), D (60-69), F (below 60)</li>
+                        <li>Round the final score to nearest whole number</li>
+                        <li>Test with: (85, 92, 95) and (70, 65, 80)</li>
+                    </ul>
+                </div>
+
+                <div class="starter-code">def <span class="function">calculate_grade</span>(homework_avg, test_avg, participation):
+    <span class="comment"># Your code here</span>
+    <span class="comment"># Hint: final_score = homework*0.4 + test*0.5 + participation*0.1</span>
+    pass
+
+<span class="comment"># Test cases</span>
+<span class="builtin">print</span>(<span class="function">calculate_grade</span>(85, 92, 95))  <span class="comment"># Should return "A"</span>
+<span class="builtin">print</span>(<span class="function">calculate_grade</span>(70, 65, 80))  <span class="comment"># Should return "C"</span></div>
+
+                <div class="tips-section">
+                    <h3>💡 Coding Tips:</h3>
+                    <ul>
+                        <li>Calculate weighted average: homework×0.4 + test×0.5 + participation×0.1</li>
+                        <li>Use <code>round()</code> function to round to nearest integer</li>
+                        <li>Use if/elif/else chain to assign letter grades</li>
+                        <li>Remember the grade boundaries: 90+, 80-89, 70-79, 60-69, below 60</li>
+                    </ul>
+                </div>
+
+                <div class="solution-section" id="solution2">
+                    <h3>💡 Solution:</h3>
+                    <div class="solution-code">def <span class="function">calculate_grade</span>(homework_avg, test_avg, participation):
+    <span class="comment"># Calculate weighted final score</span>
+    final_score = homework_avg * 0.4 + test_avg * 0.5 + participation * 0.1
+    final_score = <span class="builtin">round</span>(final_score)
+    
+    <span class="comment"># Assign letter grade based on score</span>
+    if final_score >= 90:
+        return <span class="string">"A"</span>
+    elif final_score >= 80:
+        return <span class="string">"B"</span>
+    elif final_score >= 70:
+        return <span class="string">"C"</span>
+    elif final_score >= 60:
+        return <span class="string">"D"</span>
+    else:
+        return <span class="string">"F"</span></div>
+                </div>
+            </div>
+
+            <!-- Project 3: Shopping Cart Discount -->
+            <div class="project" id="project3">
+                <div class="project-header">
+                    <h2 class="project-title">
+                        🛒 Project 3: Shopping Cart Discount Calculator
+                        <span class="difficulty intermediate">Intermediate</span>
+                    </h2>
+                    <p class="project-description">
+                        Create a smart discount system that applies the best possible discount to a shopping cart.
+                        Practice with complex conditional logic and function parameters.
+                    </p>
+                </div>
+
+                <div class="project-requirements">
+                    <h3>📋 Requirements:</h3>
+                    <ul>
+                        <li>Take cart total, customer type ("regular", "premium", "vip"), and promo code</li>
+                        <li>Premium customers get 10% off, VIP get 15% off</li>
+                        <li>Promo code "SAVE20" gives 20% off (but max $50 discount)</li>
+                        <li>Orders over $200 get free shipping (save $15)</li>
+                        <li>Apply the BEST discount (don't stack discounts)</li>
+                        <li>Return final price after best discount</li>
+                    </ul>
+                </div>
+
+                <div class="starter-code">def <span class="function">calculate_final_price</span>(cart_total, customer_type, promo_code):
+    <span class="comment"># Your code here</span>
+    <span class="comment"># Hint: Calculate all possible discounts, then apply the best one</span>
+    pass
+
+<span class="comment"># Test cases</span>
+<span class="builtin">print</span>(<span class="function">calculate_final_price</span>(100, <span class="string">"premium"</span>, <span class="string">""</span>))        <span class="comment"># Should be 90</span>
+<span class="builtin">print</span>(<span class="function">calculate_final_price</span>(300, <span class="string">"regular"</span>, <span class="string">"SAVE20"</span>))  <span class="comment"># Should be 250</span>
+<span class="builtin">print</span>(<span class="function">calculate_final_price</span>(250, <span class="string">"vip"</span>, <span class="string">"SAVE20"</span>))     <span class="comment"># Should be 200</span></div>
+
+                <div class="tips-section">
+                    <h3>💡 Coding Tips:</h3>
+                    <ul>
+                        <li>Calculate each discount separately first</li>
+                        <li>For SAVE20: discount = min(cart_total * 0.2, 50)</li>
+                        <li>Use <code>max()</code> to find the best (largest) discount</li>
+                        <li>Don't forget to add free shipping discount for orders over $200</li>
+                    </ul>
+                </div>
+
+                <div class="solution-section" id="solution3">
+                    <h3>💡 Solution:</h3>
+                    <div class="solution-code">def <span class="function">calculate_final_price</span>(cart_total, customer_type, promo_code):
+    discounts = []
+    
+    <span class="comment"># Customer type discounts</span>
+    if customer_type == <span class="string">"premium"</span>:
+        discounts.append(cart_total * 0.1)  <span class="comment"># 10% off</span>
+    elif customer_type == <span class="string">"vip"</span>:
+        discounts.append(cart_total * 0.15)  <span class="comment"># 15% off</span>
+    
+    <span class="comment"># Promo code discount</span>
+    if promo_code == <span class="string">"SAVE20"</span>:
+        promo_discount = <span class="builtin">min</span>(cart_total * 0.2, 50)  <span class="comment"># 20% off, max $50</span>
+        discounts.append(promo_discount)
+    
+    <span class="comment"># Free shipping for orders over $200</span>
+    if cart_total > 200:
+        discounts.append(15)  <span class="comment"># $15 shipping discount</span>
+    
+    <span class="comment"># Apply best discount</span>
+    if discounts:
+        best_discount = <span class="builtin">max</span>(discounts)
+        return cart_total - best_discount
+    
+    return cart_total</div>
+                </div>
+            </div>
+
+            <!-- Project 4: Quiz Game -->
+            <div class="project" id="project4">
+                <div class="project-header">
+                    <h2 class="project-title">
+                        🎯 Project 4: Interactive Quiz Game
+                        <span class="difficulty intermediate">Intermediate</span>
+                    </h2>
+                    <p class="project-description">
+                        Build a quiz function that asks questions, tracks scores, and gives feedback.
+                        Practice with lists, loops, and conditional logic.
+                    </p>
+                </div>
+
+                <div class="project-requirements">
+                    <h3>📋 Requirements:</h3>
+                    <ul>
+                        <li>Create a function that takes a list of questions and answers</li>
+                        <li>Ask each question and get user input</li>
+                        <li>Track correct answers and calculate percentage</li>
+                        <li>Give different feedback based on score (90%+: "Excellent", 70%+: "Good", 50%+: "Okay", below: "Study more")</li>
+                        <li>Return the final score and feedback message</li>
+                    </ul>
+                </div>
+
+                <div class="starter-code">def <span class="function">run_quiz</span>(questions):
+    <span class="comment"># questions is a list of tuples: [("question", "answer"), ...]</span>
+    <span class="comment"># Your code here</span>
+    pass
+
+<span class="comment"># Test data</span>
+quiz_questions = [
+    (<span class="string">"What is 2 + 2?"</span>, <span class="string">"4"</span>),
+    (<span class="string">"What color do you get mixing red and blue?"</span>, <span class="string">"purple"</span>),
+    (<span class="string">"What is the capital of France?"</span>, <span class="string">"paris"</span>)
+]
+
+<span class="comment"># Run the quiz</span>
+<span class="function">run_quiz</span>(quiz_questions)</div>
+
+                <div class="tips-section">
+                    <h3>💡 Coding Tips:</h3>
+                    <ul>
+                        <li>Use a for loop to iterate through questions</li>
+                        <li>Use <code>input()</code> to get user answers</li>
+                        <li>Convert answers to lowercase for easier comparison</li>
+                        <li>Keep a counter for correct answers</li>
+                        <li>Calculate percentage: (correct/total) * 100</li>
+                    </ul>
+                </div>
+
+                <div class="solution-section" id="solution4">
+                    <h3>💡 Solution:</h3>
+                    <div class="solution-code">def <span class="function">run_quiz</span>(questions):
+    correct_answers = 0
+    total_questions = <span class="builtin">len</span>(questions)
+    
+    <span class="builtin">print</span>(<span class="string">"Welcome to the Quiz! Type your answers below:\n"</span>)
+    
+    for i, (question, correct_answer) in <span class="builtin">enumerate</span>(questions, 1):
+        <span class="builtin">print</span>(<span class="string">f"Question {i}: {question}"</span>)
+        user_answer = <span class="builtin">input</span>(<span class="string">"Your answer: "</span>).strip().lower()
+        
+        if user_answer == correct_answer.lower():
+            <span class="builtin">print</span>(<span class="string">"Correct! ✓\n"</span>)
+            correct_answers += 1
+        else:
+            <span class="builtin">print</span>(<span class="string">f"Wrong! The answer was: {correct_answer}\n"</span>)
+    
+    <span class="comment"># Calculate score</span>
+    percentage = (correct_answers / total_questions) * 100
+    
+    <span class="comment"># Give feedback</span>
+    if percentage >= 90:
+        feedback = <span class="string">"Excellent! You're a quiz master!"</span>
+    elif percentage >= 70:
+        feedback = <span class="string">"Good job! You know your stuff!"</span>
+    elif percentage >= 50:
+        feedback = <span class="string">"Okay, but there's room for improvement."</span>
+    else:
+        feedback = <span class="string">"You should study more!"</span>
+    
+    <span class="builtin">print</span>(<span class="string">f"Final Score: {correct_answers}/{total_questions} ({percentage:.1f}%)"</span>)
+    <span class="builtin">print</span>(feedback)
+    
+    return percentage, feedback</div>
+                </div>
+            </div>
+
+            <!-- Project 5: Number Guessing Game -->
+            <div class="project" id="project5">
+                <div class="project-header">
+                    <h2 class="project-title">
+                        🎲 Project 5: Smart Number Guessing Game
+                        <span class="difficulty advanced">Advanced</span>
+                    </h2>
+                    <p class="project-description">
+                        Create an intelligent number guessing game with hints, attempt tracking, and difficulty levels.
+                        Practice with loops, random numbers, and complex game logic.
+                    </p>
+                </div>
+
+                <div class="project-requirements">
+                    <h3>📋 Requirements:</h3>
+                    <ul>
+                        <li>Generate random number based on difficulty (Easy: 1-50, Medium: 1-100, Hard: 1-200)</li>
+                        <li>Give different hint types: "too high/low", "getting warmer/colder", "you're close!"</li>
+                        <li>Track attempts and give score based on efficiency</li>
+                        <li>Allow player to quit by typing "quit"</li>
+                        <li>Handle invalid input gracefully</li>
+                        <li>Offer to play again when game ends</li>
+                    </ul>
+                </div>
+
+                <div class="starter-code">import random
+
+def <span class="function">number_guessing_game</span>(difficulty=<span class="string">"medium"</span>):
+    <span class="comment"># Your code here</span>
+    <span class="comment"># Hint: Use random.randint() and while loops</span>
+    pass
+
+<span class="comment"># Start the game</span>
+<span class="function">number_guessing_game</span>(<span class="string">"easy"</span>)</div>
+
+                <div class="tips-section">
+                    <h3>💡 Coding Tips:</h3>
+                    <ul>
+                        <li>Use <code>random.randint(1, max_num)</code> to generate target number</li>
+                        <li>Use <code>while True:</code> loop for continuous guessing</li>
+                        <li>Use <code>try/except</code> to handle invalid number input</li>
+                        <li>Track previous guess to give "warmer/colder" hints</li>
+                        <li>Calculate score based on attempts vs. optimal attempts</li>
+                    </ul>
+                </div>
+
+                <div class="solution-section" id="solution5">
+                    <h3>💡 Solution:</h3>
+                    <div class="solution-code">import random
+
+def <span class="function">number_guessing_game</span>(difficulty=<span class="string">"medium"</span>):
+    <span class="comment"># Set range based on difficulty</span>
+    ranges = {<span class="string">"easy"</span>: 50, <span class="string">"medium"</span>: 100, <span class="string">"hard"</span>: 200}
+    max_num = ranges.get(difficulty, 100)
+    target = random.randint(1, max_num)
+    
+    attempts = 0
+    previous_guess = None
+    
+    <span class="builtin">print</span>(<span class="string">f"Welcome to the Number Guessing Game! ({difficulty.upper()})"</span>)
+    <span class="builtin">print</span>(<span class="string">f"I'm thinking of a number between 1 and {max_num}"</span>)
+    <span class="builtin">print</span>(<span class="string">"Type 'quit' to exit anytime.\n"</span>)
+    
+    while True:
+        try:
+            guess_input = <span class="builtin">input</span>(<span class="string">"Enter your guess: "</span>).strip()
+            
+            if guess_input.lower() == <span class="string">"quit"</span>:
+                <span class="builtin">print</span>(<span class="string">f"Thanks for playing! The number was {target}"</span>)
+                break
+            
+            guess = <span class="builtin">int</span>(guess_input)
+            attempts += 1
+            
+            if guess == target:
+                <span class="builtin">print</span>(<span class="string">f"🎉 Congratulations! You found it in {attempts} attempts!"</span>)
+                
+                <span class="comment"># Calculate score</span>
+                optimal = <span class="builtin">max</span>(1, <span class="builtin">int</span>(math.log2(max_num)))
+                if attempts <= optimal:
+                    <span class="builtin">print</span>(<span class="string">"Perfect score! You're a guessing master!"</span>)
+                elif attempts <= optimal * 2:
+                    <span class="builtin">print</span>(<span class="string">"Great job! Very efficient guessing!"</span>)
+                else:
+                    <span class="builtin">print</span>(<span class="string">"Good job! Try to be more systematic next time."</span>)
+                break
+            
+            <span class="comment"># Give hints</span>
+            if <span class="builtin">abs</span>(guess - target) <= 5:
+                <span class="builtin">print</span>(<span class="string">"🔥 You're very close!"</span>)
+            elif guess < target:
+                <span class="builtin">print</span>(<span class="string">"📈 Too low!"</span>)
+            else:
+                <span class="builtin">print</span>(<span class="string">"📉 Too high!"</span>)
+            
+            <span class="comment"># Warmer/Colder hints</span>
+            if previous_guess is not None:
+                if <span class="builtin">abs</span>(guess - target) < <span class="builtin">abs</span>(previous_guess - target):
+                    <span class="builtin">print</span>(<span class="string">"🌡️ Getting warmer!"</span>)
+                else:
+                    <span class="builtin">print</span>(<span class="string">"🧊 Getting colder!"</span>)
+            
+            previous_guess = guess
+            
+        except ValueError:
+            <span class="builtin">print</span>(<span class="string">"Please enter a valid number or 'quit'"</span>)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <span class="project-counter" id="projectCounter">Project 1 of 5</span>
+            <div>
+                <button class="btn prev" onclick="prevProject()">← Previous</button>
+                <button class="btn next" onclick="nextProject()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentProject = 1;
+        const totalProjects = 15;
+
+        function updateDisplay() {
+            // Hide all projects
+            for (let i = 1; i <= totalProjects; i++) {
+                document.getElementById(`project${i}`).classList.remove('active');
+                document.getElementById(`solution${i}`).classList.remove('show');
+            }
+            
+            // Show current project
+            document.getElementById(`project${currentProject}`).classList.add('active');
+            
+            // Update counter
+            document.getElementById('projectCounter').textContent = `Project ${currentProject} of ${totalProjects}`;
+            
+            // Update progress bar
+            const progress = (currentProject / totalProjects) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Reset solution button
+            const solutionBtn = document.querySelector('.btn.solution');
+            solutionBtn.textContent = '💡 Show Solution';
+            solutionBtn.style.background = '#fd7e14';
+        }
+
+        function nextProject() {
+            if (currentProject < totalProjects) {
+                currentProject++;
+                updateDisplay();
+            }
+        }
+
+        function prevProject() {
+            if (currentProject > 1) {
+                currentProject--;
+                updateDisplay();
+            }
+        }
+
+        function toggleSolution() {
+            const solutionSection = document.getElementById(`solution${currentProject}`);
+            const btn = event.target;
+            
+            if (solutionSection.classList.contains('show')) {
+                solutionSection.classList.remove('show');
+                btn.textContent = '💡 Show Solution';
+                btn.style.background = '#fd7e14';
+            } else {
+                solutionSection.classList.add('show');
+                btn.textContent = '👁️ Hide Solution';
+                btn.style.background = '#dc3545';
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextProject();
+            } else if (e.key === 'ArrowLeft') {
+                prevProject();
+            } else if (e.key === ' ') {
+                e.preventDefault();
+                toggleSolution();
+            }
+        });
+
+        // Initialize display
+        updateDisplay();
+    </script>
+</body>
+</html>

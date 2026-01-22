@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Due 10/16 - Python DEF Practice | Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        .header canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .warning-banner {
+            background: linear-gradient(135deg, #ff9500, #ff6b00);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 3px solid #e55100;
+        }
+
+        .warning-banner .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .challenge-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #45b7d1, #96ceb4, #74b9ff);
+            background-size: 300% 100%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .challenge-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .challenge-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .challenge-description {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .difficulty-badge {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(116, 185, 255, 0.3);
+        }
+
+        .requirements {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .requirements h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .requirements ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .requirements li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            color: #34495e;
+        }
+
+        .requirements li::before {
+            content: '🎯';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .hint-section {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hint-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .hint-section:hover::before {
+            left: 100%;
+        }
+
+        .hint-section:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(116, 185, 255, 0.3);
+        }
+
+        .hint-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .hint-content {
+            margin-top: 15px;
+            display: none;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hint-content.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Quiz Modal Styles */
+        .quiz-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .quiz-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.5s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .quiz-header {
+            background: linear-gradient(135deg, #2d3436, #636e72);
+            color: white;
+            padding: 25px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .quiz-close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ddd;
+            transition: color 0.3s ease;
+        }
+
+        .quiz-close:hover {
+            color: #ff6b6b;
+        }
+
+        .quiz-body {
+            padding: 30px;
+            color: white;
+        }
+
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .quiz-question {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-question h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.3rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid transparent;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #74b9ff;
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct {
+            background: #00b894;
+            border-color: #00a085;
+            animation: correctPulse 0.6s ease;
+        }
+
+        .quiz-option.incorrect {
+            background: #e17055;
+            border-color: #d63031;
+            animation: incorrectShake 0.6s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .quiz-progress {
+            background: rgba(255, 255, 255, 0.2);
+            height: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .quiz-progress-bar {
+            background: linear-gradient(90deg, #00b894, #74b9ff);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 5px;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .quiz-result.hidden {
+            display: none;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .example-box strong {
+            color: #2c3e50;
+        }
+
+        code {
+            background: #f1f2f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .challenge-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .challenge-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <canvas id="particle-canvas"></canvas>
+            <h1>📝 Assignment Due 10/17</h1>
+            <p>Complete 5 activities minimum - Extra activities for bonus credit!</p>
+        </div>
+
+        <div class="warning-banner">
+            <span class="icon">⏰</span>
+            <strong>ASSIGNMENT INSTRUCTIONS</strong><br>
+            Complete at least 5 activities and submit your code via Google Form. Extra activities = bonus points!
+        </div>
+
+        <div class="content">
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
+                <h3 style="margin: 0 0 15px 0;">📋 Assignment Requirements</h3>
+                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin: 15px 0;">
+                    <p style="margin: 0 0 10px 0; font-size: 1.1rem;"><strong>✅ Minimum:</strong> Complete 5 activities below</p>
+                    <p style="margin: 0 0 10px 0; font-size: 1.1rem;"><strong>🌟 Extra Credit:</strong> Complete more than 5 for bonus points</p>
+                    <p style="margin: 0; font-size: 1.1rem;"><strong>📤 Submit:</strong> Paste your code in the Google Form</p>
+                </div>
+                <a href="https://forms.gle/WWKWtyQYgELYPoTR7" target="_blank" style="display: inline-block; background: #27ae60; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold; margin-top: 10px; transition: all 0.3s ease;">
+                    📝 Submit Your Code Here
+                </a>
+            </div>
+            
+            <!-- Interactive Demo Section -->
+            <div style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: white; padding: 25px; border-radius: 15px; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 20px 0;">🎬 Interactive Demo: Watch a Function Being Created</h3>
+                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <button onclick="startDemo()" style="background: #00b894; color: white; border: none; padding: 12px 24px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                            ▶️ Start Demo
+                        </button>
+                        <button onclick="resetDemo()" style="background: #fd79a8; color: white; border: none; padding: 12px 24px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                            🔄 Reset
+                        </button>
+                        <button onclick="openQuiz()" style="background: #e17055; color: white; border: none; padding: 12px 24px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                            🧠 Function Quiz
+                        </button>
+                        <span id="demo-status" style="font-weight: bold;">Click "Start Demo" to see how to create add_three function!</span>
+                    </div>
+                    <div id="demo-code" style="background: #2d3436; padding: 20px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 1.1rem; line-height: 1.6; min-height: 120px; border: 2px solid #74b9ff;">
+                        <div id="demo-content">Click Start Demo to begin...</div>
+                    </div>
+                </div>
+                <p style="margin: 0; font-size: 0.95rem; text-align: center;">👆 This demo shows the exact process you'll follow for each activity below!</p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+                <h3 style="margin: 0 0 15px 0;">📚 Remember Your Notes: Function Structure</h3>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace;">
+                    <code>def function_name(parameters):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;# Function body (indented)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;# Do your task here<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;return value  # Optional</code>
+                </div>
+                <p style="margin: 15px 0 0 0; font-size: 0.95rem;">Use your class notes to help you structure each function correctly!</p>
+            </div>
+
+            <div class="challenge-grid">
+                <!-- Activity 1: Subtract Two Numbers -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">1</div>
+                        <h2 class="challenge-title">➖ Subtract Two Numbers</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Starter</div>
+                    <p class="challenge-description">
+                        Create a function that takes two numbers and returns their difference (similar to your add_three practice, but with subtraction).
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>subtract_numbers(num1, num2)</code></li>
+                            <li>Take two parameters (numbers to subtract)</li>
+                            <li>Return num1 minus num2</li>
+                            <li>Test with: subtract_numbers(10, 3) should return 7</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>subtract_numbers(10, 3)</code> → <code>7</code><br>
+                        <code>subtract_numbers(15, 8)</code> → <code>7</code><br>
+                        <code>subtract_numbers(20, 5)</code> → <code>15</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint1')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint1">
+                            <strong>Use your notes! Follow the function structure:</strong><br>
+                            1. <strong>Start with def:</strong> <code>def subtract_numbers(num1, num2):</code><br>
+                            2. <strong>Don't forget the colon (:)</strong> at the end of the header<br>
+                            3. <strong>Indent your function body</strong> (use 4 spaces or Tab)<br>
+                            4. <strong>Subtract the numbers:</strong> <code>result = num1 - num2</code><br>
+                            5. <strong>Return the result:</strong> <code>return result</code><br>
+                            <br><strong>Template from your notes:</strong><br>
+                            <code>def function_name(parameter1, parameter2):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;# Function Body (must be indented)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;return value</code><br>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 2: Farewell Message -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">2</div>
+                        <h2 class="challenge-title">👋 Farewell Message</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Starter</div>
+                    <p class="challenge-description">
+                        Create a function that says goodbye to someone by name (different from the greet function from your notes).
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>say_goodbye(name)</code></li>
+                            <li>Take one parameter (the person's name)</li>
+                            <li>Return a farewell message</li>
+                            <li>Test with: say_goodbye("Maria") should return "Goodbye, Maria! See you later!"</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>say_goodbye("Maria")</code> → <code>"Goodbye, Maria! See you later!"</code><br>
+                        <code>say_goodbye("Carlos")</code> → <code>"Goodbye, Carlos! See you later!"</code><br>
+                        <code>say_goodbye("Ana")</code> → <code>"Goodbye, Ana! See you later!"</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint2')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint2">
+                            <strong>This is like the greet example from your notes:</strong><br>
+                            1. <strong>Function header:</strong> <code>def say_goodbye(name):</code><br>
+                            2. <strong>Create your message:</strong> Use f-string like <code>f"Goodbye, {name}! See you later!"</code><br>
+                            3. <strong>Return the message:</strong> <code>return message</code><br>
+                            <br><strong>Remember from notes:</strong> When you call it, you pass an argument like say_goodbye("Maria")
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 3: Circle Area Calculator -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">3</div>
+                        <h2 class="challenge-title">⭕ Circle Area Calculator</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Starter</div>
+                    <p class="challenge-description">
+                        Create a function that calculates circle area (different from the rectangle calculate_area example from your notes).
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>circle_area(radius)</code></li>
+                            <li>Take one parameter (radius)</li>
+                            <li>Calculate and return the area (3.14 × radius × radius)</li>
+                            <li>Test with: circle_area(5) should return 78.5</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>circle_area(5)</code> → <code>78.5</code><br>
+                        <code>circle_area(3)</code> → <code>28.26</code><br>
+                        <code>circle_area(10)</code> → <code>314.0</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint3')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint3">
+                            <strong>This is like your rectangle area notes!</strong><br>
+                            1. <strong>Function header:</strong> <code>def circle_area(radius):</code><br>
+                            2. <strong>Calculate area:</strong> <code>area = 3.14 * radius * radius</code><br>
+                            3. <strong>Return the result:</strong> <code>return area</code><br>
+                            <br><strong>From your notes:</strong> The function call itself becomes the value when you use return!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 4: Add Seven -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">4</div>
+                        <h2 class="challenge-title">➕ Add Seven</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Starter</div>
+                    <p class="challenge-description">
+                        Create a function that adds 7 to any number (similar to your add_three practice, but with 7).
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>add_seven(number)</code></li>
+                            <li>Take one parameter (the number)</li>
+                            <li>Add 7 to the number and return the result</li>
+                            <li>Test with: add_seven(10) should return 17</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>add_seven(10)</code> → <code>17</code><br>
+                        <code>add_seven(5)</code> → <code>12</code><br>
+                        <code>add_seven(0)</code> → <code>7</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint4')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint4">
+                            <strong>This is just like add_three but with 7:</strong><br>
+                            1. <strong>Function header:</strong> <code>def add_seven(number):</code><br>
+                            2. <strong>Do the math:</strong> <code>result = number + 7</code><br>
+                            3. <strong>Return the result:</strong> <code>return result</code><br>
+                            <br><strong>Pattern from notes:</strong> Take parameter, do operation, return result
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 5: Triple a Number -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">5</div>
+                        <h2 class="challenge-title">✖️ Triple a Number</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Starter</div>
+                    <p class="challenge-description">
+                        Create a function that triples any number (multiplies it by 3).
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>triple_number(num)</code></li>
+                            <li>Take one parameter (the number to triple)</li>
+                            <li>Multiply the number by 3 and return the result</li>
+                            <li>Test with: triple_number(5) should return 15</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>triple_number(5)</code> → <code>15</code><br>
+                        <code>triple_number(4)</code> → <code>12</code><br>
+                        <code>triple_number(10)</code> → <code>30</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint5')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint5">
+                            <strong>Simple multiplication function:</strong><br>
+                            1. <strong>Function header:</strong> <code>def triple_number(num):</code><br>
+                            2. <strong>Triple it:</strong> <code>tripled = num * 3</code><br>
+                            3. <strong>Return the result:</strong> <code>return tripled</code><br>
+                            <br><strong>Remember:</strong> Always indent your function body!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 6: Username Creator -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">6</div>
+                        <h2 class="challenge-title">🔑 Username Creator</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Practice</div>
+                    <p class="challenge-description">
+                        Create a function that makes a username from first name and favorite number.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>create_username(first_name, fav_number)</code></li>
+                            <li>Take two parameters (first name and favorite number)</li>
+                            <li>Combine them with an underscore</li>
+                            <li>Test with: create_username("Sofia", 7) should return "Sofia_7"</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>create_username("Sofia", 7)</code> → <code>"Sofia_7"</code><br>
+                        <code>create_username("Diego", 42)</code> → <code>"Diego_42"</code><br>
+                        <code>create_username("Luna", 3)</code> → <code>"Luna_3"</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint6')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint6">
+                            <strong>String combination with f-strings:</strong><br>
+                            1. <strong>Function header:</strong> <code>def create_username(first_name, fav_number):</code><br>
+                            2. <strong>Combine with underscore:</strong> <code>username = f"{first_name}_{fav_number}"</code><br>
+                            3. <strong>Return the result:</strong> <code>return username</code><br>
+                            <br><strong>Alternative:</strong> You could also use <code>first_name + "_" + str(fav_number)</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 7: Grade Calculator -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">7</div>
+                        <h2 class="challenge-title">📊 Grade Calculator</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Practice</div>
+                    <p class="challenge-description">
+                        Create a function that calculates what grade someone will graduate given their current grade.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>graduation_year(current_grade)</code></li>
+                            <li>Take one parameter (current grade: 9, 10, 11, or 12)</li>
+                            <li>Calculate graduation year (2025 + (12 - current_grade))</li>
+                            <li>Test with: graduation_year(10) should return 2027</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>graduation_year(10)</code> → <code>2027</code><br>
+                        <code>graduation_year(9)</code> → <code>2028</code><br>
+                        <code>graduation_year(12)</code> → <code>2025</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint7')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint7">
+                            <strong>Math calculation with grades:</strong><br>
+                            1. <strong>Function header:</strong> <code>def graduation_year(current_grade):</code><br>
+                            2. <strong>Calculate years left:</strong> <code>years_left = 12 - current_grade</code><br>
+                            3. <strong>Calculate graduation year:</strong> <code>grad_year = 2025 + years_left</code><br>
+                            4. <strong>Return the result:</strong> <code>return grad_year</code><br>
+                            <br><strong>Math concept:</strong> How many years until grade 12?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 8: Weather Report -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">8</div>
+                        <h2 class="challenge-title">🌤️ Weather Report</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Practice</div>
+                    <p class="challenge-description">
+                        Create a function that creates a weather report with city and temperature.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>weather_report(city, temp)</code></li>
+                            <li>Take two parameters (city name and temperature)</li>
+                            <li>Return a weather report message</li>
+                            <li>Test with: weather_report("Miami", 85) should return "Weather in Miami: 85°F"</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>weather_report("Miami", 85)</code> → <code>"Weather in Miami: 85°F"</code><br>
+                        <code>weather_report("Orlando", 78)</code> → <code>"Weather in Orlando: 78°F"</code><br>
+                        <code>weather_report("Tampa", 92)</code> → <code>"Weather in Tampa: 92°F"</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint8')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint8">
+                            <strong>String formatting with f-strings:</strong><br>
+                            1. <strong>Function header:</strong> <code>def weather_report(city, temp):</code><br>
+                            2. <strong>Create message:</strong> <code>report = f"Weather in {city}: {temp}°F"</code><br>
+                            3. <strong>Return the message:</strong> <code>return report</code><br>
+                            <br><strong>F-string tip:</strong> Put both variables inside {} in your string
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 9: Cube Calculator -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">9</div>
+                        <h2 class="challenge-title">🧊 Cube Calculator</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Practice</div>
+                    <p class="challenge-description">
+                        Create a function that calculates the cube of a number (number × number × number).
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>cube_number(num)</code></li>
+                            <li>Take one parameter (the number to cube)</li>
+                            <li>Multiply the number by itself three times and return the result</li>
+                            <li>Test with: cube_number(3) should return 27</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>cube_number(3)</code> → <code>27</code><br>
+                        <code>cube_number(2)</code> → <code>8</code><br>
+                        <code>cube_number(4)</code> → <code>64</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint9')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint9">
+                            <strong>Multiplication with same number three times:</strong><br>
+                            1. <strong>Function header:</strong> <code>def cube_number(num):</code><br>
+                            2. <strong>Cube it:</strong> <code>cubed = num * num * num</code><br>
+                            3. <strong>Return the result:</strong> <code>return cubed</code><br>
+                            <br><strong>Alternative:</strong> You can also use <code>num ** 3</code> for cubing
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 10: Average Calculator -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">10</div>
+                        <h2 class="challenge-title">📊 Average Calculator</h2>
+                    </div>
+                    <div class="difficulty-badge">📚 Practice</div>
+                    <p class="challenge-description">
+                        Create a function that calculates the average of three numbers.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Assignment Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>calculate_average(num1, num2, num3)</code></li>
+                            <li>Take three parameters (three numbers)</li>
+                            <li>Add all three numbers and divide by 3 to get the average</li>
+                            <li>Test with: calculate_average(10, 20, 30) should return 20.0</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Examples:</strong><br>
+                        <code>calculate_average(10, 20, 30)</code> → <code>20.0</code><br>
+                        <code>calculate_average(5, 10, 15)</code> → <code>10.0</code><br>
+                        <code>calculate_average(2, 4, 6)</code> → <code>4.0</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint10')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint10">
+                            <strong>Multiple parameters and division:</strong><br>
+                            1. <strong>Function header:</strong> <code>def calculate_average(num1, num2, num3):</code><br>
+                            2. <strong>Add all three:</strong> <code>total = num1 + num2 + num3</code><br>
+                            3. <strong>Calculate average:</strong> <code>average = total / 3</code><br>
+                            4. <strong>Return the result:</strong> <code>return average</code><br>
+                            <br><strong>Remember:</strong> Average = sum of all numbers ÷ count of numbers
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎯 <strong>Function Assignment - Due October 17, 2025</strong></p>
+            <p>Keep practicing, keep learning, keep growing! 🌱</p>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quiz-modal" class="quiz-modal">
+        <div class="quiz-content">
+            <div class="quiz-header">
+                <span class="quiz-close" onclick="closeQuiz()">&times;</span>
+                <h2>🧠 Python Function Quiz</h2>
+                <p>Test your knowledge and earn points!</p>
+            </div>
+            <div class="quiz-body">
+                <div class="quiz-stats">
+                    <span>🏆 Score: <span id="quiz-score">0</span> points</span>
+                    <span>📊 Question: <span id="question-counter">1</span>/8</span>
+                    <span>🔥 Streak: <span id="quiz-streak">0</span></span>
+                </div>
+                
+                <div class="quiz-progress">
+                    <div class="quiz-progress-bar" id="quiz-progress-bar"></div>
+                </div>
+
+                <div id="quiz-question-container">
+                    <!-- Questions will be dynamically inserted here -->
+                </div>
+
+                <div id="quiz-result" class="quiz-result hidden">
+                    <h3 id="result-title"></h3>
+                    <p id="result-message"></p>
+                    <button onclick="restartQuiz()" style="background: #00b894; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; margin: 10px;">
+                        🔄 Try Again
+                    </button>
+                    <button onclick="closeQuiz()" style="background: #74b9ff; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; margin: 10px;">
+                        📝 Back to Assignment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleHint(hintId) {
+            const hintContent = document.getElementById(hintId);
+            if (hintContent.classList.contains('show')) {
+                hintContent.classList.remove('show');
+            } else {
+                hintContent.classList.add('show');
+            }
+        }
+
+        // Interactive Demo System
+        let demoStep = 0;
+        const demoSteps = [
+            {
+                status: "Step 1: Writing the function header",
+                code: "def add_three(number):",
+                explanation: "🎯 Start with 'def', then function name, then parameters in parentheses, then a colon"
+            },
+            {
+                status: "Step 2: Adding the function body (indented!)",
+                code: "def add_three(number):\n    result = number + 3",
+                explanation: "🔍 Notice the indentation! Python requires 4 spaces or Tab for the function body"
+            },
+            {
+                status: "Step 3: Returning the result",
+                code: "def add_three(number):\n    result = number + 3\n    return result",
+                explanation: "✅ Use 'return' to send the result back when the function is called"
+            },
+            {
+                status: "Step 4: Testing the function",
+                code: "def add_three(number):\n    result = number + 3\n    return result\n\n# Test it!\nprint(add_three(5))  # Should print 8",
+                explanation: "🧪 Always test your function to make sure it works correctly!"
+            },
+            {
+                status: "Demo Complete! ✨ Now you try with the activities below!",
+                code: "def add_three(number):\n    result = number + 3\n    return result\n\n# Test it!\nprint(add_three(5))  # Should print 8\nprint(add_three(10)) # Should print 13",
+                explanation: "🎉 Perfect! You've seen the complete process. Follow these same steps for each activity!"
+            }
+        ];
+
+        function startDemo() {
+            demoStep = 0;
+            showDemoStep();
+            setTimeout(nextDemoStep, 2000); // Auto-advance every 2 seconds
+        }
+
+        function nextDemoStep() {
+            if (demoStep < demoSteps.length - 1) {
+                demoStep++;
+                showDemoStep();
+                setTimeout(nextDemoStep, 3000); // Longer delay for later steps
+            }
+        }
+
+        function showDemoStep() {
+            const statusElement = document.getElementById('demo-status');
+            const codeElement = document.getElementById('demo-content');
+            
+            if (demoStep < demoSteps.length) {
+                const step = demoSteps[demoStep];
+                statusElement.textContent = step.status;
+                
+                // Format code with proper line breaks
+                const formattedCode = step.code.replace(/\n/g, '<br>').replace(/ {4}/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+                codeElement.innerHTML = `<div style="color: #74b9ff; margin-bottom: 10px;">${formattedCode}</div><div style="color: #ffeaa7; font-size: 0.9rem; font-style: italic;">${step.explanation}</div>`;
+                
+                // Add typing effect
+                codeElement.style.opacity = '0';
+                setTimeout(() => {
+                    codeElement.style.opacity = '1';
+                    codeElement.style.transition = 'opacity 0.5s ease';
+                }, 100);
+            }
+        }
+
+        function resetDemo() {
+            demoStep = 0;
+            document.getElementById('demo-status').textContent = "Click 'Start Demo' to see how to create add_three function!";
+            document.getElementById('demo-content').innerHTML = "Click Start Demo to begin...";
+        }
+
+        // Gamified Quiz System
+        let currentQuestion = 0;
+        let score = 0;
+        let streak = 0;
+        let questions = [
+            {
+                question: "What keyword starts a function definition in Python?",
+                options: ["def", "function", "define", "func"],
+                correct: 0,
+                points: 10,
+                explanation: "🎯 'def' is the keyword that starts every Python function!"
+            },
+            {
+                question: "What must come at the end of a function header?",
+                options: ["Semicolon (;)", "Colon (:)", "Period (.)", "Comma (,)"],
+                correct: 1,
+                points: 10,
+                explanation: "✅ The colon (:) tells Python that the function body is coming next!"
+            },
+            {
+                question: "How should the function body be formatted?",
+                options: ["No indentation needed", "Indented with 4 spaces or Tab", "Indented with 2 spaces", "Surrounded by brackets"],
+                correct: 1,
+                points: 15,
+                explanation: "🔍 Python uses indentation (4 spaces or Tab) to show what's inside the function!"
+            },
+            {
+                question: "What does the 'return' statement do?",
+                options: ["Ends the program", "Sends a value back to whoever called the function", "Prints to the screen", "Creates a new variable"],
+                correct: 1,
+                points: 15,
+                explanation: "📤 'return' sends the result back so it can be used elsewhere!"
+            },
+            {
+                question: "What goes inside the parentheses of a function?",
+                options: ["The function body", "Parameters (inputs)", "The return value", "Comments"],
+                correct: 1,
+                points: 20,
+                explanation: "📥 Parameters are the inputs your function needs to do its job!"
+            },
+            {
+                question: "Which function header is correct?",
+                options: ["def myFunction(x):", "def my_function(x):", "def my-function(x):", "def MyFunction(x):"],
+                correct: 1,
+                points: 20,
+                explanation: "🐍 Python uses snake_case (underscores) for function names!"
+            },
+            {
+                question: "What happens if you forget to indent the function body?",
+                options: ["Nothing, it still works", "Python gives an IndentationError", "The function runs twice", "The function is ignored"],
+                correct: 1,
+                points: 25,
+                explanation: "⚠️ Python is strict about indentation - it will give you an error!"
+            },
+            {
+                question: "How do you call a function named 'greet' with parameter 'name'?",
+                options: ["greet name", "greet(name)", "call greet(name)", "run greet with name"],
+                correct: 1,
+                points: 25,
+                explanation: "📞 Use the function name followed by parentheses with the argument inside!"
+            }
+        ];
+
+        function openQuiz() {
+            document.getElementById('quiz-modal').style.display = 'block';
+            resetQuiz();
+            showQuestion();
+        }
+
+        function closeQuiz() {
+            document.getElementById('quiz-modal').style.display = 'none';
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            streak = 0;
+            updateQuizStats();
+            document.getElementById('quiz-result').classList.add('hidden');
+        }
+
+        function restartQuiz() {
+            resetQuiz();
+            showQuestion();
+        }
+
+        function updateQuizStats() {
+            document.getElementById('quiz-score').textContent = score;
+            document.getElementById('question-counter').textContent = currentQuestion + 1;
+            document.getElementById('quiz-streak').textContent = streak;
+            
+            const progressPercent = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = progressPercent + '%';
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                showFinalResult();
+                return;
+            }
+
+            const question = questions[currentQuestion];
+            const container = document.getElementById('quiz-question-container');
+            
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                optionsHtml += `<div class="quiz-option" onclick="selectAnswer(${index})">${option}</div>`;
+            });
+
+            container.innerHTML = `
+                <div class="quiz-question">
+                    <h3>❓ ${question.question}</h3>
+                    <div class="quiz-options">
+                        ${optionsHtml}
+                    </div>
+                    <div id="question-feedback" style="margin-top: 20px; padding: 15px; border-radius: 10px; display: none;"></div>
+                </div>
+            `;
+
+            updateQuizStats();
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('question-feedback');
+            
+            // Disable all options
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+
+            if (selectedIndex === question.correct) {
+                // Correct answer
+                options[selectedIndex].classList.add('correct');
+                score += question.points;
+                streak++;
+                
+                // Bonus points for streak
+                if (streak >= 3) {
+                    score += 10;
+                    feedback.innerHTML = `<div style="background: rgba(0, 184, 148, 0.3); color: white; padding: 15px; border-radius: 10px;">
+                        ✅ <strong>Correct!</strong> +${question.points} points + 10 streak bonus!<br>
+                        ${question.explanation}<br>
+                        🔥 You're on fire! ${streak} in a row!
+                    </div>`;
+                } else {
+                    feedback.innerHTML = `<div style="background: rgba(0, 184, 148, 0.3); color: white; padding: 15px; border-radius: 10px;">
+                        ✅ <strong>Correct!</strong> +${question.points} points<br>
+                        ${question.explanation}
+                    </div>`;
+                }
+                
+                // Add confetti effect
+                createConfetti();
+                
+            } else {
+                // Wrong answer
+                options[selectedIndex].classList.add('incorrect');
+                options[question.correct].classList.add('correct');
+                streak = 0;
+                
+                feedback.innerHTML = `<div style="background: rgba(225, 112, 85, 0.3); color: white; padding: 15px; border-radius: 10px;">
+                    ❌ <strong>Not quite!</strong> The correct answer is highlighted.<br>
+                    ${question.explanation}
+                </div>`;
+            }
+
+            feedback.style.display = 'block';
+
+            // Move to next question after delay
+            setTimeout(() => {
+                currentQuestion++;
+                showQuestion();
+            }, 3000);
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 20; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'][Math.floor(Math.random() * 5)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        function showFinalResult() {
+            const resultContainer = document.getElementById('quiz-result');
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            
+            const maxScore = questions.reduce((sum, q) => sum + q.points, 0);
+            const percentage = Math.round((score / maxScore) * 100);
+            
+            let title, message, emoji;
+            
+            if (percentage >= 90) {
+                title = "🏆 FUNCTION MASTER!";
+                message = `Outstanding! You scored ${score}/${maxScore} points (${percentage}%)! You're ready to tackle any Python function!`;
+                emoji = "🎉";
+                createConfetti();
+            } else if (percentage >= 75) {
+                title = "🌟 GREAT JOB!";
+                message = `Excellent work! You scored ${score}/${maxScore} points (${percentage}%)! You have a solid understanding of functions!`;
+                emoji = "👏";
+            } else if (percentage >= 60) {
+                title = "📚 GOOD EFFORT!";
+                message = `Nice try! You scored ${score}/${maxScore} points (${percentage}%). Review your notes and try again!`;
+                emoji = "💪";
+            } else {
+                title = "🔄 KEEP PRACTICING!";
+                message = `You scored ${score}/${maxScore} points (${percentage}%). Don't give up! Review the demo and try again!`;
+                emoji = "🚀";
+            }
+            
+            resultTitle.textContent = `${emoji} ${title}`;
+            resultMessage.textContent = message;
+            
+            document.getElementById('quiz-question-container').style.display = 'none';
+            resultContainer.classList.remove('hidden');
+        }
+
+        // Add some interactive animations
+        document.querySelectorAll('.challenge-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add typing effect to the header
+        const headerText = document.querySelector('.header h1');
+        const originalText = headerText.textContent;
+        headerText.textContent = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < originalText.length) {
+                headerText.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        
+        setTimeout(typeWriter, 500);
+
+        // Interactive Particle System
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.mouse = { x: 0, y: 0 };
+                this.colors = ['#74b9ff', '#a29bfe', '#fd79a8', '#fdcb6e', '#6c5ce7', '#00b894'];
+                
+                this.resize();
+                this.init();
+                this.animate();
+                this.bindEvents();
+            }
+
+            resize() {
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+            }
+
+            init() {
+                // Create initial particles
+                for (let i = 0; i < 50; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 3 + 1,
+                        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+                        alpha: Math.random() * 0.5 + 0.2,
+                        life: Math.random() * 100 + 50
+                    });
+                }
+            }
+
+            bindEvents() {
+                const header = this.canvas.parentElement;
+                
+                header.addEventListener('mousemove', (e) => {
+                    const rect = header.getBoundingClientRect();
+                    this.mouse.x = e.clientX - rect.left;
+                    this.mouse.y = e.clientY - rect.top;
+                });
+
+                header.addEventListener('mouseenter', () => {
+                    // Add burst of particles on hover
+                    for (let i = 0; i < 10; i++) {
+                        this.addParticle(this.mouse.x, this.mouse.y);
+                    }
+                });
+
+                header.addEventListener('click', () => {
+                    // Explosion effect on click
+                    for (let i = 0; i < 20; i++) {
+                        this.addParticle(this.mouse.x, this.mouse.y, true);
+                    }
+                });
+
+                window.addEventListener('resize', () => {
+                    this.resize();
+                });
+            }
+
+            addParticle(x, y, explosion = false) {
+                const speed = explosion ? 3 : 1;
+                this.particles.push({
+                    x: x || Math.random() * this.canvas.width,
+                    y: y || Math.random() * this.canvas.height,
+                    vx: (Math.random() - 0.5) * speed,
+                    vy: (Math.random() - 0.5) * speed,
+                    size: Math.random() * (explosion ? 5 : 3) + 1,
+                    color: this.colors[Math.floor(Math.random() * this.colors.length)],
+                    alpha: explosion ? 0.8 : Math.random() * 0.5 + 0.2,
+                    life: explosion ? 60 : Math.random() * 100 + 50
+                });
+            }
+
+            update() {
+                // Update particles
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    
+                    // Mouse attraction
+                    const dx = this.mouse.x - particle.x;
+                    const dy = this.mouse.y - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        const force = (100 - distance) / 100;
+                        particle.vx += (dx / distance) * force * 0.01;
+                        particle.vy += (dy / distance) * force * 0.01;
+                    }
+                    
+                    // Update position
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    // Add slight drift
+                    particle.vx *= 0.99;
+                    particle.vy *= 0.99;
+                    
+                    // Bounce off edges
+                    if (particle.x < 0 || particle.x > this.canvas.width) {
+                        particle.vx *= -0.5;
+                        particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
+                    }
+                    if (particle.y < 0 || particle.y > this.canvas.height) {
+                        particle.vy *= -0.5;
+                        particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
+                    }
+                    
+                    // Age particle
+                    particle.life--;
+                    particle.alpha -= 0.005;
+                    
+                    // Remove dead particles
+                    if (particle.life <= 0 || particle.alpha <= 0) {
+                        this.particles.splice(i, 1);
+                    }
+                }
+                
+                // Maintain particle count
+                while (this.particles.length < 40) {
+                    this.addParticle();
+                }
+            }
+
+            draw() {
+                // Clear canvas
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw connections between nearby particles
+                for (let i = 0; i < this.particles.length; i++) {
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const dx = this.particles[i].x - this.particles[j].x;
+                        const dy = this.particles[i].y - this.particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 80) {
+                            const opacity = (80 - distance) / 80 * 0.1;
+                            this.ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                            this.ctx.lineWidth = 1;
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+                            this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+                
+                // Draw particles
+                this.particles.forEach(particle => {
+                    this.ctx.save();
+                    this.ctx.globalAlpha = particle.alpha;
+                    this.ctx.fillStyle = particle.color;
+                    this.ctx.shadowColor = particle.color;
+                    this.ctx.shadowBlur = 10;
+                    this.ctx.beginPath();
+                    this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    this.ctx.restore();
+                });
+                
+                // Draw mouse glow effect
+                if (this.mouse.x > 0 && this.mouse.y > 0) {
+                    const gradient = this.ctx.createRadialGradient(
+                        this.mouse.x, this.mouse.y, 0,
+                        this.mouse.x, this.mouse.y, 50
+                    );
+                    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+                    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                    
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.mouse.x, this.mouse.y, 50, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+            }
+
+            animate() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize particle system when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('particle-canvas');
+            if (canvas) {
+                new ParticleSystem(canvas);
+            }
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('quiz-modal');
+            if (event.target === modal) {
+                closeQuiz();
+            }
+        }
+    </script>
+</body>
+</html>

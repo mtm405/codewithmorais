@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 4.1: Function Basics - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .lesson-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .theory-panel, .practice-panel {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      height: fit-content;
+    }
+    
+    .theory-panel h2, .practice-panel h2 {
+      color: #667eea;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .code-editor {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      color: #d4d4d4;
+      border: none;
+      resize: vertical;
+      min-height: 200px;
+      width: 100%;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    .output {
+      background: #0f1419;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: monospace;
+      color: #00ff00;
+      min-height: 100px;
+      white-space: pre-wrap;
+    }
+    
+    .run-button {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      transition: all 0.3s ease;
+    }
+    
+    .run-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+    
+    .example-box {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .example-box h4 {
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+    
+    .exercise-box {
+      background: linear-gradient(135deg, #fef3c7, #fbbf24);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .exercise-box h4 {
+      color: #92400e;
+      margin-bottom: 1rem;
+    }
+    
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-button.prev {
+      background: linear-gradient(135deg, #6b7280, #4b5563);
+      color: white;
+    }
+    
+    .nav-button.next {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+    
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    @media (max-width: 768px) {
+      .lesson-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .progress-tracker {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1><i class="fas fa-cogs"></i> Lesson 4.1: Function Basics</h1>
+      <p>Learn to create reusable code blocks with Python functions</p>
+    </header>
+
+    <div class="progress-tracker">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Lesson Progress</h3>
+        <span id="progress-text">0 / 4 exercises completed</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+    
+    <div class="lesson-content">
+      <div class="theory-panel">
+        <h2><i class="fas fa-book"></i> Theory</h2>
+        <div id="theory-content">
+          <h3>What are Functions?</h3>
+          <p>A <strong>function</strong> is a reusable block of code that performs a specific task. Think of it as a mini-program inside your program!</p>
+          
+          <div class="example-box">
+            <h4>Basic Function Syntax:</h4>
+            <code>
+def function_name():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;# code to execute<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return result  # optional
+            </code>
+          </div>
+
+          <h4>Key Concepts:</h4>
+          <ul>
+            <li><strong>def:</strong> Keyword to define a function</li>
+            <li><strong>Function name:</strong> What you call to use the function</li>
+            <li><strong>Parentheses:</strong> Where parameters go (more on this later)</li>
+            <li><strong>Indentation:</strong> Code inside the function</li>
+            <li><strong>return:</strong> Send a value back (optional)</li>
+          </ul>
+
+          <div class="example-box">
+            <h4>Simple Function:</h4>
+            <code>
+def greet():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("Hello, World!")<br><br>
+# Call the function<br>
+greet()
+            </code>
+          </div>
+
+          <div class="example-box">
+            <h4>Function with Return:</h4>
+            <code>
+def get_greeting():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "Hello, Python!"<br><br>
+# Use the returned value<br>
+message = get_greeting()<br>
+print(message)
+            </code>
+          </div>
+
+          <h4>Why Use Functions?</h4>
+          <ul>
+            <li><strong>Reusability:</strong> Write once, use many times</li>
+            <li><strong>Organization:</strong> Break large problems into smaller pieces</li>
+            <li><strong>Maintainability:</strong> Easier to fix and update</li>
+            <li><strong>Testing:</strong> Test individual pieces separately</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="practice-panel">
+        <h2><i class="fas fa-code"></i> Practice</h2>
+        <div id="exercise-1" class="exercise-section">
+          <div class="exercise-box">
+            <h4>Exercise 1: Your First Function</h4>
+            <p>Create a function called <code>say_hello</code> that prints "Hello from my function!":</p>
+          </div>
+          <textarea class="code-editor" id="code-1">
+# Define your function here
+def say_hello():
+    print("Hello from my function!")
+
+# Call your function
+say_hello()
+          </textarea>
+          <button class="run-button" onclick="runCode(1)">
+            <i class="fas fa-play"></i> Run Code
+          </button>
+          <div class="output" id="output-1"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="navigation">
+      <a href="../section3-loops/lesson3-4.html" class="nav-button prev">
+        <i class="fas fa-arrow-left"></i> Previous Lesson
+      </a>
+      <a href="/lessons" class="nav-button">
+        <i class="fas fa-home"></i> Course Home
+      </a>
+      <a href="lesson4-2.html" class="nav-button next">
+        Next Lesson <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    let pyodide = null;
+    let currentExercise = 1;
+    let completedExercises = 0;
+
+    async function initPyodide() {
+      if (!pyodide) {
+        pyodide = await loadPyodide();
+      }
+      return pyodide;
+    }
+
+    async function runCode(exerciseNumber) {
+      const code = document.getElementById(`code-${exerciseNumber}`).value;
+      const outputElement = document.getElementById(`output-${exerciseNumber}`);
+      
+      try {
+        outputElement.textContent = 'Running code...';
+        
+        const pyodideInstance = await initPyodide();
+        
+        // Capture print output
+        pyodideInstance.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+        `);
+        
+        // Run user code
+        pyodideInstance.runPython(code);
+        
+        // Get output
+        const output = pyodideInstance.runPython(`
+sys.stdout.getvalue()
+        `);
+        
+        outputElement.textContent = output || 'Code executed successfully (no output)';
+        
+        // Mark exercise as complete and move to next
+        markExerciseComplete(exerciseNumber);
+        
+      } catch (error) {
+        outputElement.textContent = `Error: ${error.message}`;
+      }
+    }
+
+    function markExerciseComplete(exerciseNumber) {
+      if (exerciseNumber === currentExercise) {
+        completedExercises++;
+        currentExercise++;
+        updateProgress();
+        
+        if (currentExercise <= 4) {
+          setTimeout(() => loadNextExercise(), 1000);
+        }
+      }
+    }
+
+    function updateProgress() {
+      const progressFill = document.getElementById('progress-fill');
+      const progressText = document.getElementById('progress-text');
+      const percentage = (completedExercises / 4) * 100;
+      
+      progressFill.style.width = `${percentage}%`;
+      progressText.textContent = `${completedExercises} / 4 exercises completed`;
+    }
+
+    function loadNextExercise() {
+      const currentSection = document.querySelector('.exercise-section');
+      
+      switch(currentExercise) {
+        case 2:
+          currentSection.innerHTML = `
+            <div class="exercise-box">
+              <h4>Exercise 2: Function with Return</h4>
+              <p>Create a function called <code>get_favorite_number</code> that returns your favorite number:</p>
+            </div>
+            <textarea class="code-editor" id="code-2">
+# Create a function that returns a value
+def get_favorite_number():
+    return 42
+
+# Call the function and store the result
+result = get_favorite_number()
+print(f"My favorite number is: {result}")
+            </textarea>
+            <button class="run-button" onclick="runCode(2)">
+              <i class="fas fa-play"></i> Run Code
+            </button>
+            <div class="output" id="output-2"></div>
+          `;
+          break;
+          
+        case 3:
+          currentSection.innerHTML = `
+            <div class="exercise-box">
+              <h4>Exercise 3: Multiple Function Calls</h4>
+              <p>Create a function called <code>count_to_three</code> and call it three times:</p>
+            </div>
+            <textarea class="code-editor" id="code-3">
+# Create a function that prints numbers
+def count_to_three():
+    for i in range(1, 4):
+        print(f"Count: {i}")
+
+# Call the function multiple times
+print("First call:")
+count_to_three()
+print("Second call:")
+count_to_three()
+            </textarea>
+            <button class="run-button" onclick="runCode(3)">
+              <i class="fas fa-play"></i> Run Code
+            </button>
+            <div class="output" id="output-3"></div>
+          `;
+          break;
+          
+        case 4:
+          currentSection.innerHTML = `
+            <div class="exercise-box">
+              <h4>Exercise 4: Function that Calculates</h4>
+              <p>Create a function called <code>calculate_area</code> that returns the area of a square with side length 5:</p>
+            </div>
+            <textarea class="code-editor" id="code-4">
+# Create a function that calculates area
+def calculate_area():
+    side_length = 5
+    area = side_length * side_length
+    return area
+
+# Use the function
+result = calculate_area()
+print(f"The area of a square with side 5 is: {result}")
+            </textarea>
+            <button class="run-button" onclick="runCode(4)">
+              <i class="fas fa-play"></i> Run Code
+            </button>
+            <div class="output" id="output-4"></div>
+          `;
+          break;
+      }
+    }
+
+    // Initialize Pyodide on page load
+    window.addEventListener('load', () => {
+      initPyodide();
+    });
+  </script>
+</body>
+</html>

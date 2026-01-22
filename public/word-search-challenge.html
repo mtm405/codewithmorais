@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Word - Word Search Collection</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 0.5in;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .main-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .main-header h1 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .main-header .subtitle {
+            color: #666;
+            font-size: 1.3em;
+            font-style: italic;
+        }
+
+        .puzzle-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .puzzle-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .puzzle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .puzzle-card h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .puzzle-card .emoji {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .puzzle-card .difficulty {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .puzzle-view {
+            display: none;
+        }
+
+        .puzzle-view.active {
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .instructions {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .instructions h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 25px;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .puzzle-section {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .word-grid {
+            flex: 2;
+        }
+
+        .word-grid table {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        .word-grid td {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #333;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            background: white;
+            vertical-align: middle;
+        }
+
+        .word-list {
+            flex: 1;
+        }
+
+        .word-list h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .word-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .word-list li {
+            background: #f8f9ff;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            border-left: 4px solid #667eea;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .btn {
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .no-print {
+                display: none;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
+                box-shadow: none;
+                border-radius: 0;
+                page-break-after: always;
+            }
+            
+            .header {
+                border-bottom: 3px solid #333;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+            }
+            
+            .header h1 {
+                color: #000;
+                font-size: 1.8em;
+            }
+            
+            .header .subtitle {
+                color: #333;
+                font-size: 1em;
+            }
+            
+            .instructions {
+                background: #f0f0f0;
+                border-left: 5px solid #333;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .instructions h2 {
+                color: #000;
+                font-size: 1.1em;
+                margin-bottom: 8px;
+            }
+            
+            .instructions li {
+                font-size: 0.9em;
+                line-height: 1.5;
+            }
+            
+            .puzzle-section {
+                display: flex;
+                gap: 20px;
+                page-break-inside: avoid;
+            }
+            
+            .word-grid {
+                flex: 2;
+            }
+            
+            .word-grid td {
+                width: 30px;
+                height: 30px;
+                font-size: 1.1em;
+                border: 1.5px solid #000;
+            }
+            
+            .word-list {
+                flex: 1;
+            }
+            
+            .word-list h2 {
+                color: #000;
+                font-size: 1.1em;
+            }
+            
+            .word-list li {
+                background: white;
+                border: 1.5px solid #333;
+                border-left: 4px solid #333;
+                padding: 6px;
+                margin-bottom: 5px;
+                font-size: 0.85em;
+            }
+            
+            .footer {
+                font-size: 0.8em;
+                margin-top: 15px;
+                padding-top: 10px;
+                border-top: 2px solid #333;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Menu -->
+    <div class="container no-print" id="mainMenu">
+        <div class="main-header">
+            <h1>📝 Microsoft Word - Word Search Challenge 🔍</h1>
+            <p class="subtitle">Choose your difficulty level!</p>
+        </div>
+
+        <div class="puzzle-selector">
+            <div class="puzzle-card" onclick="showPuzzle('easy')">
+                <div class="emoji">🌟</div>
+                <h2>Easy Level</h2>
+                <p>10 Basic Terms</p>
+                <div class="difficulty">Beginner Friendly</div>
+            </div>
+
+            <div class="puzzle-card" onclick="showPuzzle('medium')">
+                <div class="emoji">⚡</div>
+                <h2>Medium Level</h2>
+                <p>15 Mixed Terms</p>
+                <div class="difficulty">Intermediate</div>
+            </div>
+
+            <div class="puzzle-card" onclick="showPuzzle('hard')">
+                <div class="emoji">🔥</div>
+                <h2>Hard Level</h2>
+                <p>20 Advanced Terms</p>
+                <div class="difficulty">Expert Challenge</div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="printAll()">🖨️ Print All Puzzles</button>
+        </div>
+    </div>
+
+    <!-- Easy Puzzle -->
+    <div class="container puzzle-view" id="easyPuzzle">
+        <div class="header">
+            <h1>🌟 Easy Level - Microsoft Word Search</h1>
+            <p class="subtitle">Find 10 basic Microsoft Word terms!</p>
+        </div>
+
+        <div class="instructions">
+            <h2>📋 Instructions:</h2>
+            <ul>
+                <li>🔎 Find all <strong>10 words</strong> hidden in the grid</li>
+                <li>➡️ Words go <strong>across</strong> or <strong>down</strong></li>
+                <li>✏️ Circle or highlight each word as you find it</li>
+                <li>✅ Check off words from the list</li>
+                <li>⏱️ Time yourself for an extra challenge!</li>
+            </ul>
+        </div>
+
+        <div class="button-group no-print">
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-secondary" onclick="backToMenu()">⬅ Back</button>
+        </div>
+
+        <div class="puzzle-section">
+            <div class="word-grid">
+                <table id="easyGrid"></table>
+            </div>
+
+            <div class="word-list">
+                <h2>🎯 Words to Find:</h2>
+                <ul id="easyWords"></ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💡 <strong>Tip:</strong> Start with the longest words!</p>
+            <p>📚 Level: Easy • Perfect for beginners</p>
+        </div>
+    </div>
+
+    <!-- Medium Puzzle -->
+    <div class="container puzzle-view" id="mediumPuzzle">
+        <div class="header">
+            <h1>⚡ Medium Level - Microsoft Word Search</h1>
+            <p class="subtitle">Find 15 Microsoft Word terms!</p>
+        </div>
+
+        <div class="instructions">
+            <h2>📋 Instructions:</h2>
+            <ul>
+                <li>🔎 Find all <strong>15 words</strong> hidden in the grid</li>
+                <li>➡️ Words go <strong>across</strong> or <strong>down</strong></li>
+                <li>✏️ Circle or highlight each word as you find it</li>
+                <li>✅ Check off words from the list</li>
+                <li>⏱️ Can you beat 5 minutes?</li>
+            </ul>
+        </div>
+
+        <div class="button-group no-print">
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-secondary" onclick="backToMenu()">⬅ Back</button>
+        </div>
+
+        <div class="puzzle-section">
+            <div class="word-grid">
+                <table id="mediumGrid"></table>
+            </div>
+
+            <div class="word-list">
+                <h2>🎯 Words to Find:</h2>
+                <ul id="mediumWords"></ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💡 <strong>Tip:</strong> Look for PARAGRAPH and DOCUMENT first!</p>
+            <p>📚 Level: Medium • Intermediate challenge</p>
+        </div>
+    </div>
+
+    <!-- Hard Puzzle -->
+    <div class="container puzzle-view" id="hardPuzzle">
+        <div class="header">
+            <h1>🔥 Hard Level - Microsoft Word Search</h1>
+            <p class="subtitle">Find 20 advanced Microsoft Word terms!</p>
+        </div>
+
+        <div class="instructions">
+            <h2>📋 Instructions:</h2>
+            <ul>
+                <li>🔎 Find all <strong>20 words</strong> hidden in the grid</li>
+                <li>➡️ Words go <strong>across</strong> or <strong>down</strong></li>
+                <li>✏️ Circle or highlight each word as you find it</li>
+                <li>✅ Check off words from the list</li>
+                <li>⏱️ Expert challenge: Beat 8 minutes!</li>
+            </ul>
+        </div>
+
+        <div class="button-group no-print">
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-secondary" onclick="backToMenu()">⬅ Back</button>
+        </div>
+
+        <div class="puzzle-section">
+            <div class="word-grid">
+                <table id="hardGrid"></table>
+            </div>
+
+            <div class="word-list">
+                <h2>🎯 Words to Find:</h2>
+                <ul id="hardWords"></ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💡 <strong>Tip:</strong> This is the ultimate challenge! Take your time.</p>
+            <p>📚 Level: Hard • Expert difficulty</p>
+        </div>
+    </div>
+
+    <script>
+        // Easy words (10)
+        const easyWordList = [
+            { word: 'BOLD', row: 0, col: 0, direction: 'across' },
+            { word: 'SAVE', row: 1, col: 5, direction: 'across' },
+            { word: 'COPY', row: 2, col: 1, direction: 'across' },
+            { word: 'FONT', row: 3, col: 7, direction: 'down' },
+            { word: 'UNDO', row: 4, col: 2, direction: 'across' },
+            { word: 'PRINT', row: 5, col: 0, direction: 'across' },
+            { word: 'PASTE', row: 6, col: 4, direction: 'across' },
+            { word: 'FILE', row: 1, col: 1, direction: 'down' },
+            { word: 'EDIT', row: 7, col: 6, direction: 'across' },
+            { word: 'PAGE', row: 0, col: 8, direction: 'down' }
+        ];
+
+        // Medium words (15)
+        const mediumWordList = [
+            { word: 'BOLD', row: 0, col: 0, direction: 'across' },
+            { word: 'ITALIC', row: 1, col: 2, direction: 'across' },
+            { word: 'FONT', row: 2, col: 8, direction: 'down' },
+            { word: 'PRINT', row: 3, col: 1, direction: 'across' },
+            { word: 'SAVE', row: 4, col: 9, direction: 'down' },
+            { word: 'COPY', row: 5, col: 0, direction: 'across' },
+            { word: 'PASTE', row: 6, col: 5, direction: 'across' },
+            { word: 'UNDO', row: 7, col: 2, direction: 'across' },
+            { word: 'REDO', row: 8, col: 7, direction: 'across' },
+            { word: 'TABLE', row: 0, col: 5, direction: 'down' },
+            { word: 'PARAGRAPH', row: 9, col: 0, direction: 'across' },
+            { word: 'HEADER', row: 2, col: 0, direction: 'down' },
+            { word: 'FOOTER', row: 10, col: 3, direction: 'across' },
+            { word: 'DOCUMENT', row: 1, col: 10, direction: 'down' },
+            { word: 'SPELL', row: 11, col: 5, direction: 'across' }
+        ];
+
+        // Hard words (20)
+        const hardWordList = [
+            { word: 'ALIGNMENT', row: 0, col: 0, direction: 'across' },
+            { word: 'FORMATTING', row: 1, col: 4, direction: 'across' },
+            { word: 'MARGIN', row: 2, col: 1, direction: 'across' },
+            { word: 'ORIENTATION', row: 3, col: 2, direction: 'across' },
+            { word: 'INDENT', row: 4, col: 8, direction: 'down' },
+            { word: 'SPACING', row: 5, col: 0, direction: 'across' },
+            { word: 'PARAGRAPH', row: 6, col: 5, direction: 'across' },
+            { word: 'TEMPLATE', row: 7, col: 1, direction: 'across' },
+            { word: 'COLUMNS', row: 8, col: 7, direction: 'across' },
+            { word: 'STYLES', row: 9, col: 2, direction: 'across' },
+            { word: 'WATERMARK', row: 10, col: 0, direction: 'across' },
+            { word: 'BOOKMARK', row: 11, col: 4, direction: 'across' },
+            { word: 'HYPERLINK', row: 12, col: 1, direction: 'across' },
+            { word: 'FOOTNOTE', row: 13, col: 5, direction: 'across' },
+            { word: 'BIBLIOGRAPHY', row: 14, col: 0, direction: 'across' },
+            { word: 'ZOOM', row: 0, col: 12, direction: 'down' },
+            { word: 'REPLACE', row: 2, col: 10, direction: 'down' },
+            { word: 'BULLETS', row: 4, col: 13, direction: 'down' },
+            { word: 'BORDER', row: 1, col: 1, direction: 'down' },
+            { word: 'LAYOUT', row: 5, col: 11, direction: 'down' }
+        ];
+
+        function generateGrid(words, size) {
+            const grid = Array(size).fill(null).map(() => Array(size).fill(''));
+            
+            // Place words
+            words.forEach(({ word, row, col, direction }) => {
+                for (let i = 0; i < word.length; i++) {
+                    if (direction === 'across') {
+                        grid[row][col + i] = word[i];
+                    } else {
+                        grid[row + i][col] = word[i];
+                    }
+                }
+            });
+            
+            // Fill empty spaces
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    if (grid[i][j] === '') {
+                        grid[i][j] = alphabet[Math.floor(Math.random() * alphabet.length)];
+                    }
+                }
+            }
+            
+            return grid;
+        }
+
+        function renderGrid(gridId, grid) {
+            const table = document.getElementById(gridId);
+            table.innerHTML = '';
+            grid.forEach(row => {
+                const tr = table.insertRow();
+                row.forEach(letter => {
+                    const td = tr.insertCell();
+                    td.textContent = letter;
+                });
+            });
+        }
+
+        function renderWordList(listId, words) {
+            const list = document.getElementById(listId);
+            list.innerHTML = '';
+            words.forEach(({ word }) => {
+                const li = document.createElement('li');
+                li.textContent = `✓ ${word}`;
+                list.appendChild(li);
+            });
+        }
+
+        // Initialize puzzles
+        const easyGrid = generateGrid(easyWordList, 10);
+        const mediumGrid = generateGrid(mediumWordList, 12);
+        const hardGrid = generateGrid(hardWordList, 15);
+
+        renderGrid('easyGrid', easyGrid);
+        renderGrid('mediumGrid', mediumGrid);
+        renderGrid('hardGrid', hardGrid);
+
+        renderWordList('easyWords', easyWordList);
+        renderWordList('mediumWords', mediumWordList);
+        renderWordList('hardWords', hardWordList);
+
+        function showPuzzle(level) {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.querySelectorAll('.puzzle-view').forEach(el => el.classList.remove('active'));
+            document.getElementById(level + 'Puzzle').classList.add('active');
+        }
+
+        function backToMenu() {
+            document.getElementById('mainMenu').style.display = 'block';
+            document.querySelectorAll('.puzzle-view').forEach(el => el.classList.remove('active'));
+        }
+
+        function printAll() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.querySelectorAll('.puzzle-view').forEach(el => el.classList.add('active'));
+            setTimeout(() => {
+                window.print();
+                setTimeout(() => {
+                    backToMenu();
+                }, 100);
+            }, 100);
+        }
+    </script>
+</body>
+</html>

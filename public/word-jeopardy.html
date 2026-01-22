@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOS Word Whiz Jeopardy! | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --python-blue: #3776ab;
+            --python-yellow: #ffd43b;
+            --dark-bg: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent-green: #238636;
+            --accent-purple: #8957e5;
+            --hover-bg: #1f2937;
+            --jeopardy-blue: #0c2891;
+            --jeopardy-gold: #ffa500;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+        }
+
+        .logo-text h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--jeopardy-blue), var(--jeopardy-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .back-btn {
+            padding: 14px 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--hover-bg);
+            border-color: var(--python-blue);
+        }
+
+        .score-board {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            padding: 15px 35px;
+            background: var(--hover-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, var(--python-blue), var(--accent-purple));
+            color: white;
+            border-color: var(--python-blue);
+        }
+
+        .teams-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .team-card {
+            background: var(--hover-bg);
+            border: 3px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .team-card.buzzed {
+            border-color: var(--jeopardy-gold);
+            background: rgba(255, 165, 0, 0.2);
+            animation: pulse 0.5s ease;
+            box-shadow: 0 0 30px rgba(255, 165, 0, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .team-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .team-score {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--jeopardy-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .team-controls {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .team-btn {
+            padding: 5px 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .team-btn:hover {
+            background: var(--hover-bg);
+        }
+
+        .buzzer-display {
+            background: linear-gradient(135deg, var(--jeopardy-blue), #051a5c);
+            border: 4px solid var(--jeopardy-gold);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 25px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .buzzer-text {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--jeopardy-gold);
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .buzzer-subtext {
+            font-size: 1.6rem;
+            color: #e0e0e0;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .reset-btn {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--python-blue), var(--accent-purple));
+            border: none;
+            color: white;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.3rem;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(55, 118, 171, 0.5);
+        }
+
+        .clear-buzz-btn {
+            padding: 16px 40px;
+            background: var(--jeopardy-gold);
+            border: none;
+            color: #1f2937;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.3rem;
+        }
+
+        .clear-buzz-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 165, 0, 0.5);
+        }
+
+        .individual-mode {
+            display: none;
+        }
+
+        .classroom-mode {
+            display: none;
+        }
+
+        .individual-mode.active {
+            display: block;
+        }
+
+        .classroom-mode.active {
+            display: block;
+        }
+
+        .score-display {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(45deg, var(--jeopardy-gold), var(--python-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .jeopardy-board {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .board-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, var(--jeopardy-blue), var(--accent-purple));
+            padding: 12px 8px;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, var(--jeopardy-blue), #051a5c);
+            border: 2px solid var(--jeopardy-gold);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            height: 250px;
+        }
+
+        .question-card:hover:not(.answered) {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(255, 165, 0, 0.5);
+            border-color: var(--python-yellow);
+        }
+
+        .question-card.answered {
+            background: var(--hover-bg);
+            border-color: var(--border-color);
+            cursor: not-allowed;
+            opacity: 0.3;
+        }
+
+        .card-value {
+            font-size: 4rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--jeopardy-gold);
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+        }
+
+        .question-card.answered .card-value {
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--jeopardy-gold);
+            padding: 50px;
+            border-radius: 16px;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-value {
+            font-size: 5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--jeopardy-gold);
+            margin-bottom: 35px;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-category {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 35px;
+            font-weight: 600;
+        }
+
+        .modal-question {
+            font-size: 2rem;
+            line-height: 1.8;
+            margin-bottom: 45px;
+            color: var(--text-primary);
+        }
+
+        .answer-section {
+            margin-top: 35px;
+            padding-top: 35px;
+            border-top: 3px solid var(--border-color);
+        }
+
+        .answer-section.hidden {
+            display: none;
+        }
+
+        .answer-text {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 35px;
+            animation: bounce 0.5s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 20px 45px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.5rem;
+        }
+
+        .btn-show {
+            background: linear-gradient(135deg, var(--python-blue), var(--accent-purple));
+            color: white;
+        }
+
+        .btn-correct {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .btn-wrong {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-close {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .instructions {
+            background: rgba(55, 118, 171, 0.1);
+            border: 2px solid var(--python-blue);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .instructions h3 {
+            color: var(--python-blue);
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions li {
+            padding: 6px 0;
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+
+        .instructions li:before {
+            content: "✓ ";
+            color: var(--accent-green);
+            font-weight: 700;
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Large display optimizations (Promethean boards, etc.) */
+        @media (min-width: 1400px) {
+            .container {
+                padding: 20px 40px;
+            }
+
+            .logo-text h1 {
+                font-size: 3rem;
+            }
+
+            .logo-icon {
+                font-size: 3.5rem;
+            }
+
+            .category-header {
+                font-size: 1.2rem;
+                padding: 15px 10px;
+            }
+
+            .card-value {
+                font-size: 2.2rem;
+            }
+
+            .team-name {
+                font-size: 2rem;
+            }
+
+            .team-score {
+                font-size: 3.5rem;
+            }
+
+            .buzzer-text {
+                font-size: 4rem;
+            }
+
+            .buzzer-subtext {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Tablet and smaller screens */
+        @media (max-width: 1024px) {
+            .board-grid {
+                gap: 8px;
+            }
+
+            .category-header {
+                font-size: 1rem;
+                padding: 18px 10px;
+            }
+
+            .card-value {
+                font-size: 2.5rem;
+            }
+
+            .teams-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-content {
+                padding: 30px;
+            }
+
+            .modal-value {
+                font-size: 3.5rem;
+            }
+
+            .modal-question {
+                font-size: 1.5rem;
+            }
+
+            .answer-text {
+                font-size: 1.8rem;
+            }
+
+            .btn {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🧙💻</div>
+                <div class="logo-text">
+                    <h1>MOS Word Whiz Jeopardy!</h1>
+                    <p>Super Simple Answers - Test your Microsoft Word knowledge</p>
+                </div>
+            </div>
+            <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 How to Play</h3>
+            <ul>
+                <li>Click on any dollar amount to reveal a question</li>
+                <li>Read the question carefully and think about the answer</li>
+                <li>Click "Show Answer" to reveal the correct response</li>
+                <li>Mark if you got it right or wrong to track your score</li>
+                <li>Try to answer all questions and get the highest score!</li>
+            </ul>
+        </div>
+
+        <div class="score-board">
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('individual')">👤 Individual Play</button>
+                <button class="mode-btn" onclick="setMode('classroom')">🏫 Classroom Mode</button>
+            </div>
+
+            <div class="individual-mode active">
+                <div class="score-display">
+                    <div class="score-label">Your Score</div>
+                    <div class="score-value" id="scoreDisplay">$0</div>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="reset-btn" onclick="resetGame()">🔄 Reset Game</button>
+                </div>
+            </div>
+
+            <div class="classroom-mode">
+                <div class="buzzer-display" id="buzzerDisplay">
+                    <div class="buzzer-text">⏰ Waiting for Buzz...</div>
+                    <div class="buzzer-subtext">Students: Press your number key to buzz in!</div>
+                </div>
+
+                <div class="teams-container" id="teamsContainer"></div>
+
+                <div class="control-buttons">
+                    <button class="clear-buzz-btn" onclick="clearBuzz()">🔔 Clear Buzzer</button>
+                    <button class="reset-btn" onclick="resetGame()">🔄 Reset Scores</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="jeopardy-board">
+            <div class="board-grid" id="gameBoard"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="questionModal">
+        <div class="modal-content">
+            <div class="modal-value" id="modalValue"></div>
+            <div class="modal-category" id="modalCategory"></div>
+            <div class="modal-question" id="modalQuestion"></div>
+            
+            <div class="answer-section hidden" id="answerSection">
+                <div class="answer-text" id="answerText"></div>
+            </div>
+
+            <div class="modal-buttons" id="modalButtons">
+                <button class="btn btn-show" onclick="showAnswer()">Show Answer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const GAME_DATA = {
+            categories: [
+                'Document Secrets',
+                'Text & Paragraph Magic',
+                'Tables & Lists',
+                'Pictures & Shapes',
+                'Citations & Help'
+            ],
+            questions: {
+                'Document Secrets': {
+                    200: {
+                        question: 'This is the job of saving your project so it can be opened by different computer programs, like saving as a PDF.',
+                        answer: 'What is saving as a different file type?'
+                    },
+                    400: {
+                        question: 'When you change the margins, page size, or paper orientation, you are performing this action.',
+                        answer: 'What is setting up the pages?'
+                    },
+                    600: {
+                        question: 'You use this tool to quickly check for mistakes that might make the document hard for some people to read, like those using screen readers.',
+                        answer: 'What is the Accessibility Checker?'
+                    },
+                    800: {
+                        question: 'This important step lets you find and clean up hidden information, like your name or company, before you share your final report.',
+                        answer: 'What is removing personal information?'
+                    }
+                },
+                'Text & Paragraph Magic': {
+                    200: {
+                        question: 'This is the amazing trick that lets you instantly find every time you wrote "awesome" and change it to "fantastic".',
+                        answer: 'What is Find and Replace?'
+                    },
+                    400: {
+                        question: 'You use this feature to make a whole page (or just a part of it) look like a newspaper, with text lined up in vertical stacks.',
+                        answer: 'What is using columns?'
+                    },
+                    600: {
+                        question: 'If you\'ve messed around with the font, size, and color, this action is your quick, one-click way to make the text go back to its original look.',
+                        answer: 'What is clearing the formatting?'
+                    },
+                    800: {
+                        question: 'This is the fancy name for an invisible marker you put in your document to start a completely new set of page numbers, margins, or columns.',
+                        answer: 'What is a section break?'
+                    }
+                },
+                'Tables & Lists': {
+                    200: {
+                        question: 'This is the opposite of merging cells; it takes one big cell and cuts it into smaller ones.',
+                        answer: 'What is splitting cells?'
+                    },
+                    400: {
+                        question: 'This action puts your table data in order, like organizing your classmates by height or by last name.',
+                        answer: 'What is sorting the data?'
+                    },
+                    600: {
+                        question: 'This is what you do to turn a plain paragraph or a list of items into an organized, numbered list or a list with cool shapes next to each item.',
+                        answer: 'What is formatting as a list?'
+                    },
+                    800: {
+                        question: 'If your table is super long and spills onto the next page, you must use this trick to make sure the title row shows up on the new page too.',
+                        answer: 'What is repeating the header row?'
+                    }
+                },
+                'Pictures & Shapes': {
+                    200: {
+                        question: 'This general term refers to all the cool stuff you can add to your document, like pictures, 3D models, and SmartArt graphics.',
+                        answer: 'What are illustrations?'
+                    },
+                    400: {
+                        question: 'You use this to change how the words on the page flow around your picture—maybe the text is tight next to the image, or maybe it sits above and below.',
+                        answer: 'What is wrapping the text?'
+                    },
+                    600: {
+                        question: 'This is a special, invisible label you add to a picture so people who can\'t see the image know what it is (it\'s for accessibility).',
+                        answer: 'What is alternative text?'
+                    },
+                    800: {
+                        question: 'This tool is like a digital eraser that lets you erase the background of a photo, leaving just the main object.',
+                        answer: 'What is removing the background?'
+                    }
+                },
+                'Citations & Help': {
+                    200: {
+                        question: 'This is a small note at the bottom of the page that gives credit to a source you used.',
+                        answer: 'What is a footnote?'
+                    },
+                    400: {
+                        question: 'This is the document where you keep a list of all the books, websites, and sources you used for your big research paper.',
+                        answer: 'What is a bibliography?'
+                    },
+                    600: {
+                        question: 'You would insert this feature at the beginning of a document so readers can quickly see all the main chapters and headings with their page numbers.',
+                        answer: 'What is a Table of Contents?'
+                    },
+                    800: {
+                        question: 'This feature lets you add little sticky notes right into the document where you and your friends can leave questions or suggestions for each other.',
+                        answer: 'What is adding comments?'
+                    }
+                }
+            }
+        };
+
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        let currentQuestion = null;
+        let gameMode = 'individual';
+        let teams = [
+            { name: 'Team 1', score: 0, key: '1' },
+            { name: 'Team 2', score: 0, key: '2' },
+            { name: 'Team 3', score: 0, key: '3' },
+            { name: 'Team 4', score: 0, key: '4' },
+            { name: 'Team 5', score: 0, key: '5' },
+            { name: 'Team 6', score: 0, key: '6' }
+        ];
+        let buzzedTeam = null;
+        let buzzEnabled = false;
+
+        function initGame() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+
+            // Create category headers
+            GAME_DATA.categories.forEach(category => {
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.textContent = category;
+                board.appendChild(header);
+            });
+
+            // Create question cards
+            const values = [200, 400, 600, 800];
+            values.forEach(value => {
+                GAME_DATA.categories.forEach((category, catIndex) => {
+                    const card = document.createElement('div');
+                    card.className = 'question-card';
+                    card.id = `card-${catIndex}-${value}`;
+                    
+                    const valueText = document.createElement('div');
+                    valueText.className = 'card-value';
+                    valueText.textContent = `$${value}`;
+                    card.appendChild(valueText);
+                    
+                    card.onclick = () => openQuestion(category, value, card.id);
+                    board.appendChild(card);
+                });
+            });
+
+            loadProgress();
+            renderTeams();
+        }
+
+        function setMode(mode) {
+            gameMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (mode === 'individual') {
+                document.querySelector('.individual-mode').classList.add('active');
+                document.querySelector('.classroom-mode').classList.remove('active');
+            } else {
+                document.querySelector('.individual-mode').classList.remove('active');
+                document.querySelector('.classroom-mode').classList.add('active');
+            }
+        }
+
+        function renderTeams() {
+            const container = document.getElementById('teamsContainer');
+            container.innerHTML = '';
+
+            teams.forEach((team, index) => {
+                const card = document.createElement('div');
+                card.className = 'team-card';
+                card.id = `team-${index}`;
+                card.innerHTML = `
+                    <div class="team-name">${team.name} (${team.key})</div>
+                    <div class="team-score">$${team.score}</div>
+                    <div class="team-controls">
+                        <button class="team-btn" onclick="adjustTeamScore(${index}, 100)">+100</button>
+                        <button class="team-btn" onclick="adjustTeamScore(${index}, -100)">-100</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function adjustTeamScore(teamIndex, amount) {
+            teams[teamIndex].score = Math.max(0, teams[teamIndex].score + amount);
+            renderTeams();
+            saveProgress();
+        }
+
+        function clearBuzz() {
+            buzzedTeam = null;
+            buzzEnabled = false;
+            document.querySelectorAll('.team-card').forEach(card => {
+                card.classList.remove('buzzed');
+            });
+            document.getElementById('buzzerDisplay').innerHTML = `
+                <div class="buzzer-text">⏰ Waiting for Buzz...</div>
+                <div class="buzzer-subtext">Students: Press your number key to buzz in!</div>
+            `;
+        }
+
+        function handleBuzz(teamIndex) {
+            if (!buzzEnabled || buzzedTeam !== null) return;
+
+            buzzedTeam = teamIndex;
+            const team = teams[teamIndex];
+            
+            document.getElementById(`team-${teamIndex}`).classList.add('buzzed');
+            document.getElementById('buzzerDisplay').innerHTML = `
+                <div class="buzzer-text">🔔 ${team.name} Buzzed In!</div>
+                <div class="buzzer-subtext">Ready to answer...</div>
+            `;
+
+            // Play buzzer sound (optional)
+            playBuzzerSound();
+        }
+
+        function playBuzzerSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'square';
+            gainNode.gain.value = 0.3;
+            
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 200);
+        }
+
+        function openQuestion(category, value, cardId) {
+            const card = document.getElementById(cardId);
+            if (card.classList.contains('answered')) return;
+
+            currentQuestion = { category, value, cardId };
+            const questionData = GAME_DATA.questions[category][value];
+
+            document.getElementById('modalValue').textContent = `$${value}`;
+            document.getElementById('modalCategory').textContent = category;
+            document.getElementById('modalQuestion').textContent = questionData.question;
+            document.getElementById('answerText').textContent = questionData.answer;
+            
+            document.getElementById('answerSection').classList.add('hidden');
+            
+            if (gameMode === 'classroom') {
+                buzzEnabled = true;
+                clearBuzz();
+                document.getElementById('modalButtons').innerHTML = `
+                    <button class="btn btn-show" onclick="showAnswer()">Show Answer</button>
+                    <button class="btn btn-close" onclick="closeModal()">Close</button>
+                `;
+            } else {
+                document.getElementById('modalButtons').innerHTML = `
+                    <button class="btn btn-show" onclick="showAnswer()">Show Answer</button>
+                `;
+            }
+
+            document.getElementById('questionModal').classList.add('show');
+        }
+
+        function showAnswer() {
+            document.getElementById('answerSection').classList.remove('hidden');
+            
+            if (gameMode === 'classroom') {
+                buzzEnabled = false;
+                let buttonsHTML = '';
+                
+                if (buzzedTeam !== null) {
+                    buttonsHTML = `
+                        <button class="btn btn-correct" onclick="awardPoints(${buzzedTeam}, true)">✓ ${teams[buzzedTeam].name} Correct</button>
+                        <button class="btn btn-wrong" onclick="awardPoints(${buzzedTeam}, false)">✗ ${teams[buzzedTeam].name} Wrong</button>
+                    `;
+                }
+                
+                buttonsHTML += `<button class="btn btn-close" onclick="closeModal()">Close</button>`;
+                document.getElementById('modalButtons').innerHTML = buttonsHTML;
+            } else {
+                document.getElementById('modalButtons').innerHTML = `
+                    <button class="btn btn-correct" onclick="markAnswer(true)">✓ I Got It Right!</button>
+                    <button class="btn btn-wrong" onclick="markAnswer(false)">✗ I Got It Wrong</button>
+                    <button class="btn btn-close" onclick="closeModal()">Close</button>
+                `;
+            }
+        }
+
+        function awardPoints(teamIndex, correct) {
+            const card = document.getElementById(currentQuestion.cardId);
+            card.classList.add('answered');
+            answeredQuestions.add(currentQuestion.cardId);
+
+            if (correct) {
+                teams[teamIndex].score += currentQuestion.value;
+            } else {
+                teams[teamIndex].score = Math.max(0, teams[teamIndex].score - currentQuestion.value);
+            }
+
+            renderTeams();
+            saveProgress();
+            clearBuzz();
+            closeModal();
+        }
+
+        function markAnswer(correct) {
+            const card = document.getElementById(currentQuestion.cardId);
+            card.classList.add('answered');
+            answeredQuestions.add(currentQuestion.cardId);
+
+            if (correct) {
+                currentScore += currentQuestion.value;
+            }
+
+            updateScore();
+            saveProgress();
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('questionModal').classList.remove('show');
+            currentQuestion = null;
+        }
+
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = `$${currentScore.toLocaleString()}`;
+        }
+
+        function closeModal() {
+            document.getElementById('questionModal').classList.remove('show');
+            currentQuestion = null;
+            buzzEnabled = false;
+            clearBuzz();
+        }
+
+        function resetGame() {
+            if (confirm('Are you sure you want to reset? All progress will be lost.')) {
+                currentScore = 0;
+                answeredQuestions.clear();
+                updateScore();
+                
+                teams.forEach(team => team.score = 0);
+                renderTeams();
+                
+                document.querySelectorAll('.question-card').forEach(card => {
+                    card.classList.remove('answered');
+                });
+
+                saveProgress();
+            }
+        }
+
+        function saveProgress() {
+            const progress = {
+                score: currentScore,
+                answered: Array.from(answeredQuestions),
+                teams: teams
+            };
+            localStorage.setItem('jeopardyProgress', JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('jeopardyProgress');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                currentScore = progress.score || 0;
+                answeredQuestions = new Set(progress.answered || []);
+                
+                if (progress.teams) {
+                    teams = progress.teams;
+                }
+                
+                updateScore();
+                renderTeams();
+                answeredQuestions.forEach(cardId => {
+                    const card = document.getElementById(cardId);
+                    if (card) card.classList.add('answered');
+                });
+            }
+        }
+
+        // Keyboard buzzer system
+        document.addEventListener('keydown', (e) => {
+            if (!buzzEnabled || buzzedTeam !== null) return;
+            
+            const key = e.key;
+            const teamIndex = teams.findIndex(t => t.key === key);
+            
+            if (teamIndex !== -1) {
+                handleBuzz(teamIndex);
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('questionModal').addEventListener('click', (e) => {
+            if (e.target.id === 'questionModal') {
+                closeModal();
+            }
+        });
+
+        // Initialize game on load
+        initGame();
+    </script>
+</body>
+</html>

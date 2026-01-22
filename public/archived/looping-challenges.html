@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Looping Logic Challenges | Code With Morais</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: var(--text-inverse);
+            padding: var(--space-xl);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin: 0 0 var(--space);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin: 0 0 var(--space-lg);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-inverse);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space);
+            position: relative;
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            margin-top: -2rem;
+            border-radius: 2rem 2rem 0 0;
+        }
+
+        .navigation {
+            display: flex;
+            gap: var(--space);
+            margin-bottom: var(--space-lg);
+            justify-content: center;
+            padding-top: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: var(--bg-primary);
+            color: #667eea;
+            padding: var(--space-sm) var(--space-md);
+            border: 2px solid #667eea;
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: var(--text-inverse);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section {
+            background: var(--bg-primary);
+            padding: var(--space-xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-lg);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space);
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .section h2 {
+            color: var(--text-primary);
+            font-size: 2.2rem;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .challenges-grid {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .challenge-card {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.25);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .challenge-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space);
+            margin-bottom: var(--space-md);
+        }
+
+        .challenge-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: var(--text-inverse);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .challenge-emoji {
+            font-size: 1.8rem;
+        }
+
+        .challenge-title {
+            flex: 1;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .difficulty-tag {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .basic {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .advanced {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .challenge-goal {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-left: 4px solid #0ea5e9;
+            padding: var(--space-md);
+            border-radius: var(--radius);
+            margin-bottom: var(--space-md);
+        }
+
+        .challenge-goal strong {
+            color: #0369a1;
+            font-weight: 700;
+        }
+
+        .challenge-steps {
+            background: var(--gray-50);
+            padding: var(--space-md);
+            border-radius: var(--radius);
+            margin-top: var(--space-md);
+        }
+
+        .challenge-steps h4 {
+            color: #667eea;
+            margin: 0 0 var(--space-sm);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .challenge-steps ol {
+            margin: 0;
+            padding-left: var(--space-md);
+        }
+
+        .challenge-steps li {
+            margin-bottom: var(--space-xs);
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .code-snippet {
+            background: #f1f5f9;
+            color: #475569;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius);
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            margin: var(--space-xs) 0;
+            border: 1px solid #cbd5e1;
+            font-weight: 600;
+        }
+
+        .expected-outcome {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-left: 4px solid #16a34a;
+            padding: var(--space-md);
+            border-radius: var(--radius);
+            margin-top: var(--space-md);
+        }
+
+        .expected-outcome h4 {
+            color: #16a34a;
+            margin: 0 0 var(--space-sm);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .expected-outcome pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: var(--space-sm);
+            border-radius: var(--radius);
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            margin: 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border: 2px solid #667eea;
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+        }
+
+        .intro-section h3 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin: 0 0 var(--space);
+            font-weight: 700;
+        }
+
+        .intro-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .progress-tracker {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            background: var(--bg-primary);
+            padding: var(--space);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 2px solid #667eea;
+            z-index: 100;
+        }
+
+        .progress-tracker h4 {
+            margin: 0 0 var(--space-sm);
+            color: #667eea;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .progress-dots {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--space-xs);
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            transition: background-color 0.3s ease;
+        }
+
+        .progress-dot.completed {
+            background: #667eea;
+        }
+
+        @media (max-width: 1024px) {
+            .progress-tracker {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .challenges-grid {
+                gap: var(--space);
+            }
+            
+            .section {
+                padding: var(--space-md);
+            }
+            
+            .container {
+                padding: 0 var(--space-sm);
+            }
+
+            .challenge-card {
+                padding: var(--space-md);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .challenge-header {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-sm);
+            }
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(102, 126, 234, 0.2);
+            z-index: 1000;
+        }
+
+        .scroll-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-indicator">
+        <div class="scroll-progress" id="scrollProgress"></div>
+    </div>
+
+    <div class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-sync-alt"></i> Looping Logic Challenges</h1>
+            <p>Master Python loops with 20 hands-on challenges covering while loops, for loops, break, continue, and advanced iteration patterns</p>
+            <div class="difficulty-badge">
+                <i class="fas fa-brain"></i> Interactive Learning
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="intro-section">
+            <h3><i class="fas fa-lightbulb"></i> Welcome to Looping Logic Challenges!</h3>
+            <p>These 20 interactive challenges will teach you advanced loop control patterns in Python. From basic while and for loops to complex nested structures, you'll master break, continue, and sophisticated iteration logic through practical, real-world scenarios.</p>
+        </div>
+
+        <!-- Basic Looping Problems Section -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div>
+                    <h2>Basic Looping Problems</h2>
+                    <p style="margin: 0; color: var(--text-secondary); font-size: 1.1rem;">Master fundamental loop patterns with while, for, break, and continue</p>
+                </div>
+            </div>
+
+            <div class="challenges-grid">
+                <!-- Challenge 1 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">1</div>
+                        <div class="challenge-emoji">🎓</div>
+                        <h3 class="challenge-title">The Dynamic Mascot Picker</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Continuously pick mascots for two rival schools until the user types "stop" or the two randomly chosen mascots happen to be identical (a rare event), which then stops the picking process immediately with a special message.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create two lists of mascots, ensuring at least one mascot is common to both lists</li>
+                            <li>Start a <code class="code-snippet">while True</code> loop</li>
+                            <li>Inside the loop, use <code class="code-snippet">random.choice()</code> to pick one mascot from each list</li>
+                            <li>Ask the user for input (e.g., "Press Enter to pick or type 'stop' to quit:")</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if the user input is "stop" and use <code class="code-snippet">break</code> to exit</li>
+                            <li>Use a second <code class="code-snippet">if</code> statement to check if the two chosen mascots are identical. If they are, print the special message and use <code class="code-snippet">break</code> to exit</li>
+                            <li>If neither condition is met, print the chosen, non-identical mascots and let the loop continue</li>
+                        </ol>
+                    </div>
+
+                    <div class="expected-outcome">
+                        <h4><i class="fas fa-play"></i> Expected Outcome:</h4>
+                        <pre>School A picked: Lions
+School B picked: Bears
+Press Enter to pick or type 'stop' to quit: 
+
+School A picked: Tigers
+School B picked: Wolves
+Press Enter to pick or type 'stop' to quit: 
+
+School A picked: Eagles
+School B picked: Eagles
+🎉 MATCH FOUND! Both schools picked Eagles!
+The mascot picking stops here due to this rare coincidence!</pre>
+                    </div>
+                </div>
+
+                <!-- Challenge 2 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">2</div>
+                        <div class="challenge-emoji">📚</div>
+                        <h3 class="challenge-title">Required Study Topics</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> A student has a list of 5 topics they must study. Use a for loop to cycle through the list. If a topic is "Calculus" or "Physics," use continue to print a message like "Skipping Calculus for now, it needs a separate session." and move immediately to the next topic.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Create a single list of five diverse topics, including "Calculus" and "Physics"</li>
+                            <li>Use a <code class="code-snippet">for topic in list:</code> loop to iterate through the topics</li>
+                            <li>Inside the loop, use an <code class="code-snippet">if topic == "..."</code> condition to check for "Calculus." Print the skip message and execute <code class="code-snippet">continue</code></li>
+                            <li>Use an <code class="code-snippet">elif</code> condition to do the same for "Physics"</li>
+                            <li>After the if/elif block, use a <code class="code-snippet">print()</code> statement to suggest studying the current topic (this line will be skipped if continue is executed)</li>
+                        </ol>
+                    </div>
+
+                    <div class="expected-outcome">
+                        <h4><i class="fas fa-play"></i> Expected Outcome:</h4>
+                        <pre>Skipping Calculus for now, it needs a separate session.
+Let's study History today!
+Skipping Physics for now, it needs a separate session.
+Let's study English today!
+Let's study Biology today!</pre>
+                    </div>
+                </div>
+
+                <!-- Challenge 3 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">3</div>
+                        <div class="challenge-emoji">🤔</div>
+                        <h3 class="challenge-title">The "Would You Rather" Gauntlet</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Present the user with a sequence of "Would You Rather" questions. After each question, ask the user if they want to keep playing. The game continues indefinitely until the user inputs "no," which triggers a break to end the game.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create a list of "Would You Rather" questions</li>
+                            <li>Start a <code class="code-snippet">while True</code> loop</li>
+                            <li>Inside the loop, use <code class="code-snippet">random.choice()</code> to pick and print a question</li>
+                            <li>Use <code class="code-snippet">input()</code> to ask the user if they want to keep playing (e.g., "Keep playing? (yes/no): ")</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if the user input (in lowercase) is equal to "no." If it is, print a goodbye message and execute <code class="code-snippet">break</code></li>
+                        </ol>
+                    </div>
+
+                    <div class="expected-outcome">
+                        <h4><i class="fas fa-play"></i> Expected Outcome:</h4>
+                        <pre>Would you rather have the ability to fly or be invisible?
+Keep playing? (yes/no): yes
+
+Would you rather eat pizza every day or never eat pizza again?
+Keep playing? (yes/no): yes
+
+Would you rather always be 10 minutes late or 20 minutes early?
+Keep playing? (yes/no): no
+
+Thanks for playing! Goodbye! 🎮</pre>
+                    </div>
+                </div>
+
+                <!-- Challenge 4 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">4</div>
+                        <div class="challenge-emoji">🥪</div>
+                        <h3 class="challenge-title">Lunch Decision Loop</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Ask the user if they want a "hot" or "cold" lunch. If they give an invalid input (e.g., "salad"), keep asking (looping) until they enter a valid choice ("hot" or "cold") or type "none."
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create lists for <code class="code-snippet">hot_lunch</code> and <code class="code-snippet">cold_lunch</code></li>
+                            <li>Start a <code class="code-snippet">while True</code> loop</li>
+                            <li>Get the user's input</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if the input is "none." If it is, print a message and <code class="code-snippet">break</code></li>
+                            <li>Use an <code class="code-snippet">elif</code> to check for "hot." If true, pick and print a hot lunch, then <code class="code-snippet">break</code></li>
+                            <li>Use another <code class="code-snippet">elif</code> to check for "cold." If true, pick and print a cold lunch, then <code class="code-snippet">break</code></li>
+                            <li>Use a final <code class="code-snippet">else</code> block to handle invalid input. Print an error message, and the loop will automatically continue</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 5 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">5</div>
+                        <div class="challenge-emoji">✍️</div>
+                        <h3 class="challenge-title">Quote Refiner</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Pick a random inspirational quote. If the quote contains the word "tassel" or "tomorrow" (words we've deemed too cliché), use the continue statement to discard that quote and immediately pick a new one, repeating the pick until a non-cliché quote is found.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create a list of quotes, making sure at least two contain the word "tassel" or "tomorrow"</li>
+                            <li>Start a <code class="code-snippet">while True</code> loop</li>
+                            <li>Use <code class="code-snippet">random.choice()</code> to pick a <code class="code-snippet">chosen_quote</code></li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if "tassel" or "tomorrow" are in the <code class="code-snippet">chosen_quote</code> string</li>
+                            <li>If a cliché is found, print a message indicating a re-roll and execute <code class="code-snippet">continue</code> (this skips printing the quote and goes to the next loop iteration)</li>
+                            <li>If the loop reaches this point (meaning the quote is not cliché), print the final quote and <code class="code-snippet">break</code> the loop</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 6 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">6</div>
+                        <div class="challenge-emoji">🏘️</div>
+                        <h3 class="challenge-title">College Day Activity Scheduler</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Use a for loop to schedule 5 activities for the day. If the randomly chosen activity is "Studying in the library" at any point, stop the scheduling loop immediately with a break because the student is busy for the rest of the day.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create a list of <code class="code-snippet">social_activities</code> that includes "Studying in the library"</li>
+                            <li>Use a <code class="code-snippet">for day_slot in range(5):</code> loop to represent the 5 activity slots</li>
+                            <li>Inside the loop, use <code class="code-snippet">random.choice()</code> to pick an activity</li>
+                            <li>Print the scheduled activity</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if the chosen activity is "Studying in the library." If it is, print a message that the day is over and execute <code class="code-snippet">break</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 7 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">7</div>
+                        <div class="challenge-emoji">🎶</div>
+                        <h3 class="challenge-title">Mood Playlist Repeater</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Ask the user their mood. If the mood is not one you have songs for ("happy," "chill," "pumped"), use continue to loop back and ask them again. Only proceed to pick a song/artist when a valid mood is entered.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Define lists of songs and artists for valid moods (happy, chill, pumped)</li>
+                            <li>Create a list of <code class="code-snippet">valid_moods</code></li>
+                            <li>Start a <code class="code-snippet">while True</code> loop</li>
+                            <li>Get the user's mood input and convert it to lowercase</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if the input is not in <code class="code-snippet">valid_moods</code>. If not, print an error and execute <code class="code-snippet">continue</code></li>
+                            <li>If the input is valid, use an if/elif block to select the correct song/artist list, print the recommendation, and <code class="code-snippet">break</code> the loop</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 8 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">8</div>
+                        <div class="challenge-emoji">🧙</div>
+                        <h3 class="challenge-title">Character Stat Generator</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Generate 3 random character stats (e.g., Strength, Dexterity, Magic). Use a for loop to generate the stats. If any stat is randomly generated as 100, use break to stop generating, as this character is deemed too powerful.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create a list of stat names: <code class="code-snippet">stats = ["Strength", "Dexterity", "Magic"]</code></li>
+                            <li>Use a <code class="code-snippet">for stat in stats:</code> loop</li>
+                            <li>Inside the loop, use <code class="code-snippet">random.randint(1, 100)</code> to generate a <code class="code-snippet">stat_value</code></li>
+                            <li>Print the generated stat and value</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if <code class="code-snippet">stat_value == 100</code>. If it is, print a "too powerful" message and execute <code class="code-snippet">break</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 9 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">9</div>
+                        <div class="challenge-emoji">🍿</div>
+                        <h3 class="challenge-title">Snack Inventory Check</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> You have a master list of 5 snacks. Use a for loop to check the list. If the snack is a healthy option like "Apple slices" or "Carrots," use continue to skip it and only print suggestions for "real" movie snacks.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Create a list of 5 snacks, including healthy ones like "Apple slices" and "Carrots"</li>
+                            <li>Use a <code class="code-snippet">for snack in list:</code> loop to iterate through the snacks</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if the snack is "Apple slices." Print a "skipping" message and execute <code class="code-snippet">continue</code></li>
+                            <li>Use an <code class="code-snippet">elif</code> to do the same for "Carrots"</li>
+                            <li>After the if/elif block, print a suggestion for the current snack (this line is only reached for non-healthy snacks)</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 10 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">10</div>
+                        <div class="challenge-emoji">☀️</div>
+                        <h3 class="challenge-title">Weather Activity Re-Roller</h3>
+                        <div class="difficulty-tag basic">Basic</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Randomly pick a weather condition for the weekend. If the weather is "windy" or "foggy" (conditions too difficult to plan for), use continue to discard the pick and re-roll the weather until a standard condition ("sunny," "rainy," or "cloudy") is chosen.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create a master list of weather conditions including "windy" and "foggy"</li>
+                            <li>Start a <code class="code-snippet">while True</code> loop</li>
+                            <li>Use <code class="code-snippet">random.choice()</code> to pick the <code class="code-snippet">weekend_weather</code></li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if the weather is "windy" or "foggy." If it is, print a message indicating a re-roll and execute <code class="code-snippet">continue</code></li>
+                            <li>If the loop reaches this point, print the final, acceptable weather and <code class="code-snippet">break</code> to exit the loop</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced/Combined Logic Problems Section -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div>
+                    <h2>Advanced/Combined Logic Problems</h2>
+                    <p style="margin: 0; color: var(--text-secondary); font-size: 1.1rem;">Complex patterns with nested loops, enumerate, counters, and advanced iteration</p>
+                </div>
+            </div>
+
+            <div class="challenges-grid">
+                <!-- Challenge 11 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">11</div>
+                        <div class="challenge-emoji">🎓</div>
+                        <h3 class="challenge-title">The College Mascot Search</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Search a master list of all mascots (all_mascots) to see if both a specific search_mascot_A and search_mascot_B are present. Use a for loop to iterate over the master list and use two nested if statements to track if each has been found. break the loop once both are found.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Create one large list of <code class="code-snippet">all_mascots</code></li>
+                            <li>Define two target mascots: <code class="code-snippet">target_A</code> and <code class="code-snippet">target_B</code></li>
+                            <li>Initialize two boolean variables: <code class="code-snippet">found_A = False</code> and <code class="code-snippet">found_B = False</code></li>
+                            <li>Use a <code class="code-snippet">for mascot in all_mascots:</code> loop</li>
+                            <li>Inside the loop, use an if/elif to check if <code class="code-snippet">mascot == target_A</code> or <code class="code-snippet">mascot == target_B</code>, setting the corresponding boolean to True</li>
+                            <li>After the if/elif, use a check: <code class="code-snippet">if found_A and found_B:</code>. If true, print a success message and <code class="code-snippet">break</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 12 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">12</div>
+                        <div class="challenge-emoji">📚</div>
+                        <h3 class="challenge-title">Topic List Organizer</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Print a numbered list of all available study topics (Math, History, and Science combined). Use a for loop with the enumerate() function to automatically assign and print the index number starting from 1 for each topic.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Create separate lists for Math, History, and Science topics</li>
+                            <li>Combine them into one master list: <code class="code-snippet">all_topics = math_topics + history_topics + science_topics</code></li>
+                            <li>Use a <code class="code-snippet">for index, topic in enumerate(all_topics, 1):</code> loop</li>
+                            <li>Inside the loop, use a single <code class="code-snippet">print()</code> statement to display the index and the topic</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 13 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">13</div>
+                        <div class="challenge-emoji">🤔</div>
+                        <h3 class="challenge-title">Would You Rather Answer Counter</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Present the user with 5 "Would You Rather" questions. Use a while loop that runs as long as a counter variable is less than 5. Increment the counter after each question to track progress.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create a list of questions</li>
+                            <li>Initialize a counter: <code class="code-snippet">question_count = 0</code></li>
+                            <li>Use a <code class="code-snippet">while question_count < 5:</code> loop</li>
+                            <li>Inside the loop, pick and print a random question</li>
+                            <li>Take user input (the answer, which is ignored)</li>
+                            <li>Increment the counter: <code class="code-snippet">question_count += 1</code></li>
+                            <li>After the loop, print a "Game Over" message</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 14 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">14</div>
+                        <div class="challenge-emoji">🥪</div>
+                        <h3 class="challenge-title">Hot Lunch Calorie Filter</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> You have a list of lunch items with estimated calories (stored in a dictionary). Use a for loop to check each item. If the calories are over 500, use continue to skip the item and only print the names of the lower-calorie options.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Create a dictionary: <code class="code-snippet">lunch_items = {"Pizza": 650, "Salad": 300, "Soup": 450, "Burger": 700}</code></li>
+                            <li>Use a <code class="code-snippet">for item, calories in lunch_items.items():</code> loop</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if <code class="code-snippet">calories > 500</code>. If true, print a "filtering out" message and execute <code class="code-snippet">continue</code></li>
+                            <li>If the loop reaches this point, print a suggestion for the lower-calorie item</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 15 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">15</div>
+                        <div class="challenge-emoji">✍️</div>
+                        <h3 class="challenge-title">The Quote Length Checker</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Continuously pick a random quote. Check the length of the quote. If it is longer than 50 characters, use break to select it and print it as the final quote. If it's shorter, use a print statement but let the loop continue to find a longer one.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create a list of quotes (some long, some short)</li>
+                            <li>Start a <code class="code-snippet">while True</code> loop</li>
+                            <li>Use <code class="code-snippet">random.choice()</code> to pick a <code class="code-snippet">chosen_quote</code></li>
+                            <li>Use an <code class="code-snippet">if len(chosen_quote) > 50:</code> statement. If true, print the final quote and <code class="code-snippet">break</code></li>
+                            <li>Use an <code class="code-snippet">else</code> block. Print a message indicating the quote was too short and that the program is re-rolling</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 16 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">16</div>
+                        <div class="challenge-emoji">🏘️</div>
+                        <h3 class="challenge-title">Dining Hall Searcher</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> A student is looking for "Tacos" in the dining hall food list. Use a for loop to iterate over the list. When "Tacos" is found, print a success message and use break immediately; if the loop completes without finding it, print a "Tacos not found" message.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Create a list of <code class="code-snippet">dining_hall_food</code> (include "Tacos" somewhere in the list)</li>
+                            <li>Use a <code class="code-snippet">for food in dining_hall_food:</code> loop</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if <code class="code-snippet">food == "Tacos"</code>. If true, print a success message and <code class="code-snippet">break</code></li>
+                            <li>Attach an <code class="code-snippet">else:</code> block directly to the for loop. This block only executes if the loop finishes without hitting a break. Inside the else, print the "Tacos not found" message</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 17 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">17</div>
+                        <div class="challenge-emoji">🎶</div>
+                        <h3 class="challenge-title">Multi-Mood Playlist Search</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> You have a dictionary of moods, with each mood having a list of songs. Use a nested for loop structure to print every song available, categorized by mood.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Create a dictionary: <code class="code-snippet">playlists = {"happy": ["Song A", "Song B"], "chill": ["Song C", "Song D"]}</code></li>
+                            <li>Use the outer loop: <code class="code-snippet">for mood, songs in playlists.items():</code></li>
+                            <li>Print the current mood as a section header</li>
+                            <li>Use the inner loop: <code class="code-snippet">for song in songs:</code></li>
+                            <li>Inside the inner loop, print the song name</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 18 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">18</div>
+                        <div class="challenge-emoji">🧙</div>
+                        <h3 class="challenge-title">Character Reroll</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Generate a character name and ability. Ask the user if they like the name. If they input anything other than "yes," re-roll the name (looping) until they agree or type "quit."
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Create lists for first names, last names, and abilities</li>
+                            <li>Start a <code class="code-snippet">while True</code> loop</li>
+                            <li>Inside the loop, generate a random full name and ability</li>
+                            <li>Ask the user for feedback (yes/no/quit) on the name</li>
+                            <li>Use an <code class="code-snippet">if</code> statement to check if the input is "yes." If true, print the final name/ability and <code class="code-snippet">break</code></li>
+                            <li>Use an <code class="code-snippet">elif</code> to check for "quit." If true, print a goodbye message and <code class="code-snippet">break</code></li>
+                            <li>Use an <code class="code-snippet">else</code> block. Print a message that the program is re-rolling the name, and the loop will automatically continue</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 19 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">19</div>
+                        <div class="challenge-emoji">🍿</div>
+                        <h3 class="challenge-title">The Snack Picker's Budget</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> Start with a budget of $10. Use a while loop to suggest snacks, deducting the random cost of each suggested snack from the budget until the budget drops to $0 or below.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Import the <code class="code-snippet">random</code> module</li>
+                            <li>Initialize <code class="code-snippet">budget = 10.00</code></li>
+                            <li>Create a dictionary of snacks and their maximum possible cost (e.g., <code class="code-snippet">{"Popcorn": 4.00, "Candy": 3.00}</code>)</li>
+                            <li>Use a <code class="code-snippet">while budget > 0:</code> loop</li>
+                            <li>Inside the loop, randomly choose a snack and generate a random cost for it (e.g., <code class="code-snippet">random.uniform(1.00, max_cost)</code>)</li>
+                            <li>Subtract the cost from the budget: <code class="code-snippet">budget -= cost</code></li>
+                            <li>Print the suggested snack, its cost, and the remaining budget</li>
+                            <li>Use an <code class="code-snippet">if budget <= 0:</code> check. If true, print a "budget exhausted" message and <code class="code-snippet">break</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Challenge 20 -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">20</div>
+                        <div class="challenge-emoji">☀️</div>
+                        <h3 class="challenge-title">Activity Checklist</h3>
+                        <div class="difficulty-tag advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="challenge-goal">
+                        <strong>Goal:</strong> The user has a list of 4 chores they must do before any outside activity. Use a for loop to check each chore. If a chore is "clean room" (the hardest one), use continue to remind the user of this one but move on to checking the others immediately. Print a summary after the loop.
+                    </div>
+
+                    <div class="challenge-steps">
+                        <h4><i class="fas fa-list"></i> How to Do It:</h4>
+                        <ol>
+                            <li>Create a list of 4 chores, including "clean room"</li>
+                            <li>Use a <code class="code-snippet">for chore in chores:</code> loop</li>
+                            <li>Use an <code class="code-snippet">if chore == "clean room":</code> statement. If true, print a special message about the difficulty and execute <code class="code-snippet">continue</code></li>
+                            <li>After the if, print a message indicating the current chore is completed</li>
+                            <li>After the loop finishes, print a summary message</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="text-align: center; background: linear-gradient(135deg, #f8fafc, #e2e8f0);">
+            <h2 style="color: #667eea; margin-bottom: var(--space-md);"><i class="fas fa-trophy"></i> Congratulations!</h2>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: var(--space-lg);">You've completed all 20 Looping Logic Challenges! You now have mastery over Python's loop control structures.</p>
+        </div>
+    </div>
+
+    <div class="progress-tracker">
+        <h4>Progress</h4>
+        <div class="progress-dots">
+            <div class="progress-dot" data-challenge="1"></div>
+            <div class="progress-dot" data-challenge="2"></div>
+            <div class="progress-dot" data-challenge="3"></div>
+            <div class="progress-dot" data-challenge="4"></div>
+            <div class="progress-dot" data-challenge="5"></div>
+            <div class="progress-dot" data-challenge="6"></div>
+            <div class="progress-dot" data-challenge="7"></div>
+            <div class="progress-dot" data-challenge="8"></div>
+            <div class="progress-dot" data-challenge="9"></div>
+            <div class="progress-dot" data-challenge="10"></div>
+            <div class="progress-dot" data-challenge="11"></div>
+            <div class="progress-dot" data-challenge="12"></div>
+            <div class="progress-dot" data-challenge="13"></div>
+            <div class="progress-dot" data-challenge="14"></div>
+            <div class="progress-dot" data-challenge="15"></div>
+            <div class="progress-dot" data-challenge="16"></div>
+            <div class="progress-dot" data-challenge="17"></div>
+            <div class="progress-dot" data-challenge="18"></div>
+            <div class="progress-dot" data-challenge="19"></div>
+            <div class="progress-dot" data-challenge="20"></div>
+        </div>
+    </div>
+
+    <script>
+        // Scroll progress indicator
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = (scrollTop / scrollHeight) * 100;
+            document.getElementById('scrollProgress').style.width = progress + '%';
+        });
+
+        // Progress tracker - mark challenges as completed when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const challengeNumber = entry.target.querySelector('.challenge-number').textContent;
+                    const progressDot = document.querySelector(`[data-challenge="${challengeNumber}"]`);
+                    if (progressDot) {
+                        progressDot.classList.add('completed');
+                    }
+                }
+            });
+        }, {
+            threshold: 0.5
+        });
+
+        // Observe all challenge cards
+        document.querySelectorAll('.challenge-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script>
+</body>
+</html>

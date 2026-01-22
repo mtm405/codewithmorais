@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Assessment Center - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .assessment-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .nav-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    
+    .nav-card:hover {
+      transform: translateY(-5px);
+      border-color: #667eea;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .nav-card.active {
+      border-color: #667eea;
+      background: linear-gradient(135deg, #f8f9ff, #e8edff);
+    }
+    
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    
+    .card-icon.quiz { color: #3498db; }
+    .card-icon.coding { color: #e74c3c; }
+    .card-icon.project { color: #f39c12; }
+    .card-icon.debug { color: #9b59b6; }
+    
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .card-description {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    
+    .assessment-content {
+      display: none;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .assessment-content.active {
+      display: block;
+    }
+    
+    /* Quiz Styles */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #e9ecef;
+    }
+    
+    .quiz-progress {
+      flex: 1;
+      margin: 0 2rem;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e9ecef;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    
+    .question-container {
+      margin-bottom: 2rem;
+    }
+    
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .question-number {
+      background: #667eea;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    
+    .question-points {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .question-text {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    .options-container {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    .option {
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .option:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+    
+    .option.selected {
+      border-color: #667eea;
+      background: linear-gradient(135deg, #f0f4ff, #e8edff);
+    }
+    
+    .option.correct {
+      border-color: #10b981;
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    }
+    
+    .option.incorrect {
+      border-color: #ef4444;
+      background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    }
+    
+    .option-letter {
+      background: #667eea;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    
+    /* Coding Challenge Styles */
+    .coding-challenge {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      height: 600px;
+    }
+    
+    .challenge-description {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    
+    .challenge-editor {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .editor-header {
+      background: #21262d;
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .code-editor {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border: none;
+      padding: 1rem;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: none;
+      flex: 1;
+      border-radius: 0 0 8px 8px;
+    }
+    
+    .editor-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .run-button, .submit-button {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    
+    .submit-button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+    
+    .run-button:hover, .submit-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .output-panel {
+      background: #0f1419;
+      color: #00ff00;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+      font-family: monospace;
+      min-height: 120px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid #e9ecef;
+    }
+    
+    .nav-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .nav-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .nav-btn.secondary {
+      background: #6c757d;
+    }
+    
+    /* Results Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .score-display {
+      font-size: 3rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 1rem 0;
+    }
+    
+    .achievement-badge {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      margin: 1rem 0;
+      display: inline-block;
+    }
+    
+    @media (max-width: 768px) {
+      .coding-challenge {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      
+      .assessment-nav {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1><i class="fas fa-graduation-cap"></i> Python Assessment Center</h1>
+      <p>Test your Python knowledge with interactive quizzes, coding challenges, and projects</p>
+    </header>
+    
+    <!-- Assessment Navigation -->
+    <div class="assessment-nav">
+      <div class="nav-card active" onclick="showAssessment('quiz')">
+        <i class="fas fa-question-circle card-icon quiz"></i>
+        <div class="card-title">Section Quizzes</div>
+        <div class="card-description">Multiple choice questions testing your understanding of Python concepts</div>
+      </div>
+      
+      <div class="nav-card" onclick="showAssessment('coding')">
+        <i class="fas fa-code card-icon coding"></i>
+        <div class="card-title">Coding Challenges</div>
+        <div class="card-description">Write Python code to solve programming problems step by step</div>
+      </div>
+      
+      <div class="nav-card" onclick="showAssessment('project')">
+        <i class="fas fa-project-diagram card-icon project"></i>
+        <div class="card-title">Project Assessments</div>
+        <div class="card-description">Build complete Python applications to demonstrate your skills</div>
+      </div>
+      
+      <div class="nav-card" onclick="showAssessment('debug')">
+        <i class="fas fa-bug card-icon debug"></i>
+        <div class="card-title">Debug Challenges</div>
+        <div class="card-description">Find and fix bugs in existing Python code</div>
+      </div>
+    </div>
+    
+    <!-- Quiz Assessment -->
+    <div class="assessment-content active" id="quiz-content">
+      <div class="quiz-header">
+        <div>
+          <h2>Section 1: Data Types & Operators</h2>
+          <p>Test your knowledge of Python basics</p>
+        </div>
+        
+        <div class="quiz-progress">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span>Progress</span>
+            <span id="quiz-progress-text">1 / 5</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="quiz-progress-fill"></div>
+          </div>
+        </div>
+        
+        <div style="text-align: right;">
+          <div>Time: <span id="quiz-timer">10:00</span></div>
+          <div>Score: <span id="quiz-score">0</span></div>
+        </div>
+      </div>
+      
+      <div class="question-container" id="current-question">
+        <div class="question-header">
+          <div class="question-number" id="question-number">Question 1</div>
+          <div class="question-points">5 points</div>
+        </div>
+        
+        <div class="question-text" id="question-text">
+          What is the correct way to create a string variable in Python?
+        </div>
+        
+        <div class="options-container" id="options-container">
+          <div class="option" onclick="selectOption(0)">
+            <div class="option-letter">A</div>
+            <div>string name = "Hello"</div>
+          </div>
+          <div class="option" onclick="selectOption(1)">
+            <div class="option-letter">B</div>
+            <div>name = "Hello"</div>
+          </div>
+          <div class="option" onclick="selectOption(2)">
+            <div class="option-letter">C</div>
+            <div>var name = "Hello"</div>
+          </div>
+          <div class="option" onclick="selectOption(3)">
+            <div class="option-letter">D</div>
+            <div>String name = "Hello"</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="nav-buttons">
+        <button class="nav-btn secondary" id="prev-btn" onclick="previousQuestion()" disabled>
+          <i class="fas fa-arrow-left"></i> Previous
+        </button>
+        
+        <button class="nav-btn" id="next-btn" onclick="nextQuestion()">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Coding Challenges -->
+    <div class="assessment-content" id="coding-content">
+      <h2 style="margin-bottom: 2rem;">Coding Challenge: Calculate Average</h2>
+      
+      <div class="coding-challenge">
+        <div class="challenge-description">
+          <h3>Problem Description</h3>
+          <p><strong>Difficulty:</strong> Beginner</p>
+          <p><strong>Points:</strong> 15</p>
+          
+          <h4>Task:</h4>
+          <p>Write a function called <code>calculate_average</code> that takes a list of numbers and returns their average.</p>
+          
+          <h4>Requirements:</h4>
+          <ul>
+            <li>Function should be named <code>calculate_average</code></li>
+            <li>Accept one parameter: a list of numbers</li>
+            <li>Return the average as a float</li>
+            <li>Handle empty lists by returning 0</li>
+          </ul>
+          
+          <h4>Example:</h4>
+          <pre><code>calculate_average([1, 2, 3, 4, 5])  # Should return 3.0
+calculate_average([10, 20])          # Should return 15.0
+calculate_average([])                # Should return 0</code></pre>
+          
+          <h4>Test Cases:</h4>
+          <ul>
+            <li><code>[1, 2, 3, 4, 5]</code> → <code>3.0</code></li>
+            <li><code>[10, 20, 30]</code> → <code>20.0</code></li>
+            <li><code>[5]</code> → <code>5.0</code></li>
+            <li><code>[]</code> → <code>0</code></li>
+          </ul>
+        </div>
+        
+        <div class="challenge-editor">
+          <div class="editor-header">
+            <span>solution.py</span>
+            <span>Python</span>
+          </div>
+          
+          <textarea class="code-editor" id="coding-editor" placeholder="# Write your solution here
+def calculate_average(numbers):
+    # Your code here
+    pass
+
+# Test your function
+print(calculate_average([1, 2, 3, 4, 5]))
+print(calculate_average([10, 20, 30]))
+print(calculate_average([5]))
+print(calculate_average([]))"></textarea>
+          
+          <div class="editor-actions">
+            <button class="run-button" onclick="runCodingChallenge()">
+              <i class="fas fa-play"></i> Run Tests
+            </button>
+            <button class="submit-button" onclick="submitCodingChallenge()">
+              <i class="fas fa-check"></i> Submit Solution
+            </button>
+          </div>
+          
+          <div class="output-panel" id="coding-output">Click "Run Tests" to see your output...</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Project Assessments -->
+    <div class="assessment-content" id="project-content">
+      <h2>Project Assessment: Personal Task Manager</h2>
+      
+      <div style="background: #f8f9fa; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
+        <h3>Project Overview</h3>
+        <p><strong>Duration:</strong> 45 minutes | <strong>Points:</strong> 50</p>
+        
+        <h4>Build a Personal Task Manager</h4>
+        <p>Create a Python program that allows users to manage their daily tasks.</p>
+        
+        <h4>Required Features:</h4>
+        <ol>
+          <li><strong>Add Task:</strong> Allow users to add new tasks with a description</li>
+          <li><strong>List Tasks:</strong> Display all current tasks with numbers</li>
+          <li><strong>Mark Complete:</strong> Mark tasks as completed</li>
+          <li><strong>Remove Task:</strong> Delete tasks from the list</li>
+          <li><strong>Save/Load:</strong> Save tasks to a file and load them on startup</li>
+        </ol>
+        
+        <h4>Grading Criteria:</h4>
+        <ul>
+          <li>Code Quality (15 pts): Clean, readable code with comments</li>
+          <li>Functionality (20 pts): All features work correctly</li>
+          <li>Error Handling (10 pts): Handle invalid inputs gracefully</li>
+          <li>User Experience (5 pts): Clear prompts and messages</li>
+        </ul>
+        
+        <div style="margin-top: 2rem;">
+          <button class="nav-btn" onclick="startProject()">
+            <i class="fas fa-play"></i> Start Project
+          </button>
+          <a href="/ide-pro.html" class="nav-btn" style="margin-left: 1rem;">
+            <i class="fas fa-external-link-alt"></i> Open in IDE Pro
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Debug Challenges -->
+    <div class="assessment-content" id="debug-content">
+      <h2>Debug Challenge: Fix the Calculator</h2>
+      
+      <div class="coding-challenge">
+        <div class="challenge-description">
+          <h3>Find and Fix the Bugs</h3>
+          <p><strong>Difficulty:</strong> Intermediate</p>
+          <p><strong>Points:</strong> 20</p>
+          
+          <h4>Problem:</h4>
+          <p>The calculator program has several bugs. Your job is to find and fix them all.</p>
+          
+          <h4>Expected Behavior:</h4>
+          <ul>
+            <li>Should perform basic math operations (+, -, *, /)</li>
+            <li>Should handle division by zero</li>
+            <li>Should validate input numbers</li>
+            <li>Should continue until user chooses to quit</li>
+          </ul>
+          
+          <h4>Known Issues:</h4>
+          <ul>
+            <li>❌ Division doesn't work correctly</li>
+            <li>❌ Program crashes with invalid input</li>
+            <li>❌ Menu doesn't show all options</li>
+            <li>❌ Loop doesn't exit properly</li>
+          </ul>
+        </div>
+        
+        <div class="challenge-editor">
+          <div class="editor-header">
+            <span>buggy_calculator.py</span>
+            <span>Fix the bugs!</span>
+          </div>
+          
+          <textarea class="code-editor" id="debug-editor">def calculator():
+    print("Welcome to the Calculator!")
+    
+    while True:
+        print("\\n1. Add")
+        print("2. Subtract") 
+        print("3. Multiply")
+        # Missing division option
+        print("5. Quit")
+        
+        choice = input("Choose an option: ")
+        
+        if choice == '5':
+            break
+        
+        # No input validation
+        num1 = float(input("Enter first number: "))
+        num2 = float(input("Enter second number: "))
+        
+        if choice == '1':
+            result = num1 + num2
+            print(f"Result: {result}")
+        elif choice == '2':
+            result = num1 - num2
+            print(f"Result: {result}")
+        elif choice == '3':
+            result = num1 * num2
+            print(f"Result: {result}")
+        elif choice == '4':
+            # Division by zero not handled
+            result = num1 / num2
+            print(f"Result: {result}")
+        else:
+            print("Invalid choice!")
+
+# Missing function call
+calculator</textarea>
+          
+          <div class="editor-actions">
+            <button class="run-button" onclick="runDebugChallenge()">
+              <i class="fas fa-play"></i> Test Fix
+            </button>
+            <button class="submit-button" onclick="submitDebugChallenge()">
+              <i class="fas fa-check"></i> Submit Fix
+            </button>
+          </div>
+          
+          <div class="output-panel" id="debug-output">Click "Test Fix" to see if your debugging worked...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Results Modal -->
+  <div class="modal" id="results-modal">
+    <div class="modal-content">
+      <h2>Assessment Complete!</h2>
+      <div class="score-display" id="final-score">85%</div>
+      <div class="achievement-badge" id="achievement-badge">
+        <i class="fas fa-trophy"></i> Great Job!
+      </div>
+      <p id="results-message">You've demonstrated solid understanding of Python fundamentals!</p>
+      
+      <div style="margin-top: 2rem;">
+        <button class="nav-btn" onclick="closeResults()">
+          <i class="fas fa-redo"></i> Try Again
+        </button>
+        <a href="/dashboard.html" class="nav-btn" style="margin-left: 1rem;">
+          <i class="fas fa-home"></i> Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Global variables
+    let pyodide = null;
+    let currentAssessment = 'quiz';
+    let currentQuestionIndex = 0;
+    let selectedOption = -1;
+    let score = 0;
+    let timeRemaining = 600; // 10 minutes
+    let timerInterval = null;
+
+    // Quiz data
+    const quizData = {
+      'section1': {
+        title: 'Section 1: Data Types & Operators',
+        timeLimit: 600,
+        questions: [
+          {
+            text: "What is the correct way to create a string variable in Python?",
+            options: [
+              'string name = "Hello"',
+              'name = "Hello"',
+              'var name = "Hello"',
+              'String name = "Hello"'
+            ],
+            correct: 1,
+            points: 5
+          },
+          {
+            text: "Which of the following is NOT a valid Python data type?",
+            options: [
+              'int',
+              'float',
+              'string',
+              'bool'
+            ],
+            correct: 2,
+            points: 5
+          },
+          {
+            text: "What does the operator '//' do in Python?",
+            options: [
+              'Regular division',
+              'Floor division (integer division)',
+              'Exponentiation',
+              'String concatenation'
+            ],
+            correct: 1,
+            points: 5
+          },
+          {
+            text: "What will be the output of: print(type(5.0))",
+            options: [
+              "<class 'int'>",
+              "<class 'float'>",
+              "<class 'number'>",
+              "<class 'decimal'>"
+            ],
+            correct: 1,
+            points: 5
+          },
+          {
+            text: "Which operator is used to check if two values are equal in Python?",
+            options: [
+              '=',
+              '==',
+              '===',
+              'equals()'
+            ],
+            correct: 1,
+            points: 5
+          }
+        ]
+      }
+    };
+
+    // Initialize Pyodide
+    async function initPyodide() {
+      if (!pyodide) {
+        pyodide = await loadPyodide();
+      }
+    }
+
+    // Assessment navigation
+    function showAssessment(type) {
+      // Update nav cards
+      document.querySelectorAll('.nav-card').forEach(card => {
+        card.classList.remove('active');
+      });
+      event.target.closest('.nav-card').classList.add('active');
+      
+      // Update content
+      document.querySelectorAll('.assessment-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(`${type}-content`).classList.add('active');
+      
+      currentAssessment = type;
+      
+      // Initialize specific assessment
+      if (type === 'quiz') {
+        initQuiz();
+      } else if (type === 'coding') {
+        initCodingChallenge();
+      }
+    }
+
+    // Quiz functionality
+    function initQuiz() {
+      const quiz = quizData.section1;
+      timeRemaining = quiz.timeLimit;
+      currentQuestionIndex = 0;
+      score = 0;
+      
+      startTimer();
+      displayQuestion();
+    }
+
+    function displayQuestion() {
+      const quiz = quizData.section1;
+      const question = quiz.questions[currentQuestionIndex];
+      
+      document.getElementById('question-number').textContent = `Question ${currentQuestionIndex + 1}`;
+      document.getElementById('question-text').textContent = question.text;
+      document.getElementById('quiz-progress-text').textContent = `${currentQuestionIndex + 1} / ${quiz.questions.length}`;
+      document.getElementById('quiz-progress-fill').style.width = `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%`;
+      
+      // Display options
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+      
+      question.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+        optionElement.onclick = () => selectOption(index);
+        optionElement.innerHTML = `
+          <div class="option-letter">${String.fromCharCode(65 + index)}</div>
+          <div>${option}</div>
+        `;
+        container.appendChild(optionElement);
+      });
+      
+      selectedOption = -1;
+      updateNavigationButtons();
+    }
+
+    function selectOption(index) {
+      // Clear previous selection
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      
+      // Select new option
+      document.querySelectorAll('.option')[index].classList.add('selected');
+      selectedOption = index;
+      
+      updateNavigationButtons();
+    }
+
+    function updateNavigationButtons() {
+      const quiz = quizData.section1;
+      
+      document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+      
+      const nextBtn = document.getElementById('next-btn');
+      if (currentQuestionIndex === quiz.questions.length - 1) {
+        nextBtn.textContent = 'Finish Quiz';
+        nextBtn.innerHTML = '<i class="fas fa-flag-checkered"></i> Finish Quiz';
+      } else {
+        nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+      }
+      
+      nextBtn.disabled = selectedOption === -1;
+    }
+
+    function nextQuestion() {
+      if (selectedOption === -1) return;
+      
+      // Check answer
+      const quiz = quizData.section1;
+      const question = quiz.questions[currentQuestionIndex];
+      
+      if (selectedOption === question.correct) {
+        score += question.points;
+        document.getElementById('quiz-score').textContent = score;
+      }
+      
+      // Show correct answer briefly
+      document.querySelectorAll('.option').forEach((opt, index) => {
+        if (index === question.correct) {
+          opt.classList.add('correct');
+        } else if (index === selectedOption && selectedOption !== question.correct) {
+          opt.classList.add('incorrect');
+        }
+      });
+      
+      setTimeout(() => {
+        if (currentQuestionIndex < quiz.questions.length - 1) {
+          currentQuestionIndex++;
+          displayQuestion();
+        } else {
+          finishQuiz();
+        }
+      }, 1500);
+    }
+
+    function previousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+      }
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        document.getElementById('quiz-timer').textContent = 
+          `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeRemaining <= 0) {
+          finishQuiz();
+        }
+      }, 1000);
+    }
+
+    function finishQuiz() {
+      if (timerInterval) clearInterval(timerInterval);
+      
+      const quiz = quizData.section1;
+      const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
+      const percentage = Math.round((score / totalPoints) * 100);
+      
+      showResults(percentage, 'quiz');
+    }
+
+    // Coding challenge functionality
+    function initCodingChallenge() {
+      initPyodide();
+    }
+
+    async function runCodingChallenge() {
+      const code = document.getElementById('coding-editor').value;
+      const output = document.getElementById('coding-output');
+      
+      try {
+        output.textContent = 'Running tests...\\n';
+        
+        if (!pyodide) await initPyodide();
+        
+        // Capture output
+        pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+        `);
+        
+        // Run the code
+        pyodide.runPython(code);
+        
+        // Get output
+        const result = pyodide.runPython('sys.stdout.getvalue()');
+        output.textContent = result || 'Code executed successfully (no output)';
+        
+      } catch (error) {
+        output.textContent = `Error: ${error.message}`;
+      }
+    }
+
+    function submitCodingChallenge() {
+      // In a real implementation, this would submit to a backend for evaluation
+      showResults(85, 'coding');
+    }
+
+    // Debug challenge functionality
+    async function runDebugChallenge() {
+      const code = document.getElementById('debug-editor').value;
+      const output = document.getElementById('debug-output');
+      
+      try {
+        output.textContent = 'Testing your fixes...\\n';
+        
+        if (!pyodide) await initPyodide();
+        
+        // Test the fixed code
+        pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+        `);
+        
+        pyodide.runPython(code);
+        
+        const result = pyodide.runPython('sys.stdout.getvalue()');
+        
+        // Check if common bugs are fixed
+        const fixes = [];
+        if (code.includes('print("4. Divide")')) fixes.push('✅ Added missing division option');
+        if (code.includes('try:') || code.includes('except:')) fixes.push('✅ Added input validation');
+        if (code.includes('if num2 == 0:')) fixes.push('✅ Handled division by zero');
+        if (code.includes('calculator()')) fixes.push('✅ Added function call');
+        
+        output.textContent = `Fixes detected:\\n${fixes.join('\\n')}\\n\\nOutput:\\n${result}`;
+        
+      } catch (error) {
+        output.textContent = `Error: ${error.message}\\nStill some bugs to fix!`;
+      }
+    }
+
+    function submitDebugChallenge() {
+      showResults(90, 'debug');
+    }
+
+    // Project functionality
+    function startProject() {
+      // Redirect to IDE with project template
+      const projectCode = `"""
+Personal Task Manager Project
+Complete the following functions to build a working task manager.
+"""
+
+tasks = []
+
+def add_task():
+    """Add a new task to the list."""
+    # TODO: Implement this function
+    pass
+
+def list_tasks():
+    """Display all tasks with their status."""
+    # TODO: Implement this function  
+    pass
+
+def mark_complete():
+    """Mark a task as completed."""
+    # TODO: Implement this function
+    pass
+
+def remove_task():
+    """Remove a task from the list."""
+    # TODO: Implement this function
+    pass
+
+def save_tasks():
+    """Save tasks to a file."""
+    # TODO: Implement this function
+    pass
+
+def load_tasks():
+    """Load tasks from a file."""
+    # TODO: Implement this function
+    pass
+
+def main_menu():
+    """Display the main menu and handle user input."""
+    print("=== Personal Task Manager ===")
+    while True:
+        print("\\n1. Add Task")
+        print("2. List Tasks") 
+        print("3. Mark Complete")
+        print("4. Remove Task")
+        print("5. Quit")
+        
+        choice = input("Choose an option: ")
+        
+        if choice == '1':
+            add_task()
+        elif choice == '2':
+            list_tasks()
+        elif choice == '3':
+            mark_complete()
+        elif choice == '4':
+            remove_task()
+        elif choice == '5':
+            save_tasks()
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    load_tasks()
+    main_menu()
+`;
+      
+      localStorage.setItem('projectTemplate', projectCode);
+      window.open('/ide-pro.html?project=task-manager', '_blank');
+    }
+
+    // Results modal
+    function showResults(percentage, assessmentType) {
+      document.getElementById('final-score').textContent = `${percentage}%`;
+      
+      let message = '';
+      let badge = '';
+      
+      if (percentage >= 90) {
+        badge = '<i class="fas fa-star"></i> Excellent!';
+        message = 'Outstanding performance! You have mastered this topic.';
+      } else if (percentage >= 80) {
+        badge = '<i class="fas fa-trophy"></i> Great Job!';
+        message = 'Great work! You have a solid understanding of the concepts.';
+      } else if (percentage >= 70) {
+        badge = '<i class="fas fa-thumbs-up"></i> Good Work!';
+        message = 'Good job! Review the areas you missed and try again.';
+      } else {
+        badge = '<i class="fas fa-redo"></i> Keep Practicing!';
+        message = 'Keep practicing! Review the lessons and try again.';
+      }
+      
+      document.getElementById('achievement-badge').innerHTML = badge;
+      document.getElementById('results-message').textContent = message;
+      
+      document.getElementById('results-modal').style.display = 'flex';
+    }
+
+    function closeResults() {
+      document.getElementById('results-modal').style.display = 'none';
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+      initPyodide();
+      initQuiz();
+    });
+  </script>
+</body>
+</html>

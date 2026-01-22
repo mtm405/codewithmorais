@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Fundamentals Final Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .chatbot-container {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            max-height: calc(100vh - 40px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #2a5298;
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .section {
+            margin: 30px 0;
+        }
+
+        .section h2 {
+            color: #2a5298;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #1e3c72;
+            font-size: 1.4em;
+            margin: 20px 0 10px 0;
+        }
+
+        .goal-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .goal-box p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box strong {
+            color: #856404;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .theme-card {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .theme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-color: #2a5298;
+        }
+
+        .theme-card h4 {
+            color: #2a5298;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .theme-card .category {
+            background: #2a5298;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .theme-card p {
+            line-height: 1.5;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table thead {
+            background: #2a5298;
+            color: white;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        table tbody tr:hover {
+            background: #e9ecef;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            border-radius: 5px;
+        }
+
+        .checklist-item .icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            color: #28a745;
+        }
+
+        .rubric-table {
+            font-size: 0.95em;
+        }
+
+        .rubric-table th {
+            font-weight: bold;
+        }
+
+        .submission-box {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .submission-box h3 {
+            color: #0c5460;
+            margin-bottom: 15px;
+        }
+
+        .submission-box ul {
+            margin-left: 20px;
+        }
+
+        .submission-box li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        /* Chatbot Styles */
+        .chatbot {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 40px);
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+        }
+
+        .chatbot-header p {
+            margin: 5px 0 0 0;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            line-height: 1.5;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #dee2e6;
+        }
+
+        .message.user .message-content {
+            background: #667eea;
+            color: white;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-avatar {
+            background: #667eea;
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: #28a745;
+            color: white;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #dee2e6;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .quick-question-btn {
+            background: #e9ecef;
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-question-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 10px;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .print-button {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s ease;
+        }
+
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .chatbot-container {
+                display: none;
+            }
+
+            .print-button {
+                display: none;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .chatbot-container {
+                position: relative;
+                top: 0;
+            }
+
+            .chatbot {
+                height: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .theme-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <h1>🚀 Python Fundamentals Final Project</h1>
+                <p class="subtitle">The Creative App Challenge</p>
+            </div>
+
+            <button class="print-button" onclick="window.print()">🖨️ Print Instructions</button>
+
+            <!-- Project Goal -->
+            <section class="section">
+                <h2>🎯 Project Goal</h2>
+                <div class="goal-box">
+                    <p>Design, develop, and present a <strong>functional and creative application</strong> using Python. This project is your chance to apply all concepts learned (data types, lists, loops, functions, I/O, error handling) to solve a small problem, automate a task, or build an interactive program.</p>
+                    <p><strong>Minimum Code Length:</strong> Your final program file(s) must contain a minimum of 30 executable lines (excluding comments, blank lines, and imports).</p>
+                    <p><strong>Code Quality:</strong> Comments are mandatory. Every major section of logic (e.g., function, loop, complex calculation) must have a concise, descriptive comment explaining what it does.</p>
+                </div>
+            </section>
+
+            <!-- Creative Freedom & Theme Ideas -->
+            <section class="section">
+                <h2>💡 Creative Freedom & Advanced Theme Ideas</h2>
+                <p style="margin: 15px 0; font-size: 1.1em;">Your app's theme is entirely up to you, but it should be a bit more challenging than a simple, single-operation calculator.</p>
+
+                <div class="theme-grid">
+                    <div class="theme-card" onclick="askChatbot('Tell me more about building a Personalized Study Tracker')">
+                        <span class="category">Data & Tracking</span>
+                        <h4>Personalized Study Tracker</h4>
+                        <p><strong>Key Feature:</strong> Track subjects, assign a score (float), calculate the weighted average (using a List), and suggest which subject to focus on next (using if/elif/else).</p>
+                    </div>
+
+                    <div class="theme-card" onclick="askChatbot('How do I create a Password Validator in Python?')">
+                        <span class="category">Text & Logic</span>
+                        <h4>Simple Password Validator</h4>
+                        <p><strong>Key Feature:</strong> Accept a password (string) and use a for loop to check if it meets multiple criteria (length, contains a number, contains a symbol). Return a "Strength" score.</p>
+                    </div>
+
+                    <div class="theme-card" onclick="askChatbot('Help me design a Number Guessing Game with hard mode')">
+                        <span class="category">Interactive Game</span>
+                        <h4>Number Guessing Game (Hard Mode)</h4>
+                        <p><strong>Key Feature:</strong> The computer picks a number (using the random module). Use a while loop to let the user guess until they get it right. Use a List to track all previous guesses.</p>
+                    </div>
+
+                    <div class="theme-card" onclick="askChatbot('Explain how to build a Loan/Savings Simulator')">
+                        <span class="category">Simulation</span>
+                        <h4>Basic Loan/Savings Simulator</h4>
+                        <p><strong>Key Feature:</strong> Accept principal, interest rate, and term (years). Use a for loop to calculate the balance after each year, displaying the total interest paid.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Required Concepts Checklist -->
+            <section class="section">
+                <h2>✅ Required Concepts Checklist (MANDATORY)</h2>
+                <p style="margin: 15px 0;">You must demonstrate all of these concepts in your final code:</p>
+
+                <div class="checklist-item">
+                    <span class="icon">✅</span>
+                    <div>
+                        <strong>Functions:</strong> Define and call at least one function that accepts parameters and uses a return statement.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="icon">✅</span>
+                    <div>
+                        <strong>Lists & Methods:</strong> Use a List to store data and demonstrate one list method (e.g., .append(), .sort()).
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="icon">✅</span>
+                    <div>
+                        <strong>Control Flow:</strong> Implement both a for loop (e.g., to iterate over a list) and a while loop (e.g., to run the main program menu).
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="icon">✅</span>
+                    <div>
+                        <strong>Conditional Logic:</strong> Use a comprehensive if / elif / else statement.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="icon">✅</span>
+                    <div>
+                        <strong>User I/O & Types:</strong> Use input() for data gathering. Use and convert at least three types: str, int, and float.
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="icon">✅</span>
+                    <div>
+                        <strong>Error Handling:</strong> Implement a try...except block to gracefully handle a user error (e.g., expecting a number but receiving text).
+                    </div>
+                </div>
+
+                <div class="checklist-item">
+                    <span class="icon">✅</span>
+                    <div>
+                        <strong>Code Readability:</strong> Use clear, descriptive comments throughout the code, especially before loops and complex logic.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Project Rubric -->
+            <section class="section">
+                <h2>💯 Project Rubric</h2>
+                <p style="margin: 15px 0;">Your project will be graded based on four weighted categories for a total of 52 points:</p>
+
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Excellent (4 Points)</th>
+                            <th>Proficient (3 Points)</th>
+                            <th>Developing (2 Points)</th>
+                            <th>Needs Work (1 Point)</th>
+                            <th>Max Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>I. Core Functionality & Logic</strong></td>
+                            <td>Program runs flawlessly. Logic is highly efficient, demonstrating an expert understanding. All required concepts are implemented.</td>
+                            <td>Program runs with minor, easily fixable bugs. Logic is sound and mostly efficient. Nearly all required concepts are implemented correctly.</td>
+                            <td>Program runs but contains significant errors that prevent key functions from operating. Missing several required concepts.</td>
+                            <td>Program fails to run or crashes immediately. The code shows minimal understanding of logic or concepts.</td>
+                            <td>16</td>
+                        </tr>
+                        <tr>
+                            <td><strong>II. Code Quality & Style</strong></td>
+                            <td>Code is exceptionally clean, well-formatted, and easy to read. Excellent use of meaningful variable/function names and descriptive comments (DOCSTRINGS included).</td>
+                            <td>Code is well-organized and mostly readable. Good variable names, but comments are sometimes sparse. Proper function use.</td>
+                            <td>Code is difficult to read due to poor formatting. Variable names are unclear. Comments are missing or non-functional.</td>
+                            <td>Code structure is chaotic, violating basic Python style guides. Comments are entirely missing.</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td><strong>III. Creativity & Complexity</strong></td>
+                            <td>The project demonstrates a high degree of originality, complexity, and ambition. The chosen solution goes above and beyond basic expectations.</td>
+                            <td>The project is original and meets a good level of complexity. The solution is effective and clearly meets the goals established.</td>
+                            <td>The project is functional but lacks originality or is overly simple. It meets only the minimum expectations of complexity.</td>
+                            <td>The project is trivial, showing no creative input or complex implementation.</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IV. User Experience (UX)</strong></td>
+                            <td>The program is highly interactive, intuitive, and robust. It utilizes effective input validation (try/except) and provides clear, well-formatted f-string output.</td>
+                            <td>The program is generally easy to use. Input is accepted and output is clear. Basic input validation is present.</td>
+                            <td>The program is confusing to use; user inputs are not clearly prompted. Output is messy. Input validation is missing.</td>
+                            <td>The program is unusable without reading the source code. It fails to handle any unexpected user input.</td>
+                            <td>12</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Submission & Deliverables -->
+            <section class="section">
+                <h2>🛠 Submission & Deliverables</h2>
+                <div class="submission-box">
+                    <h3>Submit the following files in a single compressed folder (ZIP file) labeled [YourName]_Python_Final:</h3>
+                    
+                    <h4 style="margin-top: 20px;">1. The Python Program (your_app_name.py)</h4>
+                    <ul>
+                        <li>The fully functional source code.</li>
+                        <li>Must meet the 30-line minimum and include mandatory comments.</li>
+                    </ul>
+
+                    <h4 style="margin-top: 20px;">2. Project Documentation (README.txt or README.md)</h4>
+                    <p style="margin: 10px 0;"><strong>This document is essential for grading. It must contain:</strong></p>
+                    <ul>
+                        <li><strong>Project Title & Goal:</strong> A 1-2 sentence summary of what your app does.</li>
+                        <li><strong>Required Concepts Map:</strong> A clear, line-by-line explanation of where in your code you used each of the required concepts (e.g., "The if/elif/else statement is used in the check_status function on lines 25-30.").</li>
+                        <li><strong>Example Run:</strong> A transcript showing a successful and complete run of your program.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <div class="info-box" style="margin-top: 30px;">
+                <p><strong>💬 Need Help?</strong> Use the chatbot assistant on the right to brainstorm ideas, ask questions about Python concepts, or get guidance on implementing specific features for your project!</p>
+            </div>
+        </div>
+
+        <!-- Chatbot Assistant -->
+        <div class="chatbot-container">
+            <div class="chatbot">
+                <div class="chatbot-header">
+                    <h3>🤖 Python Project Assistant</h3>
+                    <p>Ask me anything about your project!</p>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            Hi! I'm your Python Project Assistant. I can help you brainstorm ideas, understand concepts, and plan your final project. What would you like to know?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="message bot">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="quick-questions">
+                        <button class="quick-question-btn" onclick="askQuickQuestion('What project should I build?')">
+                            Project Ideas
+                        </button>
+                        <button class="quick-question-btn" onclick="askQuickQuestion('How do I use try/except?')">
+                            Error Handling
+                        </button>
+                        <button class="quick-question-btn" onclick="askQuickQuestion('Explain functions with parameters')">
+                            Functions
+                        </button>
+                        <button class="quick-question-btn" onclick="askQuickQuestion('How do I work with lists?')">
+                            Lists
+                        </button>
+                    </div>
+                    <div class="chat-input-wrapper">
+                        <input 
+                            type="text" 
+                            class="chat-input" 
+                            id="chatInput" 
+                            placeholder="Ask a question..."
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chatbot knowledge base
+        const knowledgeBase = {
+            "project ideas": [
+                "Here are some great project ideas:\n\n1. **To-Do List Manager**: Track tasks with priorities, mark as complete, and save to a file\n2. **Quiz Game**: Create multiple-choice questions, track score, give feedback\n3. **Budget Tracker**: Track income/expenses, categorize, calculate totals\n4. **Temperature Converter**: Convert between C, F, K with menu system\n5. **Student Grade Calculator**: Input grades, calculate average, determine letter grade\n6. **Word Counter**: Analyze text for word frequency, longest word, etc.\n7. **Rock Paper Scissors**: Play against computer with score tracking\n8. **Recipe Manager**: Store recipes, search by ingredient, scale servings\n\nPick something that interests you!",
+                
+                "Consider these creative projects:\n\n• **Fitness Tracker**: Log workouts, calculate calories, track progress over time\n• **Expense Splitter**: Calculate how to split bills among friends\n• **Trivia Game**: Multiple categories, difficulty levels, high scores\n• **Password Generator**: Create strong passwords with customizable rules\n• **Mad Libs Game**: Fill in words, create funny stories\n• **Unit Converter**: Convert multiple units (length, weight, volume)\n\nWhat interests you most?"
+            ],
+
+            "functions": [
+                "**Functions in Python** let you reuse code!\n\n```python\ndef calculate_average(numbers):\n    \"\"\"Calculate the average of a list of numbers\"\"\"\n    total = sum(numbers)\n    avg = total / len(numbers)\n    return avg\n\n# Using the function\nscores = [85, 90, 78, 92]\nresult = calculate_average(scores)\nprint(f\"Average: {result}\")\n```\n\n✅ Use `def` to define\n✅ Parameters go in ()\n✅ Use `return` to send back a value\n✅ Add docstrings for documentation",
+
+                "Here's a function with multiple parameters:\n\n```python\ndef greet_user(name, age, city=\"Unknown\"):\n    \"\"\"Greet a user with their info\"\"\"\n    message = f\"Hello {name}! You are {age} years old.\"\n    if city != \"Unknown\":\n        message += f\" You live in {city}.\"\n    return message\n\n# Call it\ngreeting = greet_user(\"Alex\", 16, \"Boston\")\nprint(greeting)\n```\n\nNotice the default parameter for city!"
+            ],
+
+            "lists": [
+                "**Lists** store multiple items in one variable!\n\n```python\n# Creating a list\nfruits = [\"apple\", \"banana\", \"cherry\"]\n\n# Adding items\nfruits.append(\"orange\")  # Add to end\nfruits.insert(1, \"mango\")  # Add at index 1\n\n# Accessing items\nfirst = fruits[0]  # \"apple\"\nlast = fruits[-1]  # \"orange\"\n\n# Looping through\nfor fruit in fruits:\n    print(fruit)\n\n# List methods\nfruits.sort()  # Sort alphabetically\nfruits.remove(\"banana\")  # Remove item\nlength = len(fruits)  # Get length\n```\n\n✅ Use [] to create\n✅ Index starts at 0\n✅ Lots of useful methods!",
+
+                "Here are essential list operations:\n\n```python\nnumbers = [10, 20, 30, 40, 50]\n\n# Slicing\nfirst_three = numbers[0:3]  # [10, 20, 30]\nlast_two = numbers[-2:]  # [40, 50]\n\n# List comprehension\nsquares = [x**2 for x in numbers]\n# Result: [100, 400, 900, 1600, 2500]\n\n# Common methods\nnumbers.reverse()  # Reverse order\nmax_num = max(numbers)  # Find max\nmin_num = min(numbers)  # Find min\ntotal = sum(numbers)  # Add all\n```"
+            ],
+
+            "error handling": [
+                "**Error Handling** makes your program robust!\n\n```python\ntry:\n    age = int(input(\"Enter your age: \"))\n    print(f\"You are {age} years old\")\nexcept ValueError:\n    print(\"That's not a valid number!\")\nexcept Exception as e:\n    print(f\"An error occurred: {e}\")\nfinally:\n    print(\"Thanks for using the program!\")\n```\n\n✅ Use `try` for code that might error\n✅ Use `except` to handle the error\n✅ `finally` always runs (optional)\n✅ Prevents crashes!",
+
+                "Here's a complete validation example:\n\n```python\ndef get_positive_number():\n    \"\"\"Get a positive number from user\"\"\"\n    while True:\n        try:\n            num = float(input(\"Enter a positive number: \"))\n            if num <= 0:\n                print(\"Must be positive!\")\n                continue\n            return num\n        except ValueError:\n            print(\"Invalid input! Enter a number.\")\n\n# Use it\nvalue = get_positive_number()\nprint(f\"You entered: {value}\")\n```\n\nThis loops until valid input!"
+            ],
+
+            "loops": [
+                "**Loops** repeat code multiple times!\n\n**For Loop** (when you know iterations):\n```python\n# Loop through a range\nfor i in range(5):\n    print(i)  # 0, 1, 2, 3, 4\n\n# Loop through a list\ncolors = [\"red\", \"blue\", \"green\"]\nfor color in colors:\n    print(color)\n\n# Loop with index\nfor i, color in enumerate(colors):\n    print(f\"{i}: {color}\")\n```\n\n**While Loop** (when condition-based):\n```python\ncount = 0\nwhile count < 5:\n    print(count)\n    count += 1\n\n# Menu loop\nrunning = True\nwhile running:\n    choice = input(\"Continue? (y/n): \")\n    if choice == 'n':\n        running = False\n```",
+
+                "Advanced loop techniques:\n\n```python\n# Loop with break\nfor num in range(10):\n    if num == 5:\n        break  # Exit loop\n    print(num)\n\n# Loop with continue\nfor num in range(10):\n    if num % 2 == 0:\n        continue  # Skip even\n    print(num)  # Only odd\n\n# Nested loops\nfor i in range(3):\n    for j in range(3):\n        print(f\"({i}, {j})\")\n```"
+            ],
+
+            "conditionals": [
+                "**If/Elif/Else** statements control program flow!\n\n```python\nscore = int(input(\"Enter score: \"))\n\nif score >= 90:\n    grade = \"A\"\n    print(\"Excellent!\")\nelif score >= 80:\n    grade = \"B\"\n    print(\"Good job!\")\nelif score >= 70:\n    grade = \"C\"\n    print(\"Satisfactory\")\nelif score >= 60:\n    grade = \"D\"\n    print(\"Needs improvement\")\nelse:\n    grade = \"F\"\n    print(\"Please see teacher\")\n\nprint(f\"Your grade: {grade}\")\n```\n\n✅ `if` checks first condition\n✅ `elif` checks other conditions\n✅ `else` is the default",
+
+                "Comparison operators for conditions:\n\n```python\n# Comparison operators\n== # Equal to\n!= # Not equal\n>  # Greater than\n<  # Less than\n>= # Greater or equal\n<= # Less or equal\n\n# Logical operators\nand # Both conditions true\nor  # At least one true\nnot # Reverse condition\n\n# Example\nage = 16\nhas_license = True\n\nif age >= 16 and has_license:\n    print(\"Can drive!\")\nelif age >= 16 and not has_license:\n    print(\"Need to get license\")\nelse:\n    print(\"Too young to drive\")\n```"
+            ],
+
+            "input output": [
+                "**Input/Output** lets users interact with your program!\n\n```python\n# Getting input\nname = input(\"What's your name? \")\nage = int(input(\"How old are you? \"))\nheight = float(input(\"Height in meters? \"))\n\n# String formatting (f-strings)\nprint(f\"Hi {name}!\")\nprint(f\"You are {age} years old\")\nprint(f\"Height: {height:.2f}m\")  # 2 decimals\n\n# Multiple inputs\nprint(\"Enter 3 numbers:\")\nnums = []\nfor i in range(3):\n    num = float(input(f\"Number {i+1}: \"))\n    nums.append(num)\n\nprint(f\"Average: {sum(nums)/len(nums):.2f}\")\n```\n\n✅ `input()` returns a string\n✅ Convert with `int()` or `float()`\n✅ Use f-strings for output",
+
+                "Advanced I/O formatting:\n\n```python\n# Multiple variables in one line\nprint(f\"Name: {name}, Age: {age}, City: {city}\")\n\n# Number formatting\nprice = 19.99\nprint(f\"Price: ${price:.2f}\")  # $19.99\n\nlarge_num = 1000000\nprint(f\"Population: {large_num:,}\")  # 1,000,000\n\npercent = 0.856\nprint(f\"Score: {percent:.1%}\")  # 85.6%\n\n# Alignment\nprint(f\"{'Item':<10} {'Price':>8}\")\nprint(f\"{'Apple':<10} ${5.99:>7.2f}\")\nprint(f\"{'Banana':<10} ${2.50:>7.2f}\")\n```"
+            ],
+
+            "data types": [
+                "**Python Data Types** you need to know:\n\n```python\n# String (text)\nname = \"Alice\"\nmessage = 'Hello World'\n\n# Integer (whole numbers)\nage = 16\nscore = 100\n\n# Float (decimals)\nprice = 19.99\ntemperature = 72.5\n\n# Boolean (True/False)\nis_student = True\nhas_license = False\n\n# List (ordered collection)\nfruits = [\"apple\", \"banana\", \"cherry\"]\nnumbers = [1, 2, 3, 4, 5]\n\n# Type checking\nprint(type(name))  # <class 'str'>\nprint(type(age))   # <class 'int'>\n\n# Type conversion\nnum_str = \"42\"\nnum_int = int(num_str)  # Convert to int\nnum_float = float(num_str)  # Convert to float\nnum_back = str(num_int)  # Convert to string\n```",
+
+                "Working with different types:\n\n```python\n# String operations\ntext = \"Python Programming\"\nprint(text.lower())  # python programming\nprint(text.upper())  # PYTHON PROGRAMMING\nprint(text.split())  # ['Python', 'Programming']\nprint(len(text))     # 18\n\n# Math with numbers\na = 10\nb = 3\nprint(a + b)   # 13 (addition)\nprint(a - b)   # 7  (subtraction)\nprint(a * b)   # 30 (multiplication)\nprint(a / b)   # 3.333... (division)\nprint(a // b)  # 3  (integer division)\nprint(a % b)   # 1  (remainder)\nprint(a ** b)  # 1000 (exponent)\n```"
+            ],
+
+            "rubric": [
+                "Let me break down the grading rubric:\n\n**I. Core Functionality (16 pts):**\n• Your program must run without crashes\n• Implement ALL required concepts (functions, lists, loops, conditionals, I/O, error handling)\n• Logic should be efficient and correct\n\n**II. Code Quality (12 pts):**\n• Use meaningful variable names (not x, y, z)\n• Add comments explaining complex logic\n• Format code properly (indentation, spacing)\n• Include docstrings for functions\n\n**III. Creativity (12 pts):**\n• Go beyond a basic calculator\n• Make it unique and interesting\n• Show original thinking\n\n**IV. User Experience (12 pts):**\n• Clear prompts and instructions\n• Handle errors gracefully\n• Format output nicely with f-strings\n• Make it easy to use\n\n**Total: 52 points**",
+
+                "Tips for a high-scoring project:\n\n✅ **Test thoroughly** - Run your program multiple times with different inputs\n✅ **Add error handling** - Use try/except for user input\n✅ **Comment well** - Explain WHY, not just WHAT\n✅ **Format output** - Use f-strings to make it look professional\n✅ **Plan first** - Write pseudocode before coding\n✅ **Use functions** - Break code into reusable pieces\n✅ **Validate input** - Check if user input makes sense\n✅ **Create a README** - Document where each concept is used\n\nRemember: Quality > Quantity!"
+            ],
+
+            "getting started": [
+                "Here's how to get started:\n\n**Step 1: Choose Your Idea**\n• Pick something that interests you\n• Make sure it's not too simple or too complex\n• Think about what features it needs\n\n**Step 2: Plan It Out**\n• Write pseudocode (plan in plain English)\n• List the required concepts you'll use\n• Sketch the user flow\n\n**Step 3: Start Simple**\n• Build a basic version first\n• Test each feature as you add it\n• Don't try to do everything at once\n\n**Step 4: Add Required Features**\n• Make sure you include all mandatory concepts\n• Add error handling\n• Add comments\n\n**Step 5: Polish & Test**\n• Make output look nice\n• Test with different inputs\n• Write your README\n\nWant help with any step?",
+
+                "Project development checklist:\n\n□ Choose project idea\n□ Write pseudocode outline\n□ Create main function structure\n□ Implement user input (with try/except)\n□ Create and use a list\n□ Write at least one custom function\n□ Add a for loop\n□ Add a while loop\n□ Add if/elif/else logic\n□ Test with different inputs\n□ Add comments to all major sections\n□ Format output with f-strings\n□ Verify 30+ lines of code\n□ Create README.md with concept map\n□ Add example run to README\n□ Test one final time\n□ Create ZIP file for submission\n\nCheck off each item as you go!"
+            ]
+        };
+
+        // Simple keyword matching
+        function getBotResponse(userMessage) {
+            const msg = userMessage.toLowerCase();
+            
+            // Check for keywords and return appropriate response
+            if (msg.includes('project') && (msg.includes('idea') || msg.includes('build') || msg.includes('create') || msg.includes('should'))) {
+                return knowledgeBase["project ideas"][Math.floor(Math.random() * knowledgeBase["project ideas"].length)];
+            }
+            
+            if (msg.includes('function') || msg.includes('def') || msg.includes('parameter') || msg.includes('return')) {
+                return knowledgeBase["functions"][Math.floor(Math.random() * knowledgeBase["functions"].length)];
+            }
+            
+            if (msg.includes('list') || msg.includes('append') || msg.includes('array')) {
+                return knowledgeBase["lists"][Math.floor(Math.random() * knowledgeBase["lists"].length)];
+            }
+            
+            if (msg.includes('error') || msg.includes('try') || msg.includes('except') || msg.includes('validation')) {
+                return knowledgeBase["error handling"][Math.floor(Math.random() * knowledgeBase["error handling"].length)];
+            }
+            
+            if (msg.includes('loop') || msg.includes('for') || msg.includes('while') || msg.includes('repeat')) {
+                return knowledgeBase["loops"][Math.floor(Math.random() * knowledgeBase["loops"].length)];
+            }
+            
+            if (msg.includes('if') || msg.includes('elif') || msg.includes('else') || msg.includes('condition')) {
+                return knowledgeBase["conditionals"][Math.floor(Math.random() * knowledgeBase["conditionals"].length)];
+            }
+            
+            if (msg.includes('input') || msg.includes('output') || msg.includes('print') || msg.includes('f-string')) {
+                return knowledgeBase["input output"][Math.floor(Math.random() * knowledgeBase["input output"].length)];
+            }
+            
+            if (msg.includes('type') || msg.includes('string') || msg.includes('int') || msg.includes('float') || msg.includes('boolean')) {
+                return knowledgeBase["data types"][Math.floor(Math.random() * knowledgeBase["data types"].length)];
+            }
+            
+            if (msg.includes('grade') || msg.includes('rubric') || msg.includes('score') || msg.includes('point')) {
+                return knowledgeBase["rubric"][Math.floor(Math.random() * knowledgeBase["rubric"].length)];
+            }
+            
+            if (msg.includes('start') || msg.includes('begin') || msg.includes('how do i')) {
+                return knowledgeBase["getting started"][Math.floor(Math.random() * knowledgeBase["getting started"].length)];
+            }
+
+            // Study Tracker specific
+            if (msg.includes('study tracker') || msg.includes('track') && msg.includes('subject')) {
+                return "**Study Tracker Tips:**\n\n1. Use a list to store subject names\n2. Use another list for scores (floats)\n3. Calculate weighted average\n4. Use if/elif/else to suggest focus area\n5. Loop through subjects to display\n\n```python\nsubjects = []\nscores = []\n\nwhile True:\n    subject = input(\"Subject (or 'done'): \")\n    if subject == 'done':\n        break\n    subjects.append(subject)\n    score = float(input(\"Score: \"))\n    scores.append(score)\n\navg = sum(scores) / len(scores)\nprint(f\"Average: {avg:.2f}\")\n```\n\nNeed more help?";
+            }
+
+            // Password Validator specific
+            if (msg.includes('password') && (msg.includes('valid') || msg.includes('check'))) {
+                return "**Password Validator Guide:**\n\n```python\ndef validate_password(password):\n    score = 0\n    \n    # Check length\n    if len(password) >= 8:\n        score += 1\n    \n    # Check for number\n    has_number = False\n    for char in password:\n        if char.isdigit():\n            has_number = True\n            break\n    if has_number:\n        score += 1\n    \n    # Check for symbol\n    symbols = \"!@#$%^&*\"\n    for char in password:\n        if char in symbols:\n            score += 1\n            break\n    \n    return score\n\npassword = input(\"Enter password: \")\nstrength = validate_password(password)\nprint(f\"Strength: {strength}/3\")\n```";
+            }
+
+            // Number Guessing Game specific
+            if (msg.includes('guess') && msg.includes('number')) {
+                return "**Number Guessing Game Blueprint:**\n\n```python\nimport random\n\ndef play_game():\n    number = random.randint(1, 100)\n    guesses = []  # Track all guesses\n    attempts = 0\n    \n    print(\"Guess a number (1-100)\")\n    \n    while True:\n        try:\n            guess = int(input(\"Your guess: \"))\n            attempts += 1\n            guesses.append(guess)\n            \n            if guess < number:\n                print(\"Too low!\")\n            elif guess > number:\n                print(\"Too high!\")\n            else:\n                print(f\"Correct! {attempts} tries\")\n                print(f\"Guesses: {guesses}\")\n                break\n        except ValueError:\n            print(\"Enter a valid number!\")\n\nplay_game()\n```\n\nThis covers all requirements!";
+            }
+
+            // Default responses
+            const defaults = [
+                "That's a great question! Can you be more specific? Try asking about:\n• Project ideas\n• Functions and parameters\n• Lists and list methods\n• Error handling (try/except)\n• Loops (for/while)\n• If/elif/else statements\n• Input/output\n• The grading rubric",
+                
+                "I can help with many topics! Try asking:\n• 'What project should I build?'\n• 'How do I use functions?'\n• 'Explain error handling'\n• 'How do lists work?'\n• 'Tell me about the rubric'",
+                
+                "I'm here to help! You can ask me about:\n✓ Choosing a project idea\n✓ Python concepts (functions, lists, loops)\n✓ Error handling with try/except\n✓ Grading criteria\n✓ How to get started\n\nWhat would you like to know?"
+            ];
+            
+            return defaults[Math.floor(Math.random() * defaults.length)];
+        }
+
+        // Chat functions
+        function addMessage(content, isUser = false) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            // Convert markdown-style code blocks to HTML
+            let formattedContent = content.replace(/```python\n([\s\S]*?)\n```/g, '<pre><code>$1</code></pre>');
+            formattedContent = formattedContent.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            formattedContent = formattedContent.replace(/\n/g, '<br>');
+            
+            contentDiv.innerHTML = formattedContent;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').classList.add('active');
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').classList.remove('active');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
+            
+            // Show typing indicator
+            showTyping();
+            
+            // Simulate thinking time
+            setTimeout(() => {
+                hideTyping();
+                const response = getBotResponse(message);
+                addMessage(response, false);
+            }, 1000 + Math.random() * 1000);
+        }
+
+        function askQuickQuestion(question) {
+            document.getElementById('chatInput').value = question;
+            sendMessage();
+        }
+
+        function askChatbot(question) {
+            document.getElementById('chatInput').value = question;
+            sendMessage();
+            // Scroll to chatbot
+            document.querySelector('.chatbot').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Initialize
+        window.onload = function() {
+            document.getElementById('chatInput').focus();
+        };
+    </script>
+</body>
+</html>

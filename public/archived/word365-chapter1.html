@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1: Manage Documents - Word 365 Learning System</title>
+    <style>
+        :root {
+            --primary-blue: #0078d4;
+            --secondary-blue: #106ebe;
+            --accent-orange: #ff8c00;
+            --success-green: #107c10;
+            --warning-yellow: #ffb900;
+            --error-red: #d13438;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e1e1e1;
+            --dark-gray: #323130;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            line-height: 1.6;
+        }
+
+        .chapter-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 120, 212, 0.3);
+        }
+
+        .chapter-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .breadcrumb {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .breadcrumb a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .objectives-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid var(--success-green);
+        }
+
+        .objectives-card h2 {
+            color: var(--success-green);
+            margin-top: 0;
+        }
+
+        .lab-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid var(--primary-blue);
+        }
+
+        .lab-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .lab-icon {
+            font-size: 2rem;
+            background: var(--primary-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lab-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin: 0;
+        }
+
+        .lab-difficulty {
+            background: var(--light-gray);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .scenario-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .scenario-box h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .steps-container {
+            background: var(--light-gray);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-blue);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            background: var(--primary-blue);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step-content {
+            display: inline-block;
+            vertical-align: top;
+            width: calc(100% - 50px);
+        }
+
+        .ribbon-path {
+            background: var(--primary-blue);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .tip-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .tip-box h5 {
+            color: #155724;
+            margin-top: 0;
+        }
+
+        .warning-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .warning-box h5 {
+            color: #721c24;
+            margin-top: 0;
+        }
+
+        .checkpoint {
+            background: linear-gradient(135deg, var(--success-green), #0d8d0d);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .checkpoint h4 {
+            margin: 0 0 10px 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .completion-tracker {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            background: var(--light-gray);
+            height: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--success-green), var(--primary-blue));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .lab-checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .lab-checklist li {
+            padding: 10px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--medium-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lab-checklist li.completed {
+            border-left-color: var(--success-green);
+            background: #d4edda;
+        }
+
+        .lab-checklist li:hover {
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .chapter-header h1 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .step-content {
+                width: 100%;
+                display: block;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chapter-header">
+        <h1>📄 Chapter 1: Manage Documents</h1>
+        <p>Master document navigation, setup, and professional formatting</p>
+    </div>
+
+    <div class="breadcrumb">
+        <a href="word365-learning-system.html">📚 Learning System</a> → 
+        <span style="color: var(--dark-gray);"><strong>Chapter 1: Manage Documents</strong></span>
+    </div>
+
+    <div class="objectives-card">
+        <h2>🎯 Learning Objectives</h2>
+        <p>By the end of this chapter, you will be able to:</p>
+        <ul>
+            <li>Navigate efficiently within documents using various methods</li>
+            <li>Add and use bookmarks for document organization</li>
+            <li>Set up professional document pages with proper layout</li>
+            <li>Apply consistent style sets across documents</li>
+            <li>Insert and modify headers and footers</li>
+            <li>Add page background elements including borders</li>
+            <li>Save documents with macro capabilities</li>
+            <li>Manage document properties effectively</li>
+            <li>Ensure accessibility and compatibility standards</li>
+        </ul>
+    </div>
+
+    <div class="completion-tracker">
+        <h3>📊 Chapter Progress</h3>
+        <div class="progress-bar">
+            <div class="progress-fill" id="chapterProgress"></div>
+        </div>
+        <p id="progressText">0 of 9 labs completed</p>
+        
+        <ul class="lab-checklist">
+            <li data-lab="1">📍 Lab 1: Navigate Within Documents</li>
+            <li data-lab="2">🔖 Lab 2: Adding Bookmarks</li>
+            <li data-lab="3">👁️ Lab 3: Show/Hide Features</li>
+            <li data-lab="4">📐 Lab 4: Setup Document Pages</li>
+            <li data-lab="5">🎨 Lab 5: Apply Style Sets</li>
+            <li data-lab="6">📄 Lab 6: Headers and Footers</li>
+            <li data-lab="7">🖼️ Lab 7: Page Background Elements</li>
+            <li data-lab="8">💾 Lab 8: Saving Documents (Macro-enabled)</li>
+            <li data-lab="9">📋 Lab 9: Document Properties & Accessibility</li>
+        </ul>
+    </div>
+
+    <!-- Lab 1: Navigate Within Documents -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📍</div>
+            <div>
+                <h3 class="lab-title">Lab 1: Navigate Within Documents</h3>
+                <span class="lab-difficulty">Beginner</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're working on a 50-page employee handbook and need to quickly navigate between sections, find specific content, and move efficiently through the document without scrolling endlessly.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Open Navigation Pane</strong>
+                    <div class="ribbon-path">View → Navigation Pane</div>
+                    <p>Click the Navigation Pane checkbox to display the document outline. This shows headings and allows quick jumping between sections.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Use Find & Replace</strong>
+                    <div class="ribbon-path">Home → Find (Ctrl+F)</div>
+                    <p>Use the Find function to locate specific text. Try advanced options like "Find All" to see every instance highlighted.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Go To Specific Pages</strong>
+                    <div class="ribbon-path">Home → Go To (Ctrl+G)</div>
+                    <p>Use Go To dialog to jump to specific pages, sections, lines, or bookmarks instantly.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Navigation Shortcuts</strong>
+                    <div class="ribbon-path">Keyboard Shortcuts</div>
+                    <p>Practice: Ctrl+Home (document start), Ctrl+End (document end), Ctrl+Page Up/Down (page navigation).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Pro Tips</h5>
+            <p>Use Ctrl+F to search, then use F3 to find the next instance and Shift+F3 to find the previous instance. The Navigation Pane also shows search results with context.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Practice navigating through a sample document using all methods. Can you find specific text and jump to different sections quickly?</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="markLabComplete(1)">
+                <span>✅</span> Mark Complete
+            </button>
+        </div>
+    </div>
+
+    <!-- Lab 2: Adding Bookmarks -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">🔖</div>
+            <div>
+                <h3 class="lab-title">Lab 2: Adding Bookmarks</h3>
+                <span class="lab-difficulty">Beginner</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're creating a training manual with multiple sections that readers will reference frequently. Bookmarks will allow quick access to important sections like "Safety Procedures," "Emergency Contacts," and "Training Schedules."</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Insert Bookmarks</strong>
+                    <div class="ribbon-path">Insert → Bookmark</div>
+                    <p>Position cursor at the location you want to bookmark, click Insert → Bookmark, give it a descriptive name (no spaces), and click Add.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Navigate Using Bookmarks</strong>
+                    <div class="ribbon-path">Insert → Bookmark → Go To</div>
+                    <p>Use the Bookmark dialog to select and go to any bookmark instantly. Alternatively, use Ctrl+G and select Bookmark from the list.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Create Bookmark Links</strong>
+                    <div class="ribbon-path">Insert → Link → Place in This Document</div>
+                    <p>Create hyperlinks that jump to bookmarks. Select text, insert link, choose "Place in This Document," and select your bookmark.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Manage Bookmarks</strong>
+                    <div class="ribbon-path">Insert → Bookmark</div>
+                    <p>View all bookmarks, sort them, delete unnecessary ones, and ensure proper naming conventions for easy identification.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Pro Tips</h5>
+            <p>Use descriptive bookmark names like "Chapter_3_Safety" instead of "Bookmark1". Bookmarks are invisible unless you show them via File → Options → Advanced → Show bookmarks.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create at least 3 bookmarks in your practice document and create a table of contents with hyperlinks to each bookmark.</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="markLabComplete(2)">
+                <span>✅</span> Mark Complete
+            </button>
+        </div>
+    </div>
+
+    <!-- Lab 3: Show/Hide Features -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">👁️</div>
+            <div>
+                <h3 class="lab-title">Lab 3: Show/Hide Document Features</h3>
+                <span class="lab-difficulty">Beginner</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>As a document editor, you need to see formatting marks, rulers, and gridlines to ensure proper formatting, but hide them when presenting the final document to clients.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Show/Hide Formatting Marks</strong>
+                    <div class="ribbon-path">Home → Show/Hide ¶ (Ctrl+Shift+8)</div>
+                    <p>Toggle paragraph marks, spaces, tabs, and other formatting characters. Essential for precise formatting control.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Display Ruler</strong>
+                    <div class="ribbon-path">View → Ruler</div>
+                    <p>Show/hide horizontal and vertical rulers for precise positioning of text, tabs, indents, and margins.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Gridlines and Navigation Pane</strong>
+                    <div class="ribbon-path">View → Gridlines / Navigation Pane</div>
+                    <p>Toggle gridlines for alignment help and navigation pane for document structure overview.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Zoom and View Options</strong>
+                    <div class="ribbon-path">View → Zoom / View buttons</div>
+                    <p>Adjust zoom levels, use multiple page views, and switch between Print Layout, Web Layout, and Draft views.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Pro Tips</h5>
+            <p>Use Draft view for fast typing and editing, Print Layout for final formatting, and Web Layout when creating documents for online viewing.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Practice switching between different view modes and show/hide various elements. Can you efficiently toggle these features as needed?</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="markLabComplete(3)">
+                <span>✅</span> Mark Complete
+            </button>
+        </div>
+    </div>
+
+    <!-- Lab 4: Setup Document Pages -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📐</div>
+            <div>
+                <h3 class="lab-title">Lab 4: Setup Document Pages (Paper Size & Layout)</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're preparing documents for international clients requiring A4 paper, a brochure needing landscape orientation, and a report with specific margin requirements for binding.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Set Paper Size</strong>
+                    <div class="ribbon-path">Layout → Size</div>
+                    <p>Choose from standard sizes (Letter, A4, Legal) or create custom sizes. Consider your audience's regional standards.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Page Orientation</strong>
+                    <div class="ribbon-path">Layout → Orientation</div>
+                    <p>Switch between Portrait (tall) and Landscape (wide) orientations. Different sections can have different orientations.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Set Margins</strong>
+                    <div class="ribbon-path">Layout → Margins</div>
+                    <p>Choose preset margins or create custom margins. Consider binding requirements, printing constraints, and readability.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Columns and Page Setup</strong>
+                    <div class="ribbon-path">Layout → Columns / Page Setup Dialog</div>
+                    <p>Create multi-column layouts for newsletters or newspapers. Use Page Setup dialog for advanced options.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h5>⚠️ Important Note</h5>
+            <p>Always set page layout BEFORE adding content. Changing layout after content creation may disrupt formatting and require adjustments.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create three different document layouts: A4 portrait with narrow margins, Letter landscape with wide margins, and a two-column newsletter format.</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="markLabComplete(4)">
+                <span>✅</span> Mark Complete
+            </button>
+        </div>
+    </div>
+
+    <!-- Lab 5: Apply Style Sets -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">🎨</div>
+            <div>
+                <h3 class="lab-title">Lab 5: Apply Style Sets</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>Your company has specific branding requirements for documents. You need to apply consistent style sets to maintain brand identity across all business documents, reports, and proposals.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Browse Style Sets</strong>
+                    <div class="ribbon-path">Design → Document Formatting</div>
+                    <p>Explore built-in style sets like Basic (Simple), Casual, Distinctive, Elegant, Fancy, Modern, and Professional.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Apply Style Sets</strong>
+                    <div class="ribbon-path">Design → Style Set Gallery</div>
+                    <p>Click on different style sets to see live preview. Select one that matches your document's purpose and audience.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Customize Colors and Fonts</strong>
+                    <div class="ribbon-path">Design → Colors / Fonts</div>
+                    <p>After applying a style set, customize the color scheme and font combinations to match brand requirements.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Save Custom Style Set</strong>
+                    <div class="ribbon-path">Design → More → Save as New Style Set</div>
+                    <p>After customizing, save your style set for future use across other documents to maintain consistency.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Pro Tips</h5>
+            <p>Style sets change the appearance of built-in styles (Heading 1, Normal, etc.). Apply styles to your text first, then change the style set to see dramatic transformations.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create a document with headings and body text, apply different style sets, and save one custom style set for your organization.</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="markLabComplete(5)">
+                <span>✅</span> Mark Complete
+            </button>
+        </div>
+    </div>
+
+    <!-- Lab 6: Headers and Footers -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📄</div>
+            <div>
+                <h3 class="lab-title">Lab 6: Insert and Modify Headers and Footers</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're creating a business report that needs company logo in the header, page numbers in the footer, different first page header, and confidentiality notice on every page except the first.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Insert Basic Header</strong>
+                    <div class="ribbon-path">Insert → Header → Choose Style</div>
+                    <p>Select from built-in header styles or create blank header. Add company name, document title, or logo.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Add Footer Elements</strong>
+                    <div class="ribbon-path">Insert → Footer → Choose Style</div>
+                    <p>Insert page numbers, date/time, author name, or file path. Use Insert tab while in footer area for additional elements.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Different First Page</strong>
+                    <div class="ribbon-path">Header & Footer Tools → Different First Page</div>
+                    <p>Enable "Different First Page" to have unique header/footer on page 1 (often no header, just footer with page number).</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Odd & Even Pages</strong>
+                    <div class="ribbon-path">Header & Footer Tools → Different Odd & Even Pages</div>
+                    <p>Create different headers for odd/even pages (useful for bound documents where odd pages are on the right).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Pro Tips</h5>
+            <p>Double-click in the header/footer area to edit. Use Tab stops to align elements (left, center, right). Insert → Quick Parts → Field for dynamic content like filename or word count.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create a multi-page document with different first page header/footer, company logo in header, and page numbers with "Page X of Y" format in footer.</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="markLabComplete(6)">
+                <span>✅</span> Mark Complete
+            </button>
+        </div>
+    </div>
+
+    <!-- Lab 7: Page Background Elements -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">🖼️</div>
+            <div>
+                <h3 class="lab-title">Lab 7: Page Background Elements (Page Border)</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>You're creating a certificate, invitation, or special announcement that needs decorative borders, watermarks, and background colors to make it stand out and look professional.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Add Page Borders</strong>
+                    <div class="ribbon-path">Design → Page Borders</div>
+                    <p>Choose from line borders, art borders (decorative images), or create custom borders with specific colors, widths, and styles.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Insert Watermarks</strong>
+                    <div class="ribbon-path">Design → Watermark</div>
+                    <p>Add text watermarks (DRAFT, CONFIDENTIAL) or image watermarks (company logos). Adjust transparency and positioning.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Page Background Color</strong>
+                    <div class="ribbon-path">Design → Page Color</div>
+                    <p>Apply solid colors, gradients, textures, or patterns as page background. Consider readability and printing costs.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Advanced Border Options</strong>
+                    <div class="ribbon-path">Design → Page Borders → Options</div>
+                    <p>Fine-tune border positioning, margins from edge, and whether borders appear on all pages or specific sections.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h5>⚠️ Printing Considerations</h5>
+            <p>Background colors and borders may not print well on all printers. Test print a sample page and consider providing both color and black-and-white versions.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Create a certificate template with decorative border, company watermark, and subtle background color. Ensure it looks professional when printed.</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="markLabComplete(7)">
+                <span>✅</span> Mark Complete
+            </button>
+        </div>
+    </div>
+
+    <!-- Lab 8: Saving Documents (Macro-enabled) -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">💾</div>
+            <div>
+                <h3 class="lab-title">Lab 8: Saving Documents (Macro-enabled)</h3>
+                <span class="lab-difficulty">Advanced</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>Your department uses automated templates with macros for generating reports. You need to understand different save formats, macro security, and when to use macro-enabled documents.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Understanding File Formats</strong>
+                    <div class="ribbon-path">File → Save As → Browse</div>
+                    <p>Learn differences: .docx (standard), .docm (macro-enabled), .dotx (template), .dotm (macro template), .pdf, .rtf</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Save as Macro-Enabled</strong>
+                    <div class="ribbon-path">File → Save As → Word Macro-Enabled Document (.docm)</div>
+                    <p>When your document contains macros or VBA code, save in .docm format to preserve functionality.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Macro Security Settings</strong>
+                    <div class="ribbon-path">File → Options → Trust Center → Macro Settings</div>
+                    <p>Understand macro security levels: Disable all, Disable with notification, Enable all (not recommended).</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Save Options & AutoRecover</strong>
+                    <div class="ribbon-path">File → Options → Save</div>
+                    <p>Configure AutoRecover frequency, default save location, and file format preferences for efficiency.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h5>⚠️ Security Warning</h5>
+            <p>Only enable macros from trusted sources. Malicious macros can harm your computer. Always scan macro-enabled files with antivirus software.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Practice saving documents in different formats. Understand when to use each format and configure appropriate macro security settings.</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="markLabComplete(8)">
+                <span>✅</span> Mark Complete
+            </button>
+        </div>
+    </div>
+
+    <!-- Lab 9: Document Properties & Accessibility -->
+    <div class="lab-section">
+        <div class="lab-header">
+            <div class="lab-icon">📋</div>
+            <div>
+                <h3 class="lab-title">Lab 9: Document Properties & Accessibility</h3>
+                <span class="lab-difficulty">Intermediate</span>
+            </div>
+        </div>
+
+        <div class="scenario-box">
+            <h4>🎬 Real-World Scenario</h4>
+            <p>Your organization requires all documents to meet accessibility standards for users with disabilities and have proper metadata for document management systems.</p>
+        </div>
+
+        <div class="steps-container">
+            <h4>📚 Step-by-Step Instructions</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <strong>Document Properties</strong>
+                    <div class="ribbon-path">File → Info → Properties</div>
+                    <p>Add title, author, subject, keywords, and comments. This metadata helps with document organization and searching.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <strong>Accessibility Checker</strong>
+                    <div class="ribbon-path">Review → Check Accessibility</div>
+                    <p>Run accessibility checker to identify issues like missing alt text, poor color contrast, or improper heading structure.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                    <strong>Add Alt Text to Images</strong>
+                    <div class="ribbon-path">Right-click image → Alt Text</div>
+                    <p>Provide meaningful descriptions for images, charts, and graphics so screen readers can describe them to visually impaired users.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-content">
+                    <strong>Compatibility Check</strong>
+                    <div class="ribbon-path">File → Info → Check for Issues → Check Compatibility</div>
+                    <p>Ensure document works with older Word versions. Identify features that may not be supported in earlier versions.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h5>💡 Accessibility Best Practices</h5>
+            <p>Use heading styles for structure, sufficient color contrast (4.5:1 ratio), descriptive link text, and logical reading order. This helps all users, not just those with disabilities.</p>
+        </div>
+
+        <div class="checkpoint">
+            <h4>✅ Checkpoint</h4>
+            <p>Complete document properties, run accessibility checker, fix all identified issues, and verify compatibility with Word 2016 or later.</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="markLabComplete(9)">
+                <span>✅</span> Mark Complete
+            </button>
+        </div>
+    </div>
+
+    <div class="checkpoint" style="background: linear-gradient(135deg, var(--success-green), #0d8d0d); margin-top: 40px;">
+        <h3>🎉 Chapter 1 Complete!</h3>
+        <p>Congratulations! You've mastered document management fundamentals. Ready for Chapter 2?</p>
+        <div class="action-buttons" style="justify-content: center; margin-top: 20px;">
+            <a href="word365-chapter1-project.html" class="btn btn-primary">
+                <span>📋</span> Chapter Project
+            </a>
+            <a href="word365-chapter1-assessment.html" class="btn btn-secondary">
+                <span>📝</span> Post-Assessment
+            </a>
+            <a href="word365-chapter2.html" class="btn btn-success">
+                <span>➡️</span> Next: Chapter 2
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let completedLabs = JSON.parse(localStorage.getItem('word365_chapter1_labs') || '[]');
+
+        function markLabComplete(labNumber) {
+            if (!completedLabs.includes(labNumber)) {
+                completedLabs.push(labNumber);
+                localStorage.setItem('word365_chapter1_labs', JSON.stringify(completedLabs));
+                updateProgress();
+                
+                // Visual feedback
+                const labItem = document.querySelector(`[data-lab="${labNumber}"]`);
+                labItem.classList.add('completed');
+                
+                // Show success message
+                alert(`✅ Lab ${labNumber} completed! Great job!`);
+                
+                // Check if all labs completed
+                if (completedLabs.length === 9) {
+                    localStorage.setItem('word365_chapter1_completed', 'true');
+                    setTimeout(() => {
+                        alert('🎉 All Chapter 1 labs completed! You can now proceed to the chapter project and assessment.');
+                    }, 500);
+                }
+            }
+        }
+
+        function updateProgress() {
+            const progress = (completedLabs.length / 9) * 100;
+            document.getElementById('chapterProgress').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${completedLabs.length} of 9 labs completed`;
+            
+            // Mark completed labs in checklist
+            completedLabs.forEach(labNumber => {
+                const labItem = document.querySelector(`[data-lab="${labNumber}"]`);
+                if (labItem) labItem.classList.add('completed');
+            });
+        }
+
+        // Initialize progress on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            
+            // Add click handlers to checklist items
+            document.querySelectorAll('.lab-checklist li').forEach(item => {
+                item.addEventListener('click', function() {
+                    const labNumber = parseInt(this.dataset.lab);
+                    if (!this.classList.contains('completed')) {
+                        this.classList.add('completed');
+                        markLabComplete(labNumber);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

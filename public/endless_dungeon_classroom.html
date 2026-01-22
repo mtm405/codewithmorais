@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ The Endless Dungeon - Classroom Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 40px 30px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: white;
+            text-shadow: none;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        .final-product-page {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            border: 2px solid #10b981;
+        }
+        
+        .terminal-output {
+            background: #f8f8f8;
+            border: 2px solid #10b981;
+            border-radius: 5px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            line-height: 2;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .terminal-line {
+            margin: 8px 0;
+        }
+        
+        .terminal-input {
+            color: #f59e0b;
+        }
+        
+        .terminal-success {
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .terminal-damage {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        .terminal-error {
+            color: #ea580c;
+        }
+        
+        .code-files {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 1024px) {
+            .code-files {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .code-file {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #6366f1;
+        }
+        
+        .code-file h3 {
+            color: #6366f1;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .page-toggle {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px6366f1;
+            background: transparent;
+            color: #6366f1;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .page-btn.active {
+            background: #6366f1;
+            color: white;
+        }
+
+        .page-btn:hover {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5)
+        .page-btn.active {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+
+        .page-btn:hover {
+            box-shadow: 0 0 15px #00d4ff;
+        }
+        
+        /* Syntax highlighting overrides */
+        pre {
+            background: #f8f8f8 !important;
+            padding: 20px !important;
+            border-radius: 5px !important;
+            border-left: 4px solid #6366f1 !important;
+            color: #333 !important;
+            overflow-x: auto !important;
+        }
+        
+        code {
+            color: #333 !important;
+            font-family: 'Courier New', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.6 !important;
+        }
+        
+        .hljs {
+            background: transparent !important;
+            color: #333 !important;
+        }
+        
+        .hljs-string {
+            color: #059669 !important;
+        }
+        
+        .hljs-number {
+            color: #d97706 !important;
+        }
+        
+        .hljs-literal {
+            color: #d97706 !important;
+        }
+        
+        .hljs-attr {
+            color: #6366f1 !important;
+        }
+        
+        .hljs-title {
+            color: #6366f1 !important;
+        }
+        
+        .hljs-keyword {
+            color: #dc2626 !important;
+        }
+        
+        .hljs-built_in {
+            color: #6366f1 !important;
+        }
+        
+        .hljs-comment {
+            color: #999 !important;
+        }
+
+        .content-page {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .content-page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* PAGE 1: INSTRUCTIONS */
+        .instructions-page {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 0;
+            border-left: none;
+            box-shadow: none;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .section p {
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .section ul, .section ol {
+            color: #333;
+        }
+
+        .section h2 6366f1;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .section h3 {
+            color: #dc2626
+            color: #ff006e;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+7);
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #ffd60a;
+            border-radius: 5px;
+        }
+
+        .role-card strong {
+            color: #ffd60a;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .role-card p {
+            color: #e8e8e8
+            margin-bottom: 10px;6);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 3px solid #ff006e;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            color: #00d4ff;
+            font-size: 0.9em;
+            line-height: 1.6
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 3px solid #ff006e;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }2);
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ffd60a;
+            border-radius: 5px;
+            color: #ffd60a;
+            line-height: 1.8;
+        }
+
+        .tip strong {
+            color: #ffd60a;
+            font-weight: 700
+            margin: 15px 0;
+            border-left: 4px solid #ffd60a;2);
+            padding: 20px;
+            border-left: 4px solid #ff006e;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .rules h3 {
+            color: #ff006e;
+            font-weight: 700;
+        }
+
+        .rules ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .rules li {
+            margin: 12px 0;
+            color: #e8e8e8;
+            line-height: 1.8
+            color: #ff006e;
+        }
+
+        .rules ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .rules li {
+            margin: 8px 0;
+        }
+
+        /* PAGE 2: GAME */
+        .game-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            border-radius: 10px;
+            border: 2px solid #00d4ff;
+        }
+
+        .game-display {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            min-height: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #00d4ff;
+        }
+
+        .game-log {
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            margin: 8px 0;
+            padding: 5px;
+            color: #333;
+        }
+
+        .player-log {
+            color: #6366f1;
+        }
+
+        .enemy-log {
+            color: #dc2626;
+        }
+
+        .success-log {
+            color: #10b981;
+        }
+
+        .damage-log {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        .game-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #6366f1;
+        }
+
+        .stat-label {
+            color: #f59e0b;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            color: #6366f1;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        button:hover:not(:disabled) {
+            background: #4f46e5;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .code-section {
+            margin-top: 30px;
+        }
+
+        .toggle-code-btn {
+            width: 100%;
+            padding: 15px;
+            background: #ffd60a;
+            color: #1a1a2e;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .toggle-code-btn:hover {
+            background: #ff006e;
+            color: #fff;
+        }
+
+        .code-display {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 25px;
+            border-radius: 5px;
+            border: 2px solid #ffd60a;
+            overflow-x: auto;
+        }
+
+        .code-display.visible {
+            display: block;
+        }
+2);
+            color: #ff6a00;
+            padding: 15px;
+            border-left: 4px solid #ff6a00;
+            border-radius: 5px;
+            margin-top: 20px;
+            line-height: 1.8
+
+        .time-warning {
+            background: rgba(255, 106, 0, 0.1);
+            color: #ff6a00;
+            padding: 15px;
+            border-left: 4px solid #ff6a00;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .phase-timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .phase {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: none;
+            border-left: 4px solid #667eea;
+            border-top: 3px solid #667eea;
+        }
+
+        .phase-time {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .phase-name {
+            color: #667eea;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+2);
+            padding: 20px;
+            border-left: 4px solid #06d6a0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .learning-objectives h3 {
+            color: #06d6a0;
+            font-weight: 700;
+        }
+
+        .learning-objectives ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .learning-objectives li {
+            margin: 10px 0;
+            color: #e8e8e8;
+            line-height: 1.86);
+            padding: 12px;
+            border-radius: 3px;
+            margin: 10px 0;
+            border-left: 3px solid #00d4ff;
+            overflow-x: auto;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6
+            background: rgba(255, 214, 10, 0.2);
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #ffd60a;
+        }
+
+        .codeblock {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px;
+            border-radius: 3px;
+            margin: 10px 0;
+            border-left: 3px solid #00d4ff;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ THE ENDLESS DUNGEON ⚔️</h1>
+            <p style="font-size: 1.2em; margin-top: 10px;">🎯 Mission Status: ACTIVE | Time Limit: <span style="color: #ffd60a;">50 Minutes</span> | Team Size: <span style="color: #00d4ff;">4 Developers</span></p>
+        </div>
+
+        <div class="page-toggle">
+            <button class="page-btn active" onclick="switchPage('instructions')">📖 Instructions & Guidance</button>
+            <button class="page-btn" onclick="switchPage('game')">🎮 Play the Game</button>
+        </div>
+
+        <!-- PAGE 1: INSTRUCTIONS -->
+        <div id="instructions" class="content-page active">
+            <div class="instructions-page">
+                
+                <!-- OBJECTIVE -->
+                <div class="section">
+                    <h2>🎯 The Objective</h2>
+                    <p>You are a software development team. Your goal is to build a text-based RPG in under one hour. To do this, you must <span class="highlight">split the work</span>.</p>
+                    <p style="margin-top: 10px;">
+                        <strong>Three of you will build Modules (Tools)</strong><br>
+                        <strong>One of you will build the Main Program (The Game)</strong>
+                    </p>
+                </div>
+
+                <!-- LEARNING OBJECTIVES -->
+                <div class="learning-objectives">
+                    <h3>📚 Learning Objectives</h3>
+                    <ul>
+                        <li><strong>Modules:</strong> Learn how to organize code into separate files for different responsibilities</li>
+                        <li><strong>Functions:</strong> Understand that functions are tools that do one job and return results</li>
+                        <li><strong>Imports:</strong> Learn how to use other team members' code by importing their modules</li>
+                        <li><strong>Data Structures:</strong> Use dictionaries to organize monster data (name, hp, strength)</li>
+                        <li><strong>Collaboration:</strong> Practice teamwork by agreeing on variable names and file structure</li>
+                    </ul>
+                </div>
+
+                <!-- THE 3 GOLDEN RULES -->
+                <div class="rules">
+                    <h3>⚠️ The 3 Golden Rules</h3>
+                    <p><em>If you break these, your game will crash.</em></p>
+                    <ol>
+                        <li><strong>Modules are SILENT:</strong> If you are Role 1, 2, or 3, do NOT use <span class="highlight">input()</span> or <span class="highlight">print()</span> inside your functions. You only calculate math and return the answer.</li>
+                        <li><strong>Agree on "Keys":</strong> The Monster Keeper and the Game Master must agree right now: Are you using the word <span class="highlight">"hp"</span> or <span class="highlight">"health"</span> for the monster's life? <strong>Decide now!</strong></li>
+                        <li><strong>Exact Filenames:</strong> Save your files with the exact names listed below, or the imports will fail.</li>
+                    </ol>
+                </div>
+
+                <!-- TIMELINE -->
+                <div class="section">
+                    <h2>⏱️ Project Timeline</h2>
+                    <div class="phase-timeline">
+                        <div class="phase">
+                            <div class="phase-time">5 min</div>
+                            <div class="phase-name">Choose Roles</div>
+                        </div>
+                        <div class="phase">
+                            <div class="phase-time">20 min</div>
+                            <div class="phase-name">Write Code</div>
+                        </div>
+                        <div class="phase">
+                            <div class="phase-time">10 min</div>
+                            <div class="phase-name">Merge Files</div>
+                        </div>
+                        <div class="phase">
+                            <div class="phase-time">15 min</div>
+                            <div class="phase-name">Test & Debug</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROLE 1 -->
+                <div class="section">
+                    <h2>🎲 Role 1: The Mathematician</h2>
+                    <div class="role-card">
+                        <strong>File Name: dice_master.py</strong>
+                        <p>📋 Job: Handle the random number generation for attacks.</p>
+                    </div>
+
+                    <h3>What You Need to Know</h3>
+                    <p>The <span class="highlight">random</span> module is like a magic 8-ball. It can:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><span class="highlight">random.randint(1, 20)</span> - Pick a random whole number between 1 and 20</li>
+                        <li><span class="highlight">random.choice(list)</span> - Pick a random item from a list</li>
+                    </ul>
+
+                    <h3>Your Challenge</h3>
+                    <div class="code-placeholder">
+# You already have this function:
+def roll_d20():
+    """Returns a random integer between 1 and 20"""
+    return random.randint(1, 20)
+
+# QUESTION: How would you write a function that rolls damage?
+# Hint: It takes TWO numbers (min and max) and returns a random number between them
+# What function from the random module should you use?
+                    </div>
+
+                    <div class="tip">
+                        <strong>💡 Hint:</strong> Look at <span class="highlight">roll_d20()</span>. Notice it takes parameters? Your <span class="highlight">roll_damage()</span> function should also take parameters: <span class="highlight">min_dmg</span> and <span class="highlight">max_dmg</span>.
+                    </div>
+
+                    <h3>What Your Function Should Do</h3>
+                    <p>When called like: <span class="highlight">roll_damage(5, 10)</span></p>
+                    <p style="margin-top: 5px;">It should return a random number between 5 and 10 (like rolling dice damage!)</p>
+                </div>
+
+                <!-- ROLE 2 -->
+                <div class="section">
+                    <h2>🐉 Role 2: The Monster Keeper</h2>
+                    <div class="role-card">
+                        <strong>File Name: encounters.py</strong>
+                        <p>📋 Job: Create a dictionary that defines the enemy (Name, HP, Strength).</p>
+                    </div>
+
+                    <h3>What You Need to Know</h3>
+                    <p>A <span class="highlight">dictionary</span> is like a card about a monster. It has labels (keys) and values:</p>
+                    <div class="codeblock">
+monster = {
+    "name": "Goblin",
+    "hp": 15,
+    "strength": 3
+}
+                    </div>
+
+                    <h3>Your Challenge</h3>
+                    <p>You need to fill in the blanks to make monsters with:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>HP between 10 and 20 (use <span class="highlight">random.randint()</span>)</li>
+                        <li>Strength between 2 and 5 (use <span class="highlight">random.randint()</span>)</li>
+                        <li>A random name from a list: "Goblin", "Skeleton", "Slime", "Dragon"</li>
+                    </ul>
+
+                    <div class="tip">
+                        <strong>💡 Hint:</strong> This function should return a dictionary. Remember: <span class="highlight">return monster</span> at the end!
+                    </div>
+
+                    <h3>⚠️ Important Collaboration Note</h3>
+                    <p>Talk to the <strong>Game Master</strong> right now! They will use this dictionary like:</p>
+                    <div class="codeblock">
+enemy['hp']  # Will this work?
+                    </div>
+                    <p style="margin-top: 10px;"><strong>Make sure your key name matches what they expect!</strong></p>
+                </div>
+
+                <!-- ROLE 3 -->
+                <div class="section">
+                    <h2>💰 Role 3: The Loot Master</h2>
+                    <div class="role-card">
+                        <strong>File Name: treasure.py</strong>
+                        <p>📋 Job: Calculate probabilities to see if the player finds gold or potions.</p>
+                    </div>
+
+                    <h3>What You Need to Know</h3>
+                    <p><span class="highlight">random.random()</span> gives a decimal number between 0.0 and 1.0.</p>
+                    <p>You can use this for probability:</p>
+                    <div class="codeblock">
+chance = random.random()
+if chance < 0.20:      # 20% chance
+    return "Potion"
+elif chance < 0.50:    # 30% more chance
+    return "Gold"
+else:                  # 50% chance
+    return None        # Nothing!
+                    </div>
+
+                    <h3>Your Challenge</h3>
+                    <p>One of the lines is missing. Where it says <span class="todo">[TYPE STRING "Gold" HERE]</span>, you need to put the word "Gold".</p>
+
+                    <div class="tip">
+                        <strong>💡 Tip:</strong> Strings in Python use quotes: <span class="highlight">"Gold"</span> or <span class="highlight">'Gold'</span>
+                    </div>
+                </div>
+
+                <!-- ROLE 4 -->
+                <div class="section">
+                    <h2>👑 Role 4: The Game Master</h2>
+                    <div class="role-card">
+                        <strong>File Name: main.py</strong>
+                        <p>📋 Job: Import the team's files and write the game loop. You cannot finish until your team sends you their files!</p>
+                    </div>
+
+                    <h3>What You Need to Know</h3>
+                    <p>You will <strong>import</strong> your team's modules at the top of your file:</p>
+                    <div class="codeblock">
+import dice_master
+import encounters
+import treasure
+                    </div>
+
+                    <p style="margin-top: 10px;">Then you can USE their functions like:</p>
+                    <div class="codeblock">
+enemy = encounters.get_random_monster()
+roll = dice_master.roll_d20()
+loot = treasure.search_chest()
+                    </div>
+
+                    <h3>Your Challenge</h3>
+                    <p>Two places need your code:</p>
+                    
+                    <h4>Location 1: Player Attacks</h4>
+                    <div class="code-placeholder">
+if roll >= 10:
+    # TODO: Call roll_damage(5, 10) from dice_master
+    dmg = [WRITE CODE HERE]
+    enemy['hp'] = enemy['hp'] - dmg
+                    </div>
+
+                    <p><strong>Question:</strong> How do you call <span class="highlight">roll_damage(5, 10)</span> from the dice_master module?</p>
+                    <div class="tip">
+                        <strong>💡 Hint:</strong> You imported it as <span class="highlight">dice_master</span>. Use: <span class="highlight">dice_master.function_name()</span>
+                    </div>
+
+                    <h4>Location 2: Search for Loot</h4>
+                    <div class="code-placeholder">
+# CHECK FOR LOOT
+loot = [WRITE CODE HERE]
+print(f"You found: {loot}")
+                    </div>
+
+                    <p><strong>Question:</strong> How do you call <span class="highlight">search_chest()</span> from the treasure module?</p>
+                </div>
+
+                <!-- TESTING -->
+                <div class="section">
+                    <h2>✅ Phase 3: The Merge (10 Minutes)</h2>
+                    
+                    <h3>Step 1: Test Solo (5 Minutes)</h3>
+                    <p>If you are <strong>Role 1, 2, or 3</strong>: Look at the bottom of your file. You should see:</p>
+                    <div class="codeblock">
+if __name__ == "__main__":
+    print("Testing...", your_function())
+                    </div>
+                    <p style="margin-top: 10px;"><strong>Press Run!</strong> Does it print something? If yes, you're ready. ✅</p>
+
+                    <h3>Step 2: Send the Files</h3>
+                    <p>Send your .py file to the Game Master. (Email, USB, shared folder)</p>
+
+                    <h3>Step 3: The Folder</h3>
+                    <p>The Game Master must save ALL 4 FILES in the same folder:</p>
+                    <div class="codeblock">
+dice_master.py
+encounters.py
+treasure.py
+main.py
+                    </div>
+
+                    <h3>Step 4: Run Main</h3>
+                    <p>The Game Master runs main.py. The game starts! 🎮</p>
+                </div>
+
+                <!-- DEBUGGING -->
+                <div class="section">
+                    <h2>🐛 Phase 4: Debugging (Final 15 Minutes)</h2>
+                    <p>The game will probably crash the first time. <strong>This is normal!</strong></p>
+
+                    <h3>When You See Red Text...</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>NameError?</strong> You might have misspelled a function name. Double-check spelling!</li>
+                        <li><strong>KeyError?</strong> The Monster Keeper used "health" but the Game Master used "hp". Fix it!</li>
+                        <li><strong>ModuleNotFoundError?</strong> Check that all files are in the same folder.</li>
+                        <li><strong>IndentationError?</strong> Make sure all lines inside a function are indented!</li>
+                    </ul>
+
+                    <div class="tip" style="margin-top: 20px;">
+                        <strong>💡 Pro Tip:</strong> When something breaks, read the red text carefully. It tells you exactly what's wrong and which line!
+                    </div>
+                </div>
+
+                <div class="time-warning">
+                    <strong>⏰ Time Management:</strong><br>
+                    • Roles 1-3: Spend 10 min writing, 5 min testing solo<br>
+                    • Role 4: Wait for files, then write main.py in 10-15 minutes<br>
+                    • Team: Reserve 15 minutes for debugging together
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: FINAL PRODUCT -->
+        <div id="final" class="content-page">
+            <div class="final-product-page">
+                <h2 style="text-align: center; color: #06d6a0; margin-bottom: 20px;">✨ Final Product: What Your Game Looks Like</h2>
+                
+                <p style="text-align: center; color: #e8e8e8; margin-bottom: 30px; font-size: 1.1em;">
+                    When you finish building your game and run <span class="highlight">main.py</span>, this is what students will see:
+                </p>
+
+                <div class="terminal-output">
+                    <div class="terminal-line">⚔️ WELCOME TO THE DUNGEON ⚔️</div>
+                    <div class="terminal-line">A wild Dragon appears with 18 HP!</div>
+                    <div class="terminal-line"></div>
+                    <div class="terminal-line terminal-input">Press Enter to attack...</div>
+                    <div class="terminal-line">🎲 You rolled: 14</div>
+                    <div class="terminal-line terminal-success">✅ HIT! You dealt 7 damage!</div>
+                    <div class="terminal-line terminal-damage">⚡ Dragon hits you for 4 damage!</div>
+                    <div class="terminal-line">You have 46 HP left.</div>
+                    <div class="terminal-line"></div>
+                    <div class="terminal-line terminal-input">Press Enter to attack...</div>
+                    <div class="terminal-line">🎲 You rolled: 19</div>
+                    <div class="terminal-line terminal-success">✅ HIT! You dealt 9 damage!</div>
+                    <div class="terminal-line terminal-damage">⚡ Dragon hits you for 4 damage!</div>
+                    <div class="terminal-line">You have 42 HP left.</div>
+                    <div class="terminal-line"></div>
+                    <div class="terminal-line terminal-input">Press Enter to attack...</div>
+                    <div class="terminal-line">🎲 You rolled: 17</div>
+                    <div class="terminal-line terminal-success">✅ HIT! You dealt 8 damage!</div>
+                    <div class="terminal-line" style="color: #06d6a0; font-weight: bold;">🎉 YOU WON! THE MONSTER IS DEFEATED!</div>
+                    <div class="terminal-line" style="color: #ffd60a; font-weight: bold;">💎 You found: Gold</div>
+                </div>
+
+                <h2 style="color: #00d4ff; margin-top: 40px; margin-bottom: 20px;">📝 The Complete Code Files</h2>
+                
+                <div class="code-files">
+                    <div class="code-file">
+                        <h3>🎲 dice_master.py</h3>
+                        <pre><code class="language-python">import random
+
+def roll_d20():
+    """Returns a random integer between 1 and 20"""
+    return random.randint(1, 20)
+
+def roll_damage(min_dmg, max_dmg):
+    """Returns a random integer between min and max"""
+    return random.randint(min_dmg, max_dmg)
+
+if __name__ == "__main__":
+    print("Testing D20 Roll:", roll_d20())</code></pre>
+                    </div>
+
+                    <div class="code-file">
+                        <h3>🐉 encounters.py</h3>
+                        <pre><code class="language-python">import random
+
+def get_random_monster():
+    """Returns a dictionary with monster stats"""
+    names = ["Goblin", "Skeleton", "Slime", "Dragon"]
+    
+    monster = {
+        "name": random.choice(names),
+        "hp": random.randint(10, 20),
+        "strength": random.randint(2, 5)
+    }
+    return monster
+
+if __name__ == "__main__":
+    print("Testing Monster Gen:", get_random_monster())</code></pre>
+                    </div>
+
+                    <div class="code-file">
+                        <h3>💰 treasure.py</h3>
+                        <pre><code class="language-python">import random
+
+def search_chest():
+    """Returns a string item or None"""
+    chance = random.random()
+    
+    if chance < 0.20:
+        return "Potion"
+    elif chance < 0.50:
+        return "Gold"
+    else:
+        return None
+
+if __name__ == "__main__":
+    print("Testing Chest:", search_chest())</code></pre>
+                    </div>
+
+                    <div class="code-file">
+                        <h3>👑 main.py</h3>
+                        <pre><code class="language-python">import dice_master
+import encounters
+import treasure
+
+player_hp = 50
+
+print("⚔️ WELCOME TO THE DUNGEON ⚔️")
+
+# 1. SPAWN A MONSTER
+enemy = encounters.get_random_monster()
+print(f"A wild {enemy['name']} appears with {enemy['hp']} HP!")
+
+# 2. THE COMBAT LOOP
+while player_hp > 0 and enemy['hp'] > 0:
+    input("Press Enter to attack...")
+    
+    # PLAYER ATTACKS
+    roll = dice_master.roll_d20()
+    
+    if roll >= 10:
+        dmg = dice_master.roll_damage(5, 10)
+        enemy['hp'] = enemy['hp'] - dmg
+        print(f"✅ HIT! You dealt {dmg} damage!")
+    else:
+        print("❌ You missed!")
+        
+    # MONSTER ATTACKS
+    if enemy['hp'] > 0:
+        player_hp -= enemy['strength']
+        print(f"⚡ {enemy['name']} hits you for {enemy['strength']} damage!")
+        print(f"You have {player_hp} HP left.")
+
+# 3. END GAME
+if player_hp > 0:
+    print("🎉 YOU WON!")
+    loot = treasure.search_chest()
+    print(f"💎 You found: {loot}")
+else:
+    print("💀 GAME OVER.")</code></pre>
+                    </div>
+                </div>
+
+                <div class="section" style="margin-top: 40px;">
+                    <h2>🎯 What You're Building</h2>
+                    <p>This is the complete, working game. Your job as a team is to:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Roles 1-3:</strong> Build the modules (fill in the blanks in the code above)</li>
+                        <li><strong>Role 4:</strong> Combine them into a working game</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #ffd60a; font-weight: bold;">When you run <span class="highlight">main.py</span>, it imports your three modules and plays this exact game!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3: GAME -->
+        <div id="game" class="content-page">
+            <div class="game-container">
+                <h2 style="text-align: center; color: #00d4ff; margin-bottom: 20px;">🎮 Play The Game</h2>
+
+                <div class="game-stats">
+                    <div class="stat-box">
+                        <div class="stat-label">YOUR HP</div>
+                        <div class="stat-value" id="playerHp">50</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">ENEMY: <span id="enemyName">Loading...</span></div>
+                        <div class="stat-value" id="enemyHp">?</div>
+                    </div>
+                </div>
+
+                <div class="game-display">
+                    <div class="game-log" id="gameLog">
+                        <div class="log-entry player-log">🎮 Game initialized...</div>
+                        <div class="log-entry player-log">Spawning monster...</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button onclick="startGame()" id="startBtn">Start Game ⚔️</button>
+                    <button onclick="playerAttack()" id="attackBtn" disabled>Attack! 🗡️</button>
+                    <button onclick="resetGame()" id="resetBtn">New Game 🔄</button>
+                </div>
+
+                <div class="code-section">
+                    <button class="toggle-code-btn" onclick="toggleCode()">📝 Show/Hide Code</button>
+                    <div class="code-display" id="codeDisplay">
+                        <h3 style="color: #00d4ff; margin-bottom: 20px;">Complete Solution Code</h3>
+                        <pre><code class="language-python"># ===== DICE_MASTER.PY =====
+import random
+
+def roll_d20():
+    """Returns a random integer between 1 and 20"""
+    return random.randint(1, 20)
+
+def roll_damage(min_dmg, max_dmg):
+    """Returns a random integer between min and max"""
+    return random.randint(min_dmg, max_dmg)
+
+if __name__ == "__main__":
+    print("Testing D20 Roll:", roll_d20())
+
+
+# ===== ENCOUNTERS.PY =====
+import random
+
+def get_random_monster():
+    """Returns a dictionary with monster stats"""
+    names = ["Goblin", "Skeleton", "Slime", "Dragon"]
+    
+    monster = {
+        "name": random.choice(names),
+        "hp": random.randint(10, 20),
+        "strength": random.randint(2, 5)
+    }
+    return monster
+
+if __name__ == "__main__":
+    print("Testing Monster Gen:", get_random_monster())
+
+
+# ===== TREASURE.PY =====
+import random
+
+def search_chest():
+    """Returns a string item or None"""
+    chance = random.random()
+    
+    if chance < 0.20:
+        return "Potion"
+    elif chance < 0.50:
+        return "Gold"
+    else:
+        return None
+
+if __name__ == "__main__":
+    print("Testing Chest:", search_chest())
+
+
+# ===== MAIN.PY =====
+import dice_master
+import encounters
+import treasure
+
+player_hp = 50
+
+print("⚔️ WELCOME TO THE DUNGEON ⚔️")
+
+# 1. SPAWN A MONSTER
+enemy = encounters.get_random_monster()
+print(f"A wild {enemy['name']} appears with {enemy['hp']} HP!")
+
+# 2. THE COMBAT LOOP
+while player_hp > 0 and enemy['hp'] > 0:
+    input("Press Enter to attack...")
+    
+    # PLAYER ATTACKS
+    roll = dice_master.roll_d20()
+    
+    if roll >= 10:
+        dmg = dice_master.roll_damage(5, 10)
+        enemy['hp'] = enemy['hp'] - dmg
+        print(f"You hit for {dmg} damage!")
+    else:
+        print("You missed!")
+        
+    # MONSTER ATTACKS (If it's still alive)
+    if enemy['hp'] > 0:
+        player_hp -= enemy['strength']
+        print(f"The monster hits you! You have {player_hp} HP left.")
+
+# 3. END GAME
+if player_hp > 0:
+    print("You won!")
+    loot = treasure.search_chest()
+    print(f"You found: {loot}")
+else:
+    print("Game Over.")</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GAME LOGIC
+        let playerHp = 50;
+        let enemy = null;
+        let gameActive = false;
+
+        function addLog(message, type = 'default') {
+            const gameLog = document.getElementById('gameLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}-log`;
+            entry.textContent = message;
+            gameLog.appendChild(entry);
+            gameLog.scrollTop = gameLog.scrollHeight;
+        }
+
+        function rollD20() {
+            return Math.floor(Math.random() * 20) + 1;
+        }
+
+        function rollDamage(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomMonster() {
+            const names = ["Goblin", "Skeleton", "Slime", "Dragon"];
+            return {
+                name: names[Math.floor(Math.random() * names.length)],
+                hp: Math.floor(Math.random() * 11) + 10,
+                strength: Math.floor(Math.random() * 4) + 2
+            };
+        }
+
+        function searchChest() {
+            const chance = Math.random();
+            if (chance < 0.20) return "Potion";
+            if (chance < 0.50) return "Gold";
+            return null;
+        }
+
+        function startGame() {
+            playerHp = 50;
+            enemy = getRandomMonster();
+            gameActive = true;
+
+            document.getElementById('gameLog').innerHTML = '';
+            addLog('⚔️ WELCOME TO THE DUNGEON ⚔️', 'player');
+            addLog(`A wild ${enemy.name} appears with ${enemy.hp} HP!`, 'enemy');
+            
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('attackBtn').disabled = false;
+            updateStats();
+        }
+
+        function playerAttack() {
+            if (!gameActive) return;
+
+            const roll = rollD20();
+            addLog(`🎲 You rolled: ${roll}`, 'player');
+
+            if (roll >= 10) {
+                const dmg = rollDamage(5, 10);
+                enemy.hp -= dmg;
+                addLog(`✅ HIT! You dealt ${dmg} damage!`, 'success-log');
+            } else {
+                addLog(`❌ You missed!`, 'player');
+            }
+
+            if (enemy.hp <= 0) {
+                endGame(true);
+                return;
+            }
+
+            // Enemy attacks
+            if (enemy.hp > 0) {
+                const enemyDmg = enemy.strength;
+                playerHp -= enemyDmg;
+                addLog(`⚡ ${enemy.name} hits you for ${enemyDmg} damage!`, 'enemy');
+            }
+
+            if (playerHp <= 0) {
+                endGame(false);
+                return;
+            }
+
+            updateStats();
+        }
+
+        function endGame(won) {
+            gameActive = false;
+            document.getElementById('attackBtn').disabled = true;
+
+            if (won) {
+                addLog('🎉 YOU WON! THE MONSTER IS DEFEATED!', 'success-log');
+                const loot = searchChest();
+                if (loot) {
+                    addLog(`💎 You found: ${loot}`, 'damage-log');
+                } else {
+                    addLog('The chest was empty...', 'player');
+                }
+            } else {
+                addLog('💀 GAME OVER. YOU HAVE BEEN DEFEATED.', 'enemy');
+            }
+
+            document.getElementById('startBtn').disabled = false;
+        }
+
+        function resetGame() {
+            playerHp = 50;
+            enemy = null;
+            gameActive = false;
+            document.getElementById('gameLog').innerHTML = '';
+            addLog('🔄 Game reset. Click "Start Game" to begin!', 'player');
+            document.getElementById('attackBtn').disabled = true;
+            document.getElementById('startBtn').disabled = false;
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('playerHp').textContent = playerHp > 0 ? playerHp : '0';
+            if (enemy) {
+                document.getElementById('enemyName').textContent = enemy.name;
+                document.getElementById('enemyHp').textContent = enemy.hp > 0 ? enemy.hp : '0';
+            }
+        }
+
+        function toggleCode() {
+            document.getElementById('codeDisplay').classList.toggle('visible');
+            const allCode = document.querySelectorAll('#codeDisplay code');
+            allCode.forEach(code => {
+                hljs.highlightElement(code);
+            });
+        }
+
+        function switchPage(page) {
+            // Hide all pages
+            document.getElementById('instructions').classList.remove('active');
+            document.getElementById('game').classList.remove('active');
+
+            // Remove active from all buttons
+            document.querySelectorAll('.page-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Show selected page
+            document.getElementById(page).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Initialize
+        window.onload = function() {
+            updateStats();
+            addLog('👋 Welcome! Click "Instructions & Guidance" to learn how to build this game.', 'player');
+            addLog('Check out endless_dungeon_final_demo.html after students finish!', 'player');
+        };
+    </script>
+</body>
+</html>

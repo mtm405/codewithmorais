@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exception Handling Workshop - Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .workshop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .scenario-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .scenario-title {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .code-editor {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            min-height: 300px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-textarea {
+            width: 100%;
+            height: 300px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            padding: 15px;
+            resize: vertical;
+            outline: none;
+            border-radius: 10px;
+        }
+
+        .scenario-description {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .requirements {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .requirements ul {
+            margin-left: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success { background: #27ae60; }
+        .btn-success:hover { background: #229954; }
+
+        .btn-danger { background: #e74c3c; }
+        .btn-danger:hover { background: #c0392b; }
+
+        .btn-warning { background: #f39c12; }
+        .btn-warning:hover { background: #d68910; }
+
+        .output-panel {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            min-height: 200px;
+            margin-top: 15px;
+        }
+
+        .test-results {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .test-case {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .test-case:last-child {
+            border-bottom: none;
+        }
+
+        .test-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .test-pass {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .test-fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .scenario-selector {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .scenario-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .scenario-tab {
+            background: #ecf0f1;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .scenario-tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .scenario-tab.completed {
+            background: #27ae60;
+            color: white;
+        }
+
+        .progress-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #ecf0f1;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .hint-section {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .error-examples {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .success-examples {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .workshop-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛠️ Exception Handling Workshop</h1>
+            <p>Master try, except, else, finally, and raise statements through hands-on practice</p>
+        </div>
+
+        <div class="progress-section">
+            <h3>Workshop Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="workshop-progress">0%</div>
+            </div>
+            <p>Complete all scenarios to master exception handling!</p>
+        </div>
+
+        <div class="scenario-selector">
+            <h3>Choose Your Challenge</h3>
+            <div class="scenario-tabs" id="scenario-tabs">
+                <!-- Tabs will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="workshop-grid">
+            <div class="scenario-panel">
+                <h2 class="scenario-title" id="scenario-title">Scenario Title</h2>
+                
+                <div class="scenario-description" id="scenario-description">
+                    <!-- Scenario description will be populated -->
+                </div>
+
+                <div class="requirements" id="requirements">
+                    <!-- Requirements will be populated -->
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-success" onclick="runTests()">🧪 Run Tests</button>
+                    <button class="btn btn-warning" onclick="showHint()">💡 Get Hint</button>
+                    <button class="btn" onclick="resetCode()">🔄 Reset</button>
+                    <button class="btn btn-danger" onclick="showSolution()">🔑 Solution</button>
+                </div>
+
+                <textarea class="code-textarea" id="code-editor" placeholder="Write your exception handling code here..."></textarea>
+
+                <div class="hint-section" id="hint-section">
+                    <strong>💡 Hint:</strong> <span id="hint-text"></span>
+                </div>
+            </div>
+
+            <div class="scenario-panel">
+                <h2 class="scenario-title">Test Results & Output</h2>
+
+                <div class="controls">
+                    <button class="btn" onclick="clearOutput()">🗑️ Clear Output</button>
+                    <button class="btn" onclick="showExamples()">📚 Show Examples</button>
+                </div>
+
+                <div class="output-panel" id="output-panel">
+                    Select a scenario and run tests to see results here...
+                </div>
+
+                <div class="test-results" id="test-results">
+                    <h4>Test Cases</h4>
+                    <div id="test-cases">
+                        No tests run yet
+                    </div>
+                </div>
+
+                <div class="error-examples" id="error-examples" style="display: none;">
+                    <h4>❌ Common Errors to Handle</h4>
+                    <div id="error-list"></div>
+                </div>
+
+                <div class="success-examples" id="success-examples" style="display: none;">
+                    <h4>✅ Expected Behavior</h4>
+                    <div id="success-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Workshop scenarios
+        const scenarios = [
+            {
+                id: 1,
+                title: "File Processing with Exception Handling",
+                description: "Create a robust file processor that handles various file-related errors gracefully.",
+                requirements: [
+                    "Handle FileNotFoundError when file doesn't exist",
+                    "Handle PermissionError when access is denied", 
+                    "Handle empty files appropriately",
+                    "Use finally block for cleanup",
+                    "Return meaningful error messages"
+                ],
+                starterCode: `def process_file(filename):
+    """
+    Process a text file and return word count.
+    Handle all possible exceptions gracefully.
+    """
+    # Your code here
+    pass
+
+# Test the function
+filenames = ["existing.txt", "nonexistent.txt", "restricted.txt", "empty.txt"]
+for filename in filenames:
+    result = process_file(filename)
+    print(f"Processing {filename}: {result}")`,
+                solution: `def process_file(filename):
+    """
+    Process a text file and return word count.
+    Handle all possible exceptions gracefully.
+    """
+    file_handle = None
+    try:
+        print(f"Opening file: {filename}")
+        file_handle = open(filename, 'r')
+        content = file_handle.read()
+        
+        if not content.strip():
+            return {"success": False, "error": "File is empty", "word_count": 0}
+        
+        word_count = len(content.split())
+        return {"success": True, "word_count": word_count, "message": f"Successfully processed {word_count} words"}
+        
+    except FileNotFoundError:
+        return {"success": False, "error": f"File '{filename}' not found", "word_count": 0}
+        
+    except PermissionError:
+        return {"success": False, "error": f"Permission denied to read '{filename}'", "word_count": 0}
+        
+    except Exception as e:
+        return {"success": False, "error": f"Unexpected error: {str(e)}", "word_count": 0}
+        
+    finally:
+        if file_handle:
+            file_handle.close()
+            print(f"File handle closed for {filename}")
+
+# Test the function
+filenames = ["existing.txt", "nonexistent.txt", "restricted.txt", "empty.txt"]
+for filename in filenames:
+    result = process_file(filename)
+    print(f"Processing {filename}: {result}")`,
+                hint: "Use try-except-finally structure. Handle specific exceptions first, then general Exception. Use finally for cleanup.",
+                testCases: [
+                    { name: "FileNotFoundError handling", expected: "Returns error message for non-existent file" },
+                    { name: "Empty file handling", expected: "Handles empty files gracefully" },
+                    { name: "Cleanup in finally", expected: "Closes file handle in all cases" },
+                    { name: "Return format", expected: "Returns dictionary with success, error, word_count" }
+                ],
+                errors: [
+                    "FileNotFoundError - When file doesn't exist",
+                    "PermissionError - When access is denied",
+                    "IOError - General I/O problems",
+                    "UnicodeDecodeError - When file encoding is wrong"
+                ],
+                examples: [
+                    "Successful file processing with word count",
+                    "Graceful error messages for missing files",
+                    "Proper cleanup even when errors occur"
+                ]
+            },
+            {
+                id: 2,
+                title: "User Input Validation System",
+                description: "Build a validation system that handles various input errors and provides helpful feedback.",
+                requirements: [
+                    "Validate user age (integer, positive, reasonable range)",
+                    "Validate email format",
+                    "Raise custom exceptions for invalid data",
+                    "Use try-except to catch validation errors",
+                    "Provide specific error messages for each validation failure"
+                ],
+                starterCode: `class ValidationError(Exception):
+    """Custom exception for validation errors"""
+    pass
+
+class AgeValidationError(ValidationError):
+    """Raised when age validation fails"""
+    pass
+
+class EmailValidationError(ValidationError):
+    """Raised when email validation fails"""
+    pass
+
+def validate_user_input(name, age, email):
+    """
+    Validate user input and raise appropriate exceptions.
+    Return validated data if successful.
+    """
+    # Your code here
+    pass
+
+def register_user(name, age, email):
+    """
+    Register a user with validation.
+    Handle all validation errors gracefully.
+    """
+    # Your code here
+    pass
+
+# Test cases
+test_users = [
+    ("Alice", "25", "alice@email.com"),
+    ("Bob", "-5", "bob@email.com"),  
+    ("Charlie", "not_a_number", "charlie@email.com"),
+    ("Diana", "25", "invalid_email"),
+    ("Eve", "200", "eve@email.com")
+]
+
+for name, age, email in test_users:
+    result = register_user(name, age, email)
+    print(f"Registering {name}: {result}")`,
+                solution: `class ValidationError(Exception):
+    """Custom exception for validation errors"""
+    pass
+
+class AgeValidationError(ValidationError):
+    """Raised when age validation fails"""
+    pass
+
+class EmailValidationError(ValidationError):
+    """Raised when email validation fails"""
+    pass
+
+def validate_user_input(name, age, email):
+    """
+    Validate user input and raise appropriate exceptions.
+    Return validated data if successful.
+    """
+    # Validate name
+    if not name or not name.strip():
+        raise ValidationError("Name cannot be empty")
+    
+    # Validate age
+    try:
+        age_int = int(age)
+    except (ValueError, TypeError):
+        raise AgeValidationError("Age must be a valid number")
+    
+    if age_int < 0:
+        raise AgeValidationError("Age cannot be negative")
+    
+    if age_int > 150:
+        raise AgeValidationError("Age must be realistic (0-150)")
+    
+    # Validate email
+    if not email or '@' not in email or '.' not in email:
+        raise EmailValidationError("Email must be in valid format (user@domain.com)")
+    
+    return {
+        "name": name.strip(),
+        "age": age_int,
+        "email": email.lower().strip()
+    }
+
+def register_user(name, age, email):
+    """
+    Register a user with validation.
+    Handle all validation errors gracefully.
+    """
+    try:
+        validated_data = validate_user_input(name, age, email)
+        return {
+            "success": True,
+            "data": validated_data,
+            "message": f"User {validated_data['name']} registered successfully"
+        }
+    except AgeValidationError as e:
+        return {
+            "success": False,
+            "error": f"Age validation failed: {str(e)}",
+            "error_type": "age"
+        }
+    except EmailValidationError as e:
+        return {
+            "success": False,
+            "error": f"Email validation failed: {str(e)}",
+            "error_type": "email"
+        }
+    except ValidationError as e:
+        return {
+            "success": False,
+            "error": f"Validation failed: {str(e)}",
+            "error_type": "general"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"Unexpected error: {str(e)}",
+            "error_type": "unexpected"
+        }
+
+# Test cases
+test_users = [
+    ("Alice", "25", "alice@email.com"),
+    ("Bob", "-5", "bob@email.com"),  
+    ("Charlie", "not_a_number", "charlie@email.com"),
+    ("Diana", "25", "invalid_email"),
+    ("Eve", "200", "eve@email.com")
+]
+
+for name, age, email in test_users:
+    result = register_user(name, age, email)
+    print(f"Registering {name}: {result}")`,
+                hint: "Create custom exception classes that inherit from Exception. Use specific exception types for different validation failures.",
+                testCases: [
+                    { name: "Valid input handling", expected: "Successfully processes valid user data" },
+                    { name: "Age validation", expected: "Catches negative ages and non-numeric values" },
+                    { name: "Email validation", expected: "Validates email format requirements" },
+                    { name: "Custom exceptions", expected: "Raises appropriate custom exception types" }
+                ],
+                errors: [
+                    "ValueError - When converting invalid string to int",
+                    "AgeValidationError - When age is invalid",
+                    "EmailValidationError - When email format is wrong",
+                    "ValidationError - General validation failures"
+                ],
+                examples: [
+                    "Valid user registration with proper data",
+                    "Specific error messages for different validation failures",
+                    "Graceful handling without program crashes"
+                ]
+            },
+            {
+                id: 3,
+                title: "Database Connection Handler",
+                description: "Simulate database operations with proper exception handling and connection management.",
+                requirements: [
+                    "Handle connection failures",
+                    "Manage database operations with try-except-else-finally",
+                    "Use context manager pattern",
+                    "Implement retry logic for transient failures",
+                    "Ensure proper cleanup of resources"
+                ],
+                starterCode: `class DatabaseError(Exception):
+    """Base exception for database errors"""
+    pass
+
+class ConnectionError(DatabaseError):
+    """Raised when database connection fails"""
+    pass
+
+class QueryError(DatabaseError):
+    """Raised when database query fails"""
+    pass
+
+class DatabaseConnection:
+    """Simulates a database connection"""
+    
+    def __init__(self, host, retry_count=3):
+        self.host = host
+        self.retry_count = retry_count
+        self.connected = False
+        
+    def connect(self):
+        """Simulate connection - might fail"""
+        # Your code here
+        pass
+        
+    def execute_query(self, query):
+        """Simulate query execution - might fail"""
+        # Your code here
+        pass
+        
+    def close(self):
+        """Close connection"""
+        # Your code here
+        pass
+
+def database_operation(host, query):
+    """
+    Perform database operation with proper error handling.
+    Use try-except-else-finally pattern.
+    """
+    # Your code here
+    pass
+
+# Test scenarios
+test_cases = [
+    ("good_host", "SELECT * FROM users"),
+    ("bad_host", "SELECT * FROM users"),
+    ("good_host", "INVALID QUERY"),
+    ("timeout_host", "SELECT * FROM products")
+]
+
+for host, query in test_cases:
+    result = database_operation(host, query)
+    print(f"Operation on {host}: {result}")`,
+                solution: `import random
+import time
+
+class DatabaseError(Exception):
+    """Base exception for database errors"""
+    pass
+
+class ConnectionError(DatabaseError):
+    """Raised when database connection fails"""
+    pass
+
+class QueryError(DatabaseError):
+    """Raised when database query fails"""
+    pass
+
+class DatabaseConnection:
+    """Simulates a database connection"""
+    
+    def __init__(self, host, retry_count=3):
+        self.host = host
+        self.retry_count = retry_count
+        self.connected = False
+        
+    def connect(self):
+        """Simulate connection - might fail"""
+        if self.host == "bad_host":
+            raise ConnectionError(f"Cannot connect to {self.host}")
+        elif self.host == "timeout_host":
+            time.sleep(0.1)  # Simulate timeout
+            if random.random() < 0.7:  # 70% chance of failure
+                raise ConnectionError(f"Connection timeout to {self.host}")
+        
+        self.connected = True
+        print(f"Successfully connected to {self.host}")
+        
+    def execute_query(self, query):
+        """Simulate query execution - might fail"""
+        if not self.connected:
+            raise ConnectionError("Not connected to database")
+            
+        if "INVALID" in query.upper():
+            raise QueryError(f"Invalid query syntax: {query}")
+        
+        # Simulate successful query
+        return [{"id": 1, "name": "Sample Data"}]
+        
+    def close(self):
+        """Close connection"""
+        if self.connected:
+            self.connected = False
+            print(f"Connection to {self.host} closed")
+
+def database_operation(host, query):
+    """
+    Perform database operation with proper error handling.
+    Use try-except-else-finally pattern.
+    """
+    connection = None
+    attempt = 0
+    max_attempts = 3
+    
+    while attempt < max_attempts:
+        try:
+            print(f"\\nAttempt {attempt + 1} for {host}")
+            connection = DatabaseConnection(host)
+            connection.connect()
+            
+            # If connection successful, execute query
+            result = connection.execute_query(query)
+            
+        except ConnectionError as e:
+            attempt += 1
+            print(f"Connection failed: {e}")
+            
+            if attempt < max_attempts:
+                print(f"Retrying in 1 second... ({attempt}/{max_attempts})")
+                time.sleep(1)
+                continue
+            else:
+                return {
+                    "success": False,
+                    "error": f"Connection failed after {max_attempts} attempts: {str(e)}",
+                    "error_type": "connection"
+                }
+                
+        except QueryError as e:
+            return {
+                "success": False,
+                "error": f"Query execution failed: {str(e)}",
+                "error_type": "query"
+            }
+            
+        except DatabaseError as e:
+            return {
+                "success": False,
+                "error": f"Database error: {str(e)}",
+                "error_type": "database"
+            }
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"Unexpected error: {str(e)}",
+                "error_type": "unexpected"
+            }
+            
+        else:
+            # This runs only if no exception occurred
+            print("Query executed successfully!")
+            return {
+                "success": True,
+                "data": result,
+                "message": f"Successfully executed query on {host}",
+                "attempts": attempt + 1
+            }
+            
+        finally:
+            # This always runs
+            if connection:
+                connection.close()
+            print("Cleanup completed")
+        
+        break  # Exit while loop if successful
+
+# Test scenarios
+test_cases = [
+    ("good_host", "SELECT * FROM users"),
+    ("bad_host", "SELECT * FROM users"),
+    ("good_host", "INVALID QUERY"),
+    ("timeout_host", "SELECT * FROM products")
+]
+
+for host, query in test_cases:
+    result = database_operation(host, query)
+    print(f"Final result for {host}: {result}")
+    print("-" * 50)`,
+                hint: "Use nested exception handling with retry logic. The else block runs only when no exception occurs in try block.",
+                testCases: [
+                    { name: "Successful connection", expected: "Handles successful database operations" },
+                    { name: "Connection retry logic", expected: "Retries failed connections up to max attempts" },
+                    { name: "Query error handling", expected: "Catches and reports query syntax errors" },
+                    { name: "Resource cleanup", expected: "Always closes connections in finally block" }
+                ],
+                errors: [
+                    "ConnectionError - When database connection fails",
+                    "QueryError - When SQL query has syntax errors", 
+                    "DatabaseError - General database-related errors",
+                    "TimeoutError - When operations take too long"
+                ],
+                examples: [
+                    "Successful database query with proper cleanup",
+                    "Automatic retry on transient connection failures",
+                    "Graceful error reporting for query problems"
+                ]
+            },
+            {
+                id: 4,
+                title: "Web API Error Handler",
+                description: "Create a robust HTTP client that handles various network and API errors.",
+                requirements: [
+                    "Handle network timeouts and connection errors",
+                    "Parse and handle HTTP status codes",
+                    "Implement exponential backoff for retries",
+                    "Handle JSON parsing errors",
+                    "Provide comprehensive error reporting"
+                ],
+                starterCode: `import json
+import time
+import random
+
+class APIError(Exception):
+    """Base exception for API errors"""
+    pass
+
+class NetworkError(APIError):
+    """Raised for network-related errors"""
+    pass
+
+class HTTPError(APIError):
+    """Raised for HTTP status code errors"""
+    def __init__(self, message, status_code):
+        super().__init__(message)
+        self.status_code = status_code
+
+class APIClient:
+    """HTTP API client with error handling"""
+    
+    def __init__(self, base_url, timeout=30):
+        self.base_url = base_url
+        self.timeout = timeout
+        
+    def make_request(self, endpoint, method="GET"):
+        """Simulate HTTP request - can fail in various ways"""
+        # Your code here
+        pass
+
+def api_request_with_retry(client, endpoint, max_retries=3):
+    """
+    Make API request with exponential backoff retry logic.
+    Handle all types of errors gracefully.
+    """
+    # Your code here
+    pass
+
+# Test different API scenarios
+api_client = APIClient("https://api.example.com")
+
+test_endpoints = [
+    "/users",           # Should succeed
+    "/timeout",         # Will timeout
+    "/server-error",    # Returns 500
+    "/not-found",       # Returns 404
+    "/bad-json"         # Returns invalid JSON
+]
+
+for endpoint in test_endpoints:
+    result = api_request_with_retry(api_client, endpoint)
+    print(f"Request to {endpoint}: {result}")`,
+                solution: `import json
+import time
+import random
+
+class APIError(Exception):
+    """Base exception for API errors"""
+    pass
+
+class NetworkError(APIError):
+    """Raised for network-related errors"""
+    pass
+
+class HTTPError(APIError):
+    """Raised for HTTP status code errors"""
+    def __init__(self, message, status_code):
+        super().__init__(message)
+        self.status_code = status_code
+
+class APIClient:
+    """HTTP API client with error handling"""
+    
+    def __init__(self, base_url, timeout=30):
+        self.base_url = base_url
+        self.timeout = timeout
+        
+    def make_request(self, endpoint, method="GET"):
+        """Simulate HTTP request - can fail in various ways"""
+        full_url = f"{self.base_url}{endpoint}"
+        
+        # Simulate different types of failures
+        if endpoint == "/timeout":
+            time.sleep(0.1)  # Simulate delay
+            raise NetworkError("Request timeout")
+        elif endpoint == "/server-error":
+            raise HTTPError("Internal Server Error", 500)
+        elif endpoint == "/not-found":
+            raise HTTPError("Resource not found", 404)
+        elif endpoint == "/bad-json":
+            # Simulate successful HTTP but invalid JSON
+            return {
+                "status_code": 200,
+                "text": "{ invalid json content"
+            }
+        else:
+            # Simulate successful request
+            return {
+                "status_code": 200,
+                "text": json.dumps({"data": "success", "endpoint": endpoint})
+            }
+
+def api_request_with_retry(client, endpoint, max_retries=3):
+    """
+    Make API request with exponential backoff retry logic.
+    Handle all types of errors gracefully.
+    """
+    last_exception = None
+    
+    for attempt in range(max_retries):
+        try:
+            print(f"\\nAttempt {attempt + 1} for {endpoint}")
+            
+            # Make the HTTP request
+            response = client.make_request(endpoint)
+            
+            # Check HTTP status code
+            if response["status_code"] >= 400:
+                raise HTTPError(
+                    f"HTTP {response['status_code']} error", 
+                    response["status_code"]
+                )
+            
+            # Try to parse JSON response
+            try:
+                data = json.loads(response["text"])
+            except json.JSONDecodeError as e:
+                raise APIError(f"Invalid JSON response: {str(e)}")
+            
+        except NetworkError as e:
+            last_exception = e
+            print(f"Network error: {e}")
+            
+            # Only retry network errors
+            if attempt < max_retries - 1:
+                backoff_time = (2 ** attempt) + random.uniform(0, 1)
+                print(f"Retrying in {backoff_time:.2f} seconds...")
+                time.sleep(backoff_time)
+                continue
+            else:
+                return {
+                    "success": False,
+                    "error": f"Network error after {max_retries} attempts: {str(e)}",
+                    "error_type": "network",
+                    "attempts": max_retries
+                }
+                
+        except HTTPError as e:
+            # Don't retry client errors (4xx), but retry server errors (5xx)
+            if e.status_code >= 500 and attempt < max_retries - 1:
+                print(f"Server error {e.status_code}, retrying...")
+                backoff_time = (2 ** attempt) + random.uniform(0, 1)
+                time.sleep(backoff_time)
+                continue
+            else:
+                return {
+                    "success": False,
+                    "error": f"HTTP {e.status_code}: {str(e)}",
+                    "error_type": "http",
+                    "status_code": e.status_code,
+                    "attempts": attempt + 1
+                }
+                
+        except APIError as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "error_type": "api",
+                "attempts": attempt + 1
+            }
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"Unexpected error: {str(e)}",
+                "error_type": "unexpected",
+                "attempts": attempt + 1
+            }
+            
+        else:
+            # Success case
+            return {
+                "success": True,
+                "data": data,
+                "message": f"Successfully retrieved data from {endpoint}",
+                "attempts": attempt + 1
+            }
+    
+    # If we get here, all retries failed
+    return {
+        "success": False,
+        "error": f"All {max_retries} attempts failed. Last error: {str(last_exception)}",
+        "error_type": "retry_exhausted",
+        "attempts": max_retries
+    }
+
+# Test different API scenarios
+api_client = APIClient("https://api.example.com")
+
+test_endpoints = [
+    "/users",           # Should succeed
+    "/timeout",         # Will timeout
+    "/server-error",    # Returns 500
+    "/not-found",       # Returns 404
+    "/bad-json"         # Returns invalid JSON
+]
+
+for endpoint in test_endpoints:
+    result = api_request_with_retry(api_client, endpoint)
+    print(f"Final result for {endpoint}: {result}")
+    print("-" * 60)`,
+                hint: "Implement exponential backoff: wait_time = (2^attempt) + random_jitter. Don't retry 4xx client errors, but do retry 5xx server errors.",
+                testCases: [
+                    { name: "Successful API call", expected: "Returns data for valid endpoints" },
+                    { name: "HTTP error handling", expected: "Distinguishes between 4xx and 5xx errors" },
+                    { name: "Network retry logic", expected: "Retries with exponential backoff" },
+                    { name: "JSON parsing", expected: "Handles malformed JSON responses" }
+                ],
+                errors: [
+                    "NetworkError - Connection timeouts and network issues",
+                    "HTTPError - HTTP status code errors (4xx, 5xx)",
+                    "JSONDecodeError - Malformed response data",
+                    "APIError - General API-related problems"
+                ],
+                examples: [
+                    "Successful data retrieval with proper JSON parsing",
+                    "Automatic retries for transient network errors",
+                    "Smart error categorization for different failure types"
+                ]
+            },
+            {
+                id: 5,
+                title: "Advanced Context Manager",
+                description: "Create a custom context manager that handles resource management with nested operations.",
+                requirements: [
+                    "Implement __enter__ and __exit__ methods",
+                    "Handle exceptions within the context",
+                    "Support nested context managers",
+                    "Provide proper cleanup even on errors",
+                    "Log all operations and exceptions"
+                ],
+                starterCode: `class ResourceManager:
+    """
+    Custom context manager for handling multiple resources.
+    Should handle nested operations and cleanup properly.
+    """
+    
+    def __init__(self, resource_name):
+        self.resource_name = resource_name
+        self.resources = []
+        self.is_active = False
+        
+    def __enter__(self):
+        """Enter the context - acquire resources"""
+        # Your code here
+        pass
+        
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Exit the context - cleanup resources"""
+        # Your code here
+        pass
+        
+    def acquire_resource(self, resource_id):
+        """Acquire a specific resource"""
+        # Your code here
+        pass
+        
+    def perform_operation(self, operation_name):
+        """Perform an operation that might fail"""
+        # Your code here
+        pass
+
+def test_context_manager():
+    """Test the context manager in various scenarios"""
+    
+    # Test 1: Normal operation
+    try:
+        with ResourceManager("database") as rm:
+            rm.acquire_resource("connection_1")
+            rm.perform_operation("query_users")
+            rm.acquire_resource("connection_2")
+            rm.perform_operation("update_records")
+    except Exception as e:
+        print(f"Test 1 failed: {e}")
+    
+    # Test 2: Operation that causes exception
+    try:
+        with ResourceManager("file_system") as rm:
+            rm.acquire_resource("file_handle")
+            rm.perform_operation("read_file")
+            rm.perform_operation("dangerous_operation")  # This will fail
+            rm.perform_operation("final_operation")  # Should not execute
+    except Exception as e:
+        print(f"Test 2 caught exception: {e}")
+    
+    # Test 3: Nested context managers
+    try:
+        with ResourceManager("outer") as outer_rm:
+            outer_rm.acquire_resource("outer_resource")
+            
+            with ResourceManager("inner") as inner_rm:
+                inner_rm.acquire_resource("inner_resource")
+                inner_rm.perform_operation("inner_operation")
+                
+            outer_rm.perform_operation("outer_operation")
+    except Exception as e:
+        print(f"Test 3 failed: {e}")
+
+test_context_manager()`,
+                solution: `import logging
+import random
+
+# Setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+class ResourceError(Exception):
+    """Exception raised for resource management errors"""
+    pass
+
+class OperationError(Exception):
+    """Exception raised for operation failures"""
+    pass
+
+class ResourceManager:
+    """
+    Custom context manager for handling multiple resources.
+    Should handle nested operations and cleanup properly.
+    """
+    
+    def __init__(self, resource_name):
+        self.resource_name = resource_name
+        self.resources = []
+        self.is_active = False
+        self.logger = logging.getLogger(f"ResourceManager-{resource_name}")
+        
+    def __enter__(self):
+        """Enter the context - acquire resources"""
+        try:
+            self.logger.info(f"Entering context for {self.resource_name}")
+            
+            # Simulate potential setup failure
+            if random.random() < 0.1:  # 10% chance of setup failure
+                raise ResourceError(f"Failed to initialize {self.resource_name}")
+            
+            self.is_active = True
+            self.logger.info(f"Successfully initialized {self.resource_name}")
+            return self
+            
+        except Exception as e:
+            self.logger.error(f"Failed to enter context: {e}")
+            raise
+        
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Exit the context - cleanup resources"""
+        self.logger.info(f"Exiting context for {self.resource_name}")
+        
+        if exc_type:
+            self.logger.error(f"Exception occurred: {exc_type.__name__}: {exc_val}")
+        
+        # Cleanup resources in reverse order
+        cleanup_errors = []
+        for resource_id in reversed(self.resources):
+            try:
+                self.logger.info(f"Cleaning up resource: {resource_id}")
+                # Simulate cleanup operation
+                if random.random() < 0.05:  # 5% chance of cleanup failure
+                    raise ResourceError(f"Failed to cleanup {resource_id}")
+                    
+            except Exception as cleanup_error:
+                cleanup_errors.append(f"Cleanup failed for {resource_id}: {cleanup_error}")
+                self.logger.error(f"Cleanup error: {cleanup_error}")
+        
+        self.is_active = False
+        self.resources.clear()
+        
+        if cleanup_errors:
+            self.logger.warning(f"Cleanup completed with {len(cleanup_errors)} errors")
+        else:
+            self.logger.info("All resources cleaned up successfully")
+        
+        # Don't suppress the original exception
+        # Return False to propagate any exception that occurred
+        return False
+        
+    def acquire_resource(self, resource_id):
+        """Acquire a specific resource"""
+        if not self.is_active:
+            raise ResourceError("Cannot acquire resource: context not active")
+        
+        try:
+            self.logger.info(f"Acquiring resource: {resource_id}")
+            
+            # Simulate potential acquisition failure
+            if resource_id == "failing_resource":
+                raise ResourceError(f"Resource {resource_id} is unavailable")
+            
+            self.resources.append(resource_id)
+            self.logger.info(f"Successfully acquired resource: {resource_id}")
+            
+        except Exception as e:
+            self.logger.error(f"Failed to acquire resource {resource_id}: {e}")
+            raise
+        
+    def perform_operation(self, operation_name):
+        """Perform an operation that might fail"""
+        if not self.is_active:
+            raise ResourceError("Cannot perform operation: context not active")
+        
+        try:
+            self.logger.info(f"Performing operation: {operation_name}")
+            
+            # Simulate operations that might fail
+            if operation_name == "dangerous_operation":
+                raise OperationError("This operation is designed to fail")
+            elif operation_name == "slow_operation":
+                import time
+                time.sleep(0.1)  # Simulate slow operation
+            
+            self.logger.info(f"Successfully completed operation: {operation_name}")
+            return f"Operation {operation_name} completed successfully"
+            
+        except Exception as e:
+            self.logger.error(f"Operation {operation_name} failed: {e}")
+            raise
+
+def test_context_manager():
+    """Test the context manager in various scenarios"""
+    
+    print("=== Test 1: Normal operation ===")
+    try:
+        with ResourceManager("database") as rm:
+            rm.acquire_resource("connection_1")
+            rm.perform_operation("query_users")
+            rm.acquire_resource("connection_2")
+            rm.perform_operation("update_records")
+        print("Test 1: SUCCESS - Normal operation completed")
+    except Exception as e:
+        print(f"Test 1: FAILED - {e}")
+    
+    print("\\n=== Test 2: Operation that causes exception ===")
+    try:
+        with ResourceManager("file_system") as rm:
+            rm.acquire_resource("file_handle")
+            rm.perform_operation("read_file")
+            rm.perform_operation("dangerous_operation")  # This will fail
+            rm.perform_operation("final_operation")  # Should not execute
+        print("Test 2: UNEXPECTED SUCCESS")
+    except Exception as e:
+        print(f"Test 2: SUCCESS - Caught expected exception: {e}")
+    
+    print("\\n=== Test 3: Nested context managers ===")
+    try:
+        with ResourceManager("outer") as outer_rm:
+            outer_rm.acquire_resource("outer_resource")
+            
+            with ResourceManager("inner") as inner_rm:
+                inner_rm.acquire_resource("inner_resource")
+                inner_rm.perform_operation("inner_operation")
+                
+            outer_rm.perform_operation("outer_operation")
+        print("Test 3: SUCCESS - Nested contexts handled properly")
+    except Exception as e:
+        print(f"Test 3: FAILED - {e}")
+    
+    print("\\n=== Test 4: Resource acquisition failure ===")
+    try:
+        with ResourceManager("test_manager") as rm:
+            rm.acquire_resource("good_resource")
+            rm.acquire_resource("failing_resource")  # This will fail
+            rm.perform_operation("never_reached")
+        print("Test 4: UNEXPECTED SUCCESS")
+    except Exception as e:
+        print(f"Test 4: SUCCESS - Caught resource error: {e}")
+
+test_context_manager()`,
+                hint: "The __exit__ method receives exception info as parameters. Return False to propagate exceptions. Clean up resources in reverse order.",
+                testCases: [
+                    { name: "Context entry/exit", expected: "Properly enters and exits context" },
+                    { name: "Resource cleanup", expected: "Cleans up all acquired resources" },
+                    { name: "Exception propagation", expected: "Doesn't suppress exceptions by default" },
+                    { name: "Nested contexts", expected: "Supports nested context manager usage" }
+                ],
+                errors: [
+                    "ResourceError - When resource acquisition/cleanup fails",
+                    "OperationError - When operations within context fail",
+                    "Exception - Any unexpected errors during context management"
+                ],
+                examples: [
+                    "Automatic resource cleanup even when exceptions occur",
+                    "Proper logging of all operations and errors",
+                    "Support for nested context manager patterns"
+                ]
+            }
+        ];
+
+        // Game state
+        let currentScenario = 0;
+        let completedScenarios = new Set();
+
+        function initializeWorkshop() {
+            createScenarioTabs();
+            loadScenario(0);
+            updateProgress();
+        }
+
+        function createScenarioTabs() {
+            const tabsContainer = document.getElementById('scenario-tabs');
+            tabsContainer.innerHTML = '';
+
+            scenarios.forEach((scenario, index) => {
+                const tab = document.createElement('button');
+                tab.className = 'scenario-tab';
+                tab.textContent = `${index + 1}. ${scenario.title}`;
+                tab.onclick = () => loadScenario(index);
+                
+                if (index === currentScenario) {
+                    tab.classList.add('active');
+                }
+                
+                if (completedScenarios.has(index)) {
+                    tab.classList.add('completed');
+                }
+                
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        function loadScenario(index) {
+            currentScenario = index;
+            const scenario = scenarios[index];
+            
+            document.getElementById('scenario-title').textContent = scenario.title;
+            document.getElementById('scenario-description').innerHTML = scenario.description;
+            
+            document.getElementById('requirements').innerHTML = 
+                '<h4>Requirements:</h4><ul>' +
+                scenario.requirements.map(req => `<li>${req}</li>`).join('') +
+                '</ul>';
+                
+            document.getElementById('code-editor').value = scenario.starterCode;
+            document.getElementById('hint-text').textContent = scenario.hint;
+            document.getElementById('hint-section').style.display = 'none';
+            
+            clearOutput();
+            createScenarioTabs();
+        }
+
+        function runTests() {
+            const scenario = scenarios[currentScenario];
+            const code = document.getElementById('code-editor').value;
+            const output = document.getElementById('output-panel');
+            const testResults = document.getElementById('test-cases');
+            
+            output.innerHTML = '🧪 Running tests...\n';
+            
+            // Simulate test execution
+            setTimeout(() => {
+                const results = simulateTests(scenario, code);
+                
+                output.innerHTML = results.output;
+                
+                let testHtml = '';
+                results.tests.forEach(test => {
+                    testHtml += `
+                        <div class="test-case">
+                            <span>${test.name}</span>
+                            <span class="test-status ${test.passed ? 'test-pass' : 'test-fail'}">
+                                ${test.passed ? '✓ PASS' : '✗ FAIL'}
+                            </span>
+                        </div>
+                    `;
+                });
+                
+                testResults.innerHTML = testHtml;
+                
+                if (results.allPassed && !completedScenarios.has(currentScenario)) {
+                    completedScenarios.add(currentScenario);
+                    output.innerHTML += '\n🎉 All tests passed! Scenario completed!';
+                    updateProgress();
+                    createScenarioTabs();
+                }
+            }, 1000);
+        }
+
+        function simulateTests(scenario, code) {
+            const results = {
+                output: '',
+                tests: [],
+                allPassed: true
+            };
+            
+            // Check for required elements in code
+            scenario.testCases.forEach(testCase => {
+                let passed = false;
+                
+                switch (scenario.id) {
+                    case 1: // File Processing
+                        if (testCase.name.includes('FileNotFoundError')) {
+                            passed = code.includes('except FileNotFoundError') || code.includes('FileNotFoundError');
+                        } else if (testCase.name.includes('finally')) {
+                            passed = code.includes('finally:');
+                        } else if (testCase.name.includes('Return format')) {
+                            passed = code.includes('return {') && code.includes('success');
+                        } else {
+                            passed = code.includes('try:') && code.includes('except');
+                        }
+                        break;
+                        
+                    case 2: // Validation System
+                        if (testCase.name.includes('Custom exceptions')) {
+                            passed = code.includes('raise AgeValidationError') || code.includes('raise EmailValidationError');
+                        } else if (testCase.name.includes('Age validation')) {
+                            passed = code.includes('int(age)') && code.includes('except');
+                        } else {
+                            passed = code.includes('try:') && code.includes('except');
+                        }
+                        break;
+                        
+                    case 3: // Database Connection
+                        if (testCase.name.includes('retry')) {
+                            passed = code.includes('while') || code.includes('for') && code.includes('attempt');
+                        } else if (testCase.name.includes('finally')) {
+                            passed = code.includes('finally:');
+                        } else {
+                            passed = code.includes('try:') && code.includes('except');
+                        }
+                        break;
+                        
+                    case 4: // API Handler
+                        if (testCase.name.includes('backoff')) {
+                            passed = code.includes('**') || code.includes('pow') || code.includes('2 ** attempt');
+                        } else if (testCase.name.includes('HTTP error')) {
+                            passed = code.includes('status_code') && code.includes('4') && code.includes('5');
+                        } else {
+                            passed = code.includes('try:') && code.includes('except');
+                        }
+                        break;
+                        
+                    case 5: // Context Manager
+                        if (testCase.name.includes('Context entry')) {
+                            passed = code.includes('def __enter__') && code.includes('def __exit__');
+                        } else if (testCase.name.includes('Exception propagation')) {
+                            passed = code.includes('return False') || !code.includes('return True');
+                        } else {
+                            passed = code.includes('__enter__') && code.includes('__exit__');
+                        }
+                        break;
+                        
+                    default:
+                        passed = code.includes('try:') && code.includes('except');
+                }
+                
+                results.tests.push({
+                    name: testCase.name,
+                    passed: passed
+                });
+                
+                if (!passed) {
+                    results.allPassed = false;
+                }
+            });
+            
+            if (results.allPassed) {
+                results.output = '✅ All tests passed! Your exception handling is robust and follows best practices.';
+            } else {
+                results.output = '❌ Some tests failed. Check the requirements and try again.';
+            }
+            
+            return results;
+        }
+
+        function showHint() {
+            document.getElementById('hint-section').style.display = 'block';
+        }
+
+        function resetCode() {
+            const scenario = scenarios[currentScenario];
+            document.getElementById('code-editor').value = scenario.starterCode;
+            clearOutput();
+        }
+
+        function showSolution() {
+            const scenario = scenarios[currentScenario];
+            document.getElementById('code-editor').value = scenario.solution;
+            document.getElementById('output-panel').innerHTML = 
+                '💡 Solution loaded. Study the implementation to understand the exception handling patterns.';
+        }
+
+        function clearOutput() {
+            document.getElementById('output-panel').innerHTML = 'Select a scenario and run tests to see results here...';
+            document.getElementById('test-cases').innerHTML = 'No tests run yet';
+        }
+
+        function showExamples() {
+            const scenario = scenarios[currentScenario];
+            const errorExamples = document.getElementById('error-examples');
+            const successExamples = document.getElementById('success-examples');
+            
+            document.getElementById('error-list').innerHTML = 
+                scenario.errors.map(error => `<div>• ${error}</div>`).join('');
+                
+            document.getElementById('success-list').innerHTML = 
+                scenario.examples.map(example => `<div>• ${example}</div>`).join('');
+            
+            errorExamples.style.display = 'block';
+            successExamples.style.display = 'block';
+            
+            // Hide after 10 seconds
+            setTimeout(() => {
+                errorExamples.style.display = 'none';
+                successExamples.style.display = 'none';
+            }, 10000);
+        }
+
+        function updateProgress() {
+            const progress = (completedScenarios.size / scenarios.length) * 100;
+            const progressFill = document.getElementById('workshop-progress');
+            progressFill.style.width = `${progress}%`;
+            progressFill.textContent = `${Math.round(progress)}%`;
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeWorkshop);
+    </script>
+</body>
+</html>

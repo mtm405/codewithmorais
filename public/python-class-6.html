@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Operations Using Modules and Tools | Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .header p {
+            font-size: 1.15rem;
+            color: #f0f0f0;
+            line-height: 1.6;
+        }
+
+        .objectives {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .objectives h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .objectives ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .objectives li:before {
+            content: "✓";
+            position: absolute;
+            left: 5px;
+            color: #50fa7b;
+            font-weight: bold;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .section ul li {
+            font-size: 1.02rem;
+            line-height: 1.75;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            color: #ffd700;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subsection-title {
+            color: #8be9fd;
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+        }
+
+        .module-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .module-table th {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .module-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .module-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .module-table .term {
+            font-weight: bold;
+            color: #ff79c6;
+            width: 15%;
+        }
+
+        .code-block {
+            background: #282a36;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #50fa7b;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .code-block .keyword { color: #ff79c6; }
+        .code-block .function { color: #50fa7b; }
+        .code-block .string { color: #f1fa8c; }
+        .code-block .number { color: #bd93f9; }
+        .code-block .comment { color: #6272a4; font-style: italic; }
+        .code-block .operator { color: #ff79c6; }
+        .code-block .variable { color: #8be9fd; }
+
+        .example-box {
+            background: rgba(80, 250, 123, 0.1);
+            border-left: 4px solid #50fa7b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-title {
+            color: #50fa7b;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .activity-box {
+            background: rgba(189, 147, 249, 0.1);
+            border-left: 4px solid #bd93f9;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .activity-title {
+            color: #bd93f9;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .activity-table th {
+            background: rgba(189, 147, 249, 0.3);
+            color: #bd93f9;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .activity-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .concept-box {
+            background: rgba(255, 121, 198, 0.1);
+            border-left: 4px solid #ff79c6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .concept-title {
+            color: #ff79c6;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .warning-box {
+            background: rgba(255, 184, 108, 0.1);
+            border-left: 4px solid #ffb86c;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-title {
+            color: #ffb86c;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .quiz-box {
+            background: rgba(139, 233, 253, 0.1);
+            border-left: 4px solid #8be9fd;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .quiz-question {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .quiz-question h4 {
+            color: #8be9fd;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .answer-reveal {
+            background: rgba(80, 250, 123, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .answer-reveal.show {
+            display: block;
+        }
+
+        .btn-show-answer {
+            background: #8be9fd;
+            color: #282a36;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-show-answer:hover {
+            background: #a3edfd;
+            transform: translateY(-2px);
+        }
+
+        .math-formula {
+            color: #f1fa8c;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            background: rgba(241, 250, 140, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffd700;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .module-table, .activity-table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+        <div class="header">
+            <h1>🚀 Operations Using Modules and Tools</h1>
+            <p>Master the use of key built-in Python modules to handle file systems, command-line input, and complex calculations</p>
+        </div>
+
+        <div class="objectives">
+            <h2>🎯 Learning Objectives</h2>
+            <ul>
+                <li><strong>Objective 6.1:</strong> Perform file system operations with <span class="math-formula">os</span>, <span class="math-formula">sys</span>, and <span class="math-formula">os.path</span></li>
+                <li><strong>Objective 6.2:</strong> Execute mathematical operations using <span class="math-formula">math</span> module</li>
+                <li><strong>Objective 6.3:</strong> Work with dates and times using <span class="math-formula">datetime</span></li>
+                <li><strong>Objective 6.4:</strong> Generate random values with <span class="math-formula">random</span> module</li>
+            </ul>
+        </div>
+
+        <!-- Part 1: System Modules -->
+        <div class="section">
+            <h2 class="section-title">🎯 Part 1: Interacting with the System (Modules 6.1)</h2>
+            <p>This section focuses on the <span class="math-formula">os</span>, <span class="math-formula">sys</span>, <span class="math-formula">os.path</span>, and <span class="math-formula">io</span> modules—your tools for interacting with the operating system and handling files.</p>
+
+            <h3 class="subsection-title">📝 Core System Modules</h3>
+            <p>Python provides several built-in modules that allow your programs to interact with the operating system, read command-line arguments, and manage files efficiently. Think of these modules as your program's "bridge" to the computer's file system and environment.</p>
+
+            <p style="margin-top: 15px;"><strong>Why These Modules Matter:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>• <strong>Automation:</strong> Create scripts that organize files, backup data, or clean up directories automatically</li>
+                <li>• <strong>Portability:</strong> Write code that works on Windows, Mac, and Linux without changes</li>
+                <li>• <strong>Professional Tools:</strong> Build command-line applications that users can run with different settings</li>
+                <li>• <strong>File Safety:</strong> Check if files exist before trying to read them (prevents crashes)</li>
+            </ul>
+
+            <table class="module-table">
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Role</th>
+                        <th>Key Uses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term">os</td>
+                        <td>Operating System Interface</td>
+                        <td>Creating folders (<span class="math-formula">os.mkdir()</span>), changing directories (<span class="math-formula">os.chdir()</span>), running shell commands</td>
+                    </tr>
+                    <tr>
+                        <td class="term">os.path</td>
+                        <td>Path Management</td>
+                        <td>Checking if files/folders exist (<span class="math-formula">os.path.exists()</span>), joining paths (<span class="math-formula">os.path.join()</span>)</td>
+                    </tr>
+                    <tr>
+                        <td class="term">sys</td>
+                        <td>System Parameters & Arguments</td>
+                        <td>Accessing command-line arguments (<span class="math-formula">sys.argv</span>), exiting the program (<span class="math-formula">sys.exit()</span>)</td>
+                    </tr>
+                    <tr>
+                        <td class="term">io</td>
+                        <td>Input/Output Stream Handling</td>
+                        <td>Underlying module used when you <span class="math-formula">open()</span> and read/write files</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <div class="example-title">Example: Basic OS Operations</div>
+                <p style="margin-bottom: 15px;"><strong>Scenario:</strong> You're building a file organizer that needs to know where it is and create folders for different file types.</p>
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">os</span>
+
+<span class="comment"># Get current working directory (where your script is running)</span>
+<span class="variable">current_dir</span> <span class="operator">=</span> <span class="variable">os</span>.<span class="function">getcwd</span>()
+<span class="function">print</span>(<span class="string">f"Current directory: </span><span class="variable">{current_dir}</span><span class="string">"</span>)
+<span class="comment"># Example output: C:\Users\Student\Documents</span>
+
+<span class="comment"># Create a new directory for organizing files</span>
+<span class="variable">os</span>.<span class="function">mkdir</span>(<span class="string">"my_new_folder"</span>)
+<span class="function">print</span>(<span class="string">"✅ Created 'my_new_folder'"</span>)
+
+<span class="comment"># Change to the new directory</span>
+<span class="variable">os</span>.<span class="function">chdir</span>(<span class="string">"my_new_folder"</span>)
+<span class="function">print</span>(<span class="string">f"Now in: </span><span class="variable">{os.getcwd()}</span><span class="string">"</span>)
+
+<span class="comment"># List all files in current directory</span>
+<span class="variable">files</span> <span class="operator">=</span> <span class="variable">os</span>.<span class="function">listdir</span>()
+<span class="function">print</span>(<span class="string">f"Files in this folder: </span><span class="variable">{files}</span><span class="string">"</span>)
+<span class="comment"># Empty folder will show: []</span></div>
+                <p style="margin-top: 15px;"><strong>💡 Common Pitfall:</strong> If you run <span class="math-formula">os.mkdir("my_new_folder")</span> twice, you'll get a <span class="highlight">FileExistsError</span>. Always check if the folder exists first using <span class="math-formula">os.path.exists()</span>!</p>
+            </div>
+
+            <div class="concept-box">
+                <div class="concept-title">🔍 Understanding File Paths</div>
+                <p><strong>Absolute Path:</strong> The complete path from the root directory.</p>
+                <p style="margin: 10px 0 10px 20px;"><span class="math-formula">C:\Users\Student\Documents\project\data.txt</span> (Windows)</p>
+                <p style="margin: 0 0 10px 20px;"><span class="math-formula">/home/student/documents/project/data.txt</span> (Mac/Linux)</p>
+                <p><strong>Relative Path:</strong> Path relative to your current location.</p>
+                <p style="margin: 10px 0 10px 20px;"><span class="math-formula">./data.txt</span> (current folder)</p>
+                <p style="margin: 0 0 0 20px;"><span class="math-formula">../data.txt</span> (parent folder)</p>
+            </div>
+
+            <div class="activity-box">
+                <div class="activity-title">💻 Activity 1.1: File Existence Checker (Hands-On)</div>
+                <p><strong>Objective:</strong> Write a script that checks for a file and performs an action based on its existence.</p>
+                <p><strong>Instructions:</strong> Create a file named <span class="math-formula">check_it.py</span></p>
+
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">os</span>
+<span class="keyword">import</span> <span class="variable">os</span>.<span class="variable">path</span>
+
+<span class="variable">filename</span> <span class="operator">=</span> <span class="string">"report.txt"</span>
+
+<span class="comment"># 1. Use os.path.exists() to check for the file</span>
+<span class="keyword">if</span> <span class="variable">os</span>.<span class="variable">path</span>.<span class="function">exists</span>(<span class="variable">filename</span>):
+    <span class="function">print</span>(<span class="string">f"✅ Found </span><span class="variable">{filename}</span><span class="string">. Reading contents..."</span>)
+    <span class="comment"># 2. Open and read the file content</span>
+    <span class="keyword">with</span> <span class="function">open</span>(<span class="variable">filename</span>, <span class="string">'r'</span>) <span class="keyword">as</span> <span class="variable">f</span>:
+        <span class="function">print</span>(<span class="variable">f</span>.<span class="function">read</span>())
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">f"❌ </span><span class="variable">{filename}</span><span class="string"> not found."</span>)
+    <span class="comment"># 3. Use os.mkdir() to create a directory for new reports</span>
+    <span class="variable">os</span>.<span class="function">mkdir</span>(<span class="string">"new_reports_folder"</span>)
+    <span class="function">print</span>(<span class="string">"Created 'new_reports_folder'."</span>)</div>
+
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Preparation</td>
+                            <td>Create an empty file named <span class="math-formula">report.txt</span></td>
+                        </tr>
+                        <tr>
+                            <td>Step 1</td>
+                            <td>Run the script once (it should find the file)</td>
+                        </tr>
+                        <tr>
+                            <td>Step 2</td>
+                            <td>Delete <span class="math-formula">report.txt</span></td>
+                        </tr>
+                        <tr>
+                            <td>Step 3</td>
+                            <td>Run the script again (it should create the folder)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="subsection-title">🚀 Command-Line Arguments (sys.argv)</h3>
+            <p>The <span class="math-formula">sys</span> module lets your Python script take information directly from the command line when it's executed. This is how professional tools work—they accept different inputs without modifying the code!</p>
+
+            <p style="margin-top: 15px;"><strong>Real-World Examples:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>• <span class="math-formula">git commit -m "My message"</span> (git uses arguments)</li>
+                <li>• <span class="math-formula">python backup.py folder1 folder2</span> (backup specific folders)</li>
+                <li>• <span class="math-formula">python grader.py student_name 95</span> (grade calculator)</li>
+            </ul>
+
+            <p style="margin-top: 15px;"><strong>How sys.argv Works:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>• <span class="math-formula">sys.argv</span> is a <strong>list of strings</strong> containing everything typed after "python"</li>
+                <li>• <span class="math-formula">sys.argv[0]</span> is always the <strong>script name itself</strong></li>
+                <li>• <span class="math-formula">sys.argv[1]</span> is the first argument, <span class="math-formula">sys.argv[2]</span> is the second, and so on</li>
+                <li>• Use <span class="math-formula">len(sys.argv)</span> to check how many arguments were provided</li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-title">Visual Breakdown: sys.argv</div>
+                <p><strong>Command:</strong> <span class="math-formula">python calculator.py add 10 5</span></p>
+                <div style="margin: 15px 0; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                    <p style="color: #8be9fd; margin-bottom: 10px;">sys.argv contains:</p>
+                    <p style="margin-left: 20px;"><span class="math-formula">sys.argv[0]</span> = <span class="highlight">"calculator.py"</span> (script name)</p>
+                    <p style="margin-left: 20px;"><span class="math-formula">sys.argv[1]</span> = <span class="highlight">"add"</span> (operation)</p>
+                    <p style="margin-left: 20px;"><span class="math-formula">sys.argv[2]</span> = <span class="highlight">"10"</span> (first number)</p>
+                    <p style="margin-left: 20px;"><span class="math-formula">sys.argv[3]</span> = <span class="highlight">"5"</span> (second number)</p>
+                    <p style="margin-top: 10px; color: #50fa7b;"><span class="math-formula">len(sys.argv)</span> = <span class="highlight">4</span> (total items)</p>
+                </div>
+                <p><strong>⚠️ Important:</strong> Arguments are always <strong>strings</strong>! If you need numbers, convert them: <span class="math-formula">int(sys.argv[2])</span></p>
+            </div>
+
+            <div class="activity-box">
+                <div class="activity-title">⌨️ Activity 1.2: The Argument Printer (Hands-On)</div>
+                <p><strong>Objective:</strong> Read arguments provided when running the script.</p>
+                <p><strong>Script:</strong> Create <span class="math-formula">welcome.py</span></p>
+
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">sys</span>
+
+<span class="comment"># sys.argv is a list: [script_name, arg1, arg2, ...]</span>
+<span class="keyword">if</span> <span class="function">len</span>(<span class="variable">sys</span>.<span class="variable">argv</span>) <span class="operator">></span> <span class="number">1</span>:
+    <span class="variable">user_name</span> <span class="operator">=</span> <span class="variable">sys</span>.<span class="variable">argv</span>[<span class="number">1</span>]
+    <span class="function">print</span>(<span class="string">f"Hello, </span><span class="variable">{user_name}</span><span class="string">! You ran the script with </span><span class="variable">{len(sys.argv) - 1}</span><span class="string"> argument(s)."</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"Welcome! Run this script with a name, like: python welcome.py Alice"</span>)</div>
+
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Command</th>
+                            <th>Expected Output</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>No Argument</td>
+                            <td><span class="math-formula">python welcome.py</span></td>
+                            <td>Welcome! Run this script with a name...</td>
+                        </tr>
+                        <tr>
+                            <td>With Argument</td>
+                            <td><span class="math-formula">python welcome.py Neo</span></td>
+                            <td>Hello, Neo!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="concept-box">
+                <div class="concept-title">💡 Key Concept: Why sys.argv Matters</div>
+                <p>Command-line arguments allow your scripts to be flexible and reusable. Instead of hardcoding values, users can pass different inputs each time they run the script. This is essential for automation, batch processing, and building professional tools.</p>
+            </div>
+        </div>
+
+        <!-- Part 2: Complex Computing -->
+        <div class="section">
+            <h2 class="section-title">🧠 Part 2: Complex Computing & Data Handling (Modules 6.2)</h2>
+            <p>This section covers modules essential for scientific, time-based, and randomized tasks: <span class="math-formula">math</span>, <span class="math-formula">datetime</span>, and <span class="math-formula">random</span>.</p>
+
+            <h3 class="subsection-title">🔢 The Math Module</h3>
+            <p>The <span class="math-formula">math</span> module provides functions that go beyond standard arithmetic operators. It's essential for scientific calculations, rounding operations, and mathematical constants.</p>
+
+            <p style="margin-top: 15px;"><strong>When You Need the Math Module:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>• <strong>E-commerce:</strong> Rounding prices correctly (<span class="math-formula">ceil()</span> for "round up to nearest dollar")</li>
+                <li>• <strong>Game Development:</strong> Calculating distances, angles, and trajectories</li>
+                <li>• <strong>Data Science:</strong> Statistical calculations and normalizations</li>
+                <li>• <strong>Engineering:</strong> Precise mathematical operations with constants like π</li>
+            </ul>
+
+            <div class="concept-box">
+                <div class="concept-title">🎯 Rounding Concepts Explained</div>
+                <p><strong>Ceiling (math.ceil):</strong> "Round UP to the next whole number"</p>
+                <p style="margin-left: 20px;">Think: Buying ceiling tiles. If you need 4.2 tiles, you must buy 5 (can't buy 0.2 of a tile!)</p>
+                <p style="margin-top: 10px;"><strong>Floor (math.floor):</strong> "Round DOWN to the previous whole number"</p>
+                <p style="margin-left: 20px;">Think: Building floors. A 4.9-story building still only has 4 complete floors.</p>
+                <p style="margin-top: 10px;"><strong>Truncate (math.trunc):</strong> "Chop off the decimal part"</p>
+                <p style="margin-left: 20px;">Think: Cutting a rope. Just cut at the decimal point, keeping only the whole number part.</p>
+            </div>
+
+            <table class="module-table">
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Purpose</th>
+                        <th>Example (x = 4.7)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term">math.ceil(x)</td>
+                        <td>Smallest integer ≥ x (ceiling)</td>
+                        <td><span class="math-formula">math.ceil(4.7)</span> is <span class="highlight">5</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">math.floor(x)</td>
+                        <td>Largest integer ≤ x (floor)</td>
+                        <td><span class="math-formula">math.floor(4.7)</span> is <span class="highlight">4</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">math.trunc(x)</td>
+                        <td>Truncate: remove fractional part</td>
+                        <td><span class="math-formula">math.trunc(4.7)</span> is <span class="highlight">4</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">math.sqrt(x)</td>
+                        <td>Square root</td>
+                        <td><span class="math-formula">math.sqrt(16)</span> is <span class="highlight">4.0</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">math.isqrt(x)</td>
+                        <td>Integer square root</td>
+                        <td><span class="math-formula">math.isqrt(16)</span> is <span class="highlight">4</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">math.pi</td>
+                        <td>The value of pi (π)</td>
+                        <td><span class="highlight">3.14159...</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">math.isnan(x)</td>
+                        <td>Check if x is Not a Number</td>
+                        <td><span class="math-formula">math.isnan(float('nan'))</span> is <span class="highlight">True</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <div class="warning-title">⚠️ Important Distinction: trunc() vs floor()</div>
+                <p><strong>For positive numbers:</strong> <span class="math-formula">math.trunc(4.7)</span> and <span class="math-formula">math.floor(4.7)</span> both return <span class="highlight">4</span></p>
+                <p><strong>For negative numbers:</strong> They differ!</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>• <span class="math-formula">math.trunc(-4.7)</span> returns <span class="highlight">-4</span> (cuts off decimal)</li>
+                    <li>• <span class="math-formula">math.floor(-4.7)</span> returns <span class="highlight">-5</span> (rounds down to lowest integer)</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">Example: Math Operations in Real Scenarios</div>
+                <p style="margin-bottom: 15px;"><strong>Scenario 1: Shipping Calculator</strong> - A company ships products in boxes. Each box holds 20 items. How many boxes are needed?</p>
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">math</span>
+
+<span class="comment"># Customer orders 87 items</span>
+<span class="variable">items_ordered</span> <span class="operator">=</span> <span class="number">87</span>
+<span class="variable">items_per_box</span> <span class="operator">=</span> <span class="number">20</span>
+
+<span class="comment"># Division gives us 4.35, but we can't ship 0.35 of a box!</span>
+<span class="variable">boxes_needed</span> <span class="operator">=</span> <span class="variable">math</span>.<span class="function">ceil</span>(<span class="variable">items_ordered</span> <span class="operator">/</span> <span class="variable">items_per_box</span>)
+<span class="function">print</span>(<span class="string">f"Boxes needed: </span><span class="variable">{boxes_needed}</span><span class="string">"</span>)  <span class="comment"># 5 boxes (ceil rounds UP)</span>
+
+<span class="comment"># Rounding comparison with 4.7</span>
+<span class="variable">x</span> <span class="operator">=</span> <span class="number">4.7</span>
+<span class="function">print</span>(<span class="string">f"\nOriginal value: </span><span class="variable">{x}</span><span class="string">"</span>)
+<span class="function">print</span>(<span class="string">f"Ceiling (round UP): </span><span class="variable">{math.ceil(x)}</span><span class="string">"</span>)      <span class="comment"># 5</span>
+<span class="function">print</span>(<span class="string">f"Floor (round DOWN): </span><span class="variable">{math.floor(x)}</span><span class="string">"</span>)     <span class="comment"># 4</span>
+<span class="function">print</span>(<span class="string">f"Truncate (chop decimal): </span><span class="variable">{math.trunc(x)}</span><span class="string">"</span>)  <span class="comment"># 4</span></div>
+
+                <p style="margin-top: 15px;"><strong>Scenario 2: Circle Calculator</strong></p>
+                <div class="code-block"><span class="comment"># Calculate area of a circle: A = πr²</span>
+<span class="variable">radius</span> <span class="operator">=</span> <span class="number">5</span>
+<span class="variable">area</span> <span class="operator">=</span> <span class="variable">math</span>.<span class="variable">pi</span> <span class="operator">*</span> <span class="variable">radius</span> <span class="operator">**</span> <span class="number">2</span>
+<span class="function">print</span>(<span class="string">f"Area of circle with radius </span><span class="variable">{radius}</span><span class="string">: </span><span class="variable">{area:.2f}</span><span class="string">"</span>)
+<span class="comment"># Output: Area of circle with radius 5: 78.54</span>
+
+<span class="comment"># Distance formula: √((x₂-x₁)² + (y₂-y₁)²)</span>
+<span class="variable">x1</span>, <span class="variable">y1</span> <span class="operator">=</span> <span class="number">0</span>, <span class="number">0</span>  <span class="comment"># Point 1</span>
+<span class="variable">x2</span>, <span class="variable">y2</span> <span class="operator">=</span> <span class="number">3</span>, <span class="number">4</span>  <span class="comment"># Point 2</span>
+<span class="variable">distance</span> <span class="operator">=</span> <span class="variable">math</span>.<span class="function">sqrt</span>((<span class="variable">x2</span><span class="operator">-</span><span class="variable">x1</span>)<span class="operator">**</span><span class="number">2</span> <span class="operator">+</span> (<span class="variable">y2</span><span class="operator">-</span><span class="variable">y1</span>)<span class="operator">**</span><span class="number">2</span>)
+<span class="function">print</span>(<span class="string">f"Distance between points: </span><span class="variable">{distance}</span><span class="string">"</span>)  <span class="comment"># 5.0</span>
+
+<span class="comment"># Integer square root (new in Python 3.8+)</span>
+<span class="function">print</span>(<span class="string">f"sqrt(100) returns: </span><span class="variable">{math.sqrt(100)}</span><span class="string">"</span>)     <span class="comment"># 10.0 (float)</span>
+<span class="function">print</span>(<span class="string">f"isqrt(100) returns: </span><span class="variable">{math.isqrt(100)}</span><span class="string">"</span>)  <span class="comment"># 10 (int)</span></div>
+            </div>
+
+            <h3 class="subsection-title">⏱️ The Datetime Module</h3>
+            <p>The <span class="math-formula">datetime</span> module helps manage dates and times accurately. It's crucial for logging, scheduling, and time-based calculations.</p>
+
+            <p style="margin-top: 15px;"><strong>Real-World Uses:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>• <strong>Event Logging:</strong> Record exactly when errors occur in your application</li>
+                <li>• <strong>Scheduling:</strong> Determine if it's time to run a backup or send reminders</li>
+                <li>• <strong>Age Calculation:</strong> Calculate someone's age from their birthdate</li>
+                <li>• <strong>Time Zones:</strong> Handle international time differences in global apps</li>
+                <li>• <strong>Billing Systems:</strong> Track subscription start/end dates, calculate time used</li>
+            </ul>
+
+            <div class="concept-box">
+                <div class="concept-title">📅 Understanding Datetime Components</div>
+                <p>A <span class="math-formula">datetime</span> object contains:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>• <strong>Year:</strong> Full year (2025)</li>
+                    <li>• <strong>Month:</strong> 1-12 (January = 1, December = 12)</li>
+                    <li>• <strong>Day:</strong> 1-31 (depending on month)</li>
+                    <li>• <strong>Hour:</strong> 0-23 (24-hour format)</li>
+                    <li>• <strong>Minute:</strong> 0-59</li>
+                    <li>• <strong>Second:</strong> 0-59</li>
+                    <li>• <strong>Microsecond:</strong> 0-999999 (for precision timing)</li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 15px;"><strong>Key Methods:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 15px;">
+                <li>• <strong>Current Time:</strong> <span class="math-formula">datetime.datetime.now()</span> returns a datetime object with current date/time</li>
+                <li>• <strong>Day of Week:</strong> <span class="math-formula">.weekday()</span> returns the day as an integer (0=Monday, 6=Sunday)</li>
+                <li>• <strong>Formatting:</strong> <span class="math-formula">.strftime(format_code)</span> converts datetime to a formatted string</li>
+                <li>• <strong>Parsing:</strong> <span class="math-formula">.strptime(string, format)</span> converts a string back to datetime</li>
+            </ul>
+
+            <table class="module-table">
+                <thead>
+                    <tr>
+                        <th>Format Code</th>
+                        <th>Meaning</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term">%Y</td>
+                        <td>Year with century</td>
+                        <td>2025</td>
+                    </tr>
+                    <tr>
+                        <td class="term">%m</td>
+                        <td>Month as a number (01-12)</td>
+                        <td>11</td>
+                    </tr>
+                    <tr>
+                        <td class="term">%d</td>
+                        <td>Day of the month (01-31)</td>
+                        <td>03</td>
+                    </tr>
+                    <tr>
+                        <td class="term">%H</td>
+                        <td>Hour (24-hour clock)</td>
+                        <td>14</td>
+                    </tr>
+                    <tr>
+                        <td class="term">%M</td>
+                        <td>Minute (00-59)</td>
+                        <td>30</td>
+                    </tr>
+                    <tr>
+                        <td class="term">%S</td>
+                        <td>Second (00-59)</td>
+                        <td>45</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <div class="example-title">Example: Working with Dates and Times</div>
+                <p style="margin-bottom: 15px;"><strong>Scenario: Event Logger</strong> - Track when users log in and format timestamps for reports.</p>
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">datetime</span>
+
+<span class="comment"># Get current date and time</span>
+<span class="variable">now</span> <span class="operator">=</span> <span class="variable">datetime</span>.<span class="variable">datetime</span>.<span class="function">now</span>()
+<span class="function">print</span>(<span class="string">f"Current datetime: </span><span class="variable">{now}</span><span class="string">"</span>)
+<span class="comment"># Output: 2025-11-03 14:30:45.123456</span>
+
+<span class="comment"># Access individual components</span>
+<span class="function">print</span>(<span class="string">f"Year: </span><span class="variable">{now.year}</span><span class="string">"</span>)        <span class="comment"># 2025</span>
+<span class="function">print</span>(<span class="string">f"Month: </span><span class="variable">{now.month}</span><span class="string">"</span>)       <span class="comment"># 11</span>
+<span class="function">print</span>(<span class="string">f"Day: </span><span class="variable">{now.day}</span><span class="string">"</span>)         <span class="comment"># 3</span>
+<span class="function">print</span>(<span class="string">f"Hour: </span><span class="variable">{now.hour}</span><span class="string">"</span>)        <span class="comment"># 14 (2 PM in 24-hour format)</span>
+
+<span class="comment"># Get day of week (0=Monday, 6=Sunday)</span>
+<span class="variable">day_of_week</span> <span class="operator">=</span> <span class="variable">now</span>.<span class="function">weekday</span>()
+<span class="variable">days</span> <span class="operator">=</span> [<span class="string">'Monday'</span>, <span class="string">'Tuesday'</span>, <span class="string">'Wednesday'</span>, <span class="string">'Thursday'</span>, <span class="string">'Friday'</span>, <span class="string">'Saturday'</span>, <span class="string">'Sunday'</span>]
+<span class="function">print</span>(<span class="string">f"Today is </span><span class="variable">{days[day_of_week]}</span><span class="string"> (index: </span><span class="variable">{day_of_week}</span><span class="string">)"</span>)
+
+<span class="comment"># Format for database (ISO format)</span>
+<span class="variable">db_format</span> <span class="operator">=</span> <span class="variable">now</span>.<span class="function">strftime</span>(<span class="string">"%Y-%m-%d %H:%M:%S"</span>)
+<span class="function">print</span>(<span class="string">f"Database format: </span><span class="variable">{db_format}</span><span class="string">"</span>)
+<span class="comment"># Output: 2025-11-03 14:30:45</span>
+
+<span class="comment"># Format for users (readable format)</span>
+<span class="variable">user_format</span> <span class="operator">=</span> <span class="variable">now</span>.<span class="function">strftime</span>(<span class="string">"%B %d, %Y at %I:%M %p"</span>)
+<span class="function">print</span>(<span class="string">f"User-friendly: </span><span class="variable">{user_format}</span><span class="string">"</span>)
+<span class="comment"># Output: November 03, 2025 at 02:30 PM</span>
+
+<span class="comment"># Format for file names (no spaces or special chars)</span>
+<span class="variable">filename_format</span> <span class="operator">=</span> <span class="variable">now</span>.<span class="function">strftime</span>(<span class="string">"backup_%Y%m%d_%H%M%S.zip"</span>)
+<span class="function">print</span>(<span class="string">f"Filename: </span><span class="variable">{filename_format}</span><span class="string">"</span>)
+<span class="comment"># Output: backup_20251103_143045.zip</span></div>
+
+                <p style="margin-top: 15px;"><strong>Scenario: Check if it's the weekend</strong></p>
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">datetime</span>
+
+<span class="variable">today</span> <span class="operator">=</span> <span class="variable">datetime</span>.<span class="variable">datetime</span>.<span class="function">now</span>()
+<span class="variable">day_num</span> <span class="operator">=</span> <span class="variable">today</span>.<span class="function">weekday</span>()
+
+<span class="comment"># Saturday=5, Sunday=6</span>
+<span class="keyword">if</span> <span class="variable">day_num</span> <span class="operator">>=</span> <span class="number">5</span>:
+    <span class="function">print</span>(<span class="string">"🎉 It's the weekend!"</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">f"💼 Weekday. </span><span class="variable">{5 - day_num}</span><span class="string"> days until weekend."</span>)</div>
+            </div>
+
+            <div class="activity-box">
+                <div class="activity-title">🎲 Activity 2.1: Time & Math Challenge (Hands-On)</div>
+                <p><strong>Objective:</strong> Combine math and datetime to calculate and format data.</p>
+                <p style="margin-top: 10px;"><strong>Challenge:</strong> Build a "Daily Report Generator" that creates a formatted report with calculations.</p>
+
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">math</span>
+<span class="keyword">import</span> <span class="variable">datetime</span>
+
+<span class="function">print</span>(<span class="string">"=" * 50</span>)
+<span class="function">print</span>(<span class="string">"      📊 DAILY SALES REPORT 📊"</span>)
+<span class="function">print</span>(<span class="string">"=" * 50</span>)
+
+<span class="comment"># Part 1: Get current date and format it</span>
+<span class="variable">current_time</span> <span class="operator">=</span> <span class="variable">datetime</span>.<span class="variable">datetime</span>.<span class="function">now</span>()
+<span class="variable">report_date</span> <span class="operator">=</span> <span class="variable">current_time</span>.<span class="function">strftime</span>(<span class="string">"%B %d, %Y at %I:%M %p"</span>)
+<span class="function">print</span>(<span class="string">f"Generated: </span><span class="variable">{report_date}</span><span class="string">"</span>)
+<span class="function">print</span>(<span class="string">f"Weekday: </span><span class="variable">{['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][current_time.weekday()]}</span><span class="string">"</span>)
+<span class="function">print</span>(<span class="string">"-" * 50</span>)
+
+<span class="comment"># Part 2: Sales calculations with math module</span>
+<span class="variable">total_sales</span> <span class="operator">=</span> <span class="number">1547.89</span>
+<span class="variable">tax_rate</span> <span class="operator">=</span> <span class="number">0.08</span>
+
+<span class="comment"># Calculate tax and round UP to nearest cent</span>
+<span class="variable">tax_amount</span> <span class="operator">=</span> <span class="variable">total_sales</span> <span class="operator">*</span> <span class="variable">tax_rate</span>
+<span class="variable">tax_rounded</span> <span class="operator">=</span> <span class="variable">math</span>.<span class="function">ceil</span>(<span class="variable">tax_amount</span> <span class="operator">*</span> <span class="number">100</span>) <span class="operator">/</span> <span class="number">100</span>  <span class="comment"># Round to 2 decimals</span>
+<span class="variable">grand_total</span> <span class="operator">=</span> <span class="variable">total_sales</span> <span class="operator">+</span> <span class="variable">tax_rounded</span>
+
+<span class="function">print</span>(<span class="string">f"Subtotal:     ${</span><span class="variable">total_sales</span><span class="string">:.2f}"</span>)
+<span class="function">print</span>(<span class="string">f"Tax (8%):     ${</span><span class="variable">tax_rounded</span><span class="string">:.2f}"</span>)
+<span class="function">print</span>(<span class="string">f"Grand Total:  ${</span><span class="variable">grand_total</span><span class="string">:.2f}"</span>)
+<span class="function">print</span>(<span class="string">"-" * 50</span>)
+
+<span class="comment"># Part 3: Calculate items per box (shipping)</span>
+<span class="variable">items_sold</span> <span class="operator">=</span> <span class="number">127</span>
+<span class="variable">items_per_box</span> <span class="operator">=</span> <span class="number">25</span>
+<span class="variable">boxes_needed</span> <span class="operator">=</span> <span class="variable">math</span>.<span class="function">ceil</span>(<span class="variable">items_sold</span> <span class="operator">/</span> <span class="variable">items_per_box</span>)
+
+<span class="function">print</span>(<span class="string">f"Items Sold: </span><span class="variable">{items_sold}</span><span class="string">"</span>)
+<span class="function">print</span>(<span class="string">f"Boxes Needed: </span><span class="variable">{boxes_needed}</span><span class="string"> (</span><span class="variable">{items_per_box}</span><span class="string"> items per box)"</span>)
+<span class="function">print</span>(<span class="string">f"Using math.ceil: </span><span class="variable">{items_sold}</span><span class="string">/</span><span class="variable">{items_per_box}</span><span class="string"> = </span><span class="variable">{items_sold/items_per_box:.2f}</span><span class="string"> → </span><span class="variable">{boxes_needed}</span><span class="string"> boxes"</span>)
+<span class="function">print</span>(<span class="string">"=" * 50</span>)</div>
+
+                <p style="margin-top: 15px;"><strong>💡 What You'll Learn:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>• Using <span class="math-formula">strftime()</span> with multiple format codes</li>
+                    <li>• Practical use of <span class="math-formula">math.ceil()</span> for rounding money</li>
+                    <li>• Converting weekday index to readable names</li>
+                    <li>• Formatting output with f-strings</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">🃏 The Random Module</h3>
+            <p>The <span class="math-formula">random</span> module is crucial for simulations, games, and security. It provides various functions for generating random numbers and selecting random elements.</p>
+
+            <p style="margin-top: 15px;"><strong>Real-World Applications:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>• <strong>Gaming:</strong> Dice rolls, card shuffling, random enemy spawns, loot drops</li>
+                <li>• <strong>Simulations:</strong> Monte Carlo simulations, testing with random data</li>
+                <li>• <strong>Machine Learning:</strong> Random sampling of training data, initialization of neural networks</li>
+                <li>• <strong>Contests:</strong> Selecting random winners from a participant list</li>
+                <li>• <strong>A/B Testing:</strong> Randomly assigning users to different test groups</li>
+                <li>• <strong>Security:</strong> Generating random passwords, tokens, and session IDs</li>
+            </ul>
+
+            <div class="warning-box">
+                <div class="warning-title">⚠️ Important: Pseudo-Random vs True Random</div>
+                <p>Python's <span class="math-formula">random</span> module generates <strong>pseudo-random</strong> numbers—they appear random but follow a mathematical pattern. This is perfect for games and simulations but NOT for cryptography.</p>
+                <p style="margin-top: 10px;"><strong>For security/cryptography:</strong> Use <span class="math-formula">secrets</span> module instead:</p>
+                <p style="margin-left: 20px; margin-top: 5px;"><span class="math-formula">import secrets</span></p>
+                <p style="margin-left: 20px;"><span class="math-formula">secure_token = secrets.token_hex(16)</span></p>
+            </div>
+
+            <table class="module-table">
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Purpose</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term">random.randint(a, b)</td>
+                        <td>Integer, inclusive of both a and b</td>
+                        <td><span class="math-formula">randint(1, 10)</span> → 1, 2, ..., 10</td>
+                    </tr>
+                    <tr>
+                        <td class="term">random.choice(seq)</td>
+                        <td>Selects a single, random element from a list</td>
+                        <td><span class="math-formula">choice(['A', 'B', 'C'])</span> → 'B'</td>
+                    </tr>
+                    <tr>
+                        <td class="term">random.sample(pop, k)</td>
+                        <td>Selects k unique elements from a list</td>
+                        <td><span class="math-formula">sample(range(1, 50), 6)</span> → 6 unique numbers</td>
+                    </tr>
+                    <tr>
+                        <td class="term">random.shuffle(x)</td>
+                        <td>Shuffles the list in place (modifies the original)</td>
+                        <td><span class="math-formula">shuffle(my_list)</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box">
+                <div class="concept-title">💡 Key Difference: choice() vs sample()</div>
+                <p><strong>choice():</strong> Returns ONE random element. Can select the same element multiple times if called repeatedly.</p>
+                <p><strong>sample():</strong> Returns MULTIPLE unique elements at once. No duplicates in the result.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">Example: Random Module in Action</div>
+                <p style="margin-bottom: 15px;"><strong>Scenario 1: Dice Game Simulator</strong></p>
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">random</span>
+
+<span class="comment"># Roll two dice (1-6 inclusive)</span>
+<span class="variable">die1</span> <span class="operator">=</span> <span class="variable">random</span>.<span class="function">randint</span>(<span class="number">1</span>, <span class="number">6</span>)
+<span class="variable">die2</span> <span class="operator">=</span> <span class="variable">random</span>.<span class="function">randint</span>(<span class="number">1</span>, <span class="number">6</span>)
+<span class="variable">total</span> <span class="operator">=</span> <span class="variable">die1</span> <span class="operator">+</span> <span class="variable">die2</span>
+<span class="function">print</span>(<span class="string">f"🎲 You rolled: </span><span class="variable">{die1}</span><span class="string"> + </span><span class="variable">{die2}</span><span class="string"> = </span><span class="variable">{total}</span><span class="string">"</span>)
+
+<span class="comment"># Check for special rolls</span>
+<span class="keyword">if</span> <span class="variable">die1</span> <span class="operator">==</span> <span class="variable">die2</span>:
+    <span class="function">print</span>(<span class="string">"🎉 DOUBLES! Roll again!"</span>)
+<span class="keyword">if</span> <span class="variable">total</span> <span class="operator">==</span> <span class="number">7</span>:
+    <span class="function">print</span>(<span class="string">"🍀 Lucky 7!"</span>)</div>
+
+                <p style="margin-top: 15px;"><strong>Scenario 2: Random Password Generator</strong></p>
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">random</span>
+<span class="keyword">import</span> <span class="variable">string</span>
+
+<span class="comment"># Create a pool of characters</span>
+<span class="variable">characters</span> <span class="operator">=</span> <span class="variable">string</span>.<span class="variable">ascii_letters</span> <span class="operator">+</span> <span class="variable">string</span>.<span class="variable">digits</span> <span class="operator">+</span> <span class="string">"!@#$%"</span>
+<span class="comment"># Pool contains: abcdefg...XYZ123456789!@#$%</span>
+
+<span class="comment"># Generate 12-character password</span>
+<span class="variable">password</span> <span class="operator">=</span> <span class="string">''</span>.<span class="function">join</span>(<span class="variable">random</span>.<span class="function">choice</span>(<span class="variable">characters</span>) <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">12</span>))
+<span class="function">print</span>(<span class="string">f"🔐 Generated password: </span><span class="variable">{password}</span><span class="string">"</span>)
+<span class="comment"># Example output: aB3$xK9!mPq2</span></div>
+
+                <p style="margin-top: 15px;"><strong>Scenario 3: Card Game - Drawing Cards</strong></p>
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">random</span>
+
+<span class="comment"># Build a deck of cards</span>
+<span class="variable">suits</span> <span class="operator">=</span> [<span class="string">'♠'</span>, <span class="string">'♥'</span>, <span class="string">'♦'</span>, <span class="string">'♣'</span>]
+<span class="variable">ranks</span> <span class="operator">=</span> [<span class="string">'A'</span>, <span class="string">'2'</span>, <span class="string">'3'</span>, <span class="string">'4'</span>, <span class="string">'5'</span>, <span class="string">'6'</span>, <span class="string">'7'</span>, <span class="string">'8'</span>, <span class="string">'9'</span>, <span class="string">'10'</span>, <span class="string">'J'</span>, <span class="string">'Q'</span>, <span class="string">'K'</span>]
+<span class="variable">deck</span> <span class="operator">=</span> [<span class="string">f"</span><span class="variable">{rank}{suit}</span><span class="string">"</span> <span class="keyword">for</span> <span class="variable">suit</span> <span class="keyword">in</span> <span class="variable">suits</span> <span class="keyword">for</span> <span class="variable">rank</span> <span class="keyword">in</span> <span class="variable">ranks</span>]
+<span class="function">print</span>(<span class="string">f"Deck has </span><span class="variable">{len(deck)}</span><span class="string"> cards"</span>)  <span class="comment"># 52 cards</span>
+
+<span class="comment"># Shuffle the deck (modifies original list)</span>
+<span class="variable">random</span>.<span class="function">shuffle</span>(<span class="variable">deck</span>)
+<span class="function">print</span>(<span class="string">"🔀 Deck shuffled!"</span>)
+
+<span class="comment"># Deal 5 cards to player (remove from deck)</span>
+<span class="variable">hand</span> <span class="operator">=</span> <span class="variable">random</span>.<span class="function">sample</span>(<span class="variable">deck</span>, <span class="number">5</span>)
+<span class="function">print</span>(<span class="string">f"🃏 Your hand: </span><span class="variable">{hand}</span><span class="string">"</span>)
+
+<span class="comment"># OR use choice() to draw one card at a time</span>
+<span class="variable">single_card</span> <span class="operator">=</span> <span class="variable">random</span>.<span class="function">choice</span>(<span class="variable">deck</span>)
+<span class="function">print</span>(<span class="string">f"🎴 Drew a card: </span><span class="variable">{single_card}</span><span class="string">"</span>)</div>
+
+                <p style="margin-top: 15px;"><strong>Scenario 4: Contest Winner Selection</strong></p>
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">random</span>
+
+<span class="variable">participants</span> <span class="operator">=</span> [<span class="string">"Alice"</span>, <span class="string">"Bob"</span>, <span class="string">"Charlie"</span>, <span class="string">"Diana"</span>, <span class="string">"Eve"</span>, 
+                <span class="string">"Frank"</span>, <span class="string">"Grace"</span>, <span class="string">"Henry"</span>, <span class="string">"Iris"</span>, <span class="string">"Jack"</span>]
+
+<span class="comment"># Select 1st place winner</span>
+<span class="variable">first_place</span> <span class="operator">=</span> <span class="variable">random</span>.<span class="function">choice</span>(<span class="variable">participants</span>)
+<span class="function">print</span>(<span class="string">f"🥇 First place: </span><span class="variable">{first_place}</span><span class="string">"</span>)
+
+<span class="comment"># Select 3 runners-up (must be unique, excluding 1st place)</span>
+<span class="variable">remaining</span> <span class="operator">=</span> [<span class="variable">p</span> <span class="keyword">for</span> <span class="variable">p</span> <span class="keyword">in</span> <span class="variable">participants</span> <span class="keyword">if</span> <span class="variable">p</span> <span class="operator">!=</span> <span class="variable">first_place</span>]
+<span class="variable">runners_up</span> <span class="operator">=</span> <span class="variable">random</span>.<span class="function">sample</span>(<span class="variable">remaining</span>, <span class="number">3</span>)
+<span class="function">print</span>(<span class="string">f"🥈 Runners-up: </span><span class="variable">{runners_up}</span><span class="string">"</span>)</div>
+            </div>
+
+            <div class="activity-box">
+                <div class="activity-title">🎰 Activity 2.2: Random Selector (Hands-On)</div>
+                <p><strong>Objective:</strong> Use choice, sample, and shuffle to manipulate a list.</p>
+
+                <div class="code-block"><span class="keyword">import</span> <span class="variable">random</span>
+
+<span class="comment"># Example list of users</span>
+<span class="variable">users</span> <span class="operator">=</span> [<span class="string">"Alice"</span>, <span class="string">"Bob"</span>, <span class="string">"Charlie"</span>, <span class="string">"Diana"</span>, <span class="string">"Eve"</span>, <span class="string">"Frank"</span>]
+<span class="function">print</span>(<span class="string">f"Original list: </span><span class="variable">{users}</span><span class="string">"</span>)
+
+<span class="comment"># 1. Use choice()</span>
+<span class="variable">winner</span> <span class="operator">=</span> <span class="variable">random</span>.<span class="function">choice</span>(<span class="variable">users</span>)
+<span class="function">print</span>(<span class="string">f"Today's winner is: </span><span class="variable">{winner}</span><span class="string">"</span>)
+
+<span class="comment"># 2. Use sample()</span>
+<span class="variable">jury</span> <span class="operator">=</span> <span class="variable">random</span>.<span class="function">sample</span>(<span class="variable">users</span>, <span class="number">3</span>)
+<span class="function">print</span>(<span class="string">f"Randomly selected jury (3 unique members): </span><span class="variable">{jury}</span><span class="string">"</span>)
+
+<span class="comment"># 3. Use shuffle()</span>
+<span class="variable">random</span>.<span class="function">shuffle</span>(<span class="variable">users</span>)  <span class="comment"># Modifies the original list</span>
+<span class="function">print</span>(<span class="string">f"List after shuffling: </span><span class="variable">{users}</span><span class="string">"</span>)</div>
+
+                <p style="margin-top: 15px;"><strong>Expected Behavior:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>• <span class="math-formula">choice()</span> picks one random winner</li>
+                    <li>• <span class="math-formula">sample()</span> picks 3 unique jury members (no repeats)</li>
+                    <li>• <span class="math-formula">shuffle()</span> randomly reorders the entire original list</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Final Assessment Quiz -->
+        <div class="section">
+            <h2 class="section-title">❓ Final Assessment Quiz</h2>
+            <p>Take this quick quiz to check your understanding of the essential module functions.</p>
+
+            <div class="quiz-box">
+                <div class="quiz-question">
+                    <h4>Question 1: How do you check if a file named config.ini exists?</h4>
+                    <p style="margin: 10px 0;"><strong>Module:</strong> <span class="math-formula">os.path</span></p>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q1-answer')">Show Answer</button>
+                    <div id="q1-answer" class="answer-reveal">
+                        <strong>Answer:</strong> <span class="math-formula">os.path.exists('config.ini')</span><br>
+                        <strong>Explanation:</strong> The <span class="math-formula">os.path.exists()</span> function returns True if the file or directory exists, False otherwise.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 2: Which sys property holds the command-line arguments?</h4>
+                    <p style="margin: 10px 0;"><strong>Module:</strong> <span class="math-formula">sys</span></p>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q2-answer')">Show Answer</button>
+                    <div id="q2-answer" class="answer-reveal">
+                        <strong>Answer:</strong> <span class="math-formula">sys.argv</span><br>
+                        <strong>Explanation:</strong> <span class="math-formula">sys.argv</span> is a list containing command-line arguments. Index 0 is the script name, index 1+ are arguments.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 3: What does math.trunc(-5.2) return?</h4>
+                    <p style="margin: 10px 0;"><strong>Module:</strong> <span class="math-formula">math</span></p>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q3-answer')">Show Answer</button>
+                    <div id="q3-answer" class="answer-reveal">
+                        <strong>Answer:</strong> <span class="highlight">-5</span><br>
+                        <strong>Explanation:</strong> <span class="math-formula">math.trunc()</span> removes the fractional part, so -5.2 becomes -5. Note: <span class="math-formula">math.floor(-5.2)</span> would return -6.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 4: If today is a Friday, what integer does .weekday() return?</h4>
+                    <p style="margin: 10px 0;"><strong>Module:</strong> <span class="math-formula">datetime</span></p>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q4-answer')">Show Answer</button>
+                    <div id="q4-answer" class="answer-reveal">
+                        <strong>Answer:</strong> <span class="highlight">4</span><br>
+                        <strong>Explanation:</strong> The <span class="math-formula">weekday()</span> method returns: 0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, <strong>4=Friday</strong>, 5=Saturday, 6=Sunday
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 5: How do you select 5 unique winning numbers from a list of 50?</h4>
+                    <p style="margin: 10px 0;"><strong>Module:</strong> <span class="math-formula">random</span></p>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q5-answer')">Show Answer</button>
+                    <div id="q5-answer" class="answer-reveal">
+                        <strong>Answer:</strong> <span class="math-formula">random.sample(list, 5)</span><br>
+                        <strong>Explanation:</strong> <span class="math-formula">random.sample(population, k)</span> returns k unique elements from the population. Perfect for lottery-style selections.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 6: Write the strftime code for the month as a two-digit number (e.g., 03).</h4>
+                    <p style="margin: 10px 0;"><strong>Module:</strong> <span class="math-formula">datetime</span></p>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q6-answer')">Show Answer</button>
+                    <div id="q6-answer" class="answer-reveal">
+                        <strong>Answer:</strong> <span class="math-formula">%m</span><br>
+                        <strong>Explanation:</strong> The format code <span class="math-formula">%m</span> represents the month as a zero-padded decimal number (01-12).
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 7: What's the difference between math.ceil(4.2) and math.floor(4.2)?</h4>
+                    <p style="margin: 10px 0;"><strong>Module:</strong> <span class="math-formula">math</span></p>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q7-answer')">Show Answer</button>
+                    <div id="q7-answer" class="answer-reveal">
+                        <strong>Answer:</strong> <span class="math-formula">ceil(4.2) = 5</span>, <span class="math-formula">floor(4.2) = 4</span><br>
+                        <strong>Explanation:</strong> <span class="math-formula">ceil()</span> rounds UP to the smallest integer ≥ x. <span class="math-formula">floor()</span> rounds DOWN to the largest integer ≤ x.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 8: What does random.shuffle() return?</h4>
+                    <p style="margin: 10px 0;"><strong>Module:</strong> <span class="math-formula">random</span></p>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q8-answer')">Show Answer</button>
+                    <div id="q8-answer" class="answer-reveal">
+                        <strong>Answer:</strong> <span class="highlight">None</span> (it modifies the list in place)<br>
+                        <strong>Explanation:</strong> <span class="math-formula">random.shuffle()</span> doesn't return anything—it directly modifies the original list by shuffling its elements randomly.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="section">
+            <h2 class="section-title">📚 Summary: Key Takeaways</h2>
+            
+            <div class="example-box">
+                <div class="example-title">🎯 System Modules (os, sys, os.path)</div>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>• Use <span class="math-formula">os.path.exists()</span> to check if files/folders exist</li>
+                    <li>• Use <span class="math-formula">os.mkdir()</span> to create directories</li>
+                    <li>• Access command-line arguments with <span class="math-formula">sys.argv</span></li>
+                    <li>• <span class="math-formula">sys.argv[0]</span> is always the script name</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">🔢 Math Module</div>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>• <span class="math-formula">ceil()</span> rounds UP, <span class="math-formula">floor()</span> rounds DOWN</li>
+                    <li>• <span class="math-formula">trunc()</span> removes decimal (different from floor for negatives)</li>
+                    <li>• Use <span class="math-formula">sqrt()</span> for float results, <span class="math-formula">isqrt()</span> for integer results</li>
+                    <li>• Access constants like <span class="math-formula">math.pi</span></li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">⏱️ Datetime Module</div>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>• Get current time with <span class="math-formula">datetime.datetime.now()</span></li>
+                    <li>• <span class="math-formula">.weekday()</span> returns 0-6 (Monday-Sunday)</li>
+                    <li>• Format dates with <span class="math-formula">.strftime()</span> using format codes</li>
+                    <li>• Common codes: <span class="math-formula">%Y</span> (year), <span class="math-formula">%m</span> (month), <span class="math-formula">%d</span> (day)</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">🎲 Random Module</div>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>• <span class="math-formula">randint(a, b)</span> returns random integer (inclusive)</li>
+                    <li>• <span class="math-formula">choice(seq)</span> picks ONE random element</li>
+                    <li>• <span class="math-formula">sample(pop, k)</span> picks k UNIQUE elements</li>
+                    <li>• <span class="math-formula">shuffle(list)</span> randomizes order in place (returns None)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Projects: If-Else & Random - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/pyodide@0.24.1/pyodide.js"></script>
+  <script src="/firebase-config.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
+      color: #f0f6fc;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #21262d, #30363d);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #58a6ff, #79c0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header p {
+      font-size: 1.2rem;
+      color: #8b949e;
+      margin-bottom: 1.5rem;
+    }
+    
+    .header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #58a6ff;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      color: #8b949e;
+    }
+    
+    /* Navigation */
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .nav-tab {
+      background: #161b22;
+      border: 1px solid #30363d;
+      color: #f0f6fc;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-tab:hover {
+      background: #30363d;
+      border-color: #58a6ff;
+    }
+    
+    .nav-tab.active {
+      background: #1f6feb;
+      border-color: #1f6feb;
+    }
+    
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+    }
+    
+    .project-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .project-card:hover {
+      border-color: #58a6ff;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .project-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .project-emoji {
+      font-size: 2.5rem;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+    
+    .project-info h3 {
+      font-size: 1.4rem;
+      color: #58a6ff;
+      margin-bottom: 0.5rem;
+    }
+    
+    .project-difficulty {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .difficulty-beginner {
+      background: #2ea043;
+      color: white;
+    }
+    
+    .difficulty-intermediate {
+      background: #fb8500;
+      color: white;
+    }
+    
+    .project-description {
+      color: #8b949e;
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+    
+    .project-concepts {
+      margin-bottom: 1.5rem;
+    }
+    
+    .concepts-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f0f6fc;
+      margin-bottom: 0.5rem;
+    }
+    
+    .concept-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .concept-tag {
+      background: #21262d;
+      color: #58a6ff;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      border: 1px solid #30363d;
+    }
+    
+    .project-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .btn {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      flex: 1;
+      justify-content: center;
+    }
+    
+    .btn:hover {
+      background: #2ea043;
+    }
+    
+    .btn.secondary {
+      background: #21262d;
+      border: 1px solid #30363d;
+    }
+    
+    .btn.secondary:hover {
+      background: #30363d;
+    }
+    
+    /* Code Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      padding: 2rem;
+    }
+    
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #21262d;
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      color: #58a6ff;
+      flex: 1;
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      color: #8b949e;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    
+    .close-btn:hover {
+      color: #f0f6fc;
+    }
+    
+    .code-section {
+      background: #161b22;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .code-section h4 {
+      color: #58a6ff;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    
+    .code-block {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 6px;
+      padding: 1rem;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      overflow-x: auto;
+      color: #f0f6fc;
+      margin-bottom: 1rem;
+    }
+    
+    .step-list {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+    
+    .step-list li {
+      counter-increment: step-counter;
+      margin-bottom: 1rem;
+      padding-left: 3rem;
+      position: relative;
+    }
+    
+    .step-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: #58a6ff;
+      color: white;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    
+    /* Output Section */
+    .output-section {
+      margin-top: 1.5rem;
+    }
+    
+    .output-area {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 6px;
+      padding: 1rem;
+      min-height: 100px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.9rem;
+      color: #f0f6fc;
+    }
+    
+    .run-code-btn {
+      background: #238636;
+      margin-top: 1rem;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header h1 {
+        font-size: 2.2rem;
+      }
+      
+      .header-stats {
+        gap: 1.5rem;
+      }
+      
+      .project-actions {
+        flex-direction: column;
+      }
+      
+      .modal {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1><i class="fas fa-code-branch"></i> Python Projects: If-Else & Random</h1>
+      <p>Build 10 fun and interactive Python projects using conditional statements and the random module</p>
+      
+      <div class="header-stats">
+        <div class="stat-item">
+          <div class="stat-number">10</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">2-3 hrs</div>
+          <div class="stat-label">Total Time</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">Beginner</div>
+          <div class="stat-label">Level</div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+      <a href="/dashboard.html" class="nav-tab">
+        <i class="fas fa-home"></i> Dashboard
+      </a>
+      <a href="/lessons" class="nav-tab">
+        <i class="fas fa-book"></i> Lessons
+      </a>
+      <a href="/ide-pro.html" class="nav-tab">
+        <i class="fas fa-code"></i> IDE Pro
+      </a>
+      <a href="#" class="nav-tab active">
+        <i class="fas fa-project-diagram"></i> Projects
+      </a>
+    </nav>
+    
+    <!-- Projects Grid -->
+    <div class="projects-grid">
+      <!-- Project 1: College Mascot Picker -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">🎓</div>
+          <div class="project-info">
+            <h3>The College Mascot Picker</h3>
+            <span class="project-difficulty difficulty-beginner">Beginner</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          Help a high schooler randomly pick a college mascot to "support" from a list of rival schools. This is a fun way to use the random module with lists and conditional logic.
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">random.choice()</span>
+            <span class="concept-tag">Lists</span>
+            <span class="concept-tag">if/else</span>
+            <span class="concept-tag">input()</span>
+            <span class="concept-tag">String comparison</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(1)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=mascot-picker" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+      
+      <!-- Project 2: Study Topic Selector -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">📚</div>
+          <div class="project-info">
+            <h3>The Study Topic Selector</h3>
+            <span class="project-difficulty difficulty-beginner">Beginner</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          Help a student decide what subject to study next by randomly choosing from a list of topics. This program is useful for students who feel overwhelmed with what to study next.
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">if/elif/else</span>
+            <span class="concept-tag">.lower()</span>
+            <span class="concept-tag">random.choice()</span>
+            <span class="concept-tag">Multiple lists</span>
+            <span class="concept-tag">User input</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(2)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=study-selector" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+      
+      <!-- Project 3: Would You Rather Game -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">🤔</div>
+          <div class="project-info">
+            <h3>The "Would You Rather" Game</h3>
+            <span class="project-difficulty difficulty-beginner">Beginner</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          Create a simple game that presents two random, funny "Would You Rather" questions to the user. This is a great way to show how you can combine lists and random.choice() for an interactive game.
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">random.choice()</span>
+            <span class="concept-tag">Lists of strings</span>
+            <span class="concept-tag">Comparison operators</span>
+            <span class="concept-tag">While loops</span>
+            <span class="concept-tag">Game logic</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(3)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=would-rather" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+      
+      <!-- Project 4: School Lunch Decider -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">🥪</div>
+          <div class="project-info">
+            <h3>The School Lunch Decider</h3>
+            <span class="project-difficulty difficulty-beginner">Beginner</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          A program that helps a user decide what to pack for lunch by randomly choosing from a list of options. It's practical and relatable for students.
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">if/elif/else</span>
+            <span class="concept-tag">.lower()</span>
+            <span class="concept-tag">Two separate lists</span>
+            <span class="concept-tag">random.choice()</span>
+            <span class="concept-tag">Input validation</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(4)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=lunch-decider" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+      
+      <!-- Project 5: Yearbook Quote Generator -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">✍️</div>
+          <div class="project-info">
+            <h3>The Yearbook Quote Generator</h3>
+            <span class="project-difficulty difficulty-intermediate">Intermediate</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          Generate a random, inspirational, or funny yearbook quote based on the user's personality or interests. This is a perfect way to show how code can be creative and personal.
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">Multiple if/elif blocks</span>
+            <span class="concept-tag">Dictionary-like logic</span>
+            <span class="concept-tag">String formatting</span>
+            <span class="concept-tag">Default cases</span>
+            <span class="concept-tag">Creative programming</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(5)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=yearbook-quote" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+      
+      <!-- Project 6: College Life Simulator -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">🏘️</div>
+          <div class="project-info">
+            <h3>The College Life Simulator</h3>
+            <span class="project-difficulty difficulty-intermediate">Intermediate</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          Simulate a day in college life by randomly choosing a class, a food item from the dining hall, and a social activity. Create a complete story!
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">Multiple lists</span>
+            <span class="concept-tag">Multiple random.choice()</span>
+            <span class="concept-tag">Story generation</span>
+            <span class="concept-tag">String concatenation</span>
+            <span class="concept-tag">Simulation logic</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(6)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=college-sim" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+      
+      <!-- Project 7: Playlist Generator -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">🎶</div>
+          <div class="project-info">
+            <h3>The Playlist Generator</h3>
+            <span class="project-difficulty difficulty-intermediate">Intermediate</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          Create a simple music playlist generator that suggests a song and an artist based on the user's mood. Perfect for music lovers!
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">Parallel lists</span>
+            <span class="concept-tag">Mood-based logic</span>
+            <span class="concept-tag">Multiple random selections</span>
+            <span class="concept-tag">Data pairing</span>
+            <span class="concept-tag">User preferences</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(7)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=playlist-gen" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+      
+      <!-- Project 8: Character Namer -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">🧙</div>
+          <div class="project-info">
+            <h3>The Character Namer</h3>
+            <span class="project-difficulty difficulty-beginner">Beginner</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          Help a user create a fictional character by randomly assigning them a name and a special ability. Great for creative writing and gaming!
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">Multiple lists</span>
+            <span class="concept-tag">Name generation</span>
+            <span class="concept-tag">Character building</span>
+            <span class="concept-tag">Creative output</span>
+            <span class="concept-tag">Fantasy elements</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(8)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=character-namer" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+      
+      <!-- Project 9: Snack Picker -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">🍿</div>
+          <div class="project-info">
+            <h3>The Snack Picker</h3>
+            <span class="project-difficulty difficulty-beginner">Beginner</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          A program that helps a user decide on a movie night snack based on their preference for "sweet" or "salty" foods. Perfect for movie nights!
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">Binary choices</span>
+            <span class="concept-tag">if/else structure</span>
+            <span class="concept-tag">Category-based lists</span>
+            <span class="concept-tag">Simple decision making</span>
+            <span class="concept-tag">Food preferences</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(9)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=snack-picker" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+      
+      <!-- Project 10: Weekend Activity Planner -->
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-emoji">☀️</div>
+          <div class="project-info">
+            <h3>The Weekend Activity Planner</h3>
+            <span class="project-difficulty difficulty-intermediate">Intermediate</span>
+          </div>
+        </div>
+        
+        <p class="project-description">
+          Help a student plan their weekend by randomly suggesting an activity that is either "inside" or "outside" based on the predicted weather.
+        </p>
+        
+        <div class="project-concepts">
+          <div class="concepts-title">Key Concepts:</div>
+          <div class="concept-tags">
+            <span class="concept-tag">Weather simulation</span>
+            <span class="concept-tag">Complex if/elif/else</span>
+            <span class="concept-tag">Activity categorization</span>
+            <span class="concept-tag">Planning logic</span>
+            <span class="concept-tag">Real-world scenarios</span>
+          </div>
+        </div>
+        
+        <div class="project-actions">
+          <button class="btn" onclick="viewProject(10)">
+            <i class="fas fa-eye"></i> View Instructions
+          </button>
+          <a href="/ide-pro.html?project=weekend-planner" class="btn secondary">
+            <i class="fas fa-code"></i> Start Coding
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Project Details Modal -->
+  <div class="modal" id="project-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Project Instructions</h2>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      
+      <div id="modal-body">
+        <!-- Project content will be loaded here -->
+      </div>
+      
+      <div class="output-section">
+        <h4 style="color: #58a6ff; margin-bottom: 1rem;">
+          <i class="fas fa-play"></i> Try it yourself:
+        </h4>
+        <textarea id="code-editor" class="code-block" rows="10" placeholder="Write your Python code here..."></textarea>
+        <button class="btn run-code-btn" onclick="runCode()">
+          <i class="fas fa-play"></i> Run Code
+        </button>
+        <div class="output-area" id="output-area">
+          <em style="color: #8b949e;">Output will appear here...</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let pyodideInstance = null;
+    
+    // Initialize Pyodide
+    async function initPyodide() {
+      if (!pyodideInstance) {
+        pyodideInstance = await loadPyodide();
+        console.log("Pyodide initialized successfully!");
+      }
+      return pyodideInstance;
+    }
+    
+    // Project data
+    const projects = {
+      1: {
+        title: "🎓 The College Mascot Picker",
+        goal: "Help a high schooler randomly pick a college mascot to \"support\" from a list of rival schools. This is a fun way to use the random module with lists and conditional logic.",
+        steps: [
+          "Import the random module",
+          "Ask the user for their name using input()",
+          "Create two lists of mascots for two rival schools",
+          "Use random.choice() to pick one mascot from each list", 
+          "Use an if/else block to check if the two chosen mascots are the same",
+          "Print appropriate messages based on whether mascots match"
+        ],
+        code: `import random
+
+# Get user's name
+name = input("What's your name? ")
+
+# Create mascot lists for rival schools
+mascots_school_a = ["Tigers", "Bulldogs", "Gators"]
+mascots_school_b = ["Lions", "Seminoles", "Knights"]
+
+# Pick random mascots
+chosen_mascot_a = random.choice(mascots_school_a)
+chosen_mascot_b = random.choice(mascots_school_b)
+
+# Check if they're the same
+if chosen_mascot_a == chosen_mascot_b:
+    print("Wow,", chosen_mascot_a, "and", chosen_mascot_b, "are the same! Your schools share a bond.")
+else:
+    print("You're a fan of the", chosen_mascot_a, "and the", chosen_mascot_b, "! You must choose a side.")`,
+        template: `import random
+
+# Get user's name
+name = input("What's your name? ")
+
+# Create mascot lists for rival schools
+mascots_school_a = ["Tigers", "Bulldogs", "Gators"]
+mascots_school_b = ["Lions", "Seminoles", "Knights"]
+
+# TODO: Pick random mascots from each list
+# TODO: Compare the mascots and print appropriate message`
+      },
+      2: {
+        title: "📚 The Study Topic Selector",
+        goal: "Help a student decide what subject to study next by randomly choosing from a list of topics. This program is useful for students who feel overwhelmed with what to study next.",
+        steps: [
+          "Import the random module",
+          "Ask the user to input their class",
+          "Create an if/elif/else block to check the user's input using .lower()",
+          "For each class, create a specific list of topics",
+          "Use random.choice() to select a random topic from the correct list",
+          "Print the selected topic with encouragement",
+          "Handle invalid input in the else block"
+        ],
+        code: `import random
+
+# Get user's class
+user_class = input("What class do you want to study? (math/history/science): ")
+
+# Check class and provide topics
+if user_class.lower() == "math":
+    math_topics = ["Algebra II", "Geometry", "Calculus"]
+    print("Your next study topic is **", random.choice(math_topics), "**! Good luck! ✨")
+elif user_class.lower() == "history":
+    history_topics = ["World War I", "The Roman Empire", "The Civil Rights Movement"]
+    print("Your next study topic is **", random.choice(history_topics), "**! Good luck! ✨")
+elif user_class.lower() == "science":
+    science_topics = ["Cell Biology", "Physics", "Chemistry"]
+    print("Your next study topic is **", random.choice(science_topics), "**! Good luck! ✨")
+else:
+    print("Sorry, I don't have topics for that class yet!")`,
+        template: `import random
+
+# Get user's class
+user_class = input("What class do you want to study? (math/history/science): ")
+
+# TODO: Create if/elif/else structure
+# TODO: Create topic lists for each subject
+# TODO: Use random.choice() to pick topics
+# TODO: Handle invalid input`
+      },
+      3: {
+        title: "🤔 The \"Would You Rather\" Game",
+        goal: "Create a simple game that presents two random, funny \"Would You Rather\" questions to the user. This is a great way to show how you can combine lists and random.choice() for an interactive game.",
+        steps: [
+          "Import the random module",
+          "Create a list of \"Would You Rather\" questions",
+          "Use random.choice() to pick one question from the list",
+          "Print the chosen question",
+          "Pick a second question and check if it's the same",
+          "If questions are the same, pick a different one",
+          "Display both questions to create a choice"
+        ],
+        code: `import random
+
+# List of Would You Rather questions
+questions = [
+    "Would you rather have a pet dragon or a pet unicorn?",
+    "Would you rather be able to fly or be invisible?",
+    "Would you rather eat only pizza or only tacos for a year?",
+    "Would you rather live in the past or the future?",
+    "Would you rather have super strength or super speed?"
+]
+
+# Pick first question
+first_question = random.choice(questions)
+print("Question 1:", first_question)
+
+# Pick second question (make sure it's different)
+second_question = random.choice(questions)
+while second_question == first_question:
+    second_question = random.choice(questions)
+
+print("Question 2:", second_question)
+print("\\nWhich would you choose? Think about it! 🤔")`,
+        template: `import random
+
+# Create list of Would You Rather questions
+questions = [
+    "Would you rather have a pet dragon or a pet unicorn?",
+    "Would you rather be able to fly or be invisible?",
+    # TODO: Add more questions
+]
+
+# TODO: Pick first question
+# TODO: Pick second question (make sure it's different)
+# TODO: Display both questions`
+      },
+      4: {
+        title: "🥪 The School Lunch Decider",
+        goal: "A program that helps a user decide what to pack for lunch by randomly choosing from a list of options. It's practical and relatable for students.",
+        steps: [
+          "Import the random module",
+          "Ask the user if they'd like a \"hot\" or \"cold\" lunch",
+          "Create a list of hot lunch options and cold lunch options",
+          "Use if/elif/else to check the user's choice using .lower()",
+          "Use random.choice() to pick from the appropriate list",
+          "Print the lunch suggestion",
+          "Handle invalid input"
+        ],
+        code: `import random
+
+# Get user preference
+lunch_type = input("Would you like a hot or cold lunch today? ")
+
+# Lunch options
+hot_lunch = ["Leftover Pizza", "Soup", "Chicken Nuggets", "Grilled Cheese"]
+cold_lunch = ["Turkey Sandwich", "Salad", "Yogurt and Berries", "Fruit Bowl"]
+
+# Suggest based on preference
+if lunch_type.lower() == "hot":
+    suggestion = random.choice(hot_lunch)
+    print("How about", suggestion, "for lunch? 🔥")
+elif lunch_type.lower() == "cold":
+    suggestion = random.choice(cold_lunch)
+    print("How about", suggestion, "for lunch? 🥶")
+else:
+    print("Please choose either 'hot' or 'cold' for lunch!")`,
+        template: `import random
+
+# Get user preference
+lunch_type = input("Would you like a hot or cold lunch today? ")
+
+# TODO: Create lunch option lists
+hot_lunch = []
+cold_lunch = []
+
+# TODO: Create if/elif/else structure
+# TODO: Use random.choice() for suggestions`
+      },
+      5: {
+        title: "✍️ The Yearbook Quote Generator",
+        goal: "Generate a random, inspirational, or funny yearbook quote based on the user's personality or interests. This is a perfect way to show how code can be creative and personal.",
+        steps: [
+          "Import the random module",
+          "Ask the user for a word that describes them",
+          "Create if/elif/else blocks for different personality types",
+          "Create specific quote lists for each personality",
+          "Use random.choice() to pick from the appropriate list",
+          "Display the personalized quote",
+          "Provide a generic quote for unmatched words"
+        ],
+        code: `import random
+
+# Get user's personality
+personality = input("Describe yourself in one word (funny/smart/creative): ")
+
+# Quote collections
+if personality.lower() == "funny":
+    funny_quotes = ["I came. I saw. I left.", "The tassel was worth the hassle.", "Don't tell my mom I did this."]
+    print("Here is your yearbook quote: '", random.choice(funny_quotes), "'")
+elif personality.lower() == "smart":
+    smart_quotes = ["The future belongs to those who believe in the beauty of their dreams.", 
+                   "This is just the beginning.", "Knowledge is power."]
+    print("Here is your yearbook quote: '", random.choice(smart_quotes), "'")
+elif personality.lower() == "creative":
+    creative_quotes = ["The world is but a canvas to our imagination.", 
+                      "Be a pineapple: Stand tall, wear a crown, and be sweet on the inside.",
+                      "To live a creative life, we must lose our fear of being wrong."]
+    print("Here is your yearbook quote: '", random.choice(creative_quotes), "'")
+else:
+    print("Here's a quote for you: 'The best is yet to come!' ⭐")`,
+        template: `import random
+
+# Get user's personality
+personality = input("Describe yourself in one word (funny/smart/creative): ")
+
+# TODO: Create quote lists for each personality type
+# TODO: Create if/elif/else structure
+# TODO: Use random.choice() to select quotes
+# TODO: Add default case for other words`
+      },
+      6: {
+        title: "🏘️ The College Life Simulator",
+        goal: "Simulate a day in college life by randomly choosing a class, a food item from the dining hall, and a social activity.",
+        steps: [
+          "Import the random module",
+          "Create three separate lists for classes, food, and activities",
+          "Use random.choice() three times to pick from each list",
+          "Store each choice in a variable",
+          "Use print() to create a mini-story of the simulated day",
+          "Make the output engaging and narrative-like"
+        ],
+        code: `import random
+
+# College life options
+classes = ["Introduction to Psychology", "Computer Science 101", "World History", "English Literature"]
+dining_hall_food = ["Pizza", "Tacos", "Chicken Stir-fry", "Salad", "Burgers"]
+social_activities = ["Studying in the library", "Attending a club meeting", "Hanging out with friends", "Playing intramural sports"]
+
+# Simulate the day
+chosen_class = random.choice(classes)
+chosen_food = random.choice(dining_hall_food)
+chosen_activity = random.choice(social_activities)
+
+# Create the story
+print("🌅 Your College Day Simulation:")
+print("You wake up and head to your first class:", chosen_class)
+print("For lunch, you grab some", chosen_food, "from the dining hall.")
+print("After classes, you decide to go", chosen_activity.lower() + ".")
+print("What a great day! 🎓")`,
+        template: `import random
+
+# TODO: Create lists for classes, dining hall food, and social activities
+classes = []
+dining_hall_food = []
+social_activities = []
+
+# TODO: Use random.choice() to pick from each list
+# TODO: Create a narrative story with the choices`
+      },
+      7: {
+        title: "🎶 The Playlist Generator",
+        goal: "Create a simple music playlist generator that suggests a song and an artist based on the user's mood.",
+        steps: [
+          "Import the random module",
+          "Ask the user to input their mood",
+          "Create if/elif/else blocks for different moods",
+          "For each mood, create parallel lists of songs and artists",
+          "Use random.choice() on both lists to make selections",
+          "Print the song and artist recommendation",
+          "Handle unrecognized moods with a default suggestion"
+        ],
+        code: `import random
+
+# Get user's mood
+mood = input("What's your mood? (happy/chill/pumped): ")
+
+# Music recommendations by mood
+if mood.lower() == "happy":
+    happy_songs = ["Walking on Sunshine", "Don't Stop Me Now", "Good as Hell"]
+    happy_artists = ["Katrina & The Waves", "Queen", "Lizzo"]
+    song = random.choice(happy_songs)
+    artist = random.choice(happy_artists)
+    print("For your mood, you should listen to:", song, "by", artist, "🎵")
+elif mood.lower() == "chill":
+    chill_songs = ["Blinding Lights", "Watermelon Sugar", "Levitating"]
+    chill_artists = ["The Weeknd", "Harry Styles", "Dua Lipa"]
+    song = random.choice(chill_songs)
+    artist = random.choice(chill_artists)
+    print("For your mood, you should listen to:", song, "by", artist, "😌")
+elif mood.lower() == "pumped":
+    pumped_songs = ["Thunder", "Believer", "High Hopes"]
+    pumped_artists = ["Imagine Dragons", "Imagine Dragons", "Panic! At The Disco"]
+    song = random.choice(pumped_songs)
+    artist = random.choice(pumped_artists)
+    print("For your mood, you should listen to:", song, "by", artist, "💪")
+else:
+    print("Here's a great song for any mood: 'Shape of You' by Ed Sheeran! 🎶")`,
+        template: `import random
+
+# Get user's mood
+mood = input("What's your mood? (happy/chill/pumped): ")
+
+# TODO: Create song and artist lists for each mood
+# TODO: Use if/elif/else structure
+# TODO: Use random.choice() for both songs and artists
+# TODO: Handle unknown moods`
+      },
+      8: {
+        title: "🧙 The Character Namer",
+        goal: "Help a user create a fictional character by randomly assigning them a name and a special ability.",
+        steps: [
+          "Import the random module",
+          "Ask the user for their favorite color (for flavor)",
+          "Create lists of first names and last names",
+          "Create a list of character abilities/powers",
+          "Use random.choice() to pick from each list",
+          "Combine the names and display the full character",
+          "Present the character in an engaging way"
+        ],
+        code: `import random
+
+# Get user input for personalization
+favorite_color = input("What's your favorite color? ")
+
+# Character name components
+first_names = ["Arin", "Lyra", "Kael", "Zara", "Thorne", "Nova"]
+last_names = ["Shadowbane", "Stonewell", "Lightfoot", "Starwhisper", "Ironheart"]
+
+# Character abilities
+abilities = ["Invisibility", "Telekinesis", "Super Speed", "Fire Magic", "Mind Reading", "Time Control"]
+
+# Generate character
+chosen_first = random.choice(first_names)
+chosen_last = random.choice(last_names)
+chosen_ability = random.choice(abilities)
+
+# Present the character
+print("🧙‍♀️ Your Character Creation:")
+print("Name:", chosen_first, chosen_last)
+print("Special Ability:", chosen_ability)
+print("Fun fact: Their favorite color is", favorite_color, "just like yours! ✨")`,
+        template: `import random
+
+# Get user input
+favorite_color = input("What's your favorite color? ")
+
+# TODO: Create lists of first names, last names, and abilities
+first_names = []
+last_names = []
+abilities = []
+
+# TODO: Use random.choice() to generate character
+# TODO: Display the character in an engaging way`
+      },
+      9: {
+        title: "🍿 The Snack Picker",
+        goal: "A program that helps a user decide on a movie night snack based on their preference for \"sweet\" or \"salty\" foods.",
+        steps: [
+          "Import the random module",
+          "Ask if the user wants sweet or salty snacks",
+          "Create two lists: sweet_snacks and salty_snacks",
+          "Use if/else to check the user's preference",
+          "Use random.choice() to pick from the appropriate list",
+          "Display the snack suggestion with enthusiasm"
+        ],
+        code: `import random
+
+# Get snack preference
+preference = input("Are you in the mood for sweet or salty snacks? ")
+
+# Snack options
+sweet_snacks = ["Pop-tarts", "Gummy Worms", "Chocolate Chip Cookies", "Ice Cream", "Candy"]
+salty_snacks = ["Popcorn", "Pretzels", "Potato Chips", "Crackers", "Nuts"]
+
+# Make recommendation
+if preference.lower() == "sweet":
+    suggestion = random.choice(sweet_snacks)
+    print("You should have some", suggestion, "! Perfect for movie night! 🍭")
+elif preference.lower() == "salty":
+    suggestion = random.choice(salty_snacks)
+    print("You should have some", suggestion, "! Great choice for movies! 🧂")
+else:
+    print("How about some popcorn? It's a classic movie snack! 🍿")`,
+        template: `import random
+
+# Get snack preference
+preference = input("Are you in the mood for sweet or salty snacks? ")
+
+# TODO: Create sweet and salty snack lists
+sweet_snacks = []
+salty_snacks = []
+
+# TODO: Use if/else to make recommendations
+# TODO: Use random.choice() to pick snacks`
+      },
+      10: {
+        title: "☀️ The Weekend Activity Planner",
+        goal: "Help a student plan their weekend by randomly suggesting an activity that is either \"inside\" or \"outside\" based on the predicted weather.",
+        steps: [
+          "Import the random module",
+          "Create a list of weather conditions",
+          "Use random.choice() to pick weekend weather",
+          "Create lists of inside and outside activities",
+          "Use if/elif/else to check the weather",
+          "Suggest appropriate activities based on conditions",
+          "Handle cloudy weather with mixed suggestions"
+        ],
+        code: `import random
+
+# Weather simulation
+weather_conditions = ["sunny", "rainy", "cloudy", "snowy"]
+weekend_weather = random.choice(weather_conditions)
+
+# Activity options
+inside_activities = ["Watching a movie", "Playing video games", "Reading a book", "Cooking", "Art project"]
+outside_activities = ["Going for a hike", "Playing basketball", "Riding a bike", "Picnic", "Gardening"]
+
+# Plan based on weather
+print("🌤️  Weekend Weather Forecast:", weekend_weather.title())
+
+if weekend_weather == "sunny":
+    activity = random.choice(outside_activities)
+    print("Perfect weather for outdoor fun! How about", activity.lower(), "? ☀️")
+elif weekend_weather == "rainy":
+    activity = random.choice(inside_activities)
+    print("It's a cozy indoor day! Try", activity.lower(), "! 🌧️")
+elif weekend_weather == "snowy":
+    activity = random.choice(inside_activities)
+    print("Snow day! Stay warm inside with", activity.lower(), "! ❄️")
+else:  # cloudy
+    # For cloudy weather, pick from either list
+    all_activities = inside_activities + outside_activities
+    activity = random.choice(all_activities)
+    print("Cloudy weather gives you options! How about", activity.lower(), "? ☁️")`,
+        template: `import random
+
+# TODO: Create weather conditions list
+weather_conditions = []
+
+# TODO: Pick random weather for the weekend
+
+# TODO: Create inside and outside activity lists
+inside_activities = []
+outside_activities = []
+
+# TODO: Use if/elif/else to suggest activities based on weather`
+      }
+    };
+    
+    function viewProject(projectId) {
+      const project = projects[projectId];
+      if (!project) return;
+      
+      document.getElementById('modal-title').textContent = project.title;
+      
+      const modalBody = document.getElementById('modal-body');
+      modalBody.innerHTML = `
+        <div class="code-section">
+          <h4><i class="fas fa-target"></i> Project Goal</h4>
+          <p style="color: #8b949e; line-height: 1.6;">${project.goal}</p>
+        </div>
+        
+        <div class="code-section">
+          <h4><i class="fas fa-list-ol"></i> Step-by-Step Instructions</h4>
+          <ol class="step-list">
+            ${project.steps.map(step => `<li>${step}</li>`).join('')}
+          </ol>
+        </div>
+        
+        <div class="code-section">
+          <h4><i class="fas fa-code"></i> Example Solution</h4>
+          <div class="code-block">${project.code.replace(/\n/g, '<br>').replace(/ /g, '&nbsp;')}</div>
+        </div>
+        
+        <div class="code-section">
+          <h4><i class="fas fa-pencil-alt"></i> Starter Template</h4>
+          <div class="code-block">${project.template.replace(/\n/g, '<br>').replace(/ /g, '&nbsp;')}</div>
+        </div>
+      `;
+      
+      // Set the starter template in the code editor
+      document.getElementById('code-editor').value = project.template;
+      
+      document.getElementById('project-modal').classList.add('show');
+    }
+    
+    function closeModal() {
+      document.getElementById('project-modal').classList.remove('show');
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('project-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+    
+    async function runCode() {
+      const code = document.getElementById('code-editor').value;
+      const outputArea = document.getElementById('output-area');
+      
+      if (!code.trim()) {
+        outputArea.innerHTML = '<span style="color: #f85149;">Please enter some Python code to run!</span>';
+        return;
+      }
+      
+      try {
+        outputArea.innerHTML = '<span style="color: #58a6ff;"><i class="fas fa-spinner fa-spin"></i> Running code...</span>';
+        
+        // Initialize Pyodide if not already done
+        const pyodide = await initPyodide();
+        
+        // Capture output
+        let output = '';
+        pyodide.runPython(`
+          import sys
+          from io import StringIO
+          sys.stdout = StringIO()
+        `);
+        
+        // Handle input() function
+        const inputValues = [];
+        let inputIndex = 0;
+        
+        pyodide.globals.set("input", function(prompt = "") {
+          const value = window.prompt(prompt || "Enter a value:");
+          return value || "";
+        });
+        
+        // Run the user's code
+        try {
+          pyodide.runPython(code);
+          
+          // Get output
+          output = pyodide.runPython("sys.stdout.getvalue()");
+          
+          if (output) {
+            outputArea.innerHTML = output.replace(/\n/g, '<br>');
+          } else {
+            outputArea.innerHTML = '<span style="color: #2ea043;">Code executed successfully! (No output)</span>';
+          }
+        } catch (pythonError) {
+          outputArea.innerHTML = `<span style="color: #f85149;">Python Error: ${pythonError.message}</span>`;
+        }
+        
+      } catch (error) {
+        outputArea.innerHTML = `<span style="color: #f85149;">Error: ${error.message}</span>`;
+        console.error('Code execution error:', error);
+      }
+    }
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Projects: If-Else page loaded successfully!');
+      
+      // Initialize Pyodide in the background
+      initPyodide().then(() => {
+        console.log('Python environment ready!');
+      }).catch(err => {
+        console.error('Failed to initialize Python:', err);
+      });
+    });
+    
+    // Keyboard shortcut to run code (Ctrl+Enter)
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'Enter') {
+        runCode();
+      }
+    });
+  </script>
+</body>
+</html>

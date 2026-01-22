@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ The Endless Dungeon - Teacher Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+        }
+
+        h4 {
+            color: #ff9800;
+            margin: 15px 0 10px 0;
+        }
+
+        pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 2px solid #667eea;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .role-section {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+            padding: 30px;
+            margin: 25px 0;
+            border-radius: 10px;
+            border-left: 5px solid #ff9800;
+        }
+
+        .common-mistakes {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .common-mistakes h4 {
+            color: #d32f2f;
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .tips-box h4 {
+            color: #388e3c;
+        }
+
+        footer {
+            background: #f5f5f5;
+            padding: 20px 40px;
+            text-align: center;
+            border-top: 2px solid #ddd;
+            margin-top: 40px;
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👨‍🏫 Teacher's Guide</h1>
+            <p>The Endless Dungeon: Complete Solution Code</p>
+        </header>
+
+        <div class="content">
+            <h2>📌 Quick Reference</h2>
+            <p>This guide contains the complete, working solution code for all four team members' modules. Students should build these independently, but you can use these solutions to:</p>
+            <ul style="margin-left: 20px; margin-top: 15px;">
+                <li>Understand what the expected output should be</li>
+                <li>Debug student code by comparing it to the solution</li>
+                <li>Answer "How do I...?" questions during class</li>
+                <li>Verify that the game works as intended</li>
+                <li>See best practices for Python organization</li>
+            </ul>
+
+            <div class="section-divider"></div>
+
+            <!-- ROLE 1: DICE MASTER -->
+            <div class="role-section">
+                <h2>🎲 Role 1: Dice Master (dice_master.py)</h2>
+                <p><strong>Purpose:</strong> Provide random numbers for combat rolls</p>
+                <p><strong>Imports Needed:</strong> <code>import random</code></p>
+                <p><strong>Functions to Write:</strong> 1 function that simulates a d20 roll</p>
+
+                <h3>Complete Solution</h3>
+                <pre><code class="language-python">import random
+
+def roll_d20():
+    """
+    Simulates rolling a 20-sided die.
+    Returns a number between 1 and 20.
+    """
+    return random.randint(1, 20)
+
+def calculate_damage(strength):
+    """
+    Calculates weapon damage based on enemy strength.
+    A weapon does 5-10 base damage plus enemy strength bonus.
+    Returns the total damage.
+    """
+    base_damage = random.randint(5, 10)
+    total_damage = base_damage + strength
+    return total_damage</code></pre>
+
+                <h3>Key Learning Points</h3>
+                <ul style="margin-left: 20px;">
+                    <li><code>random.randint(a, b)</code> returns a random integer from a to b (inclusive)</li>
+                    <li>Functions RETURN values; they don't print them</li>
+                    <li>Each function does ONE job only</li>
+                    <li>Docstrings (the text in triple quotes) explain what the function does</li>
+                </ul>
+
+                <h3>What Students Should See When Testing</h3>
+                <pre><code class="language-python">>>> from dice_master import roll_d20, calculate_damage
+>>> roll_d20()
+17
+>>> roll_d20()
+5
+>>> calculate_damage(3)
+12
+>>> calculate_damage(3)
+8</code></pre>
+
+                <div class="common-mistakes">
+                    <h4>❌ Common Mistakes</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Printing instead of returning:</strong> <code>print(random.randint(1, 20))</code> - This should be <code>return random.randint(1, 20)</code></li>
+                        <li><strong>Wrong range:</strong> Using (1, 21) instead of (1, 20) - d20 means 20 sides!</li>
+                        <li><strong>Forgetting import:</strong> Using <code>random.randint()</code> without <code>import random</code> first</li>
+                    </ul>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💡 Teaching Tips</h4>
+                    <p>Have students test their functions in Python shell before moving on. They should see different numbers each time they call the function. If they see the same number twice, they need to understand why that's OK (random chance)!</p>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- ROLE 2: ENCOUNTER DESIGNER -->
+            <div class="role-section">
+                <h2>👹 Role 2: Encounter Designer (encounters.py)</h2>
+                <p><strong>Purpose:</strong> Create enemy data and select random encounters</p>
+                <p><strong>Imports Needed:</strong> <code>import random</code></p>
+                <p><strong>Functions to Write:</strong> 1-2 functions that manage enemy encounters</p>
+
+                <h3>Complete Solution</h3>
+                <pre><code class="language-python">import random
+
+def get_all_encounters():
+    """
+    Returns a list of all possible enemies in the dungeon.
+    Each enemy is a dictionary with name, hp, and strength.
+    """
+    encounters = [
+        {"name": "Goblin", "hp": 15, "strength": 2},
+        {"name": "Orc", "hp": 20, "strength": 3},
+        {"name": "Dark Knight", "hp": 25, "strength": 4},
+        {"name": "Skeleton", "hp": 12, "strength": 2},
+        {"name": "Troll", "hp": 30, "strength": 5}
+    ]
+    return encounters
+
+def get_random_encounter():
+    """
+    Selects a random enemy from all encounters.
+    Returns one enemy dictionary.
+    """
+    all_enemies = get_all_encounters()
+    random_enemy = random.choice(all_enemies)
+    # Make a copy so multiple calls don't modify the same object
+    return random_enemy.copy()</code></pre>
+
+                <h3>Key Learning Points</h3>
+                <ul style="margin-left: 20px;">
+                    <li>Dictionaries store multiple related pieces of data together</li>
+                    <li>Lists hold multiple dictionaries</li>
+                    <li><code>random.choice()</code> picks one random item from a list</li>
+                    <li><code>.copy()</code> creates a duplicate so changing one doesn't affect the original</li>
+                    <li>Functions can call other functions</li>
+                </ul>
+
+                <h3>What Students Should See When Testing</h3>
+                <pre><code class="language-python">>>> from encounters import get_random_encounter
+>>> enemy = get_random_encounter()
+>>> enemy["name"]
+"Orc"
+>>> enemy["hp"]
+20
+>>> get_random_encounter()["name"]
+"Goblin"</code></pre>
+
+                <div class="common-mistakes">
+                    <h4>❌ Common Mistakes</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Wrong dictionary syntax:</strong> Using <code>enemy.name</code> instead of <code>enemy["name"]</code></li>
+                        <li><strong>Not copying the enemy:</strong> Returning the original dictionary means all games modify the same object</li>
+                        <li><strong>Forgetting square brackets:</strong> <code>random.choice</code> needs a list, and lists use [ ]</li>
+                    </ul>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💡 Teaching Tips</h4>
+                    <p>Have students understand WHY we need <code>.copy()</code>. Have them test without it: they'll see the enemy HP stay changed across multiple games! This teaches why we need to be careful with shared data.</p>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- ROLE 3: TREASURE KEEPER -->
+            <div class="role-section">
+                <h2>💰 Role 3: Treasure Keeper (treasure.py)</h2>
+                <p><strong>Purpose:</strong> Calculate rewards when enemies are defeated</p>
+                <p><strong>Imports Needed:</strong> <code>import random</code></p>
+                <p><strong>Functions to Write:</strong> 1-2 functions that calculate rewards</p>
+
+                <h3>Complete Solution</h3>
+                <pre><code class="language-python">import random
+
+def calculate_loot(enemy_hp, enemy_strength):
+    """
+    Calculates how much gold a defeated enemy drops.
+    Stronger enemies drop more gold.
+    """
+    base_gold = 50
+    bonus_gold = enemy_hp + (enemy_strength * 10)
+    total_gold = base_gold + bonus_gold
+    return total_gold
+
+def calculate_xp(enemy_hp, enemy_strength):
+    """
+    Calculates experience points gained from defeating an enemy.
+    XP is based on the enemy's difficulty.
+    """
+    base_xp = 25
+    xp_multiplier = enemy_strength
+    total_xp = base_xp * xp_multiplier
+    return total_xp
+
+def get_treasure(enemy_name, enemy_hp, enemy_strength):
+    """
+    Main function that returns both loot and XP.
+    Returns a dictionary with all rewards.
+    """
+    gold = calculate_loot(enemy_hp, enemy_strength)
+    xp = calculate_xp(enemy_hp, enemy_strength)
+    
+    treasure = {
+        "enemy": enemy_name,
+        "gold": gold,
+        "xp": xp,
+        "message": f"Defeated {enemy_name}! Earned {gold} gold and {xp} XP!"
+    }
+    return treasure</code></pre>
+
+                <h3>Key Learning Points</h3>
+                <ul style="margin-left: 20px;">
+                    <li>Helper functions (like <code>calculate_loot</code>) do smaller jobs</li>
+                    <li>Main functions (like <code>get_treasure</code>) use helper functions</li>
+                    <li>Math can be part of game logic</li>
+                    <li>f-strings (f"text {variable}") embed variables in text</li>
+                    <li>Functions can return multiple values together in a dictionary</li>
+                </ul>
+
+                <h3>What Students Should See When Testing</h3>
+                <pre><code class="language-python">>>> from treasure import get_treasure
+>>> reward = get_treasure("Orc", 20, 3)
+>>> reward["gold"]
+115
+>>> reward["xp"]
+75
+>>> reward["message"]
+"Defeated Orc! Earned 115 gold and 75 XP!"</code></pre>
+
+                <div class="common-mistakes">
+                    <h4>❌ Common Mistakes</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Forgetting parameters:</strong> Functions need all the data they need passed in</li>
+                        <li><strong>Wrong math order:</strong> Make sure multiplication happens before addition (it does automatically in Python!)</li>
+                        <li><strong>Not returning the dictionary:</strong> Building treasure but not returning it</li>
+                    </ul>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💡 Teaching Tips</h4>
+                    <p>Challenge students: "What if we wanted Trolls to give 2x loot?" They need to see they'd have to add a parameter or look up the enemy type. This teaches why game designers care about data structure!</p>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- ROLE 4: GAME MASTER -->
+            <div class="role-section">
+                <h2>🎮 Role 4: Game Master (main.py)</h2>
+                <p><strong>Purpose:</strong> Import all modules and run the game</p>
+                <p><strong>Imports Needed:</strong> All three modules + random module</p>
+                <p><strong>What to Write:</strong> Game loop, combat logic, and player interaction</p>
+
+                <h3>Complete Solution</h3>
+                <pre><code class="language-python">import random
+from dice_master import roll_d20, calculate_damage
+from encounters import get_random_encounter
+from treasure import get_treasure
+
+def run_game():
+    """Main game loop. This is where it all comes together!"""
+    
+    print("=" * 50)
+    print("⚔️ WELCOME TO THE ENDLESS DUNGEON ⚔️")
+    print("=" * 50)
+    print()
+    
+    # Game state
+    player_hp = 50
+    game_over = False
+    
+    # Get a random enemy
+    enemy = get_random_encounter()
+    print(f"A wild {enemy['name']} appears!")
+    print(f"Enemy HP: {enemy['hp']} | Enemy Strength: {enemy['strength']}")
+    print()
+    
+    # Combat loop
+    while not game_over and player_hp > 0 and enemy['hp'] > 0:
+        print("-" * 50)
+        print(f"Your HP: {player_hp} | Enemy HP: {enemy['hp']}")
+        print("-" * 50)
+        
+        # Player's turn
+        print("Your turn! Rolling to attack...")
+        player_roll = roll_d20()
+        print(f"🎲 You rolled: {player_roll}")
+        
+        if player_roll >= 10:
+            damage = calculate_damage(0)  # Player base damage
+            enemy['hp'] -= damage
+            print(f"✅ HIT! You dealt {damage} damage!")
+        else:
+            print("❌ MISS! Your attack went wide!")
+        
+        # Check if enemy is defeated
+        if enemy['hp'] <= 0:
+            print()
+            print("🎉 VICTORY!")
+            reward = get_treasure(enemy['name'], enemy['hp'] + damage, enemy['strength'])
+            print(reward['message'])
+            game_over = True
+            break
+        
+        print()
+        
+        # Enemy's turn
+        print(f"{enemy['name']}'s turn...")
+        enemy_roll = roll_d20()
+        print(f"🎲 {enemy['name']} rolled: {enemy_roll}")
+        
+        if enemy_roll >= 10:
+            damage = calculate_damage(enemy['strength'])
+            player_hp -= damage
+            print(f"💥 HIT! You took {damage} damage!")
+        else:
+            print("🛡️ MISSED! You dodged the attack!")
+        
+        # Check if player is defeated
+        if player_hp <= 0:
+            print()
+            print("💀 DEFEAT!")
+            print(f"The {enemy['name']} defeated you...")
+            game_over = True
+        
+        print()
+    
+    print("=" * 50)
+    print("Thanks for playing!")
+    print("=" * 50)
+
+# Run the game
+if __name__ == "__main__":
+    run_game()</code></pre>
+
+                <h3>Key Learning Points</h3>
+                <ul style="margin-left: 20px;">
+                    <li>Imports bring in code from other files</li>
+                    <li>The game master USES functions from other modules, doesn't rewrite them</li>
+                    <li>While loops let code run multiple times until a condition is false</li>
+                    <li>Modifying dictionaries: <code>enemy['hp'] -= damage</code> changes the stored value</li>
+                    <li>The <code>if __name__ == "__main__":</code> line is how Python knows to run the game</li>
+                </ul>
+
+                <h3>Expected Output When Running</h3>
+                <pre><code class="language-python">==================================================
+⚔️ WELCOME TO THE ENDLESS DUNGEON ⚔️
+==================================================
+
+A wild Orc appears!
+Enemy HP: 20 | Enemy Strength: 3
+
+--------------------------------------------------
+Your HP: 50 | Enemy HP: 20
+--------------------------------------------------
+Your turn! Rolling to attack...
+🎲 You rolled: 15
+✅ HIT! You dealt 7 damage!
+
+Orc's turn...
+🎲 Orc rolled: 12
+💥 HIT! You took 9 damage!
+
+--------------------------------------------------
+Your HP: 41 | Enemy HP: 13
+--------------------------------------------------
+Your turn! Rolling to attack...
+🎲 You rolled: 18
+✅ HIT! You dealt 8 damage!
+
+Orc's turn...
+🎲 Orc rolled: 7
+🛡️ MISSED! You dodged the attack!
+
+--------------------------------------------------
+Your HP: 41 | Enemy HP: 5
+--------------------------------------------------
+Your turn! Rolling to attack...
+🎲 You rolled: 14
+✅ HIT! You dealt 6 damage!
+
+🎉 VICTORY!
+Defeated Orc! Earned 100 gold and 75 XP!
+
+==================================================
+Thanks for playing!
+==================================================</code></pre>
+
+                <div class="common-mistakes">
+                    <h4>❌ Common Mistakes</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Wrong import syntax:</strong> <code>from dice_master import roll_d20</code> - need "from...import"</li>
+                        <li><strong>Trying to rewrite functions:</strong> Should USE functions, not rewrite them!</li>
+                        <li><strong>Forgetting <code>-=</code> operator:</strong> <code>enemy['hp'] = enemy['hp'] - damage</code> works but <code>enemy['hp'] -= damage</code> is cleaner</li>
+                        <li><strong>Infinite loops:</strong> Forgetting to update game_over or enemy HP</li>
+                    </ul>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💡 Teaching Tips</h4>
+                    <p>This role teaches INTEGRATION - how real projects combine multiple pieces. Have them draw a diagram: main.py calls three functions from three modules. That's professional Python architecture!</p>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2>📋 File Submission Checklist</h2>
+            <p>Before students submit, verify they have these four files with these requirements:</p>
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                <tr style="background: #f5f5f5;">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">File Name</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Must Have</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Should Not Have</th>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>dice_master.py</code></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">2 functions, import random</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">print() statements, main code</td>
+                </tr>
+                <tr style="background: #f9f9f9;">
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>encounters.py</code></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">2 functions, 5 enemies</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">print() statements, game loop</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>treasure.py</code></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">3 functions, import random</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">print() statements, game logic</td>
+                </tr>
+                <tr style="background: #f9f9f9;">
+                    <td style="border: 1px solid #ddd; padding: 10px;"><code>main.py</code></td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">Imports all 3 modules, game loop</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">Function definitions, module code</td>
+                </tr>
+            </table>
+
+            <div class="section-divider"></div>
+
+            <h2>🐛 Debugging Guide for Students</h2>
+
+            <h3>Error: "ModuleNotFoundError: No module named 'dice_master'"</h3>
+            <p><strong>Cause:</strong> Python can't find the file</p>
+            <p><strong>Solution:</strong> Make sure all four .py files are in the SAME folder. Check the spelling is exact!</p>
+
+            <h3>Error: "NameError: name 'roll_d20' is not defined"</h3>
+            <p><strong>Cause:</strong> Forgot to import the function</p>
+            <p><strong>Solution:</strong> Add <code>from dice_master import roll_d20</code> at the top of main.py</p>
+
+            <h3>Game plays but keeps rolling forever</h3>
+            <p><strong>Cause:</strong> While loop condition never becomes false (game_over never set to True)</p>
+            <p><strong>Solution:</strong> Make sure you set <code>game_over = True</code> when enemy HP or player HP reaches 0</p>
+
+            <h3>Values aren't changing in dictionaries</h3>
+            <p><strong>Cause:</strong> Modifying a copy instead of the original</p>
+            <p><strong>Solution:</strong> Make sure you're using <code>enemy['hp'] -= damage</code> (modifies the dict) not just <code>damage = damage + 5</code> (creates a new variable)</p>
+
+            <div class="section-divider"></div>
+
+            <h2>✅ How to Run the Complete Solution</h2>
+            <ol style="margin-left: 20px; margin-top: 15px;">
+                <li>Create a folder named "dungeon_game"</li>
+                <li>Create the four .py files in that folder with the code above</li>
+                <li>Open terminal/command prompt in that folder</li>
+                <li>Type: <code>python main.py</code></li>
+                <li>Watch the game play! Follow the prompts</li>
+            </ol>
+
+            <div class="tips-box">
+                <h4>🎓 Learning Outcomes</h4>
+                <p>By building this project, students will understand:</p>
+                <ul style="margin-left: 20px;">
+                    <li>How to organize code into modules</li>
+                    <li>How functions should do ONE job</li>
+                    <li>How to use random data</li>
+                    <li>How to work with dictionaries and lists</li>
+                    <li>How game logic uses imports and loops</li>
+                    <li>Most importantly: How real projects combine code from multiple team members!</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>📚 Teacher's Guide for The Endless Dungeon - Team Building Project</p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #666;">Use this reference to support student learning and debug issues. Good luck!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Highlight code blocks on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightElement(block);
+            });
+        });
+    </script>
+</body>
+</html>

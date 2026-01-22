@@ -1,0 +1,2612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InstaGrows - Instagram Growth Strategy & Reel Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .calculator-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .calculator-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+
+        .calculator-section h2::before {
+            content: "📊";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .score-number {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .score-label {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .metric-card h3 {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .metric-status {
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .status-excellent { color: #10b981; }
+        .status-good { color: #3b82f6; }
+        .status-average { color: #f59e0b; }
+        .status-poor { color: #ef4444; }
+
+        .recommendations {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .recommendations h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .recommendations ul {
+            list-style-position: inside;
+            color: #856404;
+        }
+
+        /* Calendar Styles */
+        .calendar-week {
+            display: grid;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .calendar-day {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+
+        .calendar-day.priority {
+            border-left: 5px solid #ef4444;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+        }
+
+        .day-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .day-header h3 {
+            color: #1f2937;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .day-focus {
+            color: #6b7280;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .post-card {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .post-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .post-time {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .post-type {
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            display: inline-block;
+            background: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 2px solid #667eea;
+        }
+
+        .post-content {
+            color: #374151;
+            line-height: 1.8;
+        }
+
+        .post-content strong {
+            color: #1f2937;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .post-content ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .post-content li {
+            margin-bottom: 5px;
+        }
+
+        .expected-results {
+            margin-top: 15px;
+            padding: 12px;
+            background: #ecfdf5;
+            border-left: 3px solid #10b981;
+            border-radius: 5px;
+            color: #065f46;
+            font-size: 0.95em;
+        }
+
+        .calendar-legend {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .calendar-legend h3 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .legend-item {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .legend-item strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .recommendations li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .prediction {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .prediction h3 {
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+
+        .prediction-item {
+            color: #0c5460;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .viral-indicator {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .viral-high {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .viral-medium {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffc107;
+        }
+
+        .viral-low {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        /* Strategy Section Styles */
+        .strategy-overview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .strategy-overview h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .week-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .week-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .day-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .day-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .day-item h4::before {
+            content: "📅";
+            margin-right: 8px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        /* Reel Scripts Section */
+        .reel-script {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .reel-script h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+
+        .script-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .script-timeline {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .timeline-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .timestamp {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .script-text {
+            color: #333;
+            font-style: italic;
+        }
+
+        .tips-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .tips-box h4 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .tab-button {
+                padding: 12px 20px;
+                font-size: 0.9em;
+            }
+
+            .score-number {
+                font-size: 3em;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .accordion {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: #e9ecef;
+        }
+
+        .accordion-header h4 {
+            margin: 0;
+            color: #333;
+        }
+
+        .accordion-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+
+        .accordion.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion.active .accordion-content {
+            max-height: 2000px;
+        }
+
+        .accordion-body {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 InstaGrows</h1>
+            <p>@marcotmorais Growth Strategy & Performance Calculator</p>
+            <p style="font-size: 0.9em; opacity: 0.9; margin-top: 10px;">140 followers → 1,000 goal | Cultural Traveler 🏛️</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('profile')">👤 Profile</button>
+            <button class="tab-button" onclick="showTab('calendar')">📅 Content Calendar</button>
+            <button class="tab-button" onclick="showTab('engagement')">💬 Engagement</button>
+            <button class="tab-button" onclick="showTab('calculator')">📊 Reel Calculator</button>
+            <button class="tab-button" onclick="showTab('strategy')">🎯 30-Day Strategy</button>
+            <button class="tab-button" onclick="showTab('scripts')">🎬 Reel Scripts</button>
+            <button class="tab-button" onclick="showTab('tips')">💡 Growth Tips</button>
+            <button class="tab-button" onclick="showTab('ai-helper')">🤖 AI Helper</button>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="content-section active">
+            <h2 class="section-header">@marcotmorais Profile Overview</h2>
+            
+            <div class="strategy-overview">
+                <h3>📱 Current Profile Status</h3>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">140</span>
+                        <span class="stat-label">Followers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">147</span>
+                        <span class="stat-label">Following</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Posts</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">1</span>
+                        <span class="stat-label">Reels</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>✅ Optimized Profile</h3>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">Current Bio:</h4>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin: 0; font-weight: 600;">Marco | Cultural traveler 🏛️</p>
+                        <p style="margin: 5px 0 0 0;">Florida-based • Always planning the next trip</p>
+                        <p style="margin: 5px 0 0 0;">Museums • Landmarks • Good food</p>
+                    </div>
+                    <p style="margin-top: 10px; color: #10b981; font-weight: 600;">✅ Grade: A (9/10) - Authentic, clear, and aligned with content</p>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">Profile Picture:</h4>
+                    <p>✅ <strong>Perfect!</strong> Your face is clearly visible, good lighting (Big Ben background), professional but natural.</p>
+                    <p style="margin-top: 5px; color: #666;">No changes needed.</p>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">Category:</h4>
+                    <p>✅ <strong>Travel & Photos</strong> - Set correctly</p>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>📍 Your Travel Destinations</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em;">🇫🇷</div>
+                        <strong>France</strong>
+                        <p style="font-size: 0.9em; color: #666; margin: 5px 0 0 0;">Louvre, Paris</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em;">🇬🇧</div>
+                        <strong>UK</strong>
+                        <p style="font-size: 0.9em; color: #666; margin: 5px 0 0 0;">Big Ben, London</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em;">🇧🇷</div>
+                        <strong>Brazil</strong>
+                        <p style="font-size: 0.9em; color: #666; margin: 5px 0 0 0;">Beaches, Culture</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em;">🇺🇸</div>
+                        <strong>USA</strong>
+                        <p style="font-size: 0.9em; color: #666; margin: 5px 0 0 0;">Grand Canyon, Vegas, NYC</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em;">🇪🇸</div>
+                        <strong>Spain</strong>
+                        <p style="font-size: 0.9em; color: #666; margin: 5px 0 0 0;">Culture & History</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em;">🇨🇦</div>
+                        <strong>Canada</strong>
+                        <p style="font-size: 0.9em; color: #666; margin: 5px 0 0 0;">Montreal</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h3>🚀 Next Steps to Optimize</h3>
+                <ul>
+                    <li><strong>Create Story Highlights</strong> - France 🇫🇷, Brazil 🇧🇷, USA 🇺🇸 (add 5-7 photos to each)</li>
+                    <li><strong>Post Reel #2 This Week</strong> - Use Script #4 "Photos Don't Prepare You"</li>
+                    <li><strong>Engage Daily</strong> - Reply to all comments within 1 hour of posting</li>
+                    <li><strong>Post Stories</strong> - 3-5 per day with polls/questions</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Engagement Comments Tab -->
+        <div id="engagement" class="content-section">
+            <h2 class="section-header">💬 Ready-to-Post Engagement Comments</h2>
+            <p style="margin-bottom: 30px; color: #666;">Copy these genuine comments to engage with travel accounts daily (30 min/day = 3-8 new followers)</p>
+
+            <div class="recommendations" style="background: #fff3cd; margin-bottom: 30px;">
+                <h3>🎯 How to Use These Comments</h3>
+                <ul>
+                    <li><strong>Find posts:</strong> Search hashtags like #louvremuseum #grandcanyon #nyctravel</li>
+                    <li><strong>Target size:</strong> Accounts with 10K-100K followers, posts with 200-1,000 likes</li>
+                    <li><strong>Recent posts:</strong> Only comment on posts from last 24-48 hours</li>
+                    <li><strong>Customize:</strong> Change city names, dates, experiences to match YOUR travels</li>
+                    <li><strong>Daily goal:</strong> 10-15 genuine comments = 3-8 profile visits = 2-5 new followers</li>
+                </ul>
+            </div>
+
+            <div class="script-card">
+                <h3>Museums & Landmarks</h3>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Louvre Comments (15 variations)</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="copy-section">
+                                <p class="script-text">Just visited last month! The Egyptian wing at 9 AM was completely empty—felt like a private tour. Mona Lisa crowd was insane though 😅</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">This! Everyone rushes to Mona Lisa but the medieval collection is where the real magic is. Way less crowded too 👏</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">The Louvre hit different when I went in November. Your photo captures that golden light perfectly 🌅</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Pro tip I learned: First Sunday of month = free entry. Saved €17. Worth the slightly bigger crowd!</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">That pyramid at sunset is unmatched 😍 Did you make it to the Winged Victory? Still my favorite piece in the whole museum</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Grand Canyon Comments (10 variations)</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="copy-section">
+                                <p class="script-text">No photo does it justice! I stood there for 20 minutes just processing the scale. South Rim or North Rim?</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">This view though 🔥 Went at sunrise and had it almost to myself. Completely different vibe than midday crowds</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">The layers of rock are insane in person. Every photo I took looked flat compared to standing there. What viewpoint is this?</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Bucket list moment right here 🏜️ Did you hike down at all or stay rim-side? Planning my trip now</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">That golden hour light hits perfect! Free shuttle system saved me so much vs driving/parking. Underrated tip</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>NYC Comments (15 variations)</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="copy-section">
+                                <p class="script-text">Vanderbilt Summit is SO underrated vs Edge/Top of the Rock. Same views, half the wait. This shot is stunning 🌆</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Brooklyn Bridge at golden hour never misses 🌉 Did you walk it or shoot from DUMBO? Both angles are fire</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">NYC skyline hits different every time. That Chrysler Building glow 😍 What time did you shoot this?</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">This view! 🔥 Central Park from above or Midtown? Either way the composition is clean. Editing in Lightroom?</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Winter in NYC is underrated for photos. Less haze, cleaner skyline shots. This proves it 📸</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>London/Big Ben Comments (8 variations)</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="copy-section">
+                                <p class="script-text">Fun fact I learned: It's actually called Elizabeth Tower! Big Ben is just the bell inside. 99% of people don't know that 🔔</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">That blue hour lighting is perfect 💙 Westminster Bridge shot? Classic angle but you nailed the composition</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">London's architecture never gets old. Did you hit the British Museum too? The Rosetta Stone room is unreal</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">This shot 🔥 Best time to shoot Big Ben without crowds is early morning (7-8 AM). Totally worth the early wake-up</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>General Travel Comments (20 variations)</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="copy-section">
+                                <p class="script-text">This is exactly what I needed to see! Planning my trip for [month] and this just confirmed I'm going 🙌</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Your composition is so clean! Do you shoot on phone or camera? The colors are perfect 📸</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Bucket list spot right here ✅ How many days did you spend there? Trying to plan my itinerary</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">That golden hour glow 😍 Timing is everything with travel photos and you nailed it</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Been following your travels—your content is so authentic compared to typical influencer stuff. Keep it up! 👏</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">This vs the photos online is night and day. Reality looks 10x better. Adding to my list now 📝</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Photos really don't capture the scale huh? I had the same feeling when I visited. Mind-blowing in person</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Your editing style is so consistent—I can tell it's your photo instantly. What's your Lightroom preset? 🎨</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Cultural travel done right 🏛️ This is way more interesting than generic beach content. Underrated niche</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                            <div class="copy-section">
+                                <p class="script-text">Honest question: Worth the hype or overrated? Planning my route and deciding if this makes the cut</p>
+                                <button class="copy-btn" onclick="copyComment(this)">📋 Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations" style="margin-top: 30px;">
+                <h3>💡 Engagement Tips</h3>
+                <ul>
+                    <li><strong>Mix it up:</strong> Don't use same comment twice on same account</li>
+                    <li><strong>Be specific:</strong> Reference their photo ("that blue hour lighting" not "nice pic")</li>
+                    <li><strong>Add value:</strong> Share a tip, ask genuine question, relate your experience</li>
+                    <li><strong>Respond fast:</strong> If they reply, answer within 30 min (builds rapport)</li>
+                    <li><strong>Don't spam:</strong> Max 1-2 comments per account per week</li>
+                    <li><strong>Target strategically:</strong> Comment on accounts YOUR target audience follows</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Content Calendar Tab -->
+        <div id="calendar" class="content-section">
+            <h2 class="section-header">📅 7-Day Content Calendar</h2>
+            <p style="margin-bottom: 30px; color: #666;">Optimized posting schedule for @marcotmorais • All times Eastern (Florida)</p>
+
+            <div class="calendar-week">
+                <!-- Monday -->
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <h3>Monday, Dec 9</h3>
+                        <span class="day-focus">Focus: Engagement Recovery</span>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 7:30 AM</div>
+                        <div class="post-type">📸 Story (3 posts)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> Behind-the-scenes of your travel planning
+                            <ul>
+                                <li>Slide 1: Screenshot of Google Flights (poll: "Where should I go next? A) Japan B) Greece")</li>
+                                <li>Slide 2: Spreadsheet of your trip budget</li>
+                                <li>Slide 3: Question sticker "What's your travel planning secret?"</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 12:00 PM</div>
+                        <div class="post-type">📸 Story (2 posts)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> Engage with DMs/comments
+                            <ul>
+                                <li>Reply box screenshot thanking followers</li>
+                                <li>Share a follower's travel story (tag them)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 6:00 PM</div>
+                        <div class="post-type">📸 Story</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> "Prepping tomorrow's reel 🎬" (teaser for Tuesday's post)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tuesday -->
+                <div class="calendar-day priority">
+                    <div class="day-header">
+                        <h3>Tuesday, Dec 10 🔥</h3>
+                        <span class="day-focus">Focus: REEL #2 (High Priority)</span>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 8:00 AM</div>
+                        <div class="post-type">🎬 REEL (Script #4)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> "Photos Don't Prepare You" - Grand Canyon
+                            <ul>
+                                <li><strong>Script:</strong> Use Script #4 from Scripts tab (91/100 score)</li>
+                                <li><strong>Format:</strong> Expectation (photo) vs Reality (video pan)</li>
+                                <li><strong>Length:</strong> 12 seconds</li>
+                                <li><strong>Audio:</strong> Trending sound (check Instagram Reels trending)</li>
+                                <li><strong>Caption:</strong> "The Grand Canyon hits different in person 😳 No photo captures the SCALE of this place. What landmark shocked you most IRL? 🏔️"</li>
+                                <li><strong>Hashtags:</strong> #grandcanyon #travelreels #traveltok #bucketlist #arizona #canyonviews #expectationvsreality #traveltips #culturaltravel #usatravel</li>
+                            </ul>
+                            <div class="expected-results">
+                                <strong>Expected Results:</strong> 2,500-5,000 views | 15-30 shares | 50-100 new followers
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 10:00 AM - 12:00 PM</div>
+                        <div class="post-type">⚡ Engagement Burst</div>
+                        <div class="post-content">
+                            <strong>Action:</strong> Reply to EVERY comment on new reel within 2 hours
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 7:00 PM</div>
+                        <div class="post-type">📸 Story</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> Share reel performance screenshot + "Thanks for the love! 🙏"
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wednesday -->
+                <div class="calendar-day priority">
+                    <div class="day-header">
+                        <h3>Wednesday, Dec 11 🔥</h3>
+                        <span class="day-focus">Focus: NYC Carousel</span>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 7:00 AM</div>
+                        <div class="post-type">🖼️ CAROUSEL (2 photos)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> NYC Golden Hour
+                            <ul>
+                                <li><strong>Photo 1:</strong> Skyline from high-rise (Chrysler Building view)</li>
+                                <li><strong>Photo 2:</strong> Brooklyn Bridge selfie</li>
+                                <li><strong>Editing:</strong> Clean (NO text overlays), Lightroom warm tones</li>
+                                <li><strong>Caption:</strong> "NYC at golden hour never gets old 🌇 Shot 1: That moment when your hotel room has the PERFECT view of the Chrysler Building. Shot 2: Brooklyn Bridge at sunset—tourist move, but worth it every time. Which NYC landmark is overrated vs underrated? 🗽"</li>
+                                <li><strong>Hashtags:</strong> #nycgoldenhour #newyorkcity #brooklynbridge #chryslerbuilding #nyctravel #cityviews #travelphotography #culturaltravel #nyclandmarks #manhattanviews</li>
+                            </ul>
+                            <div class="expected-results">
+                                <strong>Expected Results:</strong> 1,500-3,000 reach | 50-80 saves | 12-18% engagement
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 11:00 AM & 5:00 PM</div>
+                        <div class="post-type">📸 Stories (4 total)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> NYC memories + engagement
+                            <ul>
+                                <li>Share carousel to story with "Which photo?" poll</li>
+                                <li>BTS of editing these photos in Lightroom</li>
+                                <li>Question: "Best NYC food spot?"</li>
+                                <li>Share someone's comment from carousel</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thursday -->
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <h3>Thursday, Dec 12</h3>
+                        <span class="day-focus">Focus: Story Highlights Setup</span>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 9:00 AM</div>
+                        <div class="post-type">📸 Stories (5-7 posts)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> Create "France 🇫🇷" Highlight
+                            <ul>
+                                <li>Louvre exterior shot</li>
+                                <li>Mona Lisa crowd</li>
+                                <li>Eiffel Tower view</li>
+                                <li>French food/café shot</li>
+                                <li>Arc de Triomphe</li>
+                                <li>Palace of Versailles</li>
+                            </ul>
+                            <strong>Action:</strong> Add to new Highlight "France 🇫🇷"
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 3:00 PM</div>
+                        <div class="post-type">📸 Stories (5-7 posts)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> Create "USA 🇺🇸" Highlight
+                            <ul>
+                                <li>Grand Canyon sunrise</li>
+                                <li>Vegas strip at night</li>
+                                <li>NYC skyline (from carousel)</li>
+                                <li>Statue of Liberty</li>
+                                <li>Times Square</li>
+                            </ul>
+                            <strong>Action:</strong> Add to new Highlight "USA 🇺🇸"
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Friday -->
+                <div class="calendar-day priority">
+                    <div class="day-header">
+                        <h3>Friday, Dec 13 🔥</h3>
+                        <span class="day-focus">Focus: REEL #3</span>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 7:30 AM</div>
+                        <div class="post-type">🎬 REEL (Script #6)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> "Museum Secrets" - Louvre
+                            <ul>
+                                <li><strong>Script:</strong> "3 things they don't tell you about the Louvre: 1) It's 73,000m² - you'll walk 5+ miles 2) Mona Lisa room = human zoo 3) Egyptian wing is EMPTY and breathtaking"</li>
+                                <li><strong>Format:</strong> Fast cuts, text overlays for each point</li>
+                                <li><strong>Length:</strong> 15 seconds</li>
+                                <li><strong>Caption:</strong> "The Louvre isn't what you expect 🎨 Everyone fights for Mona Lisa while ignoring actual masterpieces. Pro tip: Hit the Egyptian wing first—it's stunning and EMPTY. What museum surprised you? 🏛️"</li>
+                                <li><strong>Hashtags:</strong> #louvre #paris #museumtok #travelsecrets #parisfrance #louvremuseum #travelreels #culturaltravel #museumsofinstagram #travelhacks</li>
+                            </ul>
+                            <div class="expected-results">
+                                <strong>Expected Results:</strong> 3,000-6,000 views | 20-40 shares | 60-120 new followers
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 6:00 PM</div>
+                        <div class="post-type">📸 Story</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> Weekend travel plans teaser OR throwback Friday
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saturday -->
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <h3>Saturday, Dec 14</h3>
+                        <span class="day-focus">Focus: Community Building</span>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 10:00 AM</div>
+                        <div class="post-type">🖼️ CAROUSEL (3 photos)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> "3 Museums Worth the Hype"
+                            <ul>
+                                <li>Photo 1: Louvre (Paris)</li>
+                                <li>Photo 2: British Museum (London)</li>
+                                <li>Photo 3: Your pick (Museum of Natural History, etc.)</li>
+                                <li><strong>Caption:</strong> "Not all museums live up to the hype—but these 3 do 🏛️ Swipe for my honest takes on the world's most famous museums. Which one should I visit next? Comment below 👇"</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ Throughout Day</div>
+                        <div class="post-type">⚡ Engagement</div>
+                        <div class="post-content">
+                            <strong>Action:</strong> Spend 30 min commenting on travel accounts (50-500k followers)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sunday -->
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <h3>Sunday, Dec 15</h3>
+                        <span class="day-focus">Focus: Analytics & Planning</span>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 11:00 AM</div>
+                        <div class="post-type">📸 Stories (2-3 posts)</div>
+                        <div class="post-content">
+                            <strong>Content:</strong> Weekly recap + question
+                            <ul>
+                                <li>"This week in travel content 🌍" (carousel of week's posts)</li>
+                                <li>Question: "What content do you want more of?"</li>
+                                <li>Poll: "Next reel topic? A) Food B) Landmarks C) Budget Tips"</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-time">⏰ 2:00 PM - 4:00 PM</div>
+                        <div class="post-type">📊 Analytics Review</div>
+                        <div class="post-content">
+                            <strong>Action:</strong> Use Calculator tab to analyze week's performance
+                            <ul>
+                                <li>Which reel got most shares?</li>
+                                <li>Which post had highest engagement?</li>
+                                <li>Total follower growth this week?</li>
+                                <li>Plan next week's content based on winners</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calendar-legend">
+                <h3>📌 Quick Reference</h3>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <strong>🎬 Reel Days:</strong> Tuesday, Friday (2x per week)
+                    </div>
+                    <div class="legend-item">
+                        <strong>🖼️ Carousel Days:</strong> Wednesday, Saturday
+                    </div>
+                    <div class="legend-item">
+                        <strong>📸 Stories:</strong> Daily (3-5 per day minimum)
+                    </div>
+                    <div class="legend-item">
+                        <strong>⏰ Best Times:</strong> 7-9 AM, 5-7 PM Eastern
+                    </div>
+                    <div class="legend-item">
+                        <strong>⚡ Engagement:</strong> Reply to all comments within 2 hours of posting
+                    </div>
+                    <div class="legend-item">
+                        <strong>🎯 Weekly Goal:</strong> 100-150 new followers, 10K+ impressions
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations" style="margin-top: 30px;">
+                <h3>💡 Scheduling Tips</h3>
+                <ul>
+                    <li><strong>Use Meta Business Suite</strong> - Schedule reels/carousels up to 75 days in advance (free)</li>
+                    <li><strong>Batch Create Content</strong> - Dedicate Sunday afternoon to editing next week's reels</li>
+                    <li><strong>Pre-write Captions</strong> - Draft all captions in Notes app, copy-paste when scheduling</li>
+                    <li><strong>Stories Can't Be Scheduled</strong> - Post manually 3-5x daily (takes 5 min total)</li>
+                    <li><strong>Track Everything</strong> - After each post, log stats in Calculator tab to identify patterns</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Calculator Tab -->
+        <div id="calculator" class="content-section">
+            <h2 class="section-header">Instagram Reel Performance Calculator</h2>
+            
+            <div class="calculator-section">
+                <h2>Enter Your Reel Metrics</h2>
+                
+                <div class="input-group">
+                    <label for="views">Total Views</label>
+                    <input type="number" id="views" placeholder="e.g., 5000" min="0">
+                </div>
+
+                <div class="input-group">
+                    <label for="likes">Total Likes</label>
+                    <input type="number" id="likes" placeholder="e.g., 250" min="0">
+                </div>
+
+                <div class="input-group">
+                    <label for="comments">Total Comments</label>
+                    <input type="number" id="comments" placeholder="e.g., 30" min="0">
+                </div>
+
+                <div class="input-group">
+                    <label for="shares">Total Shares</label>
+                    <input type="number" id="shares" placeholder="e.g., 15" min="0">
+                </div>
+
+                <div class="input-group">
+                    <label for="saves">Total Saves</label>
+                    <input type="number" id="saves" placeholder="e.g., 20" min="0">
+                </div>
+
+                <div class="input-group">
+                    <label for="followers">Your Current Follower Count</label>
+                    <input type="number" id="followers" placeholder="e.g., 139" min="0">
+                </div>
+
+                <div class="input-group">
+                    <label for="retention">Average Watch Time (%)</label>
+                    <input type="number" id="retention" placeholder="e.g., 65" min="0" max="100">
+                </div>
+
+                <button class="calculate-btn" onclick="calculateMetrics()">Calculate Performance</button>
+            </div>
+
+            <div class="results" id="results">
+                <div class="score-card">
+                    <div class="score-label">Overall Performance Score</div>
+                    <div class="score-number" id="overallScore">0</div>
+                    <div class="score-label">out of 100</div>
+                </div>
+
+                <div class="viral-indicator" id="viralIndicator"></div>
+
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <h3>Engagement Rate</h3>
+                        <div class="metric-value" id="engagementRate">0%</div>
+                        <div class="metric-status" id="engagementStatus"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <h3>Share Rate</h3>
+                        <div class="metric-value" id="shareRate">0%</div>
+                        <div class="metric-status" id="shareStatus"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <h3>Save Rate</h3>
+                        <div class="metric-value" id="saveRate">0%</div>
+                        <div class="metric-status" id="saveStatus"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <h3>Comment Rate</h3>
+                        <div class="metric-value" id="commentRate">0%</div>
+                        <div class="metric-status" id="commentStatus"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <h3>Retention Score</h3>
+                        <div class="metric-value" id="retentionScore">0</div>
+                        <div class="metric-status" id="retentionStatus"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <h3>Viral Potential</h3>
+                        <div class="metric-value" id="viralScore">0%</div>
+                        <div class="metric-status" id="viralStatus"></div>
+                    </div>
+                </div>
+
+                <div class="prediction">
+                    <h3>📊 Performance Predictions</h3>
+                    <div class="prediction-item" id="viewsPrediction"></div>
+                    <div class="prediction-item" id="followersPrediction"></div>
+                    <div class="prediction-item" id="reachPrediction"></div>
+                </div>
+
+                <div class="recommendations">
+                    <h3>💡 Recommendations to Improve</h3>
+                    <ul id="recommendationsList"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategy Tab -->
+        <div id="strategy" class="content-section">
+            <h2 class="section-header">30-Day Instagram Growth Strategy</h2>
+            
+            <div class="strategy-overview">
+                <h3>🎯 Your Growth Blueprint - @marcotmorais</h3>
+                <p>A complete 30-day plan to grow from 139 to 1,000+ followers while staying authentic</p>
+                
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">140</span>
+                        <span class="stat-label">Current Followers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">1,000</span>
+                        <span class="stat-label">Goal</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">30</span>
+                        <span class="stat-label">Days</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Reels to Post</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- First Reel Analysis -->
+            <div class="week-section" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); color: #2d3436;">
+                <h3 style="color: #2d3436;">📊 Your First Reel Analysis</h3>
+                <p><strong>Performance:</strong> 444 views | 19 likes | 6 comments | 2 saves | 0 shares</p>
+                
+                <div class="stat-grid" style="margin-top: 20px;">
+                    <div class="stat-item">
+                        <span class="stat-number" style="font-size: 2em;">58/100</span>
+                        <span class="stat-label">Overall Score</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" style="font-size: 2em;">6.08%</span>
+                        <span class="stat-label">Engagement Rate ✅</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" style="font-size: 2em;">0</span>
+                        <span class="stat-label">Shares ❌</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" style="font-size: 2em;">76.4%</span>
+                        <span class="stat-label">Non-Followers</span>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #e17055; margin-bottom: 10px;">🚨 Critical Issues to Fix:</h4>
+                    <ul style="list-style-position: inside; color: #2d3436;">
+                        <li><strong>ZERO shares</strong> - This kills viral potential. Fix: Add relatable/controversial content</li>
+                        <li><strong>Low saves (2)</strong> - Need helpful/reference-worthy content</li>
+                        <li><strong>Likely low retention</strong> - Improve hook, cut every 2-3 seconds</li>
+                    </ul>
+                    
+                    <h4 style="color: #00b894; margin-top: 15px; margin-bottom: 10px;">✅ What's Working:</h4>
+                    <ul style="list-style-position: inside; color: #2d3436;">
+                        <li>6.08% engagement rate (GOOD!)</li>
+                        <li>1.35% comment rate (EXCELLENT!)</li>
+                        <li>76.4% non-follower views (algorithm is pushing you)</li>
+                    </ul>
+
+                    <h4 style="color: #0984e3; margin-top: 15px; margin-bottom: 10px;">🎯 Next Reel Strategy:</h4>
+                    <p style="color: #2d3436; margin: 0;"><strong>Use Script #4 "Photos Don't Prepare You"</strong> - Easiest to execute, highest viral score (91/100), addresses your share problem.</p>
+                </div>
+            </div>
+
+            <!-- Week 1 -->
+            <div class="week-section">
+                <h3>Week 1: Foundation (Days 1-7)</h3>
+                <p><strong>Goal:</strong> Set up for success, post first 2 reels</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h4>Day 1: Profile Optimization</h4>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul class="checklist">
+                                <li>Update bio to: "Marco | Museums, landmarks & good food 🗺️ Florida → 6 countries & counting"</li>
+                                <li>Add profile category: "Travel & Tourism"</li>
+                                <li>Update profile picture (your face clearly visible)</li>
+                                <li>Create 3 story highlights: "France 🇫🇷" "Brazil 🇧🇷" "USA 🇺🇸"</li>
+                                <li>Add best photos to each highlight (5-7 per highlight)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h4>Day 2: Content Inventory</h4>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul class="checklist">
+                                <li>Organize all travel photos/videos by country into folders</li>
+                                <li>Identify your TOP 20 best shots</li>
+                                <li>Note which trips have video footage</li>
+                                <li>List 10 memorable moments/stories from your trips</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h4>Days 3-4: Create Reel #1</h4>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p><strong>Reel:</strong> "POV: You Finally See the Grand Canyon in Person"</p>
+                            <ul class="checklist">
+                                <li>Script it out (use Reel Scripts tab)</li>
+                                <li>Edit in CapCut (1-2 hours)</li>
+                                <li>Write caption with question</li>
+                                <li>Schedule to post Day 5 at 7 AM EST</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h4>Day 5: POST REEL #1</h4>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul class="checklist">
+                                <li>Post at 7-9 AM EST (Tuesday/Wednesday/Thursday best)</li>
+                                <li>Reply to every comment within first hour</li>
+                                <li>Share to story with poll: "Have you been here?"</li>
+                                <li>Send to 5 friends asking for honest feedback</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h4>Day 6: Engagement Day</h4>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul class="checklist">
+                                <li>Spend 30 mins engaging with travel accounts (100-500K followers)</li>
+                                <li>Comment on 20 travel reels (genuine comments, not "nice!")</li>
+                                <li>Follow 10 accounts similar to your vibe</li>
+                                <li>Check Reel #1 analytics - note retention drop-off points</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h4>Day 7: Create Reel #2</h4>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p><strong>Reel:</strong> "Things Nobody Tells You About Famous Landmarks"</p>
+                            <ul class="checklist">
+                                <li>Script with 4 quick facts (Louvre, Vegas, Grand Canyon, Big Ben)</li>
+                                <li>Edit and prepare for Week 2</li>
+                            </ul>
+                            <p><strong>Expected Week 1 Results:</strong> 139 → 170 followers (+31), Reel #1 views: 2K-8K</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 2 -->
+            <div class="week-section">
+                <h3>Week 2: Momentum (Days 8-14)</h3>
+                <p><strong>Goal:</strong> Build consistency, test what works</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h4>Days 8-14 Overview</h4>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul class="checklist">
+                                <li>Day 8: POST Reel #2 - Same engagement strategy as Day 5</li>
+                                <li>Day 9: Feed post (carousel 3-5 photos) + Stories</li>
+                                <li>Day 10: Analyze Reel #1 vs #2 performance</li>
+                                <li>Days 11-12: Create Reel #3 (Emotional/Story Format)</li>
+                                <li>Day 13: POST Reel #3</li>
+                                <li>Day 14: Weekly review - track what's working</li>
+                            </ul>
+                            <p><strong>Expected Week 2 Results:</strong> 170 → 250 followers (+80), Total reach: 10K-25K</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 3 -->
+            <div class="week-section">
+                <h3>Week 3: Acceleration (Days 15-21)</h3>
+                <p><strong>Goal:</strong> Double down on what's working</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h4>Days 15-21 Overview</h4>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul class="checklist">
+                                <li>Day 15: POST Reel #4 (Similar to best performer)</li>
+                                <li>Day 16: Collaboration outreach - find similar accounts</li>
+                                <li>Day 17: Feed post + 1 hour engagement</li>
+                                <li>Days 18-19: Create Reel #5 (Trending audio format)</li>
+                                <li>Day 20: POST Reel #5</li>
+                                <li>Day 21: Mid-point analysis</li>
+                            </ul>
+                            <p><strong>Expected Week 3 Results:</strong> 250 → 400 followers (+150), One reel hits 20K+ views</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 4 -->
+            <div class="week-section">
+                <h3>Week 4: Optimization (Days 22-30)</h3>
+                <p><strong>Goal:</strong> Refine strategy, build community</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h4>Days 22-30 Overview</h4>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul class="checklist">
+                                <li>Day 22: Stories strategy - post daily with polls/questions</li>
+                                <li>Day 23: POST Reel #6 (Answer to comment)</li>
+                                <li>Day 24: Feed post with save-worthy content</li>
+                                <li>Days 25-26: Create Reel #7 (Controversial/Hot take)</li>
+                                <li>Day 27: POST Reel #7</li>
+                                <li>Day 28: Community building</li>
+                                <li>Day 29: Final weekly review</li>
+                                <li>Day 30: POST Reel #8 + Celebration</li>
+                            </ul>
+                            <p><strong>Expected Week 4 Results:</strong> 400 → 600 followers (+200)</p>
+                            <p><strong>Total 30-Day Growth:</strong> +461 followers (projected 90-day: 1,000+)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scripts Tab -->
+        <div id="scripts" class="content-section">
+            <h2 class="section-header">Ready-to-Use Reel Scripts</h2>
+            
+            <!-- Script 1 -->
+            <div class="reel-script">
+                <h3>Reel #1: POV Format</h3>
+                <div class="script-meta">
+                    <span class="meta-tag">Score: 88/100</span>
+                    <span class="meta-tag">High Viral Potential</span>
+                    <span class="meta-tag">15 seconds</span>
+                </div>
+                
+                <h4>Title: "POV: You Finally See the Grand Canyon in Person"</h4>
+                
+                <div class="script-timeline">
+                    <div class="timeline-item">
+                        <div class="timestamp">[0-1s] Hook</div>
+                        <div class="script-text">Text: "POV: You finally see it in person"</div>
+                        <p>Visual: Walking up, anticipation building</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[1-4s] Build</div>
+                        <div class="script-text">Show approach to viewpoint</div>
+                        <p>Visual: Getting closer, glimpses of canyon</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[4-7s] Reveal</div>
+                        <div class="script-text">First full view</div>
+                        <p>Visual: Wide shot of Grand Canyon</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[7-10s] Impact</div>
+                        <div class="script-text">Show scale and beauty</div>
+                        <p>Visual: Different angles, panning shots</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[10-13s] Contrast</div>
+                        <div class="script-text">Text: "Everyone said it was beautiful"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[13-15s] Payoff</div>
+                        <div class="script-text">Text: "They lied. It's way better."</div>
+                    </div>
+                </div>
+
+                <p><strong>Caption:</strong> "Some views break your brain 🏜️ What place left you speechless?"</p>
+                
+                <div class="tips-box">
+                    <h4>Why This Works:</h4>
+                    <ul>
+                        <li>POV format is trending and relatable</li>
+                        <li>Builds anticipation and delivers payoff</li>
+                        <li>Emotional connection over information</li>
+                        <li>Question drives comments</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Script 2 -->
+            <div class="reel-script">
+                <h3>Reel #2: Educational Format</h3>
+                <div class="script-meta">
+                    <span class="meta-tag">Score: 82/100</span>
+                    <span class="meta-tag">High Share Value</span>
+                    <span class="meta-tag">15 seconds</span>
+                </div>
+                
+                <h4>Title: "Things Nobody Tells You About Famous Landmarks"</h4>
+                
+                <div class="script-timeline">
+                    <div class="timeline-item">
+                        <div class="timestamp">[0-2s] Hook</div>
+                        <div class="script-text">Text: "Things nobody tells you"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[2-4s] Fact #1</div>
+                        <div class="script-text">Louvre: "You'll get lost. Twice."</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[4-6s] Fact #2</div>
+                        <div class="script-text">Vegas: "Everything is farther than it looks"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[6-8s] Fact #3</div>
+                        <div class="script-text">Grand Canyon: "Your phone camera will fail you"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[8-10s] Fact #4</div>
+                        <div class="script-text">Big Ben: "It's just... there. On a random corner."</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[10-12s] Fact #5</div>
+                        <div class="script-text">Brazil: "The locals > the beaches"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[12-15s] CTA</div>
+                        <div class="script-text">Text: "What surprised you most? 👇"</div>
+                    </div>
+                </div>
+
+                <p><strong>Caption:</strong> "Travel is full of surprises 🌍 What's something that caught you off guard?"</p>
+                
+                <div class="tips-box">
+                    <h4>Why This Works:</h4>
+                    <ul>
+                        <li>Quick cuts keep retention high</li>
+                        <li>Relatable insights = shares</li>
+                        <li>Educational but entertaining</li>
+                        <li>Use your actual experiences</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Script 3 -->
+            <div class="reel-script">
+                <h3>Reel #3: Emotional Story</h3>
+                <div class="script-meta">
+                    <span class="meta-tag">Score: 86/100</span>
+                    <span class="meta-tag">High Save Rate</span>
+                    <span class="meta-tag">15 seconds</span>
+                </div>
+                
+                <h4>Title: "I Visited 6 Countries. This One Changed Everything."</h4>
+                
+                <div class="script-timeline">
+                    <div class="timeline-item">
+                        <div class="timestamp">[0-2s] Setup</div>
+                        <div class="script-text">Text: "I visited 6 countries this year"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[2-5s] Montage</div>
+                        <div class="script-text">Fast cuts of all destinations</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[5-8s] Reveal</div>
+                        <div class="script-text">Text: "But this one hit different" [Brazil or Grand Canyon]</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[8-11s] Show</div>
+                        <div class="script-text">Best footage from that place</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[11-14s] Impact</div>
+                        <div class="script-text">Text: "Sometimes you find what you weren't looking for"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[14-15s] CTA</div>
+                        <div class="script-text">Text: "Where did travel change you? 👇"</div>
+                    </div>
+                </div>
+
+                <p><strong>Caption:</strong> "Not all trips are created equal 🌎 [Location] reminded me why I love exploring."</p>
+                
+                <div class="tips-box">
+                    <h4>Why This Works:</h4>
+                    <ul>
+                        <li>Personal and vulnerable</li>
+                        <li>Creates emotional connection</li>
+                        <li>People save inspiring content</li>
+                        <li>Showcases your best destination</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Script 4 -->
+            <div class="reel-script">
+                <h3>Reel #4: "The Photos Don't Prepare You"</h3>
+                <div class="script-meta">
+                    <span class="meta-tag">Score: 91/100</span>
+                    <span class="meta-tag">⭐ TOP RECOMMENDATION</span>
+                    <span class="meta-tag">12 seconds</span>
+                    <span class="meta-tag">Easy to Execute</span>
+                </div>
+                
+                <h4>Title: "Photos vs Being There"</h4>
+                
+                <div class="script-timeline">
+                    <div class="timeline-item">
+                        <div class="timestamp">[0-1s] Hook</div>
+                        <div class="script-text">Text: "Photos vs Being There"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[1-3s] Show Photo</div>
+                        <div class="script-text">Show your photo of Grand Canyon</div>
+                        <p>Text: "What you see in photos"</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[3-5s] Transition</div>
+                        <div class="script-text">Quick zoom or fade effect</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[5-7s] Reality</div>
+                        <div class="script-text">Cut to video/different angle</div>
+                        <p>Text: "What it actually feels like"</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[7-10s] Show Scale</div>
+                        <div class="script-text">Wide shots, multiple angles</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[10-12s] Payoff</div>
+                        <div class="script-text">Text: "Some places hit different 🏜️"</div>
+                    </div>
+                </div>
+
+                <p><strong>Caption:</strong> "No camera does this justice. What place surprised you most in person? 👇"</p>
+                
+                <p><strong>Hashtags:</strong> #travel #grandcanyon #travelreels #bucketlist #wanderlust #travelgram #explore #nature #canyon #arizonatravel</p>
+
+                <div class="tips-box">
+                    <h4>Why This Works (91/100):</h4>
+                    <ul>
+                        <li>✅ Relatable - Everyone's experienced this disconnect</li>
+                        <li>✅ Emotional payoff - Delivers "wow" moment</li>
+                        <li>✅ High share value - "Send to someone who hasn't been"</li>
+                        <li>✅ Simple to execute with your existing content</li>
+                        <li>✅ Works with ANY landmark (replicable format)</li>
+                    </ul>
+                    <p><strong>Expected Performance:</strong> 1,500-4,000 views | 40-80 new followers | 10-25 shares</p>
+                </div>
+            </div>
+
+            <!-- Script 5 -->
+            <div class="reel-script">
+                <h3>Reel #5: "Museum Person Energy"</h3>
+                <div class="script-meta">
+                    <span class="meta-tag">Score: 82/100</span>
+                    <span class="meta-tag">HIGH SHARE POTENTIAL</span>
+                    <span class="meta-tag">12 seconds</span>
+                </div>
+                
+                <h4>Title: "Signs You're a Museum Person"</h4>
+                
+                <div class="script-timeline">
+                    <div class="timeline-item">
+                        <div class="timestamp">[0-2s] Hook</div>
+                        <div class="script-text">Text: "Signs you're a museum person"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[2-4s] Sign #1</div>
+                        <div class="script-text">"Museum closes in 30 mins" → "Perfect timing 🏃"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[4-6s] Sign #2</div>
+                        <div class="script-text">"Audio guide available?" → "Obviously yes"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[6-8s] Sign #3</div>
+                        <div class="script-text">"No photos allowed" → Takes 100 anyway</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[8-10s] Sign #4</div>
+                        <div class="script-text">"Gift shop?" → Bankrupt</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[10-12s] CTA</div>
+                        <div class="script-text">Text: "It me 🎨 Tag your museum buddy"</div>
+                    </div>
+                </div>
+
+                <p><strong>Caption:</strong> "Museums > beaches. Fight me. 🏛️ Tag someone who gets it!"</p>
+                
+                <p><strong>Hashtags:</strong> #museumlife #travel #louvre #paris #culture #museum #artlover #culturaltravel #traveltok</p>
+
+                <div class="tips-box">
+                    <h4>Why This Works (82/100):</h4>
+                    <ul>
+                        <li>✅ Super relatable for your niche audience</li>
+                        <li>✅ "Tag" CTA = guaranteed shares</li>
+                        <li>✅ Builds community of like-minded travelers</li>
+                        <li>✅ Uses your Louvre content perfectly</li>
+                        <li>✅ Humor = high engagement</li>
+                    </ul>
+                    <p><strong>Expected Performance:</strong> 1,200-3,500 views | 30-60 new followers | 20-40 shares</p>
+                    <p><strong>SOLVES:</strong> Your 0 shares problem from Reel #1</p>
+                </div>
+            </div>
+
+            <!-- Script 6 -->
+            <div class="reel-script">
+                <h3>Reel #6: "Worth It or Skip It?"</h3>
+                <div class="script-meta">
+                    <span class="meta-tag">Score: 89/100</span>
+                    <span class="meta-tag">VIRAL CANDIDATE</span>
+                    <span class="meta-tag">15 seconds</span>
+                </div>
+                
+                <h4>Title: "Rating Famous Landmarks: Worth It?"</h4>
+                
+                <div class="script-timeline">
+                    <div class="timeline-item">
+                        <div class="timestamp">[0-2s] Hook</div>
+                        <div class="script-text">Text: "Rating famous landmarks: Worth it?"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[2-4s] Rating #1</div>
+                        <div class="script-text">Louvre: "WORTH IT ✅ Could spend days"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[4-6s] Rating #2</div>
+                        <div class="script-text">Vegas: "Skip 🚫 Unless you love crowds & casinos"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[6-8s] Rating #3</div>
+                        <div class="script-text">Grand Canyon: "WORTH IT ✅ Photos lie, it's 10x better"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[8-10s] Rating #4</div>
+                        <div class="script-text">Big Ben: "Quick photo ⚠️ Then move on"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[10-12s] Rating #5</div>
+                        <div class="script-text">Brazil beaches: "WORTH IT ✅ Hidden gem energy"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[12-15s] CTA</div>
+                        <div class="script-text">Text: "Honest travel takes only 📍"</div>
+                    </div>
+                </div>
+
+                <p><strong>Caption:</strong> "No BS reviews from actual visits. What's a landmark you wish you'd skipped? 👇"</p>
+                
+                <p><strong>Hashtags:</strong> #travelreview #honesttravel #bucketlist #landmarks #traveltips #louvre #grandcanyon #vegas #traveladvice</p>
+
+                <div class="tips-box">
+                    <h4>Why This Works (89/100):</h4>
+                    <ul>
+                        <li>✅ Hot takes = comments & debate = massive engagement</li>
+                        <li>✅ Helpful info = saves (people planning trips)</li>
+                        <li>✅ Controversial = shares ("Do you agree with this?")</li>
+                        <li>✅ Quick cuts = high retention</li>
+                        <li>✅ Uses ALL your destinations</li>
+                    </ul>
+                    <p><strong>Expected Performance:</strong> 2,000-6,000 views | 50-100 new followers | 25-50 shares</p>
+                    <p><strong>WARNING:</strong> Expect heated comments about Vegas - this is GOOD for engagement!</p>
+                </div>
+            </div>
+
+            <!-- Script 7 -->
+            <div class="reel-script">
+                <h3>Reel #7: "I'm Not a Travel Influencer, But..."</h3>
+                <div class="script-meta">
+                    <span class="meta-tag">Score: 88/100</span>
+                    <span class="meta-tag">BRAND ALIGNED</span>
+                    <span class="meta-tag">15 seconds</span>
+                </div>
+                
+                <h4>Title: "Anti-Influencer Humor"</h4>
+                
+                <div class="script-timeline">
+                    <div class="timeline-item">
+                        <div class="timestamp">[0-2s] Hook</div>
+                        <div class="script-text">Text: "I'm not a travel influencer but..."</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[2-4s] Confession #1</div>
+                        <div class="script-text">"I will take 47 photos of the same building" [Louvre/Big Ben]</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[4-6s] Confession #2</div>
+                        <div class="script-text">"I will research the restaurant for 3 hours" [food shot]</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[6-8s] Confession #3</div>
+                        <div class="script-text">"I will spend half my trip in museums" [museum content]</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[8-10s] Payoff</div>
+                        <div class="script-text">"And I won't regret any of it"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[10-12s] Montage</div>
+                        <div class="script-text">Show your favorite shots fast montage</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[12-15s] Brand</div>
+                        <div class="script-text">Text: "Just a guy who loves to travel 🌍"</div>
+                    </div>
+                </div>
+
+                <p><strong>Caption:</strong> "No filters, no sponsorships, just real travel. Who else travels like this? 🙋‍♂️"</p>
+                
+                <p><strong>Hashtags:</strong> #realtravel #notaninfluencer #authentictravel #solotravel #museumhopping #foodie #travelphotography</p>
+
+                <div class="tips-box">
+                    <h4>Why This Works (88/100):</h4>
+                    <ul>
+                        <li>✅ Directly addresses your "not an influencer" brand</li>
+                        <li>✅ Relatable = massive shares ("This is SO me")</li>
+                        <li>✅ Funny + honest = high engagement</li>
+                        <li>✅ Builds authentic community</li>
+                        <li>✅ Sets you apart from typical travel content</li>
+                    </ul>
+                    <p><strong>Expected Performance:</strong> 1,800-5,000 views | 40-80 new followers | 30-60 shares</p>
+                    <p><strong>BRAND FIT:</strong> Perfect for establishing your authentic voice</p>
+                </div>
+            </div>
+
+            <!-- Script 8 -->
+            <div class="reel-script">
+                <h3>Reel #8: "Things I Learned the Hard Way"</h3>
+                <div class="script-meta">
+                    <span class="meta-tag">Score: 80/100</span>
+                    <span class="meta-tag">HIGH SAVE RATE</span>
+                    <span class="meta-tag">15 seconds</span>
+                </div>
+                
+                <h4>Title: "Travel Lessons"</h4>
+                
+                <div class="script-timeline">
+                    <div class="timeline-item">
+                        <div class="timestamp">[0-2s] Hook</div>
+                        <div class="script-text">Text: "Travel lessons I learned the hard way"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[2-4s] Lesson #1</div>
+                        <div class="script-text">"The Louvre is MASSIVE" [show crowds/size]</div>
+                        <p>Subtext: "Bring. Comfy. Shoes."</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[4-6s] Lesson #2</div>
+                        <div class="script-text">"Vegas: everything is farther than it looks"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[6-8s] Lesson #3</div>
+                        <div class="script-text">"Book museums in advance"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[8-10s] Lesson #4</div>
+                        <div class="script-text">"Your phone battery will die at the worst time"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[10-12s] Lesson #5</div>
+                        <div class="script-text">"Street food > expensive restaurants"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[12-15s] CTA</div>
+                        <div class="script-text">Text: "Learn from my mistakes 😅 Save this!"</div>
+                    </div>
+                </div>
+
+                <p><strong>Caption:</strong> "Save this before your next trip 📍 What's your biggest travel lesson?"</p>
+                
+                <p><strong>Hashtags:</strong> #traveltips #traveladvice #firsttimetravel #travelhacks #louvre #bucketlist #travelguide</p>
+
+                <div class="tips-box">
+                    <h4>Why This Works (80/100):</h4>
+                    <ul>
+                        <li>✅ Helpful = high saves (your current weakness)</li>
+                        <li>✅ Relatable = shares</li>
+                        <li>✅ Authentic (your real experiences)</li>
+                        <li>✅ Save-worthy content people will reference</li>
+                        <li>✅ Question in caption = comments</li>
+                    </ul>
+                    <p><strong>Expected Performance:</strong> 1,000-3,000 views | 25-50 new followers | 50-100 saves</p>
+                    <p><strong>SOLVES:</strong> Your low save rate (2/444 on Reel #1)</p>
+                </div>
+            </div>
+
+            <!-- Script 9 -->
+            <div class="reel-script">
+                <h3>Reel #9: "Underrated vs Overrated"</h3>
+                <div class="script-meta">
+                    <span class="meta-tag">Score: 78/100</span>
+                    <span class="meta-tag">DEBATE STARTER</span>
+                    <span class="meta-tag">15 seconds</span>
+                </div>
+                
+                <h4>Title: "Travel Hot Takes"</h4>
+                
+                <div class="script-timeline">
+                    <div class="timeline-item">
+                        <div class="timestamp">[0-2s] Hook</div>
+                        <div class="script-text">Text: "Underrated vs Overrated Travel"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[2-5s] Take #1</div>
+                        <div class="script-text">"Underrated: Museum hopping" [Louvre shots]</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[5-8s] Take #2</div>
+                        <div class="script-text">"Overrated: Beach resorts"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[8-11s] Take #3</div>
+                        <div class="script-text">"Underrated: Local food markets"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[11-13s] Take #4</div>
+                        <div class="script-text">"Overrated: Michelin restaurants"</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timestamp">[13-15s] CTA</div>
+                        <div class="script-text">Text: "Agree or disagree? 👇"</div>
+                    </div>
+                </div>
+
+                <p><strong>Caption:</strong> "Hot takes from real travel. What's your unpopular opinion? 🌶️"</p>
+                
+                <p><strong>Hashtags:</strong> #hottakes #unpopularopinion #travelopinions #museumlife #foodtravel #realtravel</p>
+
+                <div class="tips-box">
+                    <h4>Why This Works (78/100):</h4>
+                    <ul>
+                        <li>✅ Debate = massive comments</li>
+                        <li>✅ Matches your style (museums > beaches)</li>
+                        <li>✅ Share-worthy controversy</li>
+                        <li>✅ Establishes your unique perspective</li>
+                    </ul>
+                    <p><strong>Expected Performance:</strong> 800-2,500 views | 20-40 new followers | 40-80 comments</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Tab -->
+        <div id="tips" class="content-section">
+            <h2 class="section-header">Growth Tips & Best Practices</h2>
+            
+            <div class="week-section">
+                <h3>🎯 Low Skip Rate Formula</h3>
+                <div class="accordion-body">
+                    <h4>1. Hook (0-1 second)</h4>
+                    <ul class="checklist">
+                        <li>Use pattern interrupt: "Wait", "Stop", "POV", "Things nobody tells you"</li>
+                        <li>Show best visual first OR biggest text</li>
+                        <li>Create curiosity gap</li>
+                    </ul>
+
+                    <h4>2. Pacing (Every 2-3 seconds)</h4>
+                    <ul class="checklist">
+                        <li>Cut to new clip/angle</li>
+                        <li>Change text overlay</li>
+                        <li>Movement in every frame (zoom, pan, motion)</li>
+                    </ul>
+
+                    <h4>3. Payoff (Last 3 seconds)</h4>
+                    <ul class="checklist">
+                        <li>Deliver on the promise</li>
+                        <li>Ask a question (drives comments)</li>
+                        <li>Loop potential (last frame connects to first)</li>
+                    </ul>
+
+                    <h4>4. Optimal Length</h4>
+                    <ul class="checklist">
+                        <li>Sweet spot: 12-15 seconds</li>
+                        <li>Avoid: 30+ seconds (retention drops)</li>
+                    </ul>
+
+                    <h4>5. Text Overlays</h4>
+                    <ul class="checklist">
+                        <li>Large, bold, readable on mobile</li>
+                        <li>Change text every 2-3 seconds</li>
+                        <li>Use emojis sparingly</li>
+                    </ul>
+
+                    <h4>6. Audio Strategy</h4>
+                    <ul class="checklist">
+                        <li>Trending audio = 2x reach</li>
+                        <li>Check "Audio" tab in Reels for trending sounds</li>
+                        <li>Avoid copyrighted music (gets muted)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>💬 Engagement Tactics (Authentic, Not Spammy)</h3>
+                <div class="accordion-body">
+                    <h4>Comments (Most Important):</h4>
+                    <ul class="checklist">
+                        <li>Reply to every comment within first hour of posting</li>
+                        <li>Ask follow-up questions to keep conversation going</li>
+                        <li>Pin best comment to top (boosts engagement)</li>
+                        <li>Never use generic replies ("Thanks!")</li>
+                    </ul>
+
+                    <h4>Stories:</h4>
+                    <ul class="checklist">
+                        <li>Post 3-5 stories per day</li>
+                        <li>Use interactive stickers: Polls, Questions, Quizzes</li>
+                        <li>Repost user content (builds community)</li>
+                        <li>Behind-the-scenes of creating reels</li>
+                    </ul>
+
+                    <h4>Hashtags:</h4>
+                    <ul class="checklist">
+                        <li>Use 10-15 hashtags (mix of sizes)</li>
+                        <li>3 big (500K-1M): #travel #travelgram #explore</li>
+                        <li>5 medium (50K-500K): #museumlife #landmarktravel</li>
+                        <li>5 niche (5K-50K): #solotraveldiaries #goldenhourtravel</li>
+                        <li>Avoid over-1M hashtags (too competitive)</li>
+                    </ul>
+
+                    <h4>Location Tags:</h4>
+                    <ul class="checklist">
+                        <li>Tag every landmark/city featured</li>
+                        <li>Increases discoverability</li>
+                        <li>People search locations before trips</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>📊 Metrics to Track Weekly</h3>
+                <div class="accordion-body">
+                    <h4>Follower Growth:</h4>
+                    <ul class="checklist">
+                        <li>New followers this week</li>
+                        <li>Follower/unfollow ratio (aim for 80%+ retention)</li>
+                        <li>Profile visits → Follow conversion rate (goal: 10%+)</li>
+                    </ul>
+
+                    <h4>Reel Performance:</h4>
+                    <ul class="checklist">
+                        <li>Views (goal: 2K+ for accounts under 500 followers)</li>
+                        <li>Retention rate (goal: 60%+ watch to end)</li>
+                        <li>Shares (goal: 5%+ of views)</li>
+                        <li>Saves (goal: 3%+ of views)</li>
+                        <li>Comments (goal: 50+ per reel)</li>
+                    </ul>
+
+                    <h4>Engagement Rate Formula:</h4>
+                    <p><strong>(Likes + Comments + Shares + Saves) / Followers × 100</strong></p>
+                    <ul class="checklist">
+                        <li>5%+ = Excellent</li>
+                        <li>3-5% = Good</li>
+                        <li>1-3% = Average</li>
+                        <li>&lt;1% = Needs improvement</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>🛠️ Recommended Tools</h3>
+                <div class="accordion-body">
+                    <h4>Editing:</h4>
+                    <ul class="checklist">
+                        <li>CapCut (Free, mobile/desktop) - Best for beginners</li>
+                        <li>InShot (Free, mobile) - Quick edits</li>
+                        <li>Premiere Rush (Free with Adobe account)</li>
+                    </ul>
+
+                    <h4>Analytics:</h4>
+                    <ul class="checklist">
+                        <li>Instagram Insights (built-in, free)</li>
+                        <li>Later.com (scheduling + analytics, free tier)</li>
+                        <li>Metricool (detailed analytics, free)</li>
+                    </ul>
+
+                    <h4>AI Voiceover (if needed):</h4>
+                    <ul class="checklist">
+                        <li>ElevenLabs (10,000 chars/month free)</li>
+                        <li>CapCut Built-in TTS (unlimited, free)</li>
+                        <li>Play.ht ($19/mo for voice cloning)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>💭 Mindset Reminders</h3>
+                <div class="accordion-body">
+                    <ul class="checklist">
+                        <li>✓ Consistency beats perfection</li>
+                        <li>✓ Your first 10 reels will be "meh" - that's normal</li>
+                        <li>✓ Growth is exponential, not linear</li>
+                        <li>✓ One viral reel can get you 500+ followers overnight</li>
+                        <li>✓ Focus on retention rate, not just views</li>
+                        <li>✓ Your authentic self > trying to be an influencer</li>
+                        <li>✓ Comparison kills creativity - stay in your lane</li>
+                        <li>✓ Engagement > follower count</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h3>🚨 What to Do When Growth Stalls</h3>
+                <ul>
+                    <li><strong>Stuck at 200-300 followers?</strong> → Create more controversial/emotional content</li>
+                    <li><strong>Reels get &lt;1K views?</strong> → Test different hooks, post Tuesday-Thursday 7-9 AM</li>
+                    <li><strong>Low retention?</strong> → Cut every 2 seconds, add more text overlays</li>
+                    <li><strong>Low engagement?</strong> → Every caption must end with a question</li>
+                    <li><strong>Followers don't engage?</strong> → Reply to every comment, post more stories</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- AI Helper Tab -->
+        <div id="ai-helper" class="content-section">
+            <h2 class="section-header">🤖 AI Helper - ChatGPT Prompts</h2>
+            <p style="margin-bottom: 30px; color: #666;">Copy these prompts to ChatGPT or Claude for instant Instagram help</p>
+
+            <div class="script-card">
+                <h3>Prompt 1: Generate Custom Reel Scripts</h3>
+                <div class="copy-section">
+                    <p class="script-text">"I'm @marcotmorais, a cultural travel account (140 followers) posting about museums, landmarks, and food. My destinations: France (Louvre), UK (Big Ben), Brazil, Spain, Canada, USA (Grand Canyon, Vegas, NYC). Create 5 reel scripts (15-30 sec) with these requirements: 1) Low skip rate focus 2) Shareable/relatable content 3) Expectation vs Reality or Before You Visit format 4) Include second-by-second breakdown 5) Score each script 0-100 based on viral potential"</p>
+                    <button class="copy-btn" onclick="copyPrompt(this, 1)">📋 Copy Prompt</button>
+                </div>
+            </div>
+
+            <div class="script-card">
+                <h3>Prompt 2: Analyze My Reel Performance</h3>
+                <div class="copy-section">
+                    <p class="script-text">"Analyze this Instagram reel: [PASTE REEL STATS]. Calculate: 1) Engagement rate 2) Share rate 3) Save rate 4) Viral score (0-100) 5) Biggest problem preventing growth 6) 3 specific fixes for next reel. Context: I'm @marcotmorais (cultural travel, 140 followers)"</p>
+                    <button class="copy-btn" onclick="copyPrompt(this, 2)">📋 Copy Prompt</button>
+                </div>
+            </div>
+
+            <div class="script-card">
+                <h3>Prompt 3: Write High-Converting Captions</h3>
+                <div class="copy-section">
+                    <p class="script-text">"Write 3 Instagram captions for this post: [DESCRIBE PHOTO/REEL]. Requirements: 1) Hook in first 5 words 2) Ends with engaging question 3) Include 10-15 relevant hashtags 4) Cultural travel tone (authentic, not influencer-y) 5) 100-150 words. Account: @marcotmorais (museums, landmarks, food)"</p>
+                    <button class="copy-btn" onclick="copyPrompt(this, 3)">📋 Copy Prompt</button>
+                </div>
+            </div>
+
+            <div class="script-card">
+                <h3>Prompt 4: Optimize My Bio</h3>
+                <div class="copy-section">
+                    <p class="script-text">"Review my Instagram bio and suggest improvements: [PASTE CURRENT BIO]. I'm @marcotmorais - cultural travel account posting museums, landmarks, food from France, Brazil, UK, Spain, Canada, USA. Current followers: 140. Give 5 bio options that: 1) Are authentic (not influencer-y) 2) Use 1-2 emojis max 3) Include location (Florida) 4) Show personality 5) Clear niche communication"</p>
+                    <button class="copy-btn" onclick="copyPrompt(this, 4)">📋 Copy Prompt</button>
+                </div>
+            </div>
+
+            <div class="script-card">
+                <h3>Prompt 5: Create Posting Schedule</h3>
+                <div class="copy-section">
+                    <p class="script-text">"Create a 7-day Instagram posting schedule for @marcotmorais (cultural travel, 140 followers). I have content from: Grand Canyon, Louvre, Big Ben, NYC, Montreal. Include: 1) Best posting times for travel niche 2) Mix of reels/carousels/stories 3) Specific content ideas for each post 4) Engagement tactics 5) Expected growth (followers/reach)"</p>
+                    <button class="copy-btn" onclick="copyPrompt(this, 5)">📋 Copy Prompt</button>
+                </div>
+            </div>
+
+            <div class="script-card">
+                <h3>Prompt 6: Troubleshoot Low Performance</h3>
+                <div class="copy-section">
+                    <p class="script-text">"My Instagram reel got low performance: [PASTE STATS]. Diagnose the problem and provide fixes. Context: @marcotmorais, cultural travel account, 140 followers. Analyze: 1) What killed the algorithm push? 2) Is it content, timing, or technical issue? 3) Should I delete and repost? 4) Specific changes for next reel 5) How to recover from low-performing post"</p>
+                    <button class="copy-btn" onclick="copyPrompt(this, 6)">📋 Copy Prompt</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(tabName).classList.add('active');
+            
+            // Set active button - find the button that matches this tab
+            const activeButton = Array.from(buttons).find(btn => 
+                btn.getAttribute('onclick').includes(`'${tabName}'`)
+            );
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+        // Accordion functionality
+        function toggleAccordion(header) {
+            const accordion = header.parentElement;
+            accordion.classList.toggle('active');
+        }
+
+        // Calculator functionality
+        function calculateMetrics() {
+            const views = parseInt(document.getElementById('views').value) || 0;
+            const likes = parseInt(document.getElementById('likes').value) || 0;
+            const comments = parseInt(document.getElementById('comments').value) || 0;
+            const shares = parseInt(document.getElementById('shares').value) || 0;
+            const saves = parseInt(document.getElementById('saves').value) || 0;
+            const followers = parseInt(document.getElementById('followers').value) || 0;
+            const retention = parseInt(document.getElementById('retention').value) || 0;
+
+            if (views === 0) {
+                alert('Please enter at least the number of views');
+                return;
+            }
+
+            // Calculate rates
+            const engagementRate = ((likes + comments + shares + saves) / views * 100).toFixed(2);
+            const shareRate = (shares / views * 100).toFixed(2);
+            const saveRate = (saves / views * 100).toFixed(2);
+            const commentRate = (comments / views * 100).toFixed(2);
+
+            // Calculate scores (0-100)
+            const retentionScore = retention;
+            const engagementScore = Math.min((engagementRate / 10) * 100, 100);
+            const shareScore = Math.min((shareRate / 5) * 100, 100);
+            const saveScore = Math.min((saveRate / 3) * 100, 100);
+            const commentScore = Math.min((commentRate / 1) * 100, 100);
+
+            // Overall score (weighted average)
+            const overallScore = Math.round(
+                (retentionScore * 0.30) +
+                (shareScore * 0.25) +
+                (saveScore * 0.20) +
+                (engagementScore * 0.15) +
+                (commentScore * 0.10)
+            );
+
+            // Viral potential
+            const viralPotential = Math.round(
+                (shareScore * 0.40) +
+                (retentionScore * 0.30) +
+                (saveScore * 0.20) +
+                (commentScore * 0.10)
+            );
+
+            // Display results
+            document.getElementById('overallScore').textContent = overallScore;
+            document.getElementById('engagementRate').textContent = engagementRate + '%';
+            document.getElementById('shareRate').textContent = shareRate + '%';
+            document.getElementById('saveRate').textContent = saveRate + '%';
+            document.getElementById('commentRate').textContent = commentRate + '%';
+            document.getElementById('retentionScore').textContent = retention + '%';
+            document.getElementById('viralScore').textContent = viralPotential + '%';
+
+            // Status labels
+            document.getElementById('engagementStatus').innerHTML = getStatus(engagementRate, [8, 5, 3]);
+            document.getElementById('shareStatus').innerHTML = getStatus(shareRate, [5, 3, 1]);
+            document.getElementById('saveStatus').innerHTML = getStatus(saveRate, [3, 2, 1]);
+            document.getElementById('commentStatus').innerHTML = getStatus(commentRate, [1, 0.5, 0.2]);
+            document.getElementById('retentionStatus').innerHTML = getStatus(retention, [70, 60, 50]);
+            document.getElementById('viralStatus').innerHTML = getViralStatus(viralPotential);
+
+            // Viral indicator
+            const viralIndicator = document.getElementById('viralIndicator');
+            if (viralPotential >= 75) {
+                viralIndicator.className = 'viral-indicator viral-high';
+                viralIndicator.textContent = '🚀 HIGH VIRAL POTENTIAL - This could blow up!';
+            } else if (viralPotential >= 50) {
+                viralIndicator.className = 'viral-indicator viral-medium';
+                viralIndicator.textContent = '⚡ MODERATE VIRAL POTENTIAL - Good performance expected';
+            } else {
+                viralIndicator.className = 'viral-indicator viral-low';
+                viralIndicator.textContent = '📊 LOW VIRAL POTENTIAL - Room for improvement';
+            }
+
+            // Predictions
+            const expectedReach = views * (1 + (viralPotential / 100));
+            const expectedFollowers = Math.round(views * 0.05 * (viralPotential / 50));
+            
+            document.getElementById('viewsPrediction').textContent = 
+                `Expected Final Views: ${Math.round(expectedReach).toLocaleString()} (current: ${views.toLocaleString()})`;
+            document.getElementById('followersPrediction').textContent = 
+                `Expected New Followers: ${expectedFollowers.toLocaleString()} from this reel`;
+            document.getElementById('reachPrediction').textContent = 
+                `Explore Page Probability: ${viralPotential > 70 ? 'High (70%+)' : viralPotential > 50 ? 'Medium (40-70%)' : 'Low (< 40%)'}`;
+
+            // Recommendations
+            const recommendations = [];
+            
+            if (retention < 60) {
+                recommendations.push('🎬 Low retention - Cut to 12-15s max, change scenes every 2-3 seconds');
+            }
+            if (shareRate < 3) {
+                recommendations.push('📤 Low shares - Add more relatable/controversial content worth sending to friends');
+            }
+            if (saveRate < 2) {
+                recommendations.push('💾 Low saves - Include helpful tips or information people want to reference later');
+            }
+            if (commentRate < 0.5) {
+                recommendations.push('💬 Low comments - End with a specific question to drive discussion');
+            }
+            if (engagementRate < 5) {
+                recommendations.push('👥 Low overall engagement - Improve hook (first 1 second) to stop the scroll');
+            }
+            if (views < followers * 2) {
+                recommendations.push('📊 Low reach - Use trending audio and post during peak times (7-9 AM or 6-8 PM)');
+            }
+            if (recommendations.length === 0) {
+                recommendations.push('🎉 Great performance! Keep doing what you\'re doing!');
+                recommendations.push('💡 To go viral: Add more controversial or emotional elements');
+                recommendations.push('🔄 Replicate this format for your next reel');
+            }
+
+            const recList = document.getElementById('recommendationsList');
+            recList.innerHTML = '';
+            recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recList.appendChild(li);
+            });
+
+            // Show results
+            document.getElementById('results').classList.add('show');
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function getStatus(value, thresholds) {
+            const val = parseFloat(value);
+            if (val >= thresholds[0]) {
+                return '<span class="status-excellent">✅ Excellent</span>';
+            } else if (val >= thresholds[1]) {
+                return '<span class="status-good">👍 Good</span>';
+            } else if (val >= thresholds[2]) {
+                return '<span class="status-average">⚠️ Average</span>';
+            } else {
+                return '<span class="status-poor">❌ Needs Work</span>';
+            }
+        }
+
+        function getViralStatus(score) {
+            if (score >= 75) {
+                return '<span class="status-excellent">🚀 Very High</span>';
+            } else if (score >= 60) {
+                return '<span class="status-good">⚡ High</span>';
+            } else if (score >= 40) {
+                return '<span class="status-average">📈 Moderate</span>';
+            } else {
+                return '<span class="status-poor">📊 Low</span>';
+            }
+        }
+
+        // Copy prompt functionality
+        function copyPrompt(button, promptNumber) {
+            const scriptText = button.previousElementSibling.textContent;
+            navigator.clipboard.writeText(scriptText).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                button.style.background = '#10b981';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        }
+
+        // Copy comment functionality
+        function copyComment(button) {
+            const commentText = button.previousElementSibling.textContent;
+            navigator.clipboard.writeText(commentText).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                button.style.background = '#10b981';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        }
+    </script>
+</body>
+</html>

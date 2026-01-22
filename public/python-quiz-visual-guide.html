@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Quiz Review - Visual Study Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            background: #f8f9fa;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #dee2e6;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .question-counter {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .question-display {
+            padding: 40px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .question-image {
+            max-width: 100%;
+            max-height: 600px;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .question-content {
+            width: 100%;
+            max-width: 900px;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .question-content h2 {
+            color: #2a5298;
+            margin-bottom: 20px;
+        }
+        
+        .code-example {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        
+        .answer-space {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            min-height: 60px;
+        }
+        
+        .answer-space::before {
+            content: "Student Answer: ";
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .notes-area {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .notes-area h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .placeholder-question {
+            text-align: center;
+            padding: 60px;
+        }
+        
+        .placeholder-question h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .placeholder-question p {
+            font-size: 1.2em;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .topic-tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px;
+        }
+        
+        .print-worksheet {
+            background: #28a745;
+            margin-left: auto;
+        }
+        
+        .print-worksheet:hover {
+            background: #218838;
+        }
+        
+        @media print {
+            .controls {
+                display: none;
+            }
+            
+            .question-display {
+                page-break-after: always;
+            }
+            
+            .question-image {
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Python Quiz Visual Study Guide</h1>
+            <p>Review questions with visual examples - Answer on worksheet</p>
+        </header>
+        
+        <div class="controls">
+            <button class="btn" onclick="previousQuestion()" id="prevBtn">← Previous</button>
+            <div class="question-counter">
+                <span id="currentQ">1</span> / <span id="totalQ">44</span>
+            </div>
+            <button class="btn" onclick="nextQuestion()" id="nextBtn">Next →</button>
+            <button class="btn print-worksheet" onclick="window.print()">🖨️ Print All Questions</button>
+        </div>
+        
+        <div class="question-display" id="questionDisplay">
+            <!-- Questions will be loaded here -->
+        </div>
+    </div>
+    
+    <script>
+        // Placeholder questions until we load the actual quiz images
+        const questions = [
+            {
+                id: 1,
+                topic: "Syntax Errors",
+                title: "Question 1: Identifying Syntax Errors",
+                image: "../images-quiz-2/Screenshot 2025-11-17 070412.png",
+                description: "Look at the code and identify the syntax error.",
+                notes: "Remember: Syntax errors prevent code from running at all."
+            },
+            {
+                id: 2,
+                topic: "Conditionals",
+                title: "Question 2: If Statement Structure",
+                image: "../images-quiz-2/Screenshot 2025-11-17 145646.png",
+                description: "Identify the correct if statement syntax.",
+                notes: "Don't forget the colon!"
+            },
+            {
+                id: 3,
+                topic: "Runtime Errors",
+                title: "Question 3: Index Errors",
+                image: "../images-quiz-2/Screenshot 2025-11-17 145655.png",
+                description: "What happens when accessing an invalid index?",
+                notes: "Remember: Lists are 0-indexed."
+            },
+            {
+                id: 4,
+                topic: "Loops",
+                title: "Question 4: Loop Iteration",
+                image: "../images-quiz-2/Screenshot 2025-11-17 145704.png",
+                description: "Trace the loop execution.",
+                notes: "Count each iteration carefully."
+            },
+            {
+                id: 5,
+                topic: "Functions",
+                title: "Question 5: Function Calls",
+                image: "../images-quiz-2/Screenshot 2025-11-17 145713.png",
+                description: "What does this function return?",
+                notes: "Check default parameters."
+            },
+            {
+                id: 6,
+                topic: "Flow Control",
+                title: "Question 6: Continue Statement",
+                image: "../images-quiz-2/Screenshot 2025-11-17 145722.png",
+                description: "How does continue affect loop execution?",
+                notes: "Continue skips to the next iteration."
+            },
+            {
+                id: 7,
+                topic: "Nested Loops",
+                title: "Question 7: Nested Loop Trace",
+                image: "../images-quiz-2/Screenshot 2025-11-17 145732.png",
+                description: "Trace the nested loop execution order.",
+                notes: "Inner loop completes fully before outer loop advances."
+            },
+            {
+                id: 8,
+                topic: "Exception Handling",
+                title: "Question 8: Try/Except",
+                image: "../images-quiz-2/Screenshot 2025-11-17 145741.png",
+                description: "How does exception handling work?",
+                notes: "Try executes first, except catches errors."
+            },
+            {
+                id: 9,
+                topic: "Finally Block",
+                title: "Question 9: Finally Execution",
+                image: "../images-quiz-2/Screenshot 2025-11-17 145749.png",
+                description: "When does the finally block execute?",
+                notes: "Finally ALWAYS runs!"
+            },
+            {
+                id: 10,
+                topic: "Data Types",
+                title: "Question 10: Type Conversion",
+                image: "../images-quiz-2/Screenshot 2025-11-17 145756.png",
+                description: "What is the result of this type conversion?",
+                notes: "Check int(), float(), str() conversions."
+            }
+        ];
+        
+        // Add remaining 34 questions as placeholders
+        for (let i = 11; i <= 44; i++) {
+            const imageIndex = i - 1;
+            const imageFiles = [
+                "Screenshot 2025-11-17 145805.png", "Screenshot 2025-11-17 145815.png",
+                "Screenshot 2025-11-17 145839.png", "Screenshot 2025-11-17 145849.png",
+                "Screenshot 2025-11-17 145906.png", "Screenshot 2025-11-17 145914.png",
+                "Screenshot 2025-11-17 145923.png", "Screenshot 2025-11-17 145934.png",
+                "Screenshot 2025-11-17 145942.png", "Screenshot 2025-11-17 145950.png",
+                "Screenshot 2025-11-17 145958.png", "Screenshot 2025-11-17 150006.png",
+                "Screenshot 2025-11-17 150017.png", "Screenshot 2025-11-17 150024.png",
+                "Screenshot 2025-11-17 150032.png", "Screenshot 2025-11-17 150042.png",
+                "Screenshot 2025-11-17 150052.png", "Screenshot 2025-11-17 150100.png",
+                "Screenshot 2025-11-17 150109.png", "Screenshot 2025-11-17 150119.png",
+                "Screenshot 2025-11-17 150128.png", "Screenshot 2025-11-17 150134.png",
+                "Screenshot 2025-11-17 150143.png", "Screenshot 2025-11-17 150200.png",
+                "Screenshot 2025-11-17 150209.png", "Screenshot 2025-11-17 150215.png",
+                "Screenshot 2025-11-17 150222.png", "Screenshot 2025-11-17 150231.png",
+                "Screenshot 2025-11-17 150253.png", "Screenshot 2025-11-17 150303.png",
+                "Screenshot 2025-11-17 150312.png", "Screenshot 2025-11-17 150321.png",
+                "Screenshot 2025-11-17 150335.png", "Screenshot 2025-11-17 150346.png"
+            ];
+            
+            questions.push({
+                id: i,
+                topic: "Python Concepts",
+                title: `Question ${i}`,
+                image: `../images-quiz-2/${imageFiles[imageIndex - 10] || 'placeholder.png'}`,
+                description: "Review the question on screen.",
+                notes: "Answer on your worksheet."
+            });
+        }
+        
+        let currentQuestion = 0;
+        
+        function displayQuestion(index) {
+            const q = questions[index];
+            const display = document.getElementById('questionDisplay');
+            
+            display.innerHTML = `
+                <img src="${q.image}" alt="${q.title}" class="question-image" onerror="this.style.display='none'; showPlaceholder()">
+                <div class="question-content">
+                    <span class="topic-tag">${q.topic}</span>
+                    <h2>${q.title}</h2>
+                    <p style="font-size: 1.1em; margin: 15px 0;">${q.description}</p>
+                    <div class="answer-space"></div>
+                    <div class="notes-area">
+                        <h3>📝 Key Concept</h3>
+                        <p>${q.notes}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('currentQ').textContent = index + 1;
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === questions.length - 1;
+        }
+        
+        function showPlaceholder() {
+            const display = document.getElementById('questionDisplay');
+            display.innerHTML = `
+                <div class="placeholder-question">
+                    <h2>Quiz Question Image</h2>
+                    <p>Image will be displayed here once loaded.</p>
+                    <p style="margin-top: 20px;">Use the worksheet to write your answers.</p>
+                </div>
+            `;
+        }
+        
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion(currentQuestion);
+            }
+        }
+        
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion(currentQuestion);
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextQuestion();
+            if (e.key === 'ArrowLeft') previousQuestion();
+        });
+        
+        // Initialize
+        document.getElementById('totalQ').textContent = questions.length;
+        displayQuestion(0);
+    </script>
+</body>
+</html>

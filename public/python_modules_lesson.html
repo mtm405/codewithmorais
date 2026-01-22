@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Modules Lesson - Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        h2 {
+            color: #764ba2;
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .concept-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            white-space: pre;
+        }
+        
+        .code-block .keyword {
+            color: #569cd6;
+            font-weight: bold;
+        }
+        
+        .code-block .string {
+            color: #ce9178;
+        }
+        
+        .code-block .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+        
+        .code-block .function {
+            color: #dcdcaa;
+        }
+        
+        .code-block .number {
+            color: #b5cea8;
+        }
+        
+        .code-block .operator {
+            color: #d4d4d4;
+        }
+        
+        .code-label {
+            color: #4ec9b0;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:hover {
+            background: #f9f9f9;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .activity {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .activity h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        .example-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #c62828;
+        }
+        
+        .cheat-sheet {
+            background: #ede7f6;
+            border-left: 4px solid #764ba2;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .bad-way, .good-way {
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .bad-way {
+            background: #ffcdd2;
+            border-left: 4px solid #f44336;
+        }
+        
+        .good-way {
+            background: #c8e6c9;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .key-point {
+            background: #fff9c4;
+            padding: 12px;
+            border-left: 4px solid #fbc02d;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        
+        .emoji {
+            font-size: 1.2em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><span class="emoji">🐍</span> Python Modules: The Complete Guide</h1>
+            <p class="subtitle">Learn how to organize, import, and use Python code like a pro!</p>
+        </div>
+
+        <!-- Part 1: Why Modules? -->
+        <div class="section">
+            <h2><span class="emoji">👨‍🍳</span> Part 1: Why Modules? (The "Organized Kitchen" Analogy)</h2>
+            
+            <p>Imagine a professional kitchen. If every chef kept every ingredient and tool in one giant pile in the center of the room, it would be chaos. Instead, they have stations: a "Pastry Station," a "Grill Station," a "Prep Area," etc.</p>
+            
+            <p><strong>In Python:</strong> A <strong>Module</strong> is like a station. It's a separate file (.py) where we group related functions to keep our code clean and organized.</p>
+            
+            <h3>The Benefits of Modules</h3>
+            <ul>
+                <li><strong>Organization:</strong> Breaks huge code into small, manageable files</li>
+                <li><strong>Reusability:</strong> You write a function once (e.g., <code>calculate_area()</code>) and can import it into 100 different scripts without copy-pasting</li>
+                <li><strong>Maintainability:</strong> When you need to fix a bug, you only fix it once</li>
+                <li><strong>Teamwork:</strong> Different team members can work on different modules without stepping on each other's toes</li>
+            </ul>
+            
+            <div class="key-point">
+                <strong>🎯 Key Takeaway:</strong> Modules make code manageable, reusable, and maintainable. They're the foundation of professional Python programming!
+            </div>
+        </div>
+
+        <!-- Part 2: Importing - Getting the Tools -->
+        <div class="section">
+            <h2><span class="emoji">📥</span> Part 2: Importing - Getting the Tools</h2>
+            
+            <p>To use a module, you must use the <code>import</code> keyword. There are three main ways to do it, and they affect how you type code later.</p>
+            
+            <h3>Method 1: The "Whole Toolbox" (Standard Import)</h3>
+            
+            <div class="code-block">
+<span class="keyword">import</span> random
+            </div>
+            
+            <p><strong>How to use it:</strong> You must use the "dot" syntax: <code>random.randint(1, 10)</code></p>
+            <p><strong>Important:</strong> You cannot just type <code>randint(1, 10)</code>; Python won't know where to look!</p>
+            
+            <div class="example-box">
+                <strong>Example:</strong>
+                <div class="code-block">
+<span class="keyword">import</span> math
+result <span class="operator">=</span> math.sqrt(<span class="number">25</span>)  <span class="comment"># ✅ Correct</span>
+result <span class="operator">=</span> sqrt(<span class="number">25</span>)        <span class="comment"># ❌ Error! Python doesn't know what sqrt is</span>
+                </div>
+            </div>
+            
+            <h3>Method 2: The "Specific Tool" (From Import)</h3>
+            
+            <div class="code-block">
+<span class="keyword">from</span> math <span class="keyword">import</span> sqrt
+            </div>
+            
+            <p><strong>How to use it:</strong> You can just type <code>sqrt(25)</code>. No dots needed!</p>
+            <p><strong>Why use it?</strong> It's usually more memory-efficient because you're only grabbing specific names, not the whole module namespace.</p>
+            
+            <div class="example-box">
+                <strong>Example:</strong>
+                <div class="code-block">
+<span class="keyword">from</span> math <span class="keyword">import</span> sqrt, pi
+result <span class="operator">=</span> sqrt(<span class="number">25</span>)  <span class="comment"># ✅ Correct - no dot needed</span>
+<span class="function">print</span>(pi)            <span class="comment"># ✅ Correct - pi is imported directly</span>
+                </div>
+            </div>
+            
+            <h3>Method 3: The "Dump Everything" (Star Import - AVOID!)</h3>
+            
+            <div class="code-block">
+<span class="keyword">from</span> time <span class="keyword">import</span> <span class="operator">*</span>
+            </div>
+            
+            <p><strong>How to use it:</strong> You can use ALL functions without dots (e.g., <code>sleep(1)</code>)</p>
+            <p><strong>⚠️ WARNING:</strong> This is bad practice. We'll explain why in Part 3!</p>
+        </div>
+
+        <!-- Part 3: The Dangers & Aliases -->
+        <div class="section">
+            <h2><span class="emoji">⚠️</span> Part 3: The Dangers & Aliases</h2>
+            
+            <h3>The "Star" Danger (Name Collisions)</h3>
+            
+            <p>Imagine you wrote a function called <code>print_info()</code> in your main program. Then you did this:</p>
+            
+            <div class="code-block">
+<span class="keyword">from</span> some_module <span class="keyword">import</span> <span class="operator">*</span>
+            </div>
+            
+            <p>If that module ALSO has a <code>print_info()</code> function, it will <strong>overwrite (shadow)</strong> yours immediately without warning! This is why we avoid "Star" imports—they cause <strong>name collisions</strong>.</p>
+            
+            <div class="warning-box">
+                <strong>❌ Never Use Star Imports in Real Code!</strong>
+                <p>They cause unpredictable behavior and name collisions. Professional programmers avoid them.</p>
+            </div>
+            
+            <h3>The "Alias" Solution (as)</h3>
+            
+            <p>Some libraries have long names, like <code>matplotlib.pyplot</code>. We don't want to type that every time.</p>
+            
+            <p>We use an alias:</p>
+            
+            <div class="code-block">
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+            </div>
+            
+            <p><strong>Why?</strong> It saves typing time and improves readability for frequently used modules.</p>
+            
+            <div class="key-point">
+                <strong>💡 Remember:</strong> <code>import math as m</code> does NOT save memory; it just gives it a shorter nickname. To be efficient, use <code>from ... import</code> to grab only what you need!
+            </div>
+        </div>
+
+        <!-- Part 4: The Three Types of Modules -->
+        <div class="section">
+            <h2><span class="emoji">📂</span> Part 4: The Three Types of Modules</h2>
+            
+            <p>Not all modules come from the same place. There are three main sources:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Definition</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Standard Library</strong></td>
+                        <td>Comes installed with Python automatically, but you still must write <code>import</code> to use it</td>
+                        <td><code>math</code>, <code>os</code>, <code>time</code>, <code>random</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>External Module</strong></td>
+                        <td>Created by other people. You must download them separately using pip</td>
+                        <td><code>requests</code>, <code>pandas</code>, <code>pygame</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Custom Module</strong></td>
+                        <td>A file you wrote (e.g., <code>stats.py</code>) sitting in the same folder as your main program</td>
+                        <td><code>import stats</code> (if stats.py is in same folder)</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="key-point">
+                <strong>💡 Important:</strong> If you import a custom module (like <code>stats.py</code>), Python looks in your current folder FIRST before checking standard library locations.
+            </div>
+        </div>
+
+        <!-- Part 5: The Package Manager (PIP & PyPI) -->
+        <div class="section">
+            <h2><span class="emoji">🏪</span> Part 5: The Package Manager (PIP & PyPI)</h2>
+            
+            <p>How do we get those "External Modules"? We go to the app store!</p>
+            
+            <h3>PyPI: The Python App Store</h3>
+            
+            <p><strong>PyPI</strong> stands for <strong>Python Package Index</strong>. It's the online repository (store) where all external Python software lives. You can visit it at <code>pypi.org</code>.</p>
+            
+            <h3>PIP: The Package Installer</h3>
+            
+            <p><strong>PIP</strong> is the tool we use to download packages from PyPI.</p>
+            
+            <div class="code-block">
+pip install requests
+            </div>
+            
+            <p><strong>When it works:</strong> The terminal will say: <code>Successfully installed requests-[version]</code></p>
+            
+            <h3>What's a Package?</h3>
+            
+            <p>When you download a complex library using pip, it often comes as a folder with multiple files. Inside, you'll see a special file called <code>__init__.py</code>.</p>
+            
+            <div class="concept-box">
+                <strong>__init__.py:</strong> A special file inside a folder that tells Python, "Treat this directory as a package so I can import from it."
+            </div>
+            
+            <h3>Real World Example</h3>
+            
+            <div class="code-block">
+<span class="comment"># Step 1: Download from PyPI (command line)</span>
+pip install requests
+
+<span class="comment"># Step 2: Use it in your code</span>
+<span class="keyword">import</span> requests
+response <span class="operator">=</span> requests.get(<span class="string">"https://api.github.com"</span>)
+            </div>
+        </div>
+
+        <!-- Part 6: What is a Module? (Updated) -->
+        <div class="section">
+            <h2><span class="emoji">📦</span> Part 6: What is a Module? (Summary)</h2>
+            
+            <p>A <strong>module</strong> is just a Python file (.py) full of tools (functions) that you want to reuse. Think of it like a <strong>Toolbox</strong>. You don't carry a hammer in your hand all day; you keep it in the toolbox until you need it.</p>
+            
+            <p>Every Python file is automatically a module! When you create a file named <code>calculator.py</code>, you've created a module that other files can use.</p>
+            
+            <div class="concept-box">
+                <strong>💡 Key Idea:</strong> Now you understand the WHOLE ecosystem: Why modules exist (organization), how to import them (three ways), the dangers to avoid (name collisions), where they come from (three types), and how to get external ones (pip). You're ready to use modules like a professional!
+            </div>
+        </div>
+
+        <!-- Part 7: The __name__ Variable -->
+        <div class="section">
+            <h2><span class="emoji">🆔</span> Part 7: The Secret ID Card (__name__)</h2>
+            
+            <p>In Python, every file has a special built-in variable called <code>__name__</code> (two underscores on each side). You don't create it; Python creates it automatically. Think of it as a <strong>Digital ID Card</strong> that answers: "Who is running this code right now?"</p>
+            
+            <h3>The Two Values of __name__</h3>
+            
+            <p>The value of this ID card changes depending on how the file is being used:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>What Happens</th>
+                        <th>__name__ Value</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>You run the file directly (click "Run")</td>
+                        <td><code>"__main__"</code></td>
+                        <td>"I am the boss. I am in charge."</td>
+                    </tr>
+                    <tr>
+                        <td>Another file imports this file</td>
+                        <td><code>"filename"</code></td>
+                        <td>"I am just a helper module."</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Important: EVERY file has __name__, but you only CHECK it in modules</h3>
+            
+            <p>Here's the key confusion point: <strong>BOTH the module AND the main program have <code>__name__</code></strong>. But you only write the <code>if __name__ == "__main__":</code> check in your <strong>module files</strong> to protect them.</p>
+            
+            <p>You DON'T write this check in your main program. The main program is MEANT to run!</p>
+            
+            <h3>Real Example: Side-by-Side Comparison</h3>
+            
+            <p>This is the clearest way to understand it. Let's create TWO files and see what happens:</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                <div style="border: 2px solid #667eea; padding: 15px; border-radius: 8px;">
+                    <h4 style="color: #667eea; margin-top: 0;">📄 File 1: math_tools.py (THE MODULE)</h4>
+                    <p style="color: #666; font-size: 0.9em; margin: 5px 0;">This is a helper file. It defines functions.</p>
+                    <div class="code-block" style="margin: 10px 0;">
+<span class="keyword">def</span> <span class="function">add</span>(a, b):
+    <span class="keyword">return</span> a <span class="operator">+</span> b
+
+<span class="keyword">def</span> <span class="function">multiply</span>(a, b):
+    <span class="keyword">return</span> a <span class="operator">*</span> b
+
+<span class="comment"># This guard is HERE to protect against imports!</span>
+<span class="keyword">if</span> __name__ <span class="operator">==</span> <span class="string">"__main__"</span>:
+    <span class="function">print</span>(<span class="string">"Testing math_tools..."</span>)
+    <span class="function">print</span>(<span class="function">add</span>(<span class="number">2</span>, <span class="number">3</span>))  <span class="comment"># Output: 5</span>
+                    </div>
+                </div>
+                
+                <div style="border: 2px solid #4caf50; padding: 15px; border-radius: 8px;">
+                    <h4 style="color: #4caf50; margin-top: 0;">📄 File 2: main.py (THE MAIN PROGRAM)</h4>
+                    <p style="color: #666; font-size: 0.9em; margin: 5px 0;">This is the boss file. It imports and uses the module.</p>
+                    <div class="code-block" style="margin: 10px 0;">
+<span class="keyword">import</span> math_tools
+
+<span class="function">print</span>(<span class="string">"This is the main program!"</span>)
+
+<span class="comment"># Use the functions from math_tools</span>
+result <span class="operator">=</span> math_tools.add(<span class="number">10</span>, <span class="number">20</span>)
+<span class="function">print</span>(result)  <span class="comment"># Output: 30</span>
+
+<span class="comment"># We DON'T need a guard here!</span>
+<span class="comment"># This file is MEANT to run.</span>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>What Happens When You Run Each File?</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>__name__ in math_tools.py</th>
+                        <th>What Gets Printed?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>You run math_tools.py directly</strong> (click "Run")</td>
+                        <td><code>"__main__"</code></td>
+                        <td>
+                            <div style="background: #f5f5f5; padding: 10px; border-radius: 3px; font-family: monospace; font-size: 0.9em;">
+Testing math_tools...<br>
+5
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>You run main.py</strong> (which imports math_tools)</td>
+                        <td><code>"math_tools"</code></td>
+                        <td>
+                            <div style="background: #f5f5f5; padding: 10px; border-radius: 3px; font-family: monospace; font-size: 0.9em;">
+This is the main program!<br>
+30
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="key-point">
+                <strong>🎯 KEY INSIGHT:</strong> The guard block <code>if __name__ == "__main__":</code> ONLY runs when you execute math_tools.py directly. When main.py imports it, that guard block is SKIPPED, so only the function definitions are available to use!
+            </div>
+            
+            <h3>The Guard Code: if __name__ == "__main__"</h3>
+            
+            <p>We use an <code>if</code> statement to check this ID card. This is called the <strong>"Guard Block"</strong>:</p>
+            
+            <div class="code-block"><span class="code-label">if __name__ == "__main__":</span>
+    <span class="comment"># Code here runs ONLY if you run this file directly.</span>
+    <span class="function">print</span>(<span class="string">"I am running directly!"</span>)</div>
+        </div>
+
+        <!-- Part 4: Why This Matters -->
+        <div class="section">
+        <!-- Part 8: Why __name__ Matters -->
+        <div class="section">
+            <h2><span class="emoji">⚠️</span> Part 8: Why Does __name__ Matter? The "Side Effect" Problem</h2>
+            
+            <p>Without the guard check, any code in your file runs automatically when someone imports it. Let's look at a real example:</p>
+            
+            <h3>Scenario: The Drill Problem</h3>
+            
+            <p>You write a library called <code>drill.py</code> with a function <code>make_hole()</code>. At the bottom, you wrote <code>make_hole()</code> to test if it works.</p>
+            
+            <div class="comparison">
+                <div class="bad-way">
+                    <h4>❌ Without Guard Block</h4>
+                    <p>Your friend imports your library to build a shelf. Suddenly, the drill turns on and makes a hole in their floor immediately!</p>
+                    <p><strong>Result: Total disaster!</strong></p>
+                </div>
+                <div class="good-way">
+                    <h4>✅ With Guard Block</h4>
+                    <p>Your friend imports your library. The drill stays silent until they actually call <code>drill.make_hole()</code>.</p>
+                    <p><strong>Result: Everything works perfectly!</strong></p>
+                </div>
+            </div>
+            
+            <h3>The BAD Way (No Guard)</h3>
+            
+<div class="code-block"><span class="code-label">File: dog.py</span>
+<span class="keyword">def</span> <span class="function">bark</span>():
+    <span class="function">print</span>(<span class="string">"Woof! Woof!"</span>)
+
+<span class="comment"># This runs INSTANTLY when imported! We don't want that.</span>
+<span class="function">bark</span>()</div>
+            
+            <h3>The GOOD Way (With Guard)</h3>
+            
+<div class="code-block"><span class="code-label">File: dog.py</span>
+<span class="keyword">def</span> <span class="function">bark</span>():
+    <span class="function">print</span>(<span class="string">"Woof! Woof!"</span>)
+
+<span class="comment"># The Guard</span>
+<span class="keyword">if</span> __name__ <span class="operator">==</span> <span class="string">"__main__"</span>:
+    <span class="comment"># This ONLY happens if you run dog.py directly to test it.</span>
+    <span class="comment"># If you import dog.py, this line is ignored.</span>
+    <span class="function">bark</span>()</div>
+            
+            <div class="key-point">
+                <strong>🎯 Remember:</strong> Use the guard block to prevent code from running when someone imports your module!
+            </div>
+        </div>
+
+        <!-- Part 9: Practice Activities -->
+        <div class="section">
+            <h2><span class="emoji">🛠️</span> Part 9: Practice Activities</h2>
+            
+            <h3>Activity 1: The Mechanic (Fix the Code)</h3>
+            <div class="activity">
+                <h3>Goal: Identify and fix common import errors</h3>
+                <p><strong>Scenario:</strong> You downloaded a calculator app, but the developer made mistakes connecting the wires.</p>
+                
+                <p><strong>Instructions:</strong> Create two files. Fix main.py so it runs without crashing.</p>
+                
+                <div class="code-block"><span class="code-label">File 1: tools.py (Do NOT change this)</span>
+<span class="keyword">def</span> <span class="function">add</span>(a, b):
+    <span class="keyword">return</span> a <span class="operator">+</span> b
+
+<span class="keyword">def</span> <span class="function">subtract</span>(a, b):
+    <span class="keyword">return</span> a <span class="operator">-</span> b</div>
+                
+                <div class="code-block"><span class="code-label">File 2: main.py (BROKEN - Students must fix)</span>
+<span class="comment"># ERROR 1: The module is named 'tools', not 'calculator'</span>
+<span class="keyword">import</span> calculator
+
+<span class="function">print</span>(<span class="string">"--- Calculator App ---"</span>)
+
+<span class="comment"># ERROR 2: We imported the whole module, but we didn't use the module name here!</span>
+<span class="comment"># It should be tools.add(5, 3)</span>
+result <span class="operator">=</span> <span class="function">add</span>(<span class="number">5</span>, <span class="number">3</span>)
+
+<span class="function">print</span>(<span class="string">f"5 + 3 = </span>{result}<span class="string">"</span>)
+
+<span class="comment"># ERROR 3: We want to use a nickname, but the syntax is wrong.</span>
+<span class="comment"># It should be: import tools as t</span>
+<span class="keyword">import</span> tools <span class="keyword">like</span> t
+
+result2 <span class="operator">=</span> t.subtract(<span class="number">10</span>, <span class="number">2</span>)
+<span class="function">print</span>(<span class="string">f"10 - 2 = </span>{result2}<span class="string">"</span>)</div>
+                
+                <h4>💡 Answers:</h4>
+                <ul>
+                    <li><code>import calculator</code> → <code>import tools</code></li>
+                    <li><code>result = add(5, 3)</code> → <code>result = tools.add(5, 3)</code></li>
+                    <li><code>import tools like t</code> → <code>import tools as t</code></li>
+                </ul>
+            </div>
+            
+            <h3>Activity 2: The Detective (Investigate __name__)</h3>
+            <div class="activity">
+                <h3>Goal: See the "Boss vs. Helper" concept in action</h3>
+                
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                    <li>Create a file named <code>identity.py</code></li>
+                    <li>Type this code exactly:</li>
+                </ol>
+                
+                <div class="code-block"><span class="code-label">File: identity.py</span>
+<span class="function">print</span>(<span class="string">f"HELLO! My secret name is: </span>{__name__}<span class="string">"</span>)
+
+<span class="keyword">if</span> __name__ <span class="operator">==</span> <span class="string">"__main__"</span>:
+    <span class="function">print</span>(<span class="string">"✅ I am running as the BOSS (Directly)."</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"🤝 I am running as a HELPER (Imported)."</span>)</div>
+                
+                <p><strong>The Experiment:</strong></p>
+                <ol>
+                    <li><strong>Run identity.py directly</strong>
+                        <ul>
+                            <li>Question: What does it print?</li>
+                            <li>Answer: <code>__main__</code> and "BOSS"</li>
+                        </ul>
+                    </li>
+                    <li><strong>Create a new file called test.py and type just one line:</strong> <code>import identity</code>
+                        <ul>
+                            <li>Run test.py</li>
+                            <li>Question: What does it print now?</li>
+                            <li>Answer: <code>identity</code> and "HELPER"</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <div class="key-point">
+                    This visually proves that the same file behaves differently depending on who started the program. This is the "Aha!" moment!
+                </div>
+            </div>
+            
+            <h3>Activity 3: The Creator (Build an Excuse Generator)</h3>
+            <div class="activity">
+                <h3>Goal: Create a module from scratch and import it</h3>
+                
+                <p><strong>Step 1: Create excuses.py (The Module)</strong></p>
+                <ul>
+                    <li>Make a list of "Who" (e.g., "My dog", "An alien", "My math teacher")</li>
+                    <li>Make a list of "What" (e.g., "ate my homework", "stole my shoes", "hacked my wifi")</li>
+                    <li>Write a function <code>get_excuse()</code> that returns a random sentence combining them</li>
+                    <li>Challenge: Add an <code>if __name__ == "__main__":</code> block that prints a test excuse</li>
+                </ul>
+                
+                <p><strong>Step 2: Create teacher.py (The Main Program)</strong></p>
+                <ul>
+                    <li>Import your excuses module</li>
+                    <li>Print: "Why is your homework late?"</li>
+                    <li>Print the random excuse from the module</li>
+                </ul>
+                
+                <h4>💡 Code Snippet (For Struggling Students)</h4>
+                <div class="code-block"><span class="code-label">File: excuses.py</span>
+<span class="keyword">import</span> random
+
+<span class="keyword">def</span> <span class="function">get_excuse</span>():
+    who <span class="operator">=</span> [<span class="string">"My dog"</span>, <span class="string">"Godzilla"</span>, <span class="string">"The President"</span>]
+    what <span class="operator">=</span> [<span class="string">"ate my homework"</span>, <span class="string">"broke my laptop"</span>, <span class="string">"froze time"</span>]
+    <span class="keyword">return</span> random.choice(who) <span class="operator">+</span> <span class="string">" "</span> <span class="operator">+</span> random.choice(what)
+
+<span class="keyword">if</span> __name__ <span class="operator">==</span> <span class="string">"__main__"</span>:
+    <span class="function">print</span>(<span class="function">get_excuse</span>())
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 10: Important Standard Libraries -->
+        <div class="section">
+            <h2><span class="emoji">📚</span> Part 10: Important Standard Libraries (For Exams!)</h2>
+            
+            <p>Exams often ask about specific functions from Python's built-in modules. You don't need to memorize everything, but know these basics:</p>
+            
+            <h3>1. The math Module</h3>
+            
+            <div class="code-block">
+<span class="keyword">import</span> math
+
+<span class="comment"># Rounding</span>
+<span class="function">print</span>(math.ceil(<span class="number">4.1</span>))    <span class="comment"># Rounds UP to 5</span>
+<span class="function">print</span>(math.floor(<span class="number">4.9</span>))   <span class="comment"># Rounds DOWN to 4</span>
+
+<span class="comment"># Square root</span>
+<span class="function">print</span>(math.sqrt(<span class="number">25</span>))     <span class="comment"># Returns 5.0</span>
+
+<span class="comment"># Constants</span>
+<span class="function">print</span>(math.pi)           <span class="comment"># 3.14159... (NOT a function!)</span>
+            </div>
+            
+            <h3>2. The platform Module</h3>
+            
+            <div class="code-block">
+<span class="keyword">import</span> platform
+
+<span class="comment"># Get system info</span>
+<span class="function">print</span>(platform.system())     <span class="comment"># "Windows", "Linux", or "Darwin" (Mac)</span>
+<span class="function">print</span>(platform.machine())    <span class="comment"># "x86_64" or other processor type</span>
+            </div>
+            
+            <h3>3. The random Module</h3>
+            
+            <div class="code-block">
+<span class="keyword">import</span> random
+
+<span class="comment"># Choose a random item from a list</span>
+<span class="function">print</span>(random.choice([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]))  <span class="comment"># Returns one random number</span>
+
+<span class="comment"># Random integer between 1 and 6</span>
+<span class="function">print</span>(random.randint(<span class="number">1</span>, <span class="number">6</span>))             <span class="comment"># Like rolling a die</span>
+
+<span class="comment"># Random float between 0.0 and 1.0</span>
+<span class="function">print</span>(random.random())                  <span class="comment"># Returns something like 0.427</span>
+            </div>
+            
+            <h3>4. The dir() Function (The X-Ray Vision)</h3>
+            
+            <p>The <code>dir()</code> function lists everything inside a module. Use it when you forget function names!</p>
+            
+            <div class="code-block">
+<span class="keyword">import</span> math
+<span class="function">print</span>(<span class="function">dir</span>(math))
+<span class="comment"># Output: ['acos', 'acosh', 'asin', ... 'pi', 'pow', 'sqrt', ...]</span>
+            </div>
+            
+            <div class="key-point">
+                <strong>💡 Exam Tip:</strong> "Which function allows you to see all available names within a module?" Answer: <code>dir()</code>
+            </div>
+        </div>
+
+        <!-- Part 11: How Python Finds Modules -->
+        <div class="section">
+            <h2><span class="emoji">🔍</span> Part 11: How Python Finds Modules (The Search Path)</h2>
+            
+            <p>Python looks for modules in this order:</p>
+            
+            <ol>
+                <li><strong>Current Directory:</strong> The folder where your script is running (This is why <code>magic_ball.py</code> must be in the same folder as <code>main.py</code>)</li>
+                <li><strong>PYTHONPATH:</strong> A special environment variable (advanced, but good to know it exists)</li>
+                <li><strong>Standard Library Directories:</strong> Where Python is installed</li>
+            </ol>
+            
+            <div class="warning-box">
+                <h3>⚠️ DANGER: The Naming Trap</h3>
+                <p>If you create a file named <code>math.py</code> in your folder, Python will import YOUR file instead of the real <code>math</code> module!</p>
+                <p><strong>Rule:</strong> Never name your files the same as standard modules (math, random, platform, etc.)</p>
+            </div>
+        </div>
+
+        <!-- Part 12: Cheat Sheet -->
+        <div class="section">
+            <div class="cheat-sheet">
+                <h2><span class="emoji">📋</span> The Ultimate Cheat Sheet for Exams</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Concept</th>
+                            <th>Command / Example</th>
+                            <th>Explanation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Import all</td>
+                            <td><code>import math</code></td>
+                            <td>Brings in the whole module. Access with <code>math.pi</code></td>
+                        </tr>
+                        <tr>
+                            <td>Import alias</td>
+                            <td><code>import math as m</code></td>
+                            <td>Renames module. Access with <code>m.pi</code></td>
+                        </tr>
+                        <tr>
+                            <td>Import specific</td>
+                            <td><code>from math import pi</code></td>
+                            <td>Grabs just one tool. Access with <code>pi</code></td>
+                        </tr>
+                        <tr>
+                            <td>Inspect module</td>
+                            <td><code>dir(math)</code></td>
+                            <td>Lists all functions inside the module</td>
+                        </tr>
+                        <tr>
+                            <td>Round Up</td>
+                            <td><code>math.ceil(3.1)</code></td>
+                            <td>Returns 4</td>
+                        </tr>
+                        <tr>
+                            <td>Round Down</td>
+                            <td><code>math.floor(3.9)</code></td>
+                            <td>Returns 3</td>
+                        </tr>
+                        <tr>
+                            <td>Square Root</td>
+                            <td><code>math.sqrt(25)</code></td>
+                            <td>Returns 5.0</td>
+                        </tr>
+                        <tr>
+                            <td>Guard Block</td>
+                            <td><code>if __name__ == "__main__":</code></td>
+                            <td>Code inside runs ONLY if file is executed directly</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Part 9: Quick Summary -->
+        <div class="section">
+            <h2><span class="emoji">📝</span> Summary Checklist</h2>
+            
+            <div class="concept-box">
+                <h3>Key Concepts to Remember:</h3>
+                <ul>
+                    <li><strong>Module:</strong> A Python file full of reusable code (functions)</li>
+                    <li><strong>__name__:</strong> A special variable with two values:
+                        <ul>
+                            <li><code>"__main__"</code> when you run the file directly</li>
+                            <li><code>"filename"</code> when you import the file</li>
+                        </ul>
+                    </li>
+                    <li><strong>Guard Block:</strong> <code>if __name__ == "__main__":</code> prevents code from running when imported</li>
+                    <li><strong>Three Import Styles:</strong>
+                        <ul>
+                            <li>Standard: <code>import math</code></li>
+                            <li>Nickname: <code>import math as m</code></li>
+                            <li>Grab: <code>from math import sqrt</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>dir():</strong> Shows all functions in a module</li>
+                    <li><strong>Never:</strong> Create files with the same name as standard modules (math, random, platform)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 50px; padding-top: 30px; border-top: 2px solid #ddd; color: #666;">
+            <p><strong>Happy coding! You now understand Python modules like a pro! 🎉</strong></p>
+        </div>
+    </div>
+</body>
+</html>

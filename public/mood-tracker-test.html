@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Mood Tracker - Test the Program</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .terminal-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+
+        .history-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background: #f5f5f5;
+        }
+
+        .terminal {
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .terminal-output {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .menu-title {
+            color: #4ec9b0;
+            border-bottom: 2px solid #4ec9b0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+
+        .menu-item {
+            color: #ce9178;
+            margin: 5px 0;
+        }
+
+        .info {
+            color: #4fc1ff;
+        }
+
+        .warning {
+            color: #ffa500;
+        }
+
+        .error {
+            color: #f48771;
+        }
+
+        .success {
+            color: #4ec9b0;
+        }
+
+        .user-input {
+            color: #dcdcaa;
+        }
+
+        .input-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .history-content {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .history-title {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .history-empty {
+            color: #999;
+            font-style: italic;
+        }
+
+        .history-entry {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .clear-btn {
+            margin-top: 15px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            width: 100%;
+        }
+
+        .instructions {
+            padding: 20px 30px;
+            background: #fff9e6;
+            border-top: 3px solid #ffd700;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 Daily Mood Tracker</h1>
+            <p>Test the Program - See How It Works!</p>
+        </div>
+
+        <div class="content">
+            <div class="terminal-section">
+                <h3 style="color: #4ec9b0; margin-bottom: 15px;">💻 Program Output</h3>
+                <div class="terminal">
+                    <div class="terminal-output" id="output"></div>
+                </div>
+                <div class="input-container">
+                    <input type="text" id="userInput" placeholder="Enter your choice or mood..." autofocus>
+                    <button onclick="submitInput()">Submit</button>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <h3 style="color: #667eea; margin-bottom: 15px;">📋 Mood Log File</h3>
+                <div class="history-content" id="historyDisplay"></div>
+                <button class="clear-btn" onclick="clearLog()">🗑️ Clear Log & Reset</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>💡 How to Use This Program:</h3>
+            <ul>
+                <li><strong>Option 1 - Log Current Mood:</strong> Enter your mood and it gets saved to the file</li>
+                <li><strong>Option 2 - View Mood History:</strong> See all your previous mood entries</li>
+                <li><strong>Option 3 - Exit:</strong> End the program</li>
+                <li><strong>Watch the File:</strong> The right side shows the actual file contents being created/modified</li>
+                <li><strong>Test Multiple Times:</strong> Try logging several moods to see how the file grows!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Simulate the file system
+        let moodLogFile = null; // null means file doesn't exist
+        let waitingForMood = false;
+        let programRunning = true;
+
+        function appendOutput(text, className = '') {
+            const output = document.getElementById('output');
+            const line = document.createElement('div');
+            if (className) {
+                line.className = className;
+            }
+            line.textContent = text;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+        }
+
+        function updateHistoryDisplay() {
+            const historyDisplay = document.getElementById('historyDisplay');
+            
+            if (!moodLogFile) {
+                historyDisplay.innerHTML = `
+                    <div class="history-title">--- Daily Mood Tracker Log ---</div>
+                    <div class="history-empty">No log file exists yet. Log a mood to create the file!</div>
+                `;
+            } else {
+                const lines = moodLogFile.split('\n').filter(line => line.trim());
+                let html = '<div class="history-title">--- Daily Mood Tracker Log ---</div>';
+                
+                lines.forEach((line, index) => {
+                    if (index === 0) {
+                        html += `<div style="font-weight: bold; color: #667eea; margin-bottom: 10px;">${line}</div>`;
+                    } else {
+                        html += `<div class="history-entry">${line}</div>`;
+                    }
+                });
+                
+                historyDisplay.innerHTML = html;
+            }
+        }
+
+        function getCurrentTimestamp() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        function logMoodEntry(mood) {
+            const timestamp = getCurrentTimestamp();
+            const logEntry = `[${timestamp}] Mood: ${mood}`;
+            
+            if (!moodLogFile) {
+                // Path A: File does NOT exist -> create it with header
+                try {
+                    moodLogFile = "--- Daily Mood Tracker Log ---\n" + logEntry + "\n";
+                    appendOutput("\n[INFO] Created new log file and recorded your mood.", "info");
+                } catch (e) {
+                    appendOutput(`\n[ERROR] Failed to create file: ${e}`, "error");
+                }
+            } else {
+                // Path B: File DOES exist -> append
+                try {
+                    moodLogFile += logEntry + "\n";
+                    appendOutput("\n[INFO] Successfully appended your mood entry.", "success");
+                } catch (e) {
+                    appendOutput(`\n[ERROR] Failed to append to file: ${e}`, "error");
+                }
+            }
+            
+            updateHistoryDisplay();
+        }
+
+        function viewHistory() {
+            if (!moodLogFile) {
+                appendOutput("\n--- History Log ---", "menu-title");
+                appendOutput(">> No history found. Log a mood entry first!", "warning");
+                appendOutput("-------------------");
+                return;
+            }
+
+            try {
+                const history = moodLogFile.trim();
+                appendOutput("\n--- Your Mood History ---", "menu-title");
+                appendOutput(history);
+                appendOutput("-------------------------");
+            } catch (e) {
+                appendOutput(`\n[ERROR] Could not read history file: ${e}`, "error");
+            }
+        }
+
+        function showMenu() {
+            appendOutput("\n==============================", "menu-title");
+            appendOutput("  Daily Mood Tracker Menu", "menu-title");
+            appendOutput("==============================", "menu-title");
+            appendOutput("1. Log Current Mood", "menu-item");
+            appendOutput("2. View Mood History", "menu-item");
+            appendOutput("3. Exit", "menu-item");
+            appendOutput("Enter your choice (1, 2, or 3): ", "");
+        }
+
+        function submitInput() {
+            const input = document.getElementById('userInput');
+            const value = input.value.trim();
+            
+            if (!value) return;
+            
+            appendOutput(value, "user-input");
+            input.value = '';
+
+            if (waitingForMood) {
+                // User is entering a mood
+                logMoodEntry(value);
+                waitingForMood = false;
+                showMenu();
+            } else {
+                // User is choosing from menu
+                handleMenuChoice(value);
+            }
+        }
+
+        function handleMenuChoice(choice) {
+            if (choice === '1') {
+                appendOutput("What is your current mood? (e.g., Happy, Stressed): ", "");
+                waitingForMood = true;
+            } else if (choice === '2') {
+                viewHistory();
+                showMenu();
+            } else if (choice === '3') {
+                appendOutput("Thank you for using the Mood Tracker. Goodbye!", "success");
+                appendOutput("\n🔄 Program ended. Click 'Clear Log & Reset' to restart.", "info");
+                programRunning = false;
+            } else {
+                appendOutput("[WARNING] Invalid choice. Please enter 1, 2, or 3.", "warning");
+                showMenu();
+            }
+        }
+
+        function clearLog() {
+            moodLogFile = null;
+            clearOutput();
+            waitingForMood = false;
+            programRunning = true;
+            updateHistoryDisplay();
+            init();
+        }
+
+        function init() {
+            appendOutput("Starting Daily Mood Tracker...\n", "success");
+            showMenu();
+        }
+
+        // Handle Enter key
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitInput();
+            }
+        });
+
+        // Initialize
+        updateHistoryDisplay();
+        init();
+    </script>
+</body>
+</html>

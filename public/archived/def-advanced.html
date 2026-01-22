@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced DEF Practice - Control Flow | Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .skill-banner {
+            background: linear-gradient(135deg, #e17055, #f39c12);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 3px solid #d35400;
+        }
+
+        .skill-banner .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .challenge-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #e17055, #f39c12, #74b9ff);
+            background-size: 300% 100%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .challenge-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .challenge-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .challenge-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .challenge-description {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .difficulty-badge {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(225, 112, 85, 0.3);
+        }
+
+        .requirements {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .requirements h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .requirements ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .requirements li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            color: #34495e;
+        }
+
+        .requirements li::before {
+            content: '🎯';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .hint-section {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hint-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .hint-section:hover::before {
+            left: 100%;
+        }
+
+        .hint-section:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(116, 185, 255, 0.3);
+        }
+
+        .hint-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .hint-content {
+            margin-top: 15px;
+            display: none;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hint-content.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #e17055;
+        }
+
+        .example-box strong {
+            color: #2c3e50;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #e17055;
+        }
+
+        .concept-box strong {
+            color: #2c3e50;
+        }
+
+        code {
+            background: #f1f2f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .challenge-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .challenge-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div id="particles-js"></div>
+            <h1>🚀 Advanced DEF Practice</h1>
+            <p>Functions + Control Flow = Programming Power!</p>
+        </div>
+
+        <div class="skill-banner">
+            <span class="icon">🎯</span>
+            <strong>SKILL FOCUS</strong><br>
+            Combining Functions with if/elif/else statements and while loops<br>
+            <a href="https://forms.gle/w8UQrrjHPC1buN2A8" target="_blank" style="display: inline-block; background: #27ae60; color: white; padding: 10px 20px; text-decoration: none; border-radius: 20px; font-weight: bold; margin-top: 10px; transition: all 0.3s ease;">
+                📝 Submit Your Advanced Code Here
+            </a>
+        </div>
+
+        <div class="content">
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
+                <h3 style="margin: 0 0 15px 0;">📚 What You'll Learn Today</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>🔄 While Loops in Functions</h4>
+                        <p>Create functions that repeat actions until a condition is met</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>🤔 Decision Making</h4>
+                        <p>Use if/elif/else to make functions smart and responsive</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                        <h4>🎮 Real Applications</h4>
+                        <p>Build functions that solve real-world problems</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+                <h3 style="margin: 0 0 15px 0;">📝 Control Flow Reminder</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; border: 1px solid rgba(255,255,255,0.3);">
+                        <strong style="color: #ffffff;">If Statement:</strong><br>
+                        <code style="color: #00d4aa; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">if condition:<br>&nbsp;&nbsp;&nbsp;&nbsp;do_something()</code>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; border: 1px solid rgba(255,255,255,0.3);">
+                        <strong style="color: #ffffff;">While Loop:</strong><br>
+                        <code style="color: #00d4aa; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">while condition:<br>&nbsp;&nbsp;&nbsp;&nbsp;do_something()</code>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; border: 1px solid rgba(255,255,255,0.3);">
+                        <strong style="color: #ffffff;">Combined:</strong><br>
+                        <code style="color: #00d4aa; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">def my_function():<br>&nbsp;&nbsp;&nbsp;&nbsp;while condition:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if something:</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comprehensive Example -->
+            <div style="background: linear-gradient(135deg, #2d3436, #636e72); color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 20px 0; color: #00d4aa; font-size: 1.8rem;">🎯 Master Example: Student Grade Manager</h3>
+                <p style="margin-bottom: 20px; font-size: 1.1rem; opacity: 0.9;">This example combines ALL the concepts you'll need for the activities below:</p>
+                
+                <div style="background: #1e272e; padding: 25px; border-radius: 10px; border-left: 5px solid #00d4aa; position: relative; overflow-x: auto;">
+                    <div style="position: absolute; top: 10px; right: 15px; background: #00d4aa; color: #1e272e; padding: 5px 12px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;">
+                        STUDY THIS! 📚
+                    </div>
+                    <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.6; color: #f1f2f6;"><span style="color: #74b9ff;">def</span> <span style="color: #00d4aa;">analyze_student_performance</span>(<span style="color: #fd79a8;">grades</span>):
+    <span style="color: #636e72;"># Initialize variables - common pattern in all activities</span>
+    <span style="color: #fd79a8;">total_points</span> <span style="color: #fdcb6e;">=</span> <span style="color: #e17055;">0</span>
+    <span style="color: #fd79a8;">grade_count</span> <span style="color: #fdcb6e;">=</span> <span style="color: #e17055;">0</span>
+    <span style="color: #fd79a8;">passing_grades</span> <span style="color: #fdcb6e;">=</span> <span style="color: #e17055;">0</span>
+    <span style="color: #fd79a8;">honor_roll</span> <span style="color: #fdcb6e;">=</span> <span style="color: #74b9ff;">False</span>
+    
+    <span style="color: #636e72;"># WHILE LOOP - Process each grade (like activities 1, 2, 6, 7, 8)</span>
+    <span style="color: #74b9ff;">while</span> <span style="color: #fd79a8;">grade_count</span> <span style="color: #fdcb6e;">&lt;</span> <span style="color: #a29bfe;">len</span>(<span style="color: #fd79a8;">grades</span>):
+        <span style="color: #fd79a8;">current_grade</span> <span style="color: #fdcb6e;">=</span> <span style="color: #fd79a8;">grades</span>[<span style="color: #fd79a8;">grade_count</span>]
+        <span style="color: #fd79a8;">total_points</span> <span style="color: #fdcb6e;">+=</span> <span style="color: #fd79a8;">current_grade</span>
+        
+        <span style="color: #636e72;"># IF/ELIF/ELSE - Decision making (like activities 2, 3, 4, 5)</span>
+        <span style="color: #74b9ff;">if</span> <span style="color: #fd79a8;">current_grade</span> <span style="color: #fdcb6e;">>=</span> <span style="color: #e17055;">60</span>:
+            <span style="color: #fd79a8;">passing_grades</span> <span style="color: #fdcb6e;">+=</span> <span style="color: #e17055;">1</span>
+            
+            <span style="color: #636e72;"># NESTED IF - Advanced logic (activities 7, 8)</span>
+            <span style="color: #74b9ff;">if</span> <span style="color: #fd79a8;">current_grade</span> <span style="color: #fdcb6e;">>=</span> <span style="color: #e17055;">90</span>:
+                <span style="color: #a29bfe;">print</span>(<span style="color: #55a3ff;">f"Excellent work on assignment {grade_count + 1}!"</span>)
+        <span style="color: #74b9ff;">else</span>:
+            <span style="color: #a29bfe;">print</span>(<span style="color: #55a3ff;">f"Need improvement on assignment {grade_count + 1}"</span>)
+        
+        <span style="color: #fd79a8;">grade_count</span> <span style="color: #fdcb6e;">+=</span> <span style="color: #e17055;">1</span>  <span style="color: #636e72;"># CRITICAL - prevent infinite loops!</span>
+    
+    <span style="color: #636e72;"># Calculate final statistics - like activities 5, 7, 8</span>
+    <span style="color: #74b9ff;">if</span> <span style="color: #fd79a8;">grade_count</span> <span style="color: #fdcb6e;">></span> <span style="color: #e17055;">0</span>:
+        <span style="color: #fd79a8;">average</span> <span style="color: #fdcb6e;">=</span> <span style="color: #fd79a8;">total_points</span> <span style="color: #fdcb6e;">/</span> <span style="color: #fd79a8;">grade_count</span>
+        <span style="color: #fd79a8;">pass_rate</span> <span style="color: #fdcb6e;">=</span> (<span style="color: #fd79a8;">passing_grades</span> <span style="color: #fdcb6e;">/</span> <span style="color: #fd79a8;">grade_count</span>) <span style="color: #fdcb6e;">*</span> <span style="color: #e17055;">100</span>
+        
+        <span style="color: #636e72;"># Multi-condition logic - advanced decision making</span>
+        <span style="color: #74b9ff;">if</span> <span style="color: #fd79a8;">average</span> <span style="color: #fdcb6e;">>=</span> <span style="color: #e17055;">90</span> <span style="color: #74b9ff;">and</span> <span style="color: #fd79a8;">pass_rate</span> <span style="color: #fdcb6e;">==</span> <span style="color: #e17055;">100</span>:
+            <span style="color: #fd79a8;">honor_roll</span> <span style="color: #fdcb6e;">=</span> <span style="color: #74b9ff;">True</span>
+            <span style="color: #fd79a8;">performance</span> <span style="color: #fdcb6e;">=</span> <span style="color: #55a3ff;">"Outstanding"</span>
+        <span style="color: #74b9ff;">elif</span> <span style="color: #fd79a8;">average</span> <span style="color: #fdcb6e;">>=</span> <span style="color: #e17055;">80</span>:
+            <span style="color: #fd79a8;">performance</span> <span style="color: #fdcb6e;">=</span> <span style="color: #55a3ff;">"Good"</span>
+        <span style="color: #74b9ff;">elif</span> <span style="color: #fd79a8;">average</span> <span style="color: #fdcb6e;">>=</span> <span style="color: #e17055;">70</span>:
+            <span style="color: #fd79a8;">performance</span> <span style="color: #fdcb6e;">=</span> <span style="color: #55a3ff;">"Satisfactory"</span>
+        <span style="color: #74b9ff;">else</span>:
+            <span style="color: #fd79a8;">performance</span> <span style="color: #fdcb6e;">=</span> <span style="color: #55a3ff;">"Needs Improvement"</span>
+    <span style="color: #74b9ff;">else</span>:
+        <span style="color: #74b9ff;">return</span> <span style="color: #55a3ff;">"No grades to analyze"</span>
+    
+    <span style="color: #636e72;"># RETURN formatted result - like all activities below</span>
+    <span style="color: #74b9ff;">return</span> <span style="color: #55a3ff;">f"Average: {average:.1f}%, Pass Rate: {pass_rate:.1f}%, Performance: {performance}, Honor Roll: {honor_roll}"</span>
+
+<span style="color: #636e72;"># Example usage:</span>
+<span style="color: #636e72;"># student_grades = [85, 92, 78, 96, 88, 91]</span>
+<span style="color: #636e72;"># result = analyze_student_performance(student_grades)</span>
+<span style="color: #636e72;"># print(result)  # "Average: 88.3%, Pass Rate: 100.0%, Performance: Good, Honor Roll: False"</span></pre>
+                </div>
+                
+                <div style="background: rgba(0,212,170,0.1); padding: 20px; border-radius: 10px; margin-top: 20px; border: 1px solid #00d4aa;">
+                    <h4 style="color: #00d4aa; margin-bottom: 15px;">🔍 Key Patterns You'll Use:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                        <div>
+                            <strong style="color: #00d4aa;">✓ Variable Initialization</strong><br>
+                            <span style="opacity: 0.9;">Set counters and totals to 0</span>
+                        </div>
+                        <div>
+                            <strong style="color: #00d4aa;">✓ While Loop Processing</strong><br>
+                            <span style="opacity: 0.9;">Go through lists/arrays step by step</span>
+                        </div>
+                        <div>
+                            <strong style="color: #00d4aa;">✓ Conditional Logic</strong><br>
+                            <span style="opacity: 0.9;">Make decisions with if/elif/else</span>
+                        </div>
+                        <div>
+                            <strong style="color: #00d4aa;">✓ Return Values</strong><br>
+                            <span style="opacity: 0.9;">Send back formatted results</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="challenge-grid">
+                <!-- Activity 1: Number Guesser -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">1</div>
+                        <h2 class="challenge-title">🎯 Number Guesser Game</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that plays a number guessing game using while loops and if/elif/else statements.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>guess_number_game(secret_number, max_guesses)</code></li>
+                            <li>Use a while loop to keep asking for guesses</li>
+                            <li>Use if/elif/else to give "too high", "too low", or "correct" feedback</li>
+                            <li>Return "You won!" or "Game over!" based on result</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> While loops with conditional logic<br>
+                        This combines repetition (while) with decision making (if/elif/else)
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Expected Behavior:</strong><br>
+                        <code>guess_number_game(7, 3)</code> should simulate a guessing game<br>
+                        The function guides the player with hints until they win or run out of guesses
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint1')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint1">
+                            <strong>Structure your function like this:</strong><br>
+                            1. <strong>Function header:</strong> <code>def guess_number_game(secret_number, max_guesses):</code><br>
+                            2. <strong>Initialize variables:</strong> <code>guesses_left = max_guesses</code><br>
+                            3. <strong>While loop:</strong> <code>while guesses_left > 0:</code><br>
+                            4. <strong>Get user input:</strong> <code>guess = int(input("Enter your guess: "))</code><br>
+                            5. <strong>Check with if/elif/else:</strong><br>
+                            &nbsp;&nbsp;<code>if guess == secret_number: return "You won!"</code><br>
+                            &nbsp;&nbsp;<code>elif guess < secret_number: print("Too low!")</code><br>
+                            &nbsp;&nbsp;<code>else: print("Too high!")</code><br>
+                            6. <strong>Decrease guesses:</strong> <code>guesses_left -= 1</code><br>
+                            7. <strong>Return if no guesses left:</strong> <code>return "Game over!"</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 2: Grade Calculator -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">2</div>
+                        <h2 class="challenge-title">📊 Smart Grade Calculator</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that calculates final grades with bonus points and grade boundaries.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>calculate_final_grade(scores)</code></li>
+                            <li>Use a while loop to process all scores in the list</li>
+                            <li>Use if/elif/else to determine letter grade (A, B, C, D, F)</li>
+                            <li>Add bonus points if average is above 95</li>
+                            <li>Return both the average and letter grade</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Processing lists with loops and conditions<br>
+                        Real-world application of control flow in functions
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Grade Scale:</strong><br>
+                        A: 90-100, B: 80-89, C: 70-79, D: 60-69, F: Below 60<br>
+                        <strong>Bonus:</strong> +5 points if average > 95
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint2')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint2">
+                            <strong>Break it down step by step:</strong><br>
+                            1. <strong>Initialize:</strong> <code>total = 0, count = 0, index = 0</code><br>
+                            2. <strong>While loop to sum:</strong> <code>while index < len(scores):</code><br>
+                            3. <strong>Calculate average:</strong> <code>average = total / count</code><br>
+                            4. <strong>Bonus check:</strong> <code>if average > 95: average += 5</code><br>
+                            5. <strong>Grade assignment:</strong><br>
+                            &nbsp;&nbsp;<code>if average >= 90: letter = "A"</code><br>
+                            &nbsp;&nbsp;<code>elif average >= 80: letter = "B"</code><br>
+                            &nbsp;&nbsp;<code>elif average >= 70: letter = "C"</code><br>
+                            &nbsp;&nbsp;<code>elif average >= 60: letter = "D"</code><br>
+                            &nbsp;&nbsp;<code>else: letter = "F"</code><br>
+                            6. <strong>Return both:</strong> <code>return f"Average: {average}, Grade: {letter}"</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 3: Password Validator -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">3</div>
+                        <h2 class="challenge-title">🔐 Password Security Checker</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that validates password strength using multiple criteria and loops.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>check_password_strength(password)</code></li>
+                            <li>Use while loop to check each character</li>
+                            <li>Use if/elif/else to check for different character types</li>
+                            <li>Check for: length, uppercase, lowercase, numbers, special chars</li>
+                            <li>Return strength level: "Weak", "Medium", "Strong"</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Character analysis with loops<br>
+                        Practical security application using control structures
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Strength Criteria:</strong><br>
+                        <strong>Strong:</strong> 8+ chars, uppercase, lowercase, number, special char<br>
+                        <strong>Medium:</strong> 6+ chars, meets 3 of 4 criteria<br>
+                        <strong>Weak:</strong> Everything else
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint3')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint3">
+                            <strong>Structure the validation:</strong><br>
+                            1. <strong>Initialize counters:</strong> <code>has_upper = False, has_lower = False, etc.</code><br>
+                            2. <strong>Check length first:</strong> <code>if len(password) < 6: return "Weak"</code><br>
+                            3. <strong>Character loop:</strong> <code>index = 0; while index < len(password):</code><br>
+                            4. <strong>Check each character:</strong><br>
+                            &nbsp;&nbsp;<code>if password[index].isupper(): has_upper = True</code><br>
+                            &nbsp;&nbsp;<code>elif password[index].islower(): has_lower = True</code><br>
+                            &nbsp;&nbsp;<code>elif password[index].isdigit(): has_number = True</code><br>
+                            5. <strong>Count criteria met:</strong> <code>score = sum([has_upper, has_lower, has_number, has_special])</code><br>
+                            6. <strong>Return strength based on score and length</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 4: Shopping Cart Calculator -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">4</div>
+                        <h2 class="challenge-title">🛒 Smart Shopping Cart</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that processes shopping items with discounts and tax calculations.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>calculate_cart_total(items, prices, tax_rate)</code></li>
+                            <li>Use while loop to process each item</li>
+                            <li>Apply discounts: 10% off if total > $100, 15% if > $200</li>
+                            <li>Use if/elif/else for discount tiers</li>
+                            <li>Return final total with tax and discount details</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Real-world math with control flow<br>
+                        E-commerce logic using loops and conditionals
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Example Input:</strong><br>
+                        <code>items = ["shirt", "shoes", "hat"]</code><br>
+                        <code>prices = [25.99, 89.99, 15.99]</code><br>
+                        <code>tax_rate = 0.08</code>
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint4')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint4">
+                            <strong>Process the shopping cart:</strong><br>
+                            1. <strong>Initialize:</strong> <code>subtotal = 0, index = 0</code><br>
+                            2. <strong>Sum prices:</strong> <code>while index < len(prices): subtotal += prices[index]</code><br>
+                            3. <strong>Apply discounts:</strong><br>
+                            &nbsp;&nbsp;<code>if subtotal > 200: discount = 0.15</code><br>
+                            &nbsp;&nbsp;<code>elif subtotal > 100: discount = 0.10</code><br>
+                            &nbsp;&nbsp;<code>else: discount = 0</code><br>
+                            4. <strong>Calculate final:</strong><br>
+                            &nbsp;&nbsp;<code>discounted = subtotal * (1 - discount)</code><br>
+                            &nbsp;&nbsp;<code>final_total = discounted * (1 + tax_rate)</code><br>
+                            5. <strong>Return detailed breakdown</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 5: Student Attendance Tracker -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">5</div>
+                        <h2 class="challenge-title">📅 Attendance Analyzer</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that analyzes student attendance patterns and determines academic standing.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>analyze_attendance(attendance_record)</code></li>
+                            <li>Use while loop to count present/absent days</li>
+                            <li>Use if/elif/else for attendance categories</li>
+                            <li>Calculate attendance percentage</li>
+                            <li>Return status: "Excellent", "Good", "Warning", "Critical"</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Data analysis with control structures<br>
+                        Educational applications of programming logic
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Attendance Categories:</strong><br>
+                        Excellent: 95%+, Good: 85-94%, Warning: 75-84%, Critical: Below 75%<br>
+                        <strong>Input:</strong> List of "P" (present) and "A" (absent)
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint5')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint5">
+                            <strong>Analyze the attendance data:</strong><br>
+                            1. <strong>Initialize counters:</strong> <code>present = 0, total = 0, index = 0</code><br>
+                            2. <strong>Count attendance:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(attendance_record):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>if attendance_record[index] == "P": present += 1</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>total += 1; index += 1</code><br>
+                            3. <strong>Calculate percentage:</strong> <code>percentage = (present / total) * 100</code><br>
+                            4. <strong>Determine status:</strong><br>
+                            &nbsp;&nbsp;<code>if percentage >= 95: return "Excellent"</code><br>
+                            &nbsp;&nbsp;<code>elif percentage >= 85: return "Good"</code><br>
+                            &nbsp;&nbsp;<code>elif percentage >= 75: return "Warning"</code><br>
+                            &nbsp;&nbsp;<code>else: return "Critical"</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 6: Text Message Counter -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">6</div>
+                        <h2 class="challenge-title">📱 Message Analytics</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that analyzes text messages for word count, sentiment, and length.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>analyze_message(message)</code></li>
+                            <li>Use while loop to process each character</li>
+                            <li>Count words, characters, and special characters</li>
+                            <li>Use if/elif/else to categorize message length</li>
+                            <li>Return analysis report with all statistics</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Text processing with character analysis<br>
+                        String manipulation using control structures
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Categories:</strong><br>
+                        Short: < 50 chars, Medium: 50-140 chars, Long: 140+ chars<br>
+                        <strong>Count:</strong> Words, letters, numbers, special characters
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint6')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint6">
+                            <strong>Analyze each character:</strong><br>
+                            1. <strong>Initialize counters:</strong> <code>letters = 0, numbers = 0, special = 0, index = 0</code><br>
+                            2. <strong>Character analysis loop:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(message):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>if message[index].isalpha(): letters += 1</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>elif message[index].isdigit(): numbers += 1</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>elif not message[index].isspace(): special += 1</code><br>
+                            3. <strong>Word count:</strong> <code>word_count = len(message.split())</code><br>
+                            4. <strong>Categorize length:</strong> Use if/elif/else with len(message)<br>
+                            5. <strong>Return comprehensive report</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 7: Game Score Tracker -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">7</div>
+                        <h2 class="challenge-title">🎮 Gaming Statistics</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that tracks gaming performance and determines player rank.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>calculate_player_rank(scores, games_played)</code></li>
+                            <li>Use while loop to find highest score streak</li>
+                            <li>Use if/elif/else for rank determination</li>
+                            <li>Calculate average, best streak, and improvement trend</li>
+                            <li>Return rank: "Novice", "Amateur", "Pro", "Elite", "Legend"</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Performance analysis algorithms<br>
+                        Gaming statistics using advanced control flow
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Rank Requirements:</strong><br>
+                        Legend: 90+ avg, 5+ win streak<br>
+                        Elite: 80+ avg, 4+ win streak<br>
+                        Pro: 70+ avg, 3+ win streak
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint7')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint7">
+                            <strong>Calculate gaming statistics:</strong><br>
+                            1. <strong>Calculate average:</strong> <code>average = sum(scores) / len(scores)</code><br>
+                            2. <strong>Find best streak:</strong><br>
+                            &nbsp;&nbsp;<code>current_streak = 0, best_streak = 0, index = 0</code><br>
+                            &nbsp;&nbsp;<code>while index < len(scores):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>if scores[index] >= 70: current_streak += 1</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>else: current_streak = 0</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>best_streak = max(best_streak, current_streak)</code><br>
+                            3. <strong>Determine rank with nested conditions</strong><br>
+                            4. <strong>Return rank with statistics</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 8: Weather Pattern Analyzer -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">8</div>
+                        <h2 class="challenge-title">🌤️ Climate Data Processor</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that analyzes weather data and predicts patterns using control flow.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>analyze_weather_pattern(temperatures)</code></li>
+                            <li>Use while loop to find temperature trends</li>
+                            <li>Use if/elif/else for weather classifications</li>
+                            <li>Identify hot streaks, cold snaps, and stable periods</li>
+                            <li>Return pattern summary and recommendations</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Data pattern recognition<br>
+                        Scientific data analysis using programming logic
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Pattern Types:</strong><br>
+                        Hot Streak: 3+ days above 85°F<br>
+                        Cold Snap: 3+ days below 40°F<br>
+                        Stable: Temperature variance < 10°F
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint8')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint8">
+                            <strong>Analyze temperature patterns:</strong><br>
+                            1. <strong>Initialize pattern counters:</strong> <code>hot_days = 0, cold_days = 0, index = 0</code><br>
+                            2. <strong>Scan for patterns:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(temperatures):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>if temperatures[index] > 85: hot_days += 1</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>elif temperatures[index] < 40: cold_days += 1</code><br>
+                            3. <strong>Find consecutive patterns:</strong> Use nested loops for streaks<br>
+                            4. <strong>Calculate statistics:</strong> min, max, average temperatures<br>
+                            5. <strong>Generate recommendations based on patterns</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 9: Inventory Management System -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">9</div>
+                        <h2 class="challenge-title">📦 Inventory Manager</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that manages store inventory with restocking alerts and sales tracking.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>manage_inventory(items, quantities, min_stock)</code></li>
+                            <li>Use while loop to check each item's stock level</li>
+                            <li>Use if/elif/else for stock status alerts</li>
+                            <li>Calculate total value and identify low-stock items</li>
+                            <li>Return inventory report with restocking recommendations</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Business logic with data validation<br>
+                        Real-world inventory management using control structures
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Stock Levels:</strong><br>
+                        Critical: Below 10 units, Low: 10-25 units, Good: 25+ units<br>
+                        <strong>Actions:</strong> Generate alerts for low stock items
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint9')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint9">
+                            <strong>Build inventory management:</strong><br>
+                            1. <strong>Initialize:</strong> <code>low_stock = [], critical_stock = [], index = 0</code><br>
+                            2. <strong>Check each item:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(quantities):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>if quantities[index] < 10: critical_stock.append(items[index])</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>elif quantities[index] < min_stock: low_stock.append(items[index])</code><br>
+                            3. <strong>Calculate total value and generate alerts</strong><br>
+                            4. <strong>Return comprehensive inventory status</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 10: Bank Account Manager -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">10</div>
+                        <h2 class="challenge-title">🏦 Banking System</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that processes bank transactions and calculates interest with overdraft protection.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>process_transactions(initial_balance, transactions)</code></li>
+                            <li>Use while loop to process each transaction</li>
+                            <li>Use if/elif/else for transaction validation and fees</li>
+                            <li>Apply overdraft fees and interest calculations</li>
+                            <li>Return final balance with transaction summary</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Financial calculations with validation<br>
+                        Banking logic using loops and conditional statements
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Transaction Types:</strong><br>
+                        Positive: Deposits, Negative: Withdrawals<br>
+                        <strong>Fees:</strong> $35 overdraft fee, 0.5% monthly interest
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint10')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint10">
+                            <strong>Process banking transactions:</strong><br>
+                            1. <strong>Initialize:</strong> <code>balance = initial_balance, fees = 0, index = 0</code><br>
+                            2. <strong>Process each transaction:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(transactions):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>balance += transactions[index]</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>if balance < 0: fees += 35</code><br>
+                            3. <strong>Calculate interest and final balance</strong><br>
+                            4. <strong>Return detailed financial summary</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 11: Recipe Cost Calculator -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">11</div>
+                        <h2 class="challenge-title">👨‍🍳 Recipe Analyzer</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that calculates recipe costs and nutritional information with serving adjustments.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>analyze_recipe(ingredients, costs, servings, target_servings)</code></li>
+                            <li>Use while loop to calculate total ingredient costs</li>
+                            <li>Use if/elif/else for cost categories and recommendations</li>
+                            <li>Scale recipe for different serving sizes</li>
+                            <li>Return cost per serving and budget category</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Mathematical scaling with conditionals<br>
+                        Culinary applications using proportional calculations
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Budget Categories:</strong><br>
+                        Budget: < $2/serving, Moderate: $2-5/serving, Premium: > $5/serving<br>
+                        <strong>Scaling:</strong> Adjust quantities based on serving size
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint11')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint11">
+                            <strong>Calculate recipe economics:</strong><br>
+                            1. <strong>Initialize:</strong> <code>total_cost = 0, index = 0</code><br>
+                            2. <strong>Sum ingredient costs:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(costs): total_cost += costs[index]</code><br>
+                            3. <strong>Scale for target servings:</strong><br>
+                            &nbsp;&nbsp;<code>scaling_factor = target_servings / servings</code><br>
+                            &nbsp;&nbsp;<code>adjusted_cost = total_cost * scaling_factor</code><br>
+                            4. <strong>Categorize and return analysis</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 12: Fitness Tracker Analytics -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">12</div>
+                        <h2 class="challenge-title">🏃‍♂️ Fitness Analytics</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that analyzes daily activity data and provides fitness recommendations.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>analyze_fitness_data(steps, calories, exercise_minutes)</code></li>
+                            <li>Use while loop to process daily activity data</li>
+                            <li>Use if/elif/else for fitness level classification</li>
+                            <li>Calculate weekly averages and goal achievements</li>
+                            <li>Return fitness report with personalized recommendations</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Health data analysis<br>
+                        Wellness applications using statistical programming
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Fitness Goals:</strong><br>
+                        Steps: 10,000/day, Calories: 2,000 burned/week, Exercise: 150 min/week<br>
+                        <strong>Levels:</strong> Sedentary, Active, Very Active, Athletic
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint12')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint12">
+                            <strong>Analyze fitness patterns:</strong><br>
+                            1. <strong>Calculate totals:</strong> <code>total_steps = 0, total_calories = 0, index = 0</code><br>
+                            2. <strong>Process daily data:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(steps): total_steps += steps[index]</code><br>
+                            3. <strong>Calculate averages and goal percentages</strong><br>
+                            4. <strong>Classify fitness level using multiple criteria</strong><br>
+                            5. <strong>Generate personalized recommendations</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 13: Social Media Engagement Analyzer -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">13</div>
+                        <h2 class="challenge-title">📱 Social Analytics</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that analyzes social media posts and calculates engagement metrics.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>analyze_social_engagement(likes, comments, shares, followers)</code></li>
+                            <li>Use while loop to process engagement data</li>
+                            <li>Use if/elif/else for engagement rate categories</li>
+                            <li>Calculate viral potential and audience reach</li>
+                            <li>Return engagement analysis with growth recommendations</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Social media metrics and algorithms<br>
+                        Digital marketing analytics using data processing
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Engagement Rates:</strong><br>
+                        Low: < 2%, Good: 2-5%, High: 5-10%, Viral: > 10%<br>
+                        <strong>Metrics:</strong> Reach, engagement rate, viral coefficient
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint13')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint13">
+                            <strong>Calculate social media metrics:</strong><br>
+                            1. <strong>Sum engagement:</strong> <code>total_engagement = 0, index = 0</code><br>
+                            2. <strong>Process each post:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(likes):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>post_engagement = likes[index] + comments[index] + shares[index]</code><br>
+                            3. <strong>Calculate engagement rate:</strong> <code>(total_engagement / followers) * 100</code><br>
+                            4. <strong>Categorize performance and suggest improvements</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 14: Energy Usage Monitor -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">14</div>
+                        <h2 class="challenge-title">⚡ Energy Tracker</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that monitors home energy consumption and suggests efficiency improvements.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>monitor_energy_usage(daily_kwh, rates, appliances)</code></li>
+                            <li>Use while loop to calculate monthly consumption patterns</li>
+                            <li>Use if/elif/else for efficiency ratings and peak usage alerts</li>
+                            <li>Calculate costs and carbon footprint</li>
+                            <li>Return energy report with savings recommendations</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Environmental data analysis<br>
+                        Sustainability applications using energy calculations
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Efficiency Ratings:</strong><br>
+                        Excellent: < 15 kWh/day, Good: 15-25 kWh/day, High: > 25 kWh/day<br>
+                        <strong>Calculations:</strong> Cost, carbon emissions, efficiency trends
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint14')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint14">
+                            <strong>Monitor energy consumption:</strong><br>
+                            1. <strong>Calculate monthly total:</strong> <code>total_kwh = 0, index = 0</code><br>
+                            2. <strong>Process daily usage:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(daily_kwh): total_kwh += daily_kwh[index]</code><br>
+                            3. <strong>Calculate costs:</strong> <code>monthly_cost = total_kwh * rate</code><br>
+                            4. <strong>Determine efficiency rating and carbon footprint</strong><br>
+                            5. <strong>Suggest energy-saving measures</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 15: Library Book Manager -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">15</div>
+                        <h2 class="challenge-title">📚 Library System</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that manages library book checkout system with due dates and fines.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>manage_library_books(books, checkout_dates, return_dates)</code></li>
+                            <li>Use while loop to process book returns</li>
+                            <li>Use if/elif/else for overdue calculations and fine determination</li>
+                            <li>Track popular books and calculate average loan period</li>
+                            <li>Return library report with fine calculations</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Date calculations and library management<br>
+                        Educational systems using time-based logic
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Fine Structure:</strong><br>
+                        $0.50/day for 1-7 days overdue, $1.00/day for 8+ days overdue<br>
+                        <strong>Loan Period:</strong> 14 days standard checkout
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint15')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint15">
+                            <strong>Manage library system:</strong><br>
+                            1. <strong>Initialize:</strong> <code>total_fines = 0, overdue_books = 0, index = 0</code><br>
+                            2. <strong>Process each book:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(books):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>days_overdue = return_dates[index] - (checkout_dates[index] + 14)</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>if days_overdue > 0: calculate fines</code><br>
+                            3. <strong>Calculate fine amounts based on overdue period</strong><br>
+                            4. <strong>Generate library management report</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 16: Movie Recommendation Engine -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">16</div>
+                        <h2 class="challenge-title">🎬 Movie Recommender</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that analyzes movie ratings and preferences to generate personalized recommendations.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>recommend_movies(user_ratings, movie_genres, preferences)</code></li>
+                            <li>Use while loop to analyze rating patterns</li>
+                            <li>Use if/elif/else for preference matching and quality filtering</li>
+                            <li>Calculate compatibility scores for different genres</li>
+                            <li>Return top movie recommendations with reasoning</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Recommendation algorithms<br>
+                        Machine learning concepts using preference analysis
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Rating Scale:</strong><br>
+                        1-2: Dislike, 3-4: Neutral, 5-6: Like, 7-8: Love, 9-10: Favorite<br>
+                        <strong>Genres:</strong> Action, Comedy, Drama, Horror, Sci-Fi, Romance
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint16')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint16">
+                            <strong>Build recommendation engine:</strong><br>
+                            1. <strong>Analyze preferences:</strong> <code>genre_scores = {}, index = 0</code><br>
+                            2. <strong>Calculate genre affinity:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(user_ratings):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>if user_ratings[index] >= 7: preferred genres</code><br>
+                            3. <strong>Score potential recommendations</strong><br>
+                            4. <strong>Filter by quality threshold and return top matches</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 17: Traffic Flow Analyzer -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">17</div>
+                        <h2 class="challenge-title">🚦 Traffic Monitor</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that analyzes traffic patterns and optimizes signal timing for city planning.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>analyze_traffic_flow(hourly_counts, peak_hours, accident_reports)</code></li>
+                            <li>Use while loop to process hourly traffic data</li>
+                            <li>Use if/elif/else for congestion level classification</li>
+                            <li>Identify peak hours and calculate average wait times</li>
+                            <li>Return traffic optimization recommendations</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Urban planning and data analysis<br>
+                        Civil engineering applications using traffic modeling
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Congestion Levels:</strong><br>
+                        Light: < 500 cars/hour, Moderate: 500-1000, Heavy: 1000-1500, Gridlock: > 1500<br>
+                        <strong>Analysis:</strong> Peak identification, signal optimization
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint17')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint17">
+                            <strong>Analyze traffic patterns:</strong><br>
+                            1. <strong>Process hourly data:</strong> <code>total_cars = 0, peak_traffic = 0, index = 0</code><br>
+                            2. <strong>Identify congestion periods:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(hourly_counts):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>if hourly_counts[index] > 1000: heavy_hours += 1</code><br>
+                            3. <strong>Calculate optimization metrics</strong><br>
+                            4. <strong>Generate traffic management recommendations</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 18: Cryptocurrency Portfolio Tracker -->
+                <div class="challenge-card">
+                    <div class="challenge-header">
+                        <div class="challenge-number">18</div>
+                        <h2 class="challenge-title">₿ Crypto Analyzer</h2>
+                    </div>
+                    <div class="difficulty-badge">🔥 Challenge</div>
+                    <p class="challenge-description">
+                        Create a function that tracks cryptocurrency investments and calculates portfolio performance.
+                    </p>
+                    
+                    <div class="requirements">
+                        <h4>📋 Requirements:</h4>
+                        <ul>
+                            <li>Function name: <code>track_crypto_portfolio(coins, quantities, buy_prices, current_prices)</code></li>
+                            <li>Use while loop to calculate gains/losses for each coin</li>
+                            <li>Use if/elif/else for performance categories and risk assessment</li>
+                            <li>Calculate total portfolio value and percentage returns</li>
+                            <li>Return investment analysis with recommendations</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box">
+                        <strong>🧠 Concept Focus:</strong> Financial technology and investment analysis<br>
+                        Cryptocurrency applications using portfolio mathematics
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Performance Categories:</strong><br>
+                        Excellent: > 50% gain, Good: 10-50% gain, Loss: < 0% gain<br>
+                        <strong>Metrics:</strong> ROI, volatility, diversification score
+                    </div>
+
+                    <div class="hint-section" onclick="toggleHint('hint18')">
+                        <div class="hint-header">
+                            💡 Click for Step-by-Step Help
+                        </div>
+                        <div class="hint-content" id="hint18">
+                            <strong>Track crypto investments:</strong><br>
+                            1. <strong>Calculate individual performance:</strong> <code>total_invested = 0, current_value = 0, index = 0</code><br>
+                            2. <strong>Process each coin:</strong><br>
+                            &nbsp;&nbsp;<code>while index < len(coins):</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>invested = quantities[index] * buy_prices[index]</code><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<code>current = quantities[index] * current_prices[index]</code><br>
+                            3. <strong>Calculate portfolio ROI and risk metrics</strong><br>
+                            4. <strong>Generate investment strategy recommendations</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🚀 <strong>Advanced Function Practice - Control Flow Mastery</strong></p>
+            <p>Combining functions with loops and conditionals = Programming Power! 💪</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleHint(hintId) {
+            const hintContent = document.getElementById(hintId);
+            if (hintContent.classList.contains('show')) {
+                hintContent.classList.remove('show');
+            } else {
+                hintContent.classList.add('show');
+            }
+        }
+
+        // Add some interactive animations
+        document.querySelectorAll('.challenge-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add typing effect to the header
+        const headerText = document.querySelector('.header h1');
+        const originalText = headerText.textContent;
+        headerText.textContent = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < originalText.length) {
+                headerText.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        
+        setTimeout(typeWriter, 500);
+
+        // Add skill progression indicators
+        const cards = document.querySelectorAll('.challenge-card');
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                card.style.background = 'linear-gradient(145deg, #e8f5e8, #d4edda)';
+                card.style.borderColor = '#28a745';
+                
+                // Add completion indicator
+                const number = card.querySelector('.challenge-number');
+                number.innerHTML = '✅';
+                number.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            });
+        });
+    </script>
+    
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Particles.js configuration for interactive background
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 100,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>

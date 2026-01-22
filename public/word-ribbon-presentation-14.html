@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word 2019 Ribbon Presentation Project - 14 Students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .intro-section {
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-bottom: 3px solid #667eea;
+        }
+
+        .intro-section h2 {
+            color: #2b5876;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .intro-section ul {
+            margin-left: 25px;
+            line-height: 2;
+            font-size: 1.1rem;
+        }
+
+        .intro-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .assignments-container {
+            padding: 40px;
+        }
+
+        .assignments-title {
+            text-align: center;
+            color: #2b5876;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .student-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            border-color: #764ba2;
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .student-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        .student-info h3 {
+            color: #2b5876;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .ribbon-tab {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-content h4 {
+            color: #4e4376;
+            margin: 20px 0 15px 0;
+            font-size: 1.2rem;
+        }
+
+        .card-content ul {
+            margin-left: 25px;
+            line-height: 2;
+        }
+
+        .card-content ul li {
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .presentation-tips {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 121, 198, 0.15) 100%);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px;
+        }
+
+        .presentation-tips h2 {
+            color: #d4a017;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tip-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .tip-box h3 {
+            color: #d4a017;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .tip-box ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .grading-rubric {
+            background: linear-gradient(135deg, rgba(80, 250, 123, 0.15) 0%, rgba(139, 233, 253, 0.15) 100%);
+            border: 2px solid #50fa7b;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px;
+        }
+
+        .grading-rubric h2 {
+            color: #00a86b;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #00a86b 0%, #50fa7b 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .rubric-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:hover {
+            background: rgba(80, 250, 123, 0.1);
+        }
+
+        .footer {
+            background: #2b5876;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .student-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .student-number {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Microsoft Word 2019 Ribbon Presentation Project</h1>
+            <p>14 Students • 7 Duo Teams • Partner Collaboration</p>
+        </div>
+
+        <!-- Introduction Section -->
+        <div class="intro-section">
+            <h2>🎯 Project Overview</h2>
+            <p style="margin-bottom: 20px; font-size: 1.1rem; line-height: 1.8;">
+                The Microsoft Word Ribbon is the command center of Word 2019. Each tab contains powerful tools that help you create professional documents. 
+                In this project, you and your partner will become experts on ONE specific ribbon section and teach the class together!
+            </p>
+
+            <h2 style="margin-top: 30px;">📋 Your Duo Mission</h2>
+            <ul>
+                <li><strong>Partner Up:</strong> Work together as a team of 2 students</li>
+                <li><strong>Research Together:</strong> Both partners explore and master your assigned ribbon section</li>
+                <li><strong>Practice:</strong> Try out the tools and understand what they do</li>
+                <li><strong>Create Together:</strong> Make ONE cohesive presentation (PowerPoint, Google Slides, or Word)</li>
+                <li><strong>Split the Presentation:</strong> Each partner presents part of the content (2-3 minutes each = 4-6 min total)</li>
+                <li><strong>Teach:</strong> Show live demonstrations and answer questions as a duo</li>
+            </ul>
+
+            <div style="background: rgba(255, 215, 0, 0.2); padding: 20px; border-radius: 10px; margin-top: 25px; border-left: 4px solid #ffd700;">
+                <h3 style="color: #d4a017; margin-bottom: 10px;">👥 Duo Structure: 7 Teams of 2</h3>
+                <p style="font-size: 1.05rem; line-height: 1.8;">
+                    <strong>14 students total</strong> divided into <strong>7 duo teams</strong>. Each team covers ONE complete ribbon tab or major section, making you the class experts on that topic!
+                </p>
+            </div>
+        </div>
+
+        <!-- Student Assignments -->
+        <div class="assignments-container">
+            <h2 class="assignments-title">👥 Duo Team Assignments (7 Teams • 14 Students)</h2>
+
+            <!-- DUO TEAM 1 -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 1.8rem; margin-bottom: 10px;">👥 DUO TEAM 1</h2>
+                <p style="color: white; text-align: center; font-size: 1.3rem; font-weight: bold;">🏠 HOME Tab - Complete Overview</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.05rem; opacity: 0.9;">
+                    Students 1 & 2 • Presentation Time: 4-6 minutes total
+                </p>
+            </div>
+
+            <!-- Student 1 & 2 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">1-2</div>
+                    <div class="student-info">
+                        <h3>Students 1 & 2 (Duo Team 1)</h3>
+                        <div class="ribbon-tab">🏠 HOME Tab - ALL Groups</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas (Split Between Partners):</h4>
+                    <p style="margin-bottom: 15px; font-style: italic; color: #764ba2;"><strong>Partner 1:</strong> Clipboard & Font Groups</p>
+                    <ul>
+                        <li><strong>Clipboard:</strong> Cut, Copy, Paste, Format Painter, Paste Special</li>
+                        <li><strong>Font:</strong> Font types/sizes, Bold, Italic, Underline, Text effects, Colors</li>
+                    </ul>
+                    <p style="margin: 15px 0; font-style: italic; color: #764ba2;"><strong>Partner 2:</strong> Paragraph, Styles & Editing Groups</p>
+                    <ul>
+                        <li><strong>Paragraph:</strong> Bullets, Numbering, Alignment, Spacing, Indentation</li>
+                        <li><strong>Styles & Editing:</strong> Styles Gallery, Find & Replace, Select tools</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Show how Format Painter copies formatting between text</li>
+                        <li>Demonstrate creating a professional document using styles</li>
+                        <li>Use Find & Replace to change repeated words</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- DUO TEAM 2 -->
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 25px; border-radius: 15px; margin: 40px 0 25px 0; box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 1.8rem; margin-bottom: 10px;">👥 DUO TEAM 2</h2>
+                <p style="color: white; text-align: center; font-size: 1.3rem; font-weight: bold;">📝 INSERT Tab - Pages, Tables & Illustrations</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.05rem; opacity: 0.9;">
+                    Students 3 & 4 • Presentation Time: 4-6 minutes total
+                </p>
+            </div>
+
+            <!-- Student 3 & 4 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">3-4</div>
+                    <div class="student-info">
+                        <h3>Students 3 & 4 (Duo Team 2)</h3>
+                        <div class="ribbon-tab">📝 INSERT Tab - Pages, Tables & Illustrations</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas (Split Between Partners):</h4>
+                    <p style="margin-bottom: 15px; font-style: italic; color: #f5576c;"><strong>Partner 1:</strong> Pages & Tables</p>
+                    <ul>
+                        <li><strong>Cover Pages & Page Breaks</strong> - Professional document structure</li>
+                        <li><strong>Tables</strong> - Creating and formatting tables, Quick Tables</li>
+                    </ul>
+                    <p style="margin: 15px 0; font-style: italic; color: #f5576c;"><strong>Partner 2:</strong> Illustrations</p>
+                    <ul>
+                        <li><strong>Pictures & Shapes</strong> - Inserting and formatting images</li>
+                        <li><strong>SmartArt & Charts</strong> - Professional diagrams and graphs</li>
+                        <li><strong>Icons & 3D Models</strong> - Modern graphics</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Create a professional report with cover page and formatted tables</li>
+                        <li>Build a flowchart using SmartArt</li>
+                        <li>Show how to wrap text around images</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- DUO TEAM 3 -->
+            <div style="background: linear-gradient(135deg, #13547a 0%, #80d0c7 100%); padding: 25px; border-radius: 15px; margin: 40px 0 25px 0; box-shadow: 0 8px 20px rgba(19, 84, 122, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 1.8rem; margin-bottom: 10px;">👥 DUO TEAM 3</h2>
+                <p style="color: white; text-align: center; font-size: 1.3rem; font-weight: bold;">📝 INSERT Tab - Headers, Links & Text Elements</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.05rem; opacity: 0.9;">
+                    Students 5 & 6 • Presentation Time: 4-6 minutes total
+                </p>
+            </div>
+
+            <!-- Student 5 & 6 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">5-6</div>
+                    <div class="student-info">
+                        <h3>Students 5 & 6 (Duo Team 3)</h3>
+                        <div class="ribbon-tab">📝 INSERT Tab - Headers, Links & Text</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas (Split Between Partners):</h4>
+                    <p style="margin-bottom: 15px; font-style: italic; color: #13547a;"><strong>Partner 1:</strong> Headers, Footers & Page Numbers</p>
+                    <ul>
+                        <li><strong>Header & Footer</strong> - Adding consistent page elements</li>
+                        <li><strong>Page Numbers</strong> - Automatic page numbering</li>
+                        <li><strong>Text Box & WordArt</strong> - Decorative text elements</li>
+                        <li><strong>Symbols & Equations</strong> - Special characters</li>
+                    </ul>
+                    <p style="margin: 15px 0; font-style: italic; color: #13547a;"><strong>Partner 2:</strong> Links & Comments</p>
+                    <ul>
+                        <li><strong>Hyperlinks & Bookmarks</strong> - Interactive documents</li>
+                        <li><strong>Cross-references</strong> - Internal document links</li>
+                        <li><strong>Comments</strong> - Collaboration tools</li>
+                        <li><strong>Online Video</strong> - Embedding media</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Create a document with professional headers and page numbers</li>
+                        <li>Show how hyperlinks make interactive documents</li>
+                        <li>Demonstrate mathematical equations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- DUO TEAM 4 -->
+            <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 25px; border-radius: 15px; margin: 40px 0 25px 0; box-shadow: 0 8px 20px rgba(250, 112, 154, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 1.8rem; margin-bottom: 10px;">👥 DUO TEAM 4</h2>
+                <p style="color: white; text-align: center; font-size: 1.3rem; font-weight: bold;">🎨 DESIGN Tab - Complete Overview</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.05rem; opacity: 0.9;">
+                    Students 7 & 8 • Presentation Time: 4-6 minutes total
+                </p>
+            </div>
+
+            <!-- Student 7 & 8 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">7-8</div>
+                    <div class="student-info">
+                        <h3>Students 7 & 8 (Duo Team 4)</h3>
+                        <div class="ribbon-tab">🎨 DESIGN Tab - ALL Groups</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas (Split Between Partners):</h4>
+                    <p style="margin-bottom: 15px; font-style: italic; color: #fa709a;"><strong>Partner 1:</strong> Themes & Document Formatting</p>
+                    <ul>
+                        <li><strong>Themes</strong> - Coordinated colors and fonts</li>
+                        <li><strong>Document Formatting</strong> - Overall document style</li>
+                        <li><strong>Colors & Fonts</strong> - Customizing theme elements</li>
+                    </ul>
+                    <p style="margin: 15px 0; font-style: italic; color: #fa709a;"><strong>Partner 2:</strong> Page Background</p>
+                    <ul>
+                        <li><strong>Watermarks</strong> - Background text (Confidential, Draft)</li>
+                        <li><strong>Page Color</strong> - Changing background colors</li>
+                        <li><strong>Page Borders</strong> - Decorative page borders</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Transform a plain document using themes</li>
+                        <li>Create a document with a "DRAFT" watermark</li>
+                        <li>Show professional use of page borders</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- DUO TEAM 5 -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 15px; margin: 40px 0 25px 0; box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 1.8rem; margin-bottom: 10px;">👥 DUO TEAM 5</h2>
+                <p style="color: white; text-align: center; font-size: 1.3rem; font-weight: bold;">📄 LAYOUT Tab - Complete Overview</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.05rem; opacity: 0.9;">
+                    Students 9 & 10 • Presentation Time: 4-6 minutes total
+                </p>
+            </div>
+
+            <!-- Student 9 & 10 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">9-10</div>
+                    <div class="student-info">
+                        <h3>Students 9 & 10 (Duo Team 5)</h3>
+                        <div class="ribbon-tab">📄 LAYOUT Tab - ALL Groups</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas (Split Between Partners):</h4>
+                    <p style="margin-bottom: 15px; font-style: italic; color: #764ba2;"><strong>Partner 1:</strong> Page Setup</p>
+                    <ul>
+                        <li><strong>Margins</strong> - Setting page margins (Normal, Narrow, Wide)</li>
+                        <li><strong>Orientation</strong> - Portrait vs. Landscape</li>
+                        <li><strong>Size</strong> - Paper size options (Letter, Legal, A4)</li>
+                        <li><strong>Columns</strong> - Creating newspaper-style columns</li>
+                    </ul>
+                    <p style="margin: 15px 0; font-style: italic; color: #764ba2;"><strong>Partner 2:</strong> Paragraph & Arrange</p>
+                    <ul>
+                        <li><strong>Breaks</strong> - Page, section, and column breaks</li>
+                        <li><strong>Indentation & Spacing</strong> - Fine-tuning layout</li>
+                        <li><strong>Wrap Text</strong> - Text wrapping around objects</li>
+                        <li><strong>Bring Forward/Send Backward</strong> - Layering objects</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Create a newsletter with multiple columns</li>
+                        <li>Show how section breaks create different layouts</li>
+                        <li>Demonstrate text wrapping options</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- DUO TEAM 6 -->
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 25px; border-radius: 15px; margin: 40px 0 25px 0; box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 1.8rem; margin-bottom: 10px;">👥 DUO TEAM 6</h2>
+                <p style="color: white; text-align: center; font-size: 1.3rem; font-weight: bold;">📚 REFERENCES Tab - Complete Overview</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.05rem; opacity: 0.9;">
+                    Students 11 & 12 • Presentation Time: 4-6 minutes total
+                </p>
+            </div>
+
+            <!-- Student 11 & 12 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">11-12</div>
+                    <div class="student-info">
+                        <h3>Students 11 & 12 (Duo Team 6)</h3>
+                        <div class="ribbon-tab">📚 REFERENCES Tab - ALL Groups</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas (Split Between Partners):</h4>
+                    <p style="margin-bottom: 15px; font-style: italic; color: #f5576c;"><strong>Partner 1:</strong> Table of Contents & Footnotes</p>
+                    <ul>
+                        <li><strong>Table of Contents</strong> - Automatic ToC from headings</li>
+                        <li><strong>Footnotes & Endnotes</strong> - Adding citations and notes</li>
+                        <li><strong>Captions</strong> - Labeling figures and tables</li>
+                    </ul>
+                    <p style="margin: 15px 0; font-style: italic; color: #f5576c;"><strong>Partner 2:</strong> Citations & Bibliography</p>
+                    <ul>
+                        <li><strong>Citations</strong> - Managing sources (APA, MLA, Chicago)</li>
+                        <li><strong>Bibliography</strong> - Automatic reference lists</li>
+                        <li><strong>Index</strong> - Creating an alphabetical index</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Create an automatic table of contents for a report</li>
+                        <li>Show how to add and format citations in APA style</li>
+                        <li>Demonstrate footnotes for research papers</li>
+                        <li>Generate an automatic bibliography</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- DUO TEAM 7 -->
+            <div style="background: linear-gradient(135deg, #13547a 0%, #80d0c7 100%); padding: 25px; border-radius: 15px; margin: 40px 0 25px 0; box-shadow: 0 8px 20px rgba(19, 84, 122, 0.4);">
+                <h2 style="color: white; text-align: center; font-size: 1.8rem; margin-bottom: 10px;">👥 DUO TEAM 7</h2>
+                <p style="color: white; text-align: center; font-size: 1.3rem; font-weight: bold;">📝 REVIEW Tab - Complete Overview</p>
+                <p style="color: white; text-align: center; margin-top: 10px; font-size: 1.05rem; opacity: 0.9;">
+                    Students 13 & 14 • Presentation Time: 4-6 minutes total
+                </p>
+            </div>
+
+            <!-- Student 13 & 14 -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="student-number">13-14</div>
+                    <div class="student-info">
+                        <h3>Students 13 & 14 (Duo Team 7)</h3>
+                        <div class="ribbon-tab">📝 REVIEW Tab - ALL Groups</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>📌 Your Focus Areas (Split Between Partners):</h4>
+                    <p style="margin-bottom: 15px; font-style: italic; color: #13547a;"><strong>Partner 1:</strong> Proofing Tools</p>
+                    <ul>
+                        <li><strong>Spelling & Grammar</strong> - Checking for errors</li>
+                        <li><strong>Thesaurus</strong> - Finding synonyms</li>
+                        <li><strong>Word Count</strong> - Tracking document statistics</li>
+                        <li><strong>Language Tools</strong> - Translation and language options</li>
+                    </ul>
+                    <p style="margin: 15px 0; font-style: italic; color: #13547a;"><strong>Partner 2:</strong> Collaboration Tools</p>
+                    <ul>
+                        <li><strong>Track Changes</strong> - Monitoring edits in documents</li>
+                        <li><strong>Comments</strong> - Adding feedback and notes</li>
+                        <li><strong>Compare & Combine</strong> - Merging document versions</li>
+                        <li><strong>Protect Document</strong> - Restricting editing</li>
+                    </ul>
+                    <h4>💡 Demo Ideas:</h4>
+                    <ul>
+                        <li>Show Track Changes for collaborative editing</li>
+                        <li>Demonstrate spell check catching different types of errors</li>
+                        <li>Use comments to provide feedback on a document</li>
+                        <li>Protect a document with editing restrictions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Presentation Tips -->
+        <div class="presentation-tips">
+            <h2>🎤 Duo Presentation Tips for Success</h2>
+            <div class="tips-grid">
+                <div class="tip-box">
+                    <h3>👥 Collaborate as Partners</h3>
+                    <ul>
+                        <li><strong>Meet with your partner</strong> to plan your presentation flow</li>
+                        <li>Decide who presents which features (2-3 min each)</li>
+                        <li>Create ONE cohesive slide deck together</li>
+                        <li>Practice smooth transitions between speakers</li>
+                        <li>Support each other during Q&A</li>
+                        <li>Divide work equally and fairly</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>📊 Prepare Your Content</h3>
+                    <ul>
+                        <li>Each person researches their specific section deeply</li>
+                        <li>Practice using each tool multiple times</li>
+                        <li>Create examples BEFORE presenting</li>
+                        <li>Have a backup plan if technology fails</li>
+                        <li>Share a single Word document to demonstrate</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>🎯 Structure Your Duo Presentation</h3>
+                    <ul>
+                        <li><strong>Intro (20 sec):</strong> Both partners introduce your ribbon tab</li>
+                        <li><strong>Partner 1 (2-3 min):</strong> First section demo</li>
+                        <li><strong>Partner 2 (2-3 min):</strong> Second section demo</li>
+                        <li><strong>Conclusion (20 sec):</strong> Quick summary & Q&A</li>
+                        <li><strong>Total Time:</strong> 4-6 minutes</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>💻 Live Demonstration</h3>
+                    <ul>
+                        <li>Open Word and show features in REAL-TIME</li>
+                        <li>Narrate what you're doing as you do it</li>
+                        <li>Each person builds on the previous person's work</li>
+                        <li>Zoom in so everyone can see</li>
+                        <li>Have a prepared document ready to go</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>🗣️ Delivery Tips</h3>
+                    <ul>
+                        <li>Speak clearly and at a good pace</li>
+                        <li>Make eye contact with the class</li>
+                        <li>Explain WHY each feature is useful</li>
+                        <li>Stay within 4-6 minutes total</li>
+                        <li>Smooth handoff between partners</li>
+                        <li>Both partners should be engaged the whole time</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <h3>✨ Make It Flow</h3>
+                    <ul>
+                        <li>Show how your features work TOGETHER</li>
+                        <li>Build one document progressively (Partner 1 starts, Partner 2 continues)</li>
+                        <li>Tell a story with your presentation</li>
+                        <li>Connect features to real-world uses</li>
+                        <li>Divide work evenly (each partner 2-3 min)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grading Rubric -->
+        <div class="grading-rubric">
+            <h2>📊 Grading Rubric (100 Points Total)</h2>
+            <table class="rubric-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Points</th>
+                        <th>Criteria</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Content Knowledge</strong></td>
+                        <td>25 points</td>
+                        <td>Both partners demonstrate thorough understanding of their assigned ribbon section</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Live Demonstration</strong></td>
+                        <td>25 points</td>
+                        <td>Successfully demonstrates features with clear, step-by-step instructions (both partners)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Partner Collaboration</strong></td>
+                        <td>15 points</td>
+                        <td>Cohesive presentation with smooth transitions, equal participation, and unified approach</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Real-World Application</strong></td>
+                        <td>10 points</td>
+                        <td>Explains when and why someone would use these features in actual work</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visual Aids/Presentation</strong></td>
+                        <td>10 points</td>
+                        <td>Uses slides or prepared materials to support duo presentation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time Management</strong></td>
+                        <td>5 points</td>
+                        <td>Presentation is 4-6 minutes total (2-3 min per partner)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delivery & Clarity</strong></td>
+                        <td>5 points</td>
+                        <td>Both partners speak clearly, make eye contact, and engage the audience</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Q&A Handling</strong></td>
+                        <td>5 points</td>
+                        <td>Duo answers classmate questions confidently and accurately (partners can help each other)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <h3 style="margin-bottom: 15px;">🎓 Project Timeline</h3>
+            <p><strong>Partner Pairing & Planning:</strong> Day 1</p>
+            <p><strong>Research & Practice Together:</strong> 3-4 days</p>
+            <p><strong>Presentation Creation:</strong> 2-3 days</p>
+            <p><strong>Presentation Day:</strong> All 7 duo teams present</p>
+            <p style="margin-top: 20px;"><strong>📊 Total Presentation Time:</strong> 7 teams × 5 min = ~35 minutes + Q&A</p>
+            <p style="margin-top: 20px; font-style: italic;">Remember: You're not just presenting—you're TEACHING your classmates as PARTNERS!</p>
+            
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; margin-top: 30px;">
+                <h3 style="margin-bottom: 15px;">🎯 Quick Duo Team Summary</h3>
+                <p><strong>DUO TEAM 1 (Students 1-2):</strong> HOME Tab - Complete overview</p>
+                <p><strong>DUO TEAM 2 (Students 3-4):</strong> INSERT Tab - Pages, Tables & Illustrations</p>
+                <p><strong>DUO TEAM 3 (Students 5-6):</strong> INSERT Tab - Headers, Links & Text</p>
+                <p><strong>DUO TEAM 4 (Students 7-8):</strong> DESIGN Tab - Complete overview</p>
+                <p><strong>DUO TEAM 5 (Students 9-10):</strong> LAYOUT Tab - Complete overview</p>
+                <p><strong>DUO TEAM 6 (Students 11-12):</strong> REFERENCES Tab - Complete overview</p>
+                <p><strong>DUO TEAM 7 (Students 13-14):</strong> REVIEW Tab - Complete overview</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

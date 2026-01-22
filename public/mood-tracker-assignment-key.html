@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python File I/O Mastery: Analysis - ANSWER KEY</title>
+    <style>
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.75in;
+            background: #f5f5f5;
+            line-height: 1.6;
+            font-size: 12pt;
+        }
+
+        .document {
+            background: white;
+            padding: 0.75in;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            
+            .document {
+                box-shadow: none;
+                padding: 0.4in;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .page-break {
+                page-break-after: always;
+            }
+            
+            h1 {
+                font-size: 20pt !important;
+                margin-bottom: 8px !important;
+            }
+            
+            h2 {
+                font-size: 16pt !important;
+                margin: 15px 0 8px 0 !important;
+            }
+            
+            h3 {
+                font-size: 13pt !important;
+                margin: 12px 0 6px 0 !important;
+            }
+            
+            .question {
+                margin: 8px 0 !important;
+            }
+            
+            .answer-space {
+                min-height: auto !important;
+                padding: 5px !important;
+            }
+            
+            .intro {
+                padding: 8px !important;
+                margin: 10px 0 !important;
+                font-size: 10pt !important;
+            }
+            
+            .student-info {
+                margin: 10px 0 !important;
+                font-size: 10pt !important;
+            }
+            
+            .header {
+                padding-bottom: 8px !important;
+                margin-bottom: 12px !important;
+            }
+            
+            h2 {
+                margin: 12px 0 8px 0 !important;
+                padding-bottom: 3px !important;
+            }
+            
+            h3 {
+                margin: 10px 0 5px 0 !important;
+            }
+            
+            .question-header {
+                font-size: 10pt !important;
+                margin-bottom: 3px !important;
+            }
+            
+            @page {
+                margin: 0.5in;
+            }
+        }
+
+        .header {
+            border-bottom: 3px solid #c00;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #c00;
+            font-size: 26pt;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11pt;
+            color: #333;
+            margin-top: 8px;
+        }
+
+        .student-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 11pt;
+        }
+
+        .field {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .field:last-child {
+            margin-right: 0;
+        }
+
+        .field label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .field .line {
+            border-bottom: 1px solid #000;
+            min-height: 20px;
+            padding: 2px 0;
+        }
+
+        .intro {
+            background: #fff0f0;
+            padding: 10px;
+            border-left: 4px solid #c00;
+            margin: 15px 0;
+            font-size: 11pt;
+        }
+
+        h2 {
+            color: #c00;
+            font-size: 18pt;
+            margin: 18px 0 10px 0;
+            border-bottom: 2px solid #c00;
+            padding-bottom: 4px;
+        }
+
+        h3 {
+            color: #8b0000;
+            font-size: 14pt;
+            margin: 15px 0 8px 0;
+            font-weight: bold;
+        }
+
+        .question {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+
+        .question-header {
+            font-weight: bold;
+            color: #8b0000;
+            margin-bottom: 5px;
+            font-size: 11pt;
+        }
+
+        .answer-space {
+            border: 2px solid #c00;
+            padding: 12px;
+            background: #fffef0;
+            margin-top: 5px;
+        }
+
+        .answer-label {
+            font-weight: bold;
+            color: #c00;
+            margin-bottom: 5px;
+        }
+
+        .answer-text {
+            color: #000;
+            line-height: 1.8;
+        }
+
+        .points {
+            color: #c00;
+            font-weight: bold;
+        }
+
+        code {
+            background: #e8e8e8;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            background: #c00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .print-btn:hover {
+            background: #a00;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .print-btn {
+                position: static;
+                margin-bottom: 20px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn no-print" onclick="window.print()">🖨️ Print Answer Key</button>
+
+    <div class="document">
+        <div class="header">
+            <h1>🐍 Python File I/O Mastery: Analysis - ANSWER KEY</h1>
+            <div class="subtitle">
+                <div><strong>Topic:</strong> Robust File Input/Output (I/O) and Error Handling</div>
+                <div><strong>Total Points:</strong> <span class="points">16</span></div>
+            </div>
+        </div>
+
+        <div class="student-info">
+            <div class="field" style="flex: 2;">
+                <label>Student Name:</label>
+                <div class="line"></div>
+            </div>
+            <div class="field">
+                <label>Date:</label>
+                <div class="line"></div>
+            </div>
+            <div class="field">
+                <label>Period:</label>
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <div class="intro">
+            <strong>Introduction:</strong> In this assignment, you will analyze a fully functional Python utility (mood_tracker.py) to understand key File I/O concepts, and then apply those concepts to complete a similar, simplified coding challenge.
+        </div>
+
+        <h2>Part A: Code Analysis (<span class="points">16 Points</span>)</h2>
+
+        <h3>Section 1: Core I/O Structure and Modes (<span class="points">8 Points</span>)</h3>
+
+        <div class="question">
+            <div class="question-header">1. Context Manager (<span class="points">2 pts</span>): What is the single most important reason for using the <code>with open(...)</code> structure instead of just calling <code>f = open(...)</code> and later <code>f.close()</code>?</div>
+            <div class="answer-space">
+                <div class="answer-label">Answer:</div>
+                <div class="answer-text">
+                    It guarantees the file is always closed, even if an error (exception) occurs while the program is reading or writing the file. This prevents file corruption and resource leaks.
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">2. File Modes (<span class="points">2 pts</span>): Explain the crucial difference between the file modes 'w' (write) and 'a' (append).</div>
+            <div class="answer-space">
+                <div class="answer-label">Answer:</div>
+                <div class="answer-text">
+                    'w' (write) mode creates a new file or overwrites all existing content if the file already exists. 'a' (append) mode adds new content to the very end of the file, preserving everything already there.
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">3. Catastrophic Failure (<span class="points">2 pts</span>): Why would using the 'w' mode every time a user logs a mood be a catastrophic failure for the application?</div>
+            <div class="answer-space">
+                <div class="answer-label">Answer:</div>
+                <div class="answer-text">
+                    Using 'w' would erase all previous log history every time the user ran the function, leaving only the single, newest log entry in the file.
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">4. Reading Methods (<span class="points">2 pts</span>): The <code>view_history</code> function uses <code>f.read()</code>. If the log file was 100 lines long, how many separate strings would <code>f.read()</code> return?</div>
+            <div class="answer-space">
+                <div class="answer-label">Answer:</div>
+                <div class="answer-text">
+                    One (1). The <code>f.read()</code> method reads the entire file content as a single, large string.
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <h3>Section 2: Defensive Programming and Formatting (<span class="points">8 Points</span>)</h3>
+
+        <div class="question">
+            <div class="question-header">5. Error Prevention (<span class="points">2 pts</span>): What specific Python error is the line <code>if not os.path.exists(FILENAME):</code> in the <code>view_history</code> function designed to prevent if the log file is missing?</div>
+            <div class="answer-space">
+                <div class="answer-label">Answer:</div>
+                <div class="answer-text">
+                    It prevents the <code>FileNotFoundError</code> that would occur if the program tried to open a file in read mode ('r') that doesn't exist.
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">6. Logic Flow (<span class="points">2 pts</span>): In the <code>log_mood_entry</code> function, what is the condition that determines whether the program uses 'w' mode (to create the header) or 'a' mode (to append the new entry)?</div>
+            <div class="answer-space">
+                <div class="answer-label">Answer:</div>
+                <div class="answer-text">
+                    The condition is <code>if not os.path.exists(FILENAME):</code>. If the file is missing (True), it uses 'w' to create the header. If the file is found (False), it proceeds to use 'a'.
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">7. Newline Character (<span class="points">2 pts</span>): Why is the newline character (<code>\n</code>) added to the <code>log_entry</code> string? What would happen to the file contents if this character was forgotten in append mode?</div>
+            <div class="answer-space">
+                <div class="answer-label">Answer:</div>
+                <div class="answer-text">
+                    It ensures that each new entry starts on a fresh line in the text file. If forgotten, all subsequent entries would be written immediately after the previous line without a line break, making the file unreadable.
+                </div>
+            </div>
+        </div>
+
+        <div class="question">
+            <div class="question-header">8. Robustness (<span class="points">2 pts</span>): The <code>main_menu</code> function uses a <code>try/except</code> block. What is the primary benefit of using <code>try/except</code> here?</div>
+            <div class="answer-space">
+                <div class="answer-label">Answer:</div>
+                <div class="answer-text">
+                    It prevents the program from crashing (or raising a <code>ValueError</code>) if the user enters non-numeric text (like "exit" or "a") instead of the expected menu options (1, 2, or 3).
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

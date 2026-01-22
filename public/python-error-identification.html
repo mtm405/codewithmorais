@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Error Identification 🐍</title>
+    <style>
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin: 0 0 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            margin: 0;
+            opacity: 0.95;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .question-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .timer-display {
+            font-size: 1.5em;
+            color: #f5576c;
+            font-weight: bold;
+        }
+
+        .instruction {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .instruction strong {
+            color: #f5576c;
+        }
+
+        .code-display {
+            background: #282c34;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .code-display::before {
+            content: 'Python';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            color: #61dafb;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .code-display pre {
+            margin: 30px 0 0 0;
+            padding: 0;
+            overflow-x: auto;
+        }
+
+        .code-display code {
+            color: #abb2bf;
+            font-size: 1.4em;
+            line-height: 1.6;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        .keyword { color: #c678dd; }
+        .function { color: #61dafb; }
+        .string { color: #98c379; }
+        .number { color: #d19a66; }
+        .comment { color: #5c6370; font-style: italic; }
+        .error-line { background: rgba(255, 87, 108, 0.2); display: block; }
+
+        .answer-section {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            display: none;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .answer-section.show {
+            display: block;
+        }
+
+        .answer-section h3 {
+            margin: 0 0 15px 0;
+            font-size: 2em;
+            color: #2d3436;
+        }
+
+        .answer-content {
+            font-size: 1.3em;
+            color: #2d3436;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .error-type {
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #f5576c;
+            margin: 10px 0;
+        }
+
+        .explanation {
+            margin-top: 15px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            gap: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-show-answer {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-show-answer:hover {
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+        }
+
+        .progress {
+            text-align: center;
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .completion-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 80px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .completion-screen.show {
+            display: block;
+        }
+
+        .completion-screen h2 {
+            font-size: 3em;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .completion-screen p {
+            font-size: 1.5em;
+            color: #2d3436;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            .question-card {
+                padding: 30px;
+            }
+            .code-display code {
+                font-size: 1.1em;
+            }
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐍 Python Error Identification Challenge</h1>
+            <p>Identify the type of error in each code snippet!</p>
+        </div>
+
+        <div id="questionCard" class="question-card">
+            <div>
+                <div class="question-header">
+                    <div class="question-number">Question <span id="questionNum">1</span></div>
+                    <div class="timer-display" id="timerDisplay"></div>
+                </div>
+
+                <div class="instruction">
+                    <strong>📝 Instructions:</strong> Look at the code below and write on your whiteboard what type of error this is!
+                </div>
+
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);">
+                    <h3 style="color: white; margin: 0 0 15px 0; font-size: 1.3em; text-align: center;">🔍 Error Word Bank</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">SyntaxError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">TypeError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">IndexError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">NameError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">ZeroDivisionError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">KeyError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">ValueError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">IndentationError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">FileNotFoundError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #667eea; font-size: 0.95em;">ModuleNotFoundError</div>
+                        <div style="background: white; padding: 10px 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #f5576c; font-size: 0.95em;">No Error ✅</div>
+                    </div>
+                </div>
+
+                <div class="code-display" id="codeDisplay">
+                    <!-- Code will be inserted here -->
+                </div>
+
+                <div id="answerSection" class="answer-section">
+                    <h3>✅ Answer:</h3>
+                    <div class="answer-content" id="answerContent">
+                        <!-- Answer will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn" id="prevBtn" onclick="previousQuestion()" disabled>⬅️ Previous</button>
+                <div class="progress" id="progress">Question 1 of 10</div>
+                <button class="btn btn-show-answer" id="showAnswerBtn" onclick="toggleAnswer()">Show Answer</button>
+                <button class="btn" id="nextBtn" onclick="nextQuestion()">Next ➡️</button>
+            </div>
+        </div>
+
+        <div id="completionScreen" class="completion-screen">
+            <h2>🎉 Great Job!</h2>
+            <p>You've completed all the error identification questions!</p>
+            <p style="margin-top: 30px;">Keep practicing to master Python debugging! 💪</p>
+            <button class="btn" onclick="restartQuiz()" style="margin-top: 40px;">🔄 Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                code: `<span class="keyword">print</span>(<span class="string">"Hello World"</span>`,
+                errorType: "SyntaxError",
+                explanation: "Missing closing parenthesis. Python requires all opening parentheses to be closed."
+            },
+            {
+                code: `age = <span class="string">"25"</span>\nresult = age + <span class="number">5</span>`,
+                errorType: "TypeError",
+                explanation: "Cannot add a string and an integer. You need to convert the string to an int first: int(age) + 5"
+            },
+            {
+                code: `numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]\n<span class="keyword">print</span>(numbers[<span class="number">3</span>])`,
+                errorType: "IndexError",
+                explanation: "List index out of range. The list has indices 0, 1, 2, but we're trying to access index 3."
+            },
+            {
+                code: `name = <span class="string">"Alice"</span>\n<span class="keyword">print</span>(Name)`,
+                errorType: "NameError",
+                explanation: "Variable 'Name' is not defined. Python is case-sensitive, so 'name' and 'Name' are different variables."
+            },
+            {
+                code: `result = <span class="number">10</span> / <span class="number">0</span>`,
+                errorType: "ZeroDivisionError",
+                explanation: "Cannot divide by zero. Division by zero is mathematically undefined and causes this error."
+            },
+            {
+                code: `student = {<span class="string">"name"</span>: <span class="string">"Bob"</span>, <span class="string">"age"</span>: <span class="number">16</span>}\n<span class="keyword">print</span>(student[<span class="string">"grade"</span>])`,
+                errorType: "KeyError",
+                explanation: "The key 'grade' does not exist in the dictionary. Only 'name' and 'age' are valid keys."
+            },
+            {
+                code: `number = <span class="function">int</span>(<span class="string">"hello"</span>)`,
+                errorType: "ValueError",
+                explanation: "Cannot convert the string 'hello' to an integer. The string must contain only numeric characters."
+            },
+            {
+                code: `<span class="keyword">def</span> <span class="function">greet</span>():\n<span class="keyword">print</span>(<span class="string">"Hello"</span>)`,
+                errorType: "IndentationError",
+                explanation: "Expected an indented block. The print statement must be indented inside the function."
+            },
+            {
+                code: `my_file = <span class="function">open</span>(<span class="string">"nonexistent.txt"</span>, <span class="string">"r"</span>)`,
+                errorType: "FileNotFoundError",
+                explanation: "The file 'nonexistent.txt' does not exist in the current directory. Check the filename and path."
+            },
+            {
+                code: `text = <span class="string">"Python"</span>\ntext[<span class="number">0</span>] = <span class="string">"J"</span>`,
+                errorType: "TypeError",
+                explanation: "Strings are immutable in Python. You cannot change individual characters. You would need to create a new string instead."
+            },
+            {
+                code: `<span class="keyword">def</span> <span class="function">add</span>(a, b):\n    <span class="keyword">return</span> a + b\n\nresult = <span class="function">add</span>(<span class="number">5</span>)`,
+                errorType: "TypeError",
+                explanation: "Missing required positional argument. The function add() requires 2 arguments but only 1 was provided."
+            },
+            {
+                code: `colors = (<span class="string">"red"</span>, <span class="string">"blue"</span>, <span class="string">"green"</span>)\ncolors[<span class="number">0</span>] = <span class="string">"yellow"</span>`,
+                errorType: "TypeError",
+                explanation: "Tuples are immutable. You cannot modify elements of a tuple after it's created."
+            },
+            {
+                code: `<span class="keyword">import</span> nonexistent_module`,
+                errorType: "ModuleNotFoundError",
+                explanation: "The module 'nonexistent_module' is not installed or does not exist. Check the module name or install it first."
+            },
+            {
+                code: `numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]\n<span class="keyword">del</span> numbers[<span class="number">1</span>]\n<span class="keyword">print</span>(numbers[<span class="number">2</span>])`,
+                errorType: "IndexError",
+                explanation: "After deleting index 1, the list becomes [1, 3]. Index 2 no longer exists."
+            },
+            {
+                code: `<span class="keyword">if</span> <span class="number">5</span> > <span class="number">3</span>\n    <span class="keyword">print</span>(<span class="string">"True"</span>)`,
+                errorType: "SyntaxError",
+                explanation: "Missing colon (:) after the if statement. Python requires a colon to end conditional statements."
+            },
+            {
+                code: `<span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">5</span>)\n    <span class="keyword">print</span>(i)`,
+                errorType: "SyntaxError",
+                explanation: "Missing colon (:) after the for statement. All loop declarations must end with a colon."
+            },
+            {
+                code: `scores = [<span class="number">85</span>, <span class="number">90</span>, <span class="number">78</span>]\ntotal = <span class="function">sum</span>(scores)\naverage = total / <span class="function">len</span>(scors)`,
+                errorType: "NameError",
+                explanation: "Variable 'scors' is not defined. It's a typo - should be 'scores' with an 'e'."
+            },
+            {
+                code: `data = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]\ndata.<span class="function">append</span>(<span class="number">4</span>, <span class="number">5</span>)`,
+                errorType: "TypeError",
+                explanation: "append() takes exactly one argument (2 given). Use extend() to add multiple items or call append() multiple times."
+            },
+            {
+                code: `x = <span class="number">10</span>\ny = <span class="string">"20"</span>\nresult = x * y`,
+                errorType: "TypeError",
+                explanation: "Cannot multiply an integer and a string in this context. Convert the string to int first: x * int(y)"
+            },
+            {
+                code: `<span class="keyword">def</span> <span class="function">calculate</span>(a, b):\n    <span class="keyword">return</span> a + b\n\n<span class="keyword">print</span>(<span class="function">calculate</span>(<span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>))`,
+                errorType: "TypeError",
+                explanation: "calculate() takes 2 positional arguments but 3 were given. The function only accepts two parameters."
+            },
+            {
+                code: `price = <span class="number">19.99</span>\ntax = <span class="number">0.08</span>\ntotal = price + tax\n<span class="keyword">print</span>(<span class="string">f"Total: $"</span> + total)`,
+                errorType: "TypeError",
+                explanation: "Cannot concatenate string and float. Use f-string properly: f\"Total: ${total}\" or convert to string."
+            },
+            {
+                code: `items = {<span class="string">"apple"</span>: <span class="number">1</span>, <span class="string">"banana"</span>: <span class="number">2</span>}\n<span class="keyword">del</span> items[<span class="string">"orange"</span>]`,
+                errorType: "KeyError",
+                explanation: "Cannot delete key 'orange' because it doesn't exist in the dictionary. Check if key exists first."
+            },
+            {
+                code: `<span class="keyword">while</span> <span class="keyword">True</span>\n    <span class="keyword">print</span>(<span class="string">"Loop"</span>)\n    <span class="keyword">break</span>`,
+                errorType: "SyntaxError",
+                explanation: "Missing colon (:) after while statement. The while loop declaration must end with a colon."
+            },
+            {
+                code: `name = <span class="string">"Bob"</span>\nage = <span class="number">15</span>\n<span class="keyword">print</span>(<span class="string">"Name: "</span> + name + <span class="string">", Age: "</span> + age)`,
+                errorType: "TypeError",
+                explanation: "Cannot concatenate string and integer. Convert age to string: str(age) or use f-strings."
+            },
+            {
+                code: `numbers = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>]\nnumbers[<span class="number">-4</span>]`,
+                errorType: "IndexError",
+                explanation: "List index out of range. Negative index -4 is beyond the list length. Valid negative indices are -1, -2, -3."
+            },
+            {
+                code: `data = <span class="string">"Python"</span>\n<span class="keyword">del</span> data[<span class="number">0</span>]`,
+                errorType: "TypeError",
+                explanation: "Strings don't support item deletion. Strings are immutable. Create a new string instead: data = data[1:]"
+            },
+            {
+                code: `grades = {<span class="string">"math"</span>: <span class="number">90</span>, <span class="string">"science"</span>: <span class="number">85</span>}\ngrades[<span class="number">0</span>]`,
+                errorType: "KeyError",
+                explanation: "Dictionaries use keys, not numeric indices. Use grades[\"math\"] or grades[\"science\"] instead of grades[0]."
+            },
+            {
+                code: `<span class="keyword">try</span>:\n    x = <span class="number">10</span>\n<span class="keyword">except</span>`,
+                errorType: "SyntaxError",
+                explanation: "Invalid syntax in except clause. The except statement needs to specify an exception type or use a colon."
+            },
+            {
+                code: `count = <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter a number: "</span>))`,
+                errorType: "ValueError",
+                explanation: "This will cause ValueError if user enters non-numeric input like 'abc'. Always validate input or use try-except."
+            },
+            {
+                code: `<span class="keyword">def</span> <span class="function">square</span>(num):\n    <span class="keyword">return</span> num ** <span class="number">2</span>\n\nresult = sqaure(<span class="number">5</span>)`,
+                errorType: "NameError",
+                explanation: "Function 'sqaure' is not defined. It's a typo - should be 'square' with correct spelling."
+            },
+            {
+                code: `<span class="keyword">class</span> <span class="function">Student</span>:\n<span class="keyword">def</span> __init__(self, name):\nself.name = name`,
+                errorType: "IndentationError",
+                explanation: "Expected an indented block. Methods inside a class must be indented, and code inside methods must be further indented."
+            },
+            {
+                code: `info = (<span class="string">"Alice"</span>, <span class="number">25</span>, <span class="string">"Engineer"</span>)\ninfo[<span class="number">5</span>]`,
+                errorType: "IndexError",
+                explanation: "Tuple index out of range. The tuple has only 3 elements (indices 0, 1, 2), but we're trying to access index 5."
+            },
+            {
+                code: `numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]\ntotal = numbers + <span class="number">10</span>`,
+                errorType: "TypeError",
+                explanation: "Cannot concatenate list and integer. Use numbers.append(10) or numbers + [10] to add to a list."
+            },
+            {
+                code: `text = <span class="string">"Hello"</span>\nresult = text.<span class="function">split</span>(<span class="string">","</span>, <span class="string">" "</span>)`,
+                errorType: "TypeError",
+                explanation: "split() takes at most 1 argument (2 given). The second parameter should be maxsplit (an integer), not another separator."
+            },
+            {
+                code: `colors = [<span class="string">"red"</span>, <span class="string">"blue"</span>]\ncolors[<span class="number">1</span>:<span class="number">3</span>] = <span class="string">"green"</span>`,
+                errorType: "TypeError",
+                explanation: "Can only assign an iterable to a slice. Use colors[1:3] = [\"green\"] with a list, not a string."
+            },
+            {
+                code: `x = <span class="string">"5"</span>\ny = <span class="string">"3"</span>\nresult = x - y`,
+                errorType: "TypeError",
+                explanation: "Unsupported operand types for -: 'str' and 'str'. Convert strings to integers first: int(x) - int(y)"
+            },
+            {
+                code: `<span class="keyword">def</span> <span class="function">greet</span>(name):\n    <span class="keyword">print</span>(<span class="string">f"Hello, {name}"</span>)\n\n<span class="function">greet</span>()`,
+                errorType: "TypeError",
+                explanation: "Missing required positional argument: 'name'. The function requires one argument but none was provided."
+            },
+            {
+                code: `scores = [<span class="number">95</span>, <span class="number">87</span>, <span class="number">92</span>]\nscores.<span class="function">insert</span>(<span class="number">10</span>, <span class="number">100</span>)`,
+                errorType: "No Error",
+                explanation: "This is valid! insert() with an index beyond the list length will simply append to the end. No error occurs."
+            },
+            {
+                code: `message = <span class="string">"Python"</span>\n<span class="keyword">print</span>(message[<span class="number">-10</span>])`,
+                errorType: "IndexError",
+                explanation: "String index out of range. The string has only 6 characters, so negative index -10 is beyond the string's bounds."
+            },
+            {
+                code: `num1 = <span class="number">10</span>\nnum2 = <span class="string">"5"</span>\nresult = num1 / num2`,
+                errorType: "TypeError",
+                explanation: "Unsupported operand types for /: 'int' and 'str'. Convert the string to a number: num1 / int(num2)"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let timerInterval = null;
+        let seconds = 0;
+
+        function displayQuestion() {
+            const q = questions[currentQuestion];
+            
+            // Update question number
+            document.getElementById('questionNum').textContent = currentQuestion + 1;
+            document.getElementById('progress').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+            
+            // Display code
+            document.getElementById('codeDisplay').innerHTML = `
+                <pre><code>${q.code}</code></pre>
+            `;
+            
+            // Reset answer section
+            document.getElementById('answerSection').classList.remove('show');
+            document.getElementById('showAnswerBtn').textContent = 'Show Answer';
+            
+            // Update buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').disabled = false;
+            
+            // Reset and start timer
+            resetTimer();
+            startTimer();
+        }
+
+        function toggleAnswer() {
+            const answerSection = document.getElementById('answerSection');
+            const btn = document.getElementById('showAnswerBtn');
+            
+            if (answerSection.classList.contains('show')) {
+                answerSection.classList.remove('show');
+                btn.textContent = 'Show Answer';
+                startTimer();
+            } else {
+                const q = questions[currentQuestion];
+                document.getElementById('answerContent').innerHTML = `
+                    <div class="error-type">${q.errorType}</div>
+                    <div class="explanation">${q.explanation}</div>
+                `;
+                answerSection.classList.add('show');
+                btn.textContent = 'Hide Answer';
+                stopTimer();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                // Show completion screen
+                document.getElementById('questionCard').style.display = 'none';
+                document.getElementById('completionScreen').classList.add('show');
+                stopTimer();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+            }
+        }
+
+        function startTimer() {
+            seconds = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                seconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function resetTimer() {
+            stopTimer();
+            seconds = 0;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `⏱️ ${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            document.getElementById('questionCard').style.display = 'flex';
+            document.getElementById('completionScreen').classList.remove('show');
+            displayQuestion();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentQuestion < questions.length - 1) {
+                nextQuestion();
+            } else if (e.key === 'ArrowLeft' && currentQuestion > 0) {
+                previousQuestion();
+            } else if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                toggleAnswer();
+            }
+        });
+
+        // Initialize
+        displayQuestion();
+    </script>
+</body>
+</html>

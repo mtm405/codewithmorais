@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Quiz Prep - Day 1 & 2 Lessons</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .quiz-prep-banner {
+            background: #ffc107;
+            color: #000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .lesson-nav {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 3px solid #667eea;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .section {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.5s;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .topic-card {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+        
+        .topic-card h2 {
+            color: #2a5298;
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 1.1em;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+            border: 1px solid #333;
+            line-height: 1.8;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            white-space: pre-wrap;
+        }
+        
+        .code-block::before {
+            content: 'Python';
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+        
+        .code-block .keyword { color: #569cd6; font-weight: bold; }
+        .code-block .string { color: #ce9178; }
+        .code-block .function { color: #dcdcaa; }
+        .code-block .comment { color: #6a9955; font-style: italic; }
+        .code-block .number { color: #b5cea8; }
+        .code-block .operator { color: #d4d4d4; }
+        .code-block .variable { color: #9cdcfe; }
+        
+        .code-explanation {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+        
+        .code-explanation .explain-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .code-output {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            margin: 15px 0;
+            border: 2px solid #0f0;
+            white-space: pre-wrap;
+        }
+        
+        .code-output::before {
+            content: '>>> Output:';
+            display: block;
+            color: #fff;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .practice-box {
+            background: white;
+            border: 3px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .practice-box h3 {
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        
+        .btn-practice {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn-practice:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .key-concept {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .key-concept strong {
+            color: #856404;
+        }
+        
+        .common-mistake {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .common-mistake strong {
+            color: #721c24;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            resize: vertical;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .quiz-hint {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .day-header {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Python Quiz Preparation</h1>
+            <p>2-Day Intensive Review | Quiz Thursday</p>
+        </header>
+        
+        <div class="quiz-prep-banner">
+            ⚠️ Focus Areas: Loops, Exception Handling, File Operations, Functions & Modules
+        </div>
+        
+        <nav class="lesson-nav">
+            <button class="nav-btn active" onclick="showSection('overview')">📋 Overview</button>
+            <button class="nav-btn" onclick="showSection('day1')">📅 Day 1</button>
+            <button class="nav-btn" onclick="showSection('day2')">📅 Day 2</button>
+            <button class="nav-btn" onclick="showSection('practice')">✏️ Practice</button>
+            <button class="nav-btn" onclick="showSection('checklist')">✅ Checklist</button>
+        </nav>
+        
+        <!-- OVERVIEW SECTION -->
+        <div id="overview" class="section active">
+            <h1 style="color: #2a5298; margin-bottom: 20px;">📋 Quiz Preparation Overview</h1>
+            
+            <div class="quiz-hint">
+                <h3>🎯 What Students Need to Master:</h3>
+                <p>This lesson plan covers ALL topics that appear on Thursday's quiz. Students will practice with DIFFERENT examples so they understand the concepts, not just memorize answers.</p>
+            </div>
+            
+            <div class="topic-card">
+                <h2>Day 1 Focus (50 min):</h2>
+                <ul style="margin-left: 30px; line-height: 2;">
+                    <li><strong>Nested Loops</strong> - Understanding inner/outer loop execution</li>
+                    <li><strong>Exception Handling</strong> - try/except/else/finally flow</li>
+                    <li><strong>Syntax vs Runtime Errors</strong> - Identifying and fixing errors</li>
+                    <li><strong>Continue Statement</strong> - Skipping loop iterations</li>
+                    <li><strong>Conditionals</strong> - if/elif/else with logical operators</li>
+                </ul>
+            </div>
+            
+            <div class="topic-card">
+                <h2>Day 2 Focus (50 min):</h2>
+                <ul style="margin-left: 30px; line-height: 2;">
+                    <li><strong>File Operations</strong> - open(), write(), close(), os.path</li>
+                    <li><strong>Functions with Defaults</strong> - Creating and calling functions</li>
+                    <li><strong>System & Random Modules</strong> - os, sys.argv, random</li>
+                    <li><strong>DateTime Module</strong> - Formatting dates with strftime</li>
+                    <li><strong>List Iteration</strong> - Looping through tuples and lists</li>
+                </ul>
+            </div>
+            
+            <div class="common-mistake">
+                <strong>⚠️ Most Common Student Mistakes:</strong>
+                <ol style="margin-left: 30px; margin-top: 10px;">
+                    <li>Forgetting colons (:) after if/for/def statements</li>
+                    <li>Incorrect indentation in code blocks</li>
+                    <li>Not understanding when finally block executes</li>
+                    <li>Confusing range(1,10) vs range(1,11)</li>
+                    <li>Using wrong logical operators (&& vs and)</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- DAY 1 SECTION -->
+        <div id="day1" class="section">
+            <div class="day-header">
+                <h1>📅 Day 1: Flow Control & Error Handling (50 min)</h1>
+                <p>Focus: Loops, Exceptions, Syntax</p>
+            </div>
+            
+            <!-- Topic 1: Nested Loops -->
+            <div class="topic-card">
+                <h2>🔁 Topic 1: Nested Loops (15 min)</h2>
+                
+                <div class="key-concept">
+                    <strong>Key Concept:</strong> A nested loop is a loop inside another loop. The <strong>outer loop</strong> runs once, then the <strong>inner loop</strong> runs to COMPLETION before the outer loop advances to its next iteration.
+                </div>
+                
+                <p style="font-size: 1.1em; margin: 15px 0;"><strong>Think of it like this:</strong></p>
+                <ul style="margin-left: 30px; line-height: 2;">
+                    <li>Outer loop = Which row you're on</li>
+                    <li>Inner loop = Going through every seat in that row</li>
+                    <li>You must complete ALL seats in a row before moving to the next row</li>
+                </ul>
+                
+                <p style="margin: 20px 0;"><strong>📊 Real-world Example:</strong> Creating a seating chart for a theater with 5 rows and 8 seats per row.</p>
+                
+                <div class="code-block">
+<span class="comment"># Outer loop: Iterate through each ROW</span>
+<span class="keyword">for</span> <span class="variable">row</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, <span class="number">6</span>):  <span class="comment"># Creates numbers 1, 2, 3, 4, 5</span>
+    
+    <span class="comment"># Inner loop: Iterate through each SEAT in the current row</span>
+    <span class="keyword">for</span> <span class="variable">seat</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, <span class="number">9</span>):  <span class="comment"># Creates numbers 1, 2, 3, 4, 5, 6, 7, 8</span>
+        <span class="function">print</span>(<span class="string">f"Row </span>{<span class="variable">row</span>}<span class="string">, Seat </span>{<span class="variable">seat</span>}<span class="string">"</span>)
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">🔍 How This Works Step-by-Step:</span>
+                    <strong>Iteration 1:</strong> row = 1<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• seat = 1 → Prints "Row 1, Seat 1"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• seat = 2 → Prints "Row 1, Seat 2"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• ... continues through seat = 8<br>
+                    <strong>Iteration 2:</strong> row = 2<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• seat = 1 → Prints "Row 2, Seat 1"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• seat = 2 → Prints "Row 2, Seat 2"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• ... continues through seat = 8<br>
+                    <strong>And so on...</strong> until all 5 rows are complete.<br><br>
+                    <strong>Total output lines:</strong> 5 rows × 8 seats = 40 lines
+                </div>
+                
+                <div class="code-output">
+Row 1, Seat 1
+Row 1, Seat 2
+Row 1, Seat 3
+...
+Row 1, Seat 8
+Row 2, Seat 1
+Row 2, Seat 2
+...
+Row 5, Seat 8
+                </div>
+                
+                <div class="common-mistake">
+                    <strong>⚠️ Common Mistake #1:</strong> Using <code>range(1, 10)</code> when you want 10 items.<br>
+                    <strong>Fix:</strong> Use <code>range(1, 11)</code> - the second number is EXCLUSIVE (not included).<br><br>
+                    <strong>⚠️ Common Mistake #2:</strong> Mixing up the order of loops.<br>
+                    <strong>Remember:</strong> The first loop you write is the OUTER loop, the second is INNER.
+                </div>
+                
+                <div class="quiz-hint">
+                    <strong>Quiz Connection:</strong> You'll see questions about creating attendance sheets, sign-in systems, or similar patterns. Focus on understanding range() endpoints!
+                </div>
+                
+                <div class="practice-box">
+                    <h3>✏️ Practice: Library Bookshelf</h3>
+                    <p>Write code to label 4 shelves with 6 books each. Output should be "Shelf 1, Book 1" through "Shelf 4, Book 6".</p>
+                    <textarea id="nested-loop-practice" placeholder="Write your code here..."></textarea>
+                    <button class="btn-practice" onclick="checkNestedLoop()">Check Answer</button>
+                    <div id="nested-loop-feedback" class="feedback"></div>
+                </div>
+                
+                <div class="common-mistake">
+                    <strong>Common Mistake:</strong> Using range(1,10) when you want 10 items. Remember: range(1,11) gives you 1-10!
+                </div>
+            </div>
+            
+            <!-- Topic 2: Exception Handling -->
+            <div class="topic-card">
+                <h2>🛡️ Topic 2: Exception Handling (20 min)</h2>
+                
+                <div class="key-concept">
+                    <strong>What is Exception Handling?</strong> A way to prevent your program from crashing when errors occur. Instead of stopping, you can "catch" the error and handle it gracefully.<br><br>
+                    <strong>🔥 Critical Rule:</strong> The <code>finally</code> block ALWAYS executes, whether an error happened or not. It's used for cleanup (closing files, saving data, etc.)
+                </div>
+                
+                <p style="font-size: 1.1em; margin: 20px 0;"><strong>The Four Blocks of Exception Handling:</strong></p>
+                <ol style="margin-left: 30px; line-height: 2;">
+                    <li><strong>try:</strong> The code that MIGHT cause an error (risky code)</li>
+                    <li><strong>except:</strong> What to do IF an error occurs (backup plan)</li>
+                    <li><strong>else:</strong> What to do if NO error occurs (success actions)</li>
+                    <li><strong>finally:</strong> Code that ALWAYS runs (cleanup, regardless of errors)</li>
+                </ol>
+                
+                <p style="margin: 20px 0;"><strong>📊 Real Example: Safe Calculator</strong></p>
+                
+                <div class="code-block">
+<span class="keyword">try</span>:
+    <span class="comment"># RISKY CODE: User might enter text or divide by zero</span>
+    <span class="variable">num1</span> <span class="operator">=</span> <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter a number: "</span>))
+    <span class="variable">num2</span> <span class="operator">=</span> <span class="function">int</span>(<span class="function">input</span>(<span class="string">"Enter another number: "</span>))
+    <span class="variable">result</span> <span class="operator">=</span> <span class="variable">num1</span> <span class="operator">/</span> <span class="variable">num2</span>
+    <span class="function">print</span>(<span class="string">f"Result: </span>{<span class="variable">result</span>}<span class="string">"</span>)
+
+<span class="keyword">except</span> <span class="function">ZeroDivisionError</span>:
+    <span class="comment"># Handles ONLY division by zero errors</span>
+    <span class="function">print</span>(<span class="string">"❌ Cannot divide by zero!"</span>)
+
+<span class="keyword">except</span> <span class="function">ValueError</span>:
+    <span class="comment"># Handles ONLY invalid input (like entering "hello")</span>
+    <span class="function">print</span>(<span class="string">"❌ Invalid input! Please enter numbers only."</span>)
+
+<span class="keyword">else</span>:
+    <span class="comment"># Only runs if NO errors occurred</span>
+    <span class="function">print</span>(<span class="string">"✓ Division successful!"</span>)
+
+<span class="keyword">finally</span>:
+    <span class="comment"># ALWAYS runs, no matter what happened above</span>
+    <span class="function">print</span>(<span class="string">"Thank you for using the calculator."</span>)
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">🔍 Execution Flow Examples:</span>
+                    
+                    <strong>Scenario 1: User enters 10 and 2</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;✓ try block executes → prints "Result: 5.0"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;✓ else block executes → prints "Division successful!"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;✓ finally block executes → prints "Thank you..."<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;❌ except blocks are SKIPPED<br><br>
+                    
+                    <strong>Scenario 2: User enters 10 and 0</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;✓ try block starts, but crashes at division<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;✓ except ZeroDivisionError executes → prints "Cannot divide by zero!"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;✓ finally block executes → prints "Thank you..."<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;❌ else block is SKIPPED (error occurred)<br><br>
+                    
+                    <strong>Scenario 3: User enters "hello" and 5</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;✓ try block starts, but crashes at int("hello")<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;✓ except ValueError executes → prints "Invalid input!"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;✓ finally block executes → prints "Thank you..."<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;❌ else block is SKIPPED (error occurred)
+                </div>
+                
+                <div class="common-mistake">
+                    <strong>⚠️ Students Often Think:</strong> "finally only runs if there's an error"<br>
+                    <strong>✓ TRUTH:</strong> finally runs EVERY TIME, whether there's an error or not!<br><br>
+                    <strong>💡 Memory Trick:</strong> "finally = FINALLY, this will ALWAYS happen"
+                </div>
+                
+                <div class="quiz-hint">
+                    <strong>Quiz Connection:</strong> You'll be asked about which blocks execute in different scenarios. Remember: finally ALWAYS runs!
+                </div>
+                
+                <div class="practice-box">
+                    <h3>✏️ Practice: Safe List Access</h3>
+                    <p>Write code that tries to access index 5 in a list, handles the IndexError if it occurs, and always prints "List access complete" at the end.</p>
+                    <textarea id="exception-practice" placeholder="Write your code here..."></textarea>
+                    <button class="btn-practice" onclick="checkException()">Check Answer</button>
+                    <div id="exception-feedback" class="feedback"></div>
+                </div>
+            </div>
+            
+            <!-- Topic 3: Syntax Errors -->
+            <div class="topic-card">
+                <h2>❌ Topic 3: Syntax vs Runtime Errors (10 min)</h2>
+                
+                <div class="key-concept">
+                    <strong>Syntax Error:</strong> Code won't run at all - Python doesn't understand the structure.<br>
+                    <strong>Runtime Error:</strong> Code runs but crashes when executing a specific line.
+                </div>
+                
+                <p><strong>Common Syntax Errors:</strong></p>
+                <div class="code-block">
+<span class="comment"># Missing colon</span>
+<span class="keyword">if</span> x > <span class="number">10</span>  <span class="comment"># ❌ Missing :</span>
+    <span class="function">print</span>(<span class="string">"Big"</span>)
+
+<span class="comment"># Wrong indentation</span>
+<span class="keyword">if</span> x > <span class="number">10</span>:
+<span class="function">print</span>(<span class="string">"Big"</span>)  <span class="comment"># ❌ Not indented</span>
+
+<span class="comment"># Missing quotes</span>
+<span class="function">print</span>(Hello)  <span class="comment"># ❌ Should be "Hello"</span>
+                </div>
+                
+                <p><strong>Common Runtime Errors:</strong></p>
+                <div class="code-block">
+<span class="comment"># IndexError</span>
+myList = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]
+<span class="function">print</span>(myList[<span class="number">5</span>])  <span class="comment"># ❌ Index out of range</span>
+
+<span class="comment"># ZeroDivisionError</span>
+result = <span class="number">10</span> / <span class="number">0</span>  <span class="comment"># ❌ Cannot divide by zero</span>
+
+<span class="comment"># NameError</span>
+<span class="function">print</span>(undefinedVariable)  <span class="comment"># ❌ Variable not defined</span>
+                </div>
+                
+                <div class="quiz-hint">
+                    <strong>Quiz Connection:</strong> You'll need to identify what type of error code will produce and how to fix it.
+                </div>
+            </div>
+            
+            <!-- Topic 4: Continue Statement -->
+            <div class="topic-card">
+                <h2>⏭️ Topic 4: Continue Statement (5 min)</h2>
+                
+                <div class="key-concept">
+                    <strong>What is Continue?</strong> The <code>continue</code> statement tells Python to <strong>skip the rest of the current loop iteration</strong> and immediately jump to the next one. Think of it as a "skip button" for loops.<br><br>
+                    <strong>When to use it:</strong> When you want to skip certain items in a loop but keep the loop running.
+                </div>
+                
+                <p style="margin: 20px 0;"><strong>📊 Real Example: Weekly Workout Schedule</strong></p>
+                
+                <div class="code-block">
+<span class="comment"># Loop through 7 days of the week</span>
+<span class="keyword">for</span> <span class="variable">day</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>, <span class="number">8</span>):  <span class="comment"># Days 1 through 7</span>
+    
+    <span class="keyword">if</span> <span class="variable">day</span> <span class="operator">==</span> <span class="number">3</span>:
+        <span class="function">print</span>(<span class="string">"Day 3: Rest day 😴"</span>)
+        <span class="keyword">continue</span>  <span class="comment"># SKIP the workout print below</span>
+    
+    <span class="comment"># This line is SKIPPED on day 3</span>
+    <span class="function">print</span>(<span class="string">f"Day </span>{<span class="variable">day</span>}<span class="string">: Workout 💪"</span>)
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">🔍 Step-by-Step Execution:</span>
+                    
+                    <strong>Day 1:</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Check if day == 3? No<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Print "Day 1: Workout 💪"<br><br>
+                    
+                    <strong>Day 2:</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Check if day == 3? No<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Print "Day 2: Workout 💪"<br><br>
+                    
+                    <strong>Day 3:</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Check if day == 3? YES!<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Print "Day 3: Rest day 😴"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong>Continue executes → JUMPS to Day 4</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• ❌ "Day 3: Workout" is NEVER printed<br><br>
+                    
+                    <strong>Day 4-7:</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Check if day == 3? No<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Print "Day X: Workout 💪"
+                </div>
+                
+                <div class="code-output">
+Day 1: Workout 💪
+Day 2: Workout 💪
+Day 3: Rest day 😴
+Day 4: Workout 💪
+Day 5: Workout 💪
+Day 6: Workout 💪
+Day 7: Workout 💪
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">💡 Continue vs Break:</span>
+                    <strong>continue</strong> → Skips to NEXT iteration (loop continues)<br>
+                    <strong>break</strong> → Exits the loop ENTIRELY (loop stops)<br><br>
+                    
+                    <strong>Example:</strong><br>
+                    • continue on day 3 → Days 4-7 still run<br>
+                    • break on day 3 → Days 4-7 NEVER run (loop ends)
+                </div>
+                
+                <div class="common-mistake">
+                    <strong>⚠️ Common Mistake:</strong> Thinking continue stops the entire loop.<br>
+                    <strong>✓ TRUTH:</strong> Continue only skips the CURRENT iteration, the loop keeps going!
+                </div>
+                
+                <div class="quiz-hint">
+                    <strong>Quiz Connection:</strong> Watch for questions about skipping specific days in a program or loop.
+                </div>
+            </div>
+        </div>
+        
+        <!-- DAY 2 SECTION -->
+        <div id="day2" class="section">
+            <div class="day-header">
+                <h1>📅 Day 2: Files, Functions & Modules (50 min)</h1>
+                <p>Focus: File I/O, Functions, Modules</p>
+            </div>
+            
+            <!-- Topic 1: File Operations -->
+            <div class="topic-card">
+                <h2>📁 Topic 1: File Operations (20 min)</h2>
+                
+                <div class="key-concept">
+                    <strong>What are File Operations?</strong> Ways to save data permanently (even after program closes) by writing to files, and ways to retrieve that data by reading from files.<br><br>
+                    <strong>Why File Operations Matter:</strong> Without files, all your program data disappears when it closes. Files let you store scores, user data, logs, etc.
+                </div>
+                
+                <p style="font-size: 1.1em; margin: 20px 0;"><strong>📝 File Modes Explained:</strong></p>
+                <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                    <tr style="background: #667eea; color: white;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Mode</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">Name</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #dee2e6;">What It Does</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #dee2e6;"><code>'w'</code></td>
+                        <td style="padding: 12px; border: 1px solid #dee2e6;">Write</td>
+                        <td style="padding: 12px; border: 1px solid #dee2e6;">Creates NEW file or ERASES existing file and writes from scratch</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                        <td style="padding: 12px; border: 1px solid #dee2e6;"><code>'a'</code></td>
+                        <td style="padding: 12px; border: 1px solid #dee2e6;">Append</td>
+                        <td style="padding: 12px; border: 1px solid #dee2e6;">Adds to the END of existing file (doesn't erase old data)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #dee2e6;"><code>'r'</code></td>
+                        <td style="padding: 12px; border: 1px solid #dee2e6;">Read</td>
+                        <td style="padding: 12px; border: 1px solid #dee2e6;">Opens file to read data (file must already exist)</td>
+                    </tr>
+                </table>
+                
+                <p style="margin: 20px 0;"><strong>📊 Method 1: Manual File Handling (Must Close File)</strong></p>
+                
+                <div class="code-block">
+<span class="comment"># Open file for writing (creates new file or overwrites existing)</span>
+<span class="variable">writeFile</span> <span class="operator">=</span> <span class="function">open</span>(<span class="string">"results.txt"</span>, <span class="string">'w'</span>)
+
+<span class="comment"># Write text to the file</span>
+<span class="variable">writeFile</span>.<span class="function">write</span>(<span class="string">"Hello, World!"</span>)
+
+<span class="comment"># IMPORTANT: Always close file to save changes!</span>
+<span class="variable">writeFile</span>.<span class="function">close</span>()
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">🔍 Why You Must Close Files:</span>
+                    • Closing saves your changes to disk<br>
+                    • Closing frees up computer memory<br>
+                    • If you don't close, data might not save!<br>
+                    • Like saving a document - if you don't save, changes are lost
+                </div>
+                
+                <p style="margin: 20px 0;"><strong>📊 Method 2: With Statement (Auto-Closes)</strong></p>
+                
+                <div class="code-block">
+<span class="comment"># 'with' automatically closes file when done</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">"results.txt"</span>, <span class="string">'w'</span>) <span class="keyword">as</span> <span class="variable">writeFile</span>:
+    <span class="variable">writeFile</span>.<span class="function">write</span>(<span class="string">"Hello, World!"</span>)
+    <span class="variable">writeFile</span>.<span class="function">write</span>(<span class="string">"\nSecond line"</span>)  <span class="comment"># \n = new line</span>
+
+<span class="comment"># File is automatically closed here! No need for .close()</span>
+<span class="function">print</span>(<span class="string">"File saved!"</span>)
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">✅ Best Practice:</span>
+                    Use <code>with</code> statement instead of manual open/close because:<br>
+                    • Automatically closes file (even if error occurs)<br>
+                    • Cleaner code<br>
+                    • Prevents forgetting to close the file
+                </div>
+                
+                <p style="margin: 20px 0;"><strong>📊 Checking if a File Exists</strong></p>
+                
+                <div class="code-block">
+<span class="keyword">import</span> os  <span class="comment"># Import the operating system module</span>
+
+<span class="comment"># Check if file exists before trying to read/modify it</span>
+<span class="keyword">if</span> os.path.<span class="function">isfile</span>(<span class="string">"results.txt"</span>):
+    <span class="function">print</span>(<span class="string">"✓ File exists! Safe to open."</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"✗ File not found."</span>)
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">💡 Why Check if File Exists?</span>
+                    • Trying to read a non-existent file causes an error<br>
+                    • You can create the file if it doesn't exist<br>
+                    • Or display a helpful message to the user<br>
+                    • Prevents your program from crashing
+                </div>
+                
+                <p style="margin: 20px 0;"><strong>📊 Appending to a File (Adding Without Erasing)</strong></p>
+                
+                <div class="code-block">
+<span class="keyword">import</span> os
+
+<span class="comment"># Only append if file exists</span>
+<span class="keyword">if</span> os.path.<span class="function">isfile</span>(<span class="string">"scores.txt"</span>):
+    <span class="keyword">with</span> <span class="function">open</span>(<span class="string">"scores.txt"</span>, <span class="string">'a'</span>) <span class="keyword">as</span> <span class="variable">scoreFile</span>:
+        <span class="variable">scoreFile</span>.<span class="function">write</span>(<span class="string">"\nNew Score: 95"</span>)  <span class="comment"># \n adds new line</span>
+    <span class="function">print</span>(<span class="string">"Score added!"</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"No score file found. Creating one..."</span>)
+    <span class="keyword">with</span> <span class="function">open</span>(<span class="string">"scores.txt"</span>, <span class="string">'w'</span>) <span class="keyword">as</span> <span class="variable">scoreFile</span>:
+        <span class="variable">scoreFile</span>.<span class="function">write</span>(<span class="string">"Score: 95"</span>)
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">📝 Append vs Write:</span>
+                    <strong>Mode 'w' (Write):</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• File contains: "Hello"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• You write: "Goodbye"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Result: "Goodbye" (old data ERASED)<br><br>
+                    
+                    <strong>Mode 'a' (Append):</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• File contains: "Hello"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• You write: "Goodbye"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Result: "HelloGoodbye" (old data KEPT)
+                </div>
+                
+                <p style="margin: 20px 0;"><strong>📊 Deleting a File</strong></p>
+                
+                <div class="code-block">
+<span class="keyword">import</span> os
+
+<span class="comment"># Check if file exists before trying to delete</span>
+<span class="keyword">if</span> os.path.<span class="function">isfile</span>(<span class="string">"results.txt"</span>):
+    os.<span class="function">remove</span>(<span class="string">"results.txt"</span>)  <span class="comment"># Delete the file</span>
+    <span class="function">print</span>(<span class="string">"File has been removed."</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"No file to remove."</span>)
+                </div>
+                
+                <div class="common-mistake">
+                    <strong>⚠️ Mistake #1:</strong> Opening file with 'w' when you meant 'a' → Accidentally erases all data!<br>
+                    <strong>⚠️ Mistake #2:</strong> Forgetting to close file → Data doesn't save<br>
+                    <strong>⚠️ Mistake #3:</strong> Not checking if file exists before reading → Program crashes<br><br>
+                    <strong>✓ Solution:</strong> Use 'with' statement and always check if file exists!
+                </div>
+                
+                <div class="quiz-hint">
+                    <strong>Quiz Connection:</strong> You'll need to write code to create, write to, check for, and delete files.
+                </div>
+                
+                <div class="practice-box">
+                    <h3>✏️ Practice: Score Logger</h3>
+                    <p>Write code that appends a new score to "scores.txt" only if the file exists. If it doesn't exist, print "No score file found."</p>
+                    <textarea id="file-practice" placeholder="Write your code here..."></textarea>
+                    <button class="btn-practice" onclick="checkFile()">Check Answer</button>
+                    <div id="file-feedback" class="feedback"></div>
+                </div>
+            </div>
+            
+            <!-- Topic 2: Functions with Defaults -->
+            <div class="topic-card">
+                <h2>⚙️ Topic 2: Functions with Default Parameters (15 min)</h2>
+                
+                <div class="key-concept">
+                    <strong>What is a Function?</strong> A reusable block of code that performs a specific task. Instead of writing the same code over and over, you write it once in a function and call it whenever needed.<br><br>
+                    <strong>What are Default Parameters?</strong> Values assigned in the function definition that are automatically used if the caller doesn't provide a value. It's like a "backup value."
+                </div>
+                
+                <p style="font-size: 1.1em; margin: 20px 0;"><strong>🔧 Function Anatomy:</strong></p>
+                
+                <div class="code-block">
+<span class="keyword">def</span> <span class="function">function_name</span>(<span class="variable">required_param</span>, <span class="variable">optional_param</span><span class="operator">=</span><span class="string">default_value</span>):
+    <span class="comment"># Function body (code that runs when called)</span>
+    <span class="keyword">return</span> <span class="variable">result</span>
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">🔍 Parts of a Function:</span>
+                    <strong>1. def</strong> → Keyword that means "define a function"<br>
+                    <strong>2. function_name</strong> → What you call the function<br>
+                    <strong>3. (parameters)</strong> → Inputs the function needs<br>
+                    <strong>4. :</strong> → Colon marks the start of the function body<br>
+                    <strong>5. Indented code</strong> → What the function does<br>
+                    <strong>6. return</strong> → Sends a value back to whoever called the function
+                </div>
+                
+                <p style="margin: 20px 0;"><strong>📊 Example: Restaurant Tip Calculator</strong></p>
+                
+                <div class="code-block">
+<span class="keyword">def</span> <span class="function">calculate_tip</span>(<span class="variable">bill</span>, <span class="variable">tip_rate</span><span class="operator">=</span><span class="number">0.15</span>):  <span class="comment"># Default tip is 15%</span>
+    <span class="string">"""
+    Calculate the tip amount for a restaurant bill.
+    
+    bill: The total cost of the meal (required)
+    tip_rate: Percentage as decimal (optional, defaults to 0.15)
+    """</span>
+    <span class="variable">tip_amount</span> <span class="operator">=</span> <span class="variable">bill</span> <span class="operator">*</span> <span class="variable">tip_rate</span>
+    <span class="keyword">return</span> <span class="variable">tip_amount</span>
+
+
+<span class="comment"># Calling the function WITH default tip rate (15%)</span>
+<span class="variable">tip1</span> <span class="operator">=</span> <span class="function">calculate_tip</span>(<span class="number">100</span>)
+<span class="function">print</span>(<span class="string">f"Tip with default rate: $</span>{<span class="variable">tip1</span>}<span class="string">"</span>)  <span class="comment"># Output: $15.0</span>
+
+<span class="comment"># Calling the function with CUSTOM tip rate (20%)</span>
+<span class="variable">tip2</span> <span class="operator">=</span> <span class="function">calculate_tip</span>(<span class="number">100</span>, <span class="number">0.20</span>)
+<span class="function">print</span>(<span class="string">f"Tip with 20% rate: $</span>{<span class="variable">tip2</span>}<span class="string">"</span>)  <span class="comment"># Output: $20.0</span>
+
+<span class="comment"># Calling with generous 25% tip</span>
+<span class="variable">tip3</span> <span class="operator">=</span> <span class="function">calculate_tip</span>(<span class="number">100</span>, <span class="number">0.25</span>)
+<span class="function">print</span>(<span class="string">f"Tip with 25% rate: $</span>{<span class="variable">tip3</span>}<span class="string">"</span>)  <span class="comment"># Output: $25.0</span>
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">🔍 How Default Parameters Work:</span>
+                    
+                    <strong>Call 1: calculate_tip(100)</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• bill = 100 (provided)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• tip_rate = 0.15 (uses DEFAULT because not provided)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Calculation: 100 × 0.15 = 15.0<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Returns: 15.0<br><br>
+                    
+                    <strong>Call 2: calculate_tip(100, 0.20)</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• bill = 100 (provided)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• tip_rate = 0.20 (provided, OVERRIDES default)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Calculation: 100 × 0.20 = 20.0<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Returns: 20.0<br><br>
+                    
+                    <strong>Call 3: calculate_tip(100, 0.25)</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• bill = 100 (provided)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• tip_rate = 0.25 (provided, OVERRIDES default)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Calculation: 100 × 0.25 = 25.0<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Returns: 25.0
+                </div>
+                
+                <div class="code-output">
+Tip with default rate: $15.0
+Tip with 20% rate: $20.0
+Tip with 25% rate: $25.0
+                </div>
+                
+                <p style="margin: 20px 0;"><strong>📊 Quiz-Style Example: Sales Tax Calculator</strong></p>
+                
+                <div class="code-block">
+<span class="keyword">def</span> <span class="function">sales_tax</span>(<span class="variable">amount</span>, <span class="variable">tax</span><span class="operator">=</span><span class="number">0.08</span>):  <span class="comment"># Default tax is 8%</span>
+    <span class="string">"""Calculate sales tax on a purchase amount."""</span>
+    <span class="keyword">return</span> <span class="variable">amount</span> <span class="operator">*</span> <span class="variable">tax</span>
+
+
+<span class="comment"># Test the function with $100</span>
+<span class="variable">test_amount</span> <span class="operator">=</span> <span class="number">100</span>
+<span class="variable">tax_amount</span> <span class="operator">=</span> <span class="function">sales_tax</span>(<span class="variable">test_amount</span>)
+
+<span class="function">print</span>(<span class="string">f"Purchase: $</span>{<span class="variable">test_amount</span>}<span class="string">"</span>)
+<span class="function">print</span>(<span class="string">f"Tax (8%): $</span>{<span class="variable">tax_amount</span>}<span class="string">"</span>)
+<span class="function">print</span>(<span class="string">f"Total: $</span>{<span class="variable">test_amount</span> <span class="operator">+</span> <span class="variable">tax_amount</span>}<span class="string">"</span>)
+                </div>
+                
+                <div class="code-output">
+Purchase: $100
+Tax (8%): $8.0
+Total: $108.0
+                </div>
+                
+                <div class="code-explanation">
+                    <span class="explain-title">💡 Why Use Default Parameters?</span>
+                    <strong>Convenience:</strong> Users don't have to provide every parameter every time<br>
+                    <strong>Flexibility:</strong> Can still customize when needed<br>
+                    <strong>Common Values:</strong> If most people use 8% tax, make it the default<br>
+                    <strong>Less Code:</strong> <code>sales_tax(100)</code> is simpler than <code>sales_tax(100, 0.08)</code> every time
+                </div>
+                
+                <div class="common-mistake">
+                    <strong>⚠️ Mistake #1:</strong> Putting default parameters BEFORE required ones<br>
+                    <code style="color: #dc3545;">def bad_function(x=5, y):</code> ❌ WRONG<br>
+                    <code style="color: #28a745;">def good_function(y, x=5):</code> ✓ CORRECT<br><br>
+                    
+                    <strong>⚠️ Mistake #2:</strong> Forgetting the return statement<br>
+                    Without return, function gives back <code>None</code> (nothing)<br><br>
+                    
+                    <strong>⚠️ Mistake #3:</strong> Not testing the function after writing it<br>
+                    Always call your function to make sure it works!
+                </div>
+                
+                <div class="quiz-hint">
+                    <strong>Quiz Connection:</strong> You'll write a sales_tax function with a default tax rate of 8% (0.08).
+                </div>
+                
+                <div class="practice-box">
+                    <h3>✏️ Practice: Shipping Calculator</h3>
+                    <p>Create a function called `calculate_shipping` that takes weight and rate (default $5.00 per pound). Test it with 10 pounds.</p>
+                    <textarea id="function-practice" placeholder="def calculate_shipping(...):\n    ..."></textarea>
+                    <button class="btn-practice" onclick="checkFunction()">Check Answer</button>
+                    <div id="function-feedback" class="feedback"></div>
+                </div>
+            </div>
+            
+            <!-- Topic 3: Modules -->
+            <div class="topic-card">
+                <h2>📦 Topic 3: Python Modules (15 min)</h2>
+                
+                <p><strong>OS Module - Creating Directories:</strong></p>
+                <div class="code-block">
+<span class="keyword">import</span> os
+
+<span class="comment"># Create a new directory</span>
+os.<span class="function">mkdir</span>(<span class="string">"Sample Files"</span>)
+
+<span class="comment"># Check if directory exists</span>
+<span class="keyword">if</span> os.path.<span class="function">isdir</span>(<span class="string">"Sample Files"</span>):
+    <span class="function">print</span>(<span class="string">"Directory exists!"</span>)
+                </div>
+                
+                <p><strong>Random Module - Choosing from List:</strong></p>
+                <div class="code-block">
+<span class="keyword">import</span> random
+
+baskets = [<span class="string">"Wicker"</span>, <span class="string">"Picnic"</span>, <span class="string">"Gift"</span>, <span class="string">"Market"</span>]
+
+<span class="comment"># Pick a random item</span>
+random_basket = random.<span class="function">choice</span>(baskets)
+<span class="function">print</span>(random_basket)  <span class="comment"># Could be any item from the list</span>
+                </div>
+                
+                <p><strong>DateTime Module - Date Formatting:</strong></p>
+                <div class="code-block">
+<span class="keyword">import</span> datetime
+
+current_date = datetime.datetime.<span class="function">today</span>()
+<span class="function">print</span>(current_date)  <span class="comment"># Full datetime</span>
+
+<span class="comment"># Format as MM/DD/YYYY</span>
+formatted = datetime.datetime.<span class="function">strftime</span>(current_date, <span class="string">"%m/%d/%Y"</span>)
+<span class="function">print</span>(formatted)  <span class="comment"># Example: 11/17/2025</span>
+
+<span class="comment"># Get weekday name</span>
+weekday = current_date.<span class="function">strftime</span>(<span class="string">"%A"</span>)
+<span class="function">print</span>(weekday)  <span class="comment"># Example: Sunday</span>
+                </div>
+                
+                <p><strong>Sys Module - Command Line Arguments:</strong></p>
+                <div class="code-block">
+<span class="keyword">import</span> sys
+
+<span class="comment"># If you run: python test.py Hello World</span>
+<span class="function">print</span>(sys.argv[<span class="number">0</span>])  <span class="comment"># Output: test.py (filename)</span>
+<span class="function">print</span>(sys.argv[<span class="number">1</span>])  <span class="comment"># Output: Hello (first argument)</span>
+<span class="function">print</span>(sys.argv[<span class="number">2</span>])  <span class="comment"># Output: World (second argument)</span>
+<span class="function">print</span>(<span class="function">len</span>(sys.argv))  <span class="comment"># Output: 3 (total arguments)</span>
+                </div>
+                
+                <div class="quiz-hint">
+                    <strong>Quiz Connection:</strong> You'll use os.mkdir(), random.choice(), datetime.strftime(), and understand sys.argv[0].
+                </div>
+            </div>
+        </div>
+        
+        <!-- PRACTICE SECTION -->
+        <div id="practice" class="section">
+            <h1 style="color: #2a5298; margin-bottom: 20px;">✏️ Cumulative Practice</h1>
+            
+            <div class="quiz-hint">
+                <h3>🎯 Mixed Practice Problems</h3>
+                <p>These combine multiple concepts you'll see on the quiz.</p>
+            </div>
+            
+            <div class="practice-box">
+                <h3>Problem 1: Event Schedule with Exception Handling</h3>
+                <p>Write code that:</p>
+                <ul style="margin-left: 30px;">
+                    <li>Loops through days 1-30</li>
+                    <li>Skips day 15 (uses continue)</li>
+                    <li>Divides each day number by user input</li>
+                    <li>Handles ZeroDivisionError</li>
+                    <li>Always prints "Day processed" in finally block</li>
+                </ul>
+                <textarea id="practice1" placeholder="Write your code here..." style="min-height: 200px;"></textarea>
+                <button class="btn-practice" onclick="checkPractice1()">Check Answer</button>
+                <div id="practice1-feedback" class="feedback"></div>
+            </div>
+            
+            <div class="practice-box">
+                <h3>Problem 2: File Logger with Date</h3>
+                <p>Write code that:</p>
+                <ul style="margin-left: 30px;">
+                    <li>Gets today's date formatted as MM/DD/YYYY</li>
+                    <li>Checks if "log.txt" exists</li>
+                    <li>If it exists, appends the date to the file</li>
+                    <li>If not, creates it and writes the date</li>
+                </ul>
+                <textarea id="practice2" placeholder="Write your code here..." style="min-height: 200px;"></textarea>
+                <button class="btn-practice" onclick="checkPractice2()">Check Answer</button>
+                <div id="practice2-feedback" class="feedback"></div>
+            </div>
+        </div>
+        
+        <!-- CHECKLIST SECTION -->
+        <div id="checklist" class="section">
+            <h1 style="color: #2a5298; margin-bottom: 20px;">✅ Quiz Readiness Checklist</h1>
+            
+            <div class="topic-card">
+                <h2>Before Thursday's Quiz, Can You:</h2>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check1" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check1" style="font-size: 1.1em;">Write nested loops with correct range() values?</label>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check2" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check2" style="font-size: 1.1em;">Explain when the finally block executes?</label>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check3" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check3" style="font-size: 1.1em;">Identify syntax errors (missing colons, indentation)?</label>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check4" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check4" style="font-size: 1.1em;">Use continue to skip loop iterations?</label>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check5" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check5" style="font-size: 1.1em;">Write to and read from files?</label>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check6" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check6" style="font-size: 1.1em;">Create functions with default parameters?</label>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check7" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check7" style="font-size: 1.1em;">Use os.mkdir() and os.path.isfile()?</label>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check8" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check8" style="font-size: 1.1em;">Use random.choice() to pick from a list?</label>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check9" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check9" style="font-size: 1.1em;">Format dates with datetime.strftime()?</label>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <input type="checkbox" id="check10" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <label for="check10" style="font-size: 1.1em;">Understand what sys.argv[0] represents?</label>
+                </div>
+            </div>
+            
+            <div class="key-concept">
+                <strong>🎯 Goal:</strong> Check all boxes before Thursday! If you can't, review that topic again.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function checkNestedLoop() {
+            const code = document.getElementById('nested-loop-practice').value.toLowerCase();
+            const feedback = document.getElementById('nested-loop-feedback');
+            
+            const hasOuterLoop = code.includes('for') && code.includes('shelf');
+            const hasInnerLoop = code.includes('for') && code.includes('book');
+            const hasCorrectRange = (code.includes('range(1, 5)') || code.includes('range(1,5)')) &&
+                                    (code.includes('range(1, 7)') || code.includes('range(1,7)'));
+            const hasPrint = code.includes('print');
+            
+            if (hasOuterLoop && hasInnerLoop && hasCorrectRange && hasPrint) {
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<strong>✓ Excellent!</strong> Your nested loop structure is correct. Remember: 4 shelves = range(1,5), 6 books = range(1,7).';
+            } else {
+                feedback.className = 'feedback incorrect show';
+                let hints = '<strong>Try again:</strong><br>';
+                if (!hasOuterLoop) hints += '• Need outer loop for shelves<br>';
+                if (!hasInnerLoop) hints += '• Need inner loop for books<br>';
+                if (!hasCorrectRange) hints += '• Check your range() values<br>';
+                feedback.innerHTML = hints;
+            }
+        }
+        
+        function checkException() {
+            const code = document.getElementById('exception-practice').value.toLowerCase();
+            const feedback = document.getElementById('exception-feedback');
+            
+            const hasTry = code.includes('try');
+            const hasExcept = code.includes('except');
+            const hasFinally = code.includes('finally');
+            const hasCorrectMessage = code.includes('list access complete');
+            
+            if (hasTry && hasExcept && hasFinally && hasCorrectMessage) {
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<strong>✓ Perfect!</strong> You correctly used try/except/finally with the right message.';
+            } else {
+                feedback.className = 'feedback incorrect show';
+                let hints = '<strong>Missing elements:</strong><br>';
+                if (!hasTry) hints += '• Need try block<br>';
+                if (!hasExcept) hints += '• Need except block<br>';
+                if (!hasFinally) hints += '• Need finally block<br>';
+                if (!hasCorrectMessage) hints += '• Finally should print "List access complete"<br>';
+                feedback.innerHTML = hints;
+            }
+        }
+        
+        function checkFile() {
+            const code = document.getElementById('file-practice').value.toLowerCase();
+            const feedback = document.getElementById('file-feedback');
+            
+            const hasImport = code.includes('import os');
+            const hasIsFile = code.includes('isfile');
+            const hasAppend = code.includes("'a'");
+            const hasElse = code.includes('else');
+            
+            if (hasImport && hasIsFile && hasAppend && hasElse) {
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<strong>✓ Great work!</strong> You checked if file exists and used append mode correctly.';
+            } else {
+                feedback.className = 'feedback incorrect show';
+                let hints = '<strong>Hints:</strong><br>';
+                if (!hasImport) hints += '• Import os module<br>';
+                if (!hasIsFile) hints += '• Use os.path.isfile()<br>';
+                if (!hasAppend) hints += '• Use mode \'a\' for append<br>';
+                feedback.innerHTML = hints;
+            }
+        }
+        
+        function checkFunction() {
+            const code = document.getElementById('function-practice').value.toLowerCase();
+            const feedback = document.getElementById('function-feedback');
+            
+            const hasDef = code.includes('def');
+            const hasFunctionName = code.includes('calculate_shipping');
+            const hasDefault = code.includes('5.00') || code.includes('5.0') || code.includes('5');
+            const hasReturn = code.includes('return');
+            const hasTest = code.includes('10');
+            
+            if (hasDef && hasFunctionName && hasDefault && hasReturn && hasTest) {
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<strong>✓ Excellent!</strong> Your function has correct name, default parameter, and test call.';
+            } else {
+                feedback.className = 'feedback incorrect show';
+                let hints = '<strong>Check:</strong><br>';
+                if (!hasDef) hints += '• Use def keyword<br>';
+                if (!hasFunctionName) hints += '• Function name: calculate_shipping<br>';
+                if (!hasDefault) hints += '• Default rate should be 5.00<br>';
+                if (!hasReturn) hints += '• Function should return a value<br>';
+                if (!hasTest) hints += '• Test with 10 pounds<br>';
+                feedback.innerHTML = hints;
+            }
+        }
+        
+        function checkPractice1() {
+            const code = document.getElementById('practice1').value.toLowerCase();
+            const feedback = document.getElementById('practice1-feedback');
+            
+            const hasLoop = code.includes('for') && code.includes('range');
+            const hasContinue = code.includes('continue');
+            const hasTry = code.includes('try');
+            const hasExcept = code.includes('except');
+            const hasFinally = code.includes('finally');
+            
+            if (hasLoop && hasContinue && hasTry && hasExcept && hasFinally) {
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<strong>✓ Outstanding!</strong> You combined loops, continue, and exception handling correctly!';
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.innerHTML = '<strong>Keep working on it!</strong> Make sure you have: loop, continue statement, try/except/finally blocks.';
+            }
+        }
+        
+        function checkPractice2() {
+            const code = document.getElementById('practice2').value.toLowerCase();
+            const feedback = document.getElementById('practice2-feedback');
+            
+            const hasImport = code.includes('import');
+            const hasDatetime = code.includes('datetime');
+            const hasOs = code.includes('os');
+            const hasIsFile = code.includes('isfile');
+            const hasOpen = code.includes('open');
+            
+            if (hasImport && hasDatetime && hasOs && hasIsFile && hasOpen) {
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<strong>✓ Fantastic!</strong> You combined datetime and file operations perfectly!';
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.innerHTML = '<strong>Almost there!</strong> Check: imports, datetime formatting, os.path.isfile(), file operations.';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -117,7 +117,8 @@ def dashboard():
     if 'user_id' not in session:
         # Redirect to auth blueprint's index (login page)
         return redirect(url_for('auth.index'))
-    return render_template('dashboard_course.html', active_page='dashboard')
+    # Redirect to new student dashboard
+    return redirect(url_for('routes.student_dashboard'))
 
 # --- New Dashboard2 route ---
 @routes_bp.route('/dashboard2')
@@ -125,6 +126,73 @@ def dashboard2():
     if 'user_id' not in session:
         return redirect(url_for('auth.index'))
     return render_template('dashboard2.html')
+
+# --- Student Dashboard route ---
+@routes_bp.route('/student-dashboard')
+def student_dashboard():
+    """Serve the new comprehensive student dashboard."""
+    if 'user_id' not in session:
+        return redirect(url_for('auth.index'))
+    return render_template('student-dashboard.html', active_page='dashboard')
+
+# --- Production Dashboard route ---
+@routes_bp.route('/production-dashboard')
+def production_dashboard():
+    """Serve the production Firebase-connected dashboard."""
+    # This dashboard handles its own authentication via Firebase
+    return send_file(os.path.join(os.getcwd(), 'public', 'production-dashboard.html'))
+
+# --- Real Data Dashboard API ---
+@routes_bp.route('/api/production/lesson_complete', methods=['POST'])
+def production_lesson_complete():
+    """API endpoint for production dashboard to sync lesson completions with Flask backend."""
+    data = request.get_json()
+    
+    if not data or 'user_id' not in data or 'lesson_id' not in data:
+        return jsonify({'error': 'Missing required fields'}), 400
+    
+    try:
+        user_id = data['user_id']
+        lesson_id = data['lesson_id']
+        points = data.get('points', 100)
+        coins = data.get('coins', 50)
+        
+        # Update in Firestore via Firebase Admin SDK
+        if db:
+            user_ref = db.collection('userProgress').document(user_id)
+            user_doc = user_ref.get()
+            
+            if user_doc.exists:
+                user_data = user_doc.to_dict()
+                completed_lessons = user_data.get('completedLessons', [])
+                
+                if lesson_id not in completed_lessons:
+                    # Add new completion
+                    completed_lessons.append(lesson_id)
+                    new_activity = {
+                        'timestamp': datetime.now().isoformat(),
+                        'description': f'Completed {lesson_id.replace("_", " ").title()}'
+                    }
+                    
+                    user_ref.update({
+                        'completedLessons': completed_lessons,
+                        'totalPoints': firestore.Increment(points),
+                        'totalCoins': firestore.Increment(coins),
+                        'lastActive': datetime.now().isoformat(),
+                        'recentActivity': firestore.ArrayUnion([new_activity])
+                    })
+                    
+                    return jsonify({'success': True, 'message': 'Lesson completion saved'})
+                else:
+                    return jsonify({'success': True, 'message': 'Lesson already completed'})
+            else:
+                return jsonify({'error': 'User not found'}), 404
+        else:
+            return jsonify({'error': 'Database not available'}), 500
+            
+    except Exception as e:
+        print(f"Error saving lesson completion: {e}")
+        return jsonify({'error': 'Failed to save lesson completion'}), 500
 
 # --- API to fetch a user's progress for the dashboard ---
 # Keeping this as it's general purpose for displaying user data on dashboard
@@ -170,6 +238,139 @@ def get_user_progress_api():
     except Exception as e:
         current_app.logger.error(f"Error fetching user progress for {user_id}: {e}", exc_info=True)
         return jsonify({'message': 'Internal server error while fetching progress'}), 500
+
+@routes_bp.route('/api/dashboard_data', methods=['GET'])
+def get_dashboard_data():
+    """API endpoint specifically for dashboard real data integration"""
+    if db is None:
+        return jsonify({'message': 'Database not initialized'}), 500
+
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'message': 'Authentication required. No user_id in session.'}), 401
+
+    try:
+        # Get user profile data
+        user_doc = db.collection('users').document(user_id).get()
+        user_data = user_doc.to_dict() if user_doc.exists else {}
+        
+        # Get user progress data
+        progress_docs = db.collection('user_progress').where('user_id', '==', user_id).stream()
+        progress_list = []
+        
+        # Define lesson mapping for better content titles
+        lesson_titles = {
+            'lesson_1_1': 'Variables & Data Types',
+            'lesson_1_2': 'Working with Numbers',
+            'lesson_1_3': 'String Operations', 
+            'lesson_1_4': 'Boolean Logic',
+            'lesson_2_1': 'If Statements',
+            'lesson_2_2': 'Loops & Iteration',
+            'lesson_3_1': 'Functions Basics',
+            'lesson_3_2': 'Advanced Functions',
+            'lesson_4_1': 'Problem Solving'
+        }
+        
+        for doc in progress_docs:
+            item = doc.to_dict()
+            content_id = item.get('content_id', '')
+            
+            # Use predefined titles or fallback to content_id
+            item['content_title'] = lesson_titles.get(content_id, content_id.replace('_', ' ').title())
+            item['content_type'] = 'lesson'  # Most content is lessons
+            
+            # Handle timestamp conversion safely
+            ts = None
+            if 'last_updated' in item and hasattr(item['last_updated'], 'timestamp'):
+                ts = int(item['last_updated'].timestamp() * 1000)
+            elif 'completion_date' in item and hasattr(item['completion_date'], 'timestamp'):
+                ts = int(item['completion_date'].timestamp() * 1000)
+            item['timestamp'] = ts
+            progress_list.append(item)
+
+        # Calculate dashboard statistics
+        completed_lessons = [p for p in progress_list if p.get('status') == 'completed']
+        total_points = sum(p.get('points_earned', 0) for p in progress_list)
+        total_lessons = len(lesson_titles)  # Based on our lesson files
+        progress_percentage = round((len(completed_lessons) / total_lessons) * 100) if total_lessons > 0 else 0
+        
+        # Recent activity (last 5 items, sorted by timestamp)
+        recent_activity = sorted(
+            [p for p in progress_list if p.get('timestamp')], 
+            key=lambda x: x['timestamp'], 
+            reverse=True
+        )[:5]
+        
+        # Calculate achievements
+        achievements = [
+            {
+                'id': 'first-lesson',
+                'title': 'First Steps',
+                'description': 'Complete your first lesson',
+                'icon': '🎯',
+                'unlocked': len(completed_lessons) >= 1
+            },
+            {
+                'id': 'five-lessons', 
+                'title': 'Getting Started',
+                'description': 'Complete 5 lessons',
+                'icon': '🏆',
+                'unlocked': len(completed_lessons) >= 5
+            },
+            {
+                'id': 'point-collector',
+                'title': 'Point Collector',
+                'description': 'Earn 100 points',
+                'icon': '💎',
+                'unlocked': total_points >= 100
+            },
+            {
+                'id': 'dedicated-learner',
+                'title': 'Dedicated Learner', 
+                'description': 'Complete all lessons in a section',
+                'icon': '📚',
+                'unlocked': len(completed_lessons) >= 4  # Complete section 1
+            }
+        ]
+        
+        # Prepare dashboard data response
+        dashboard_data = {
+            'user': {
+                'name': user_data.get('name', session.get('user_name', 'Student')),
+                'email': user_data.get('email', session.get('user_email', '')),
+                'title': user_data.get('user_title', 'Newbie'),
+                'currency': user_data.get('currency', 10),
+                'points': user_data.get('points', 0),
+                'avatar': user_data.get('picture', '')
+            },
+            'stats': {
+                'currency': user_data.get('currency', 10),
+                'points': user_data.get('points', 0) + total_points,  # Include progress points
+                'progress_percentage': progress_percentage,
+                'lessons_completed': len(completed_lessons),
+                'total_lessons': total_lessons
+            },
+            'progress': progress_list,
+            'recent_activity': recent_activity,
+            'achievements': achievements,
+            'learning_path': [
+                {
+                    'id': lesson_id,
+                    'title': title,
+                    'status': next((p['status'] for p in progress_list if p.get('content_id') == lesson_id), 'not_started')
+                }
+                for lesson_id, title in lesson_titles.items()
+            ]
+        }
+
+        return jsonify(dashboard_data), 200
+        
+    except FirebaseError as e:
+        current_app.logger.error(f"Firebase error fetching dashboard data for {user_id}: {e}")
+        return jsonify({'message': 'Database error while fetching dashboard data'}), 500
+    except Exception as e:
+        current_app.logger.error(f"Error fetching dashboard data for {user_id}: {e}", exc_info=True)
+        return jsonify({'message': 'Internal server error while fetching dashboard data'}), 500
 
 # --- API to update user progress ---
 # Keeping this as it's general purpose for updating user data (e.g., currency, points)

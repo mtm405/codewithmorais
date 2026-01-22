@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Word 365 Complete Learning System | Code with Morais</title>
+    <style>
+        :root {
+            --primary-blue: #0078d4;
+            --secondary-blue: #106ebe;
+            --accent-orange: #ff8c00;
+            --success-green: #107c10;
+            --warning-yellow: #ffb900;
+            --error-red: #d13438;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e1e1e1;
+            --dark-gray: #323130;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            line-height: 1.6;
+        }
+        
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(0, 120, 212, 0.3);
+        }
+        
+        .main-header h1 {
+            margin: 0;
+            font-size: 3em;
+            font-weight: 300;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .main-header p {
+            margin: 15px 0 0 0;
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .learning-path {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid var(--success-green);
+        }
+
+        .learning-path h2 {
+            color: var(--success-green);
+            margin-top: 0;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-bar {
+            background: var(--light-gray);
+            height: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--success-green), var(--primary-blue));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .chapter-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--medium-gray);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .chapter-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chapter-icon {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .chapter-1 { background: var(--primary-blue); }
+        .chapter-2 { background: var(--success-green); }
+        .chapter-3 { background: var(--accent-orange); }
+        .chapter-4 { background: var(--warning-yellow); color: var(--dark-gray) !important; }
+        .chapter-5 { background: var(--error-red); }
+        .chapter-6 { background: #6264a7; }
+
+        .chapter-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin: 0;
+        }
+
+        .chapter-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 5px 0 0 0;
+        }
+
+        .learning-objectives {
+            background: var(--light-gray);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .objectives-list {
+            margin: 10px 0 0 0;
+            padding-left: 20px;
+        }
+
+        .objectives-list li {
+            margin-bottom: 5px;
+            color: var(--dark-gray);
+        }
+
+        .topics-section {
+            margin: 15px 0;
+        }
+
+        .topics-title {
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topics-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .topic-tag {
+            background: var(--light-gray);
+            border: 1px solid var(--medium-gray);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+        }
+
+        .chapter-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-yellow);
+            color: var(--dark-gray);
+        }
+
+        .ribbon-overview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .ribbon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .ribbon-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ribbon-item h4 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .ribbon-item p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .assessment-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .assessment-info h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .skills-matrix {
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .skills-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .skills-table th {
+            background: var(--primary-blue);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .skills-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .skills-table tr:hover {
+            background: var(--light-gray);
+        }
+
+        .difficulty-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .difficulty-beginner {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .difficulty-intermediate {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty-advanced {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .main-header h1 {
+                font-size: 2rem;
+            }
+            
+            .chapters-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ribbon-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-header">
+        <h1>📚 Microsoft Word 365 Complete Learning System</h1>
+        <p>Master all Word ribbons through hands-on projects and real-world applications</p>
+    </div>
+
+    <div class="learning-path">
+        <h2>🎯 Your Learning Journey</h2>
+        <p>Complete 6 comprehensive chapters covering every aspect of Microsoft Word 365. Each chapter includes learning objectives, hands-on labs, vocabulary building, projects, and assessments.</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%"></div>
+        </div>
+        <p style="text-align: center; margin: 10px 0 0 0; color: #666;"><strong>Progress:</strong> 0 of 6 chapters completed</p>
+    </div>
+
+    <div class="ribbon-overview">
+        <h2>🎨 Word 365 Ribbons Mastery</h2>
+        <p>Learn to use every ribbon and feature in Microsoft Word 365 through practical, real-world projects</p>
+        
+        <div class="ribbon-grid">
+            <div class="ribbon-item">
+                <h4>📄 File</h4>
+                <p>Document management, saving, sharing, and properties</p>
+            </div>
+            <div class="ribbon-item">
+                <h4>🏠 Home</h4>
+                <p>Text formatting, styles, find & replace, clipboard</p>
+            </div>
+            <div class="ribbon-item">
+                <h4>📝 Insert</h4>
+                <p>Tables, images, shapes, headers, footers, symbols</p>
+            </div>
+            <div class="ribbon-item">
+                <h4>🎨 Design</h4>
+                <p>Themes, colors, fonts, page borders, watermarks</p>
+            </div>
+            <div class="ribbon-item">
+                <h4>📐 Layout</h4>
+                <p>Margins, orientation, columns, page setup, spacing</p>
+            </div>
+            <div class="ribbon-item">
+                <h4>📚 References</h4>
+                <p>Table of contents, footnotes, citations, bibliography</p>
+            </div>
+            <div class="ribbon-item">
+                <h4>📮 Mailings</h4>
+                <p>Mail merge, envelopes, labels, address blocks</p>
+            </div>
+            <div class="ribbon-item">
+                <h4>📝 Review</h4>
+                <p>Comments, track changes, spelling, accessibility</p>
+            </div>
+            <div class="ribbon-item">
+                <h4>👁️ View</h4>
+                <p>Document views, zoom, navigation, ruler, gridlines</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="chapters-grid">
+        <!-- Chapter 1 -->
+        <div class="chapter-card">
+            <div class="chapter-header">
+                <div class="chapter-icon chapter-1">📄</div>
+                <div>
+                    <h3 class="chapter-title">Chapter 1: Manage Documents</h3>
+                    <p class="chapter-subtitle">Foundation Skills • File & Home Ribbons</p>
+                </div>
+            </div>
+
+            <div class="learning-objectives">
+                <strong>🎯 Learning Objectives:</strong>
+                <ul class="objectives-list">
+                    <li>Navigate efficiently within documents</li>
+                    <li>Set up professional document layouts</li>
+                    <li>Apply consistent formatting with style sets</li>
+                    <li>Manage document properties and accessibility</li>
+                </ul>
+            </div>
+
+            <div class="topics-section">
+                <div class="topics-title">📋 Topics & Labs:</div>
+                <div class="topics-list">
+                    <span class="topic-tag">Navigation</span>
+                    <span class="topic-tag">Bookmarks</span>
+                    <span class="topic-tag">Page Setup</span>
+                    <span class="topic-tag">Style Sets</span>
+                    <span class="topic-tag">Headers/Footers</span>
+                    <span class="topic-tag">Page Borders</span>
+                    <span class="topic-tag">Document Properties</span>
+                    <span class="topic-tag">Accessibility</span>
+                </div>
+            </div>
+
+            <div class="chapter-actions">
+                <a href="word365-chapter1.html" class="action-btn btn-primary">
+                    <span>🚀</span> Start Chapter
+                </a>
+                <a href="word365-chapter1-pre.html" class="action-btn btn-secondary">
+                    <span>📝</span> Pre-Assessment
+                </a>
+                <a href="word365-chapter1-vocab.html" class="action-btn btn-warning">
+                    <span>📚</span> Vocabulary
+                </a>
+            </div>
+        </div>
+
+        <!-- Chapter 2 -->
+        <div class="chapter-card">
+            <div class="chapter-header">
+                <div class="chapter-icon chapter-2">✏️</div>
+                <div>
+                    <h3 class="chapter-title">Chapter 2: Text, Paragraphs & Sections</h3>
+                    <p class="chapter-subtitle">Formatting Mastery • Home & Layout Ribbons</p>
+                </div>
+            </div>
+
+            <div class="learning-objectives">
+                <strong>🎯 Learning Objectives:</strong>
+                <ul class="objectives-list">
+                    <li>Master text formatting techniques</li>
+                    <li>Control spacing and indentation precisely</li>
+                    <li>Create and configure document sections</li>
+                    <li>Apply and customize built-in styles</li>
+                </ul>
+            </div>
+
+            <div class="topics-section">
+                <div class="topics-title">📋 Topics & Labs:</div>
+                <div class="topics-list">
+                    <span class="topic-tag">Text Formatting</span>
+                    <span class="topic-tag">Line Spacing</span>
+                    <span class="topic-tag">Paragraph Spacing</span>
+                    <span class="topic-tag">Indentation</span>
+                    <span class="topic-tag">Document Sections</span>
+                    <span class="topic-tag">Built-in Styles</span>
+                </div>
+            </div>
+
+            <div class="chapter-actions">
+                <a href="word365-chapter2.html" class="action-btn btn-primary">
+                    <span>🚀</span> Start Chapter
+                </a>
+                <a href="word365-chapter2-pre.html" class="action-btn btn-secondary">
+                    <span>📝</span> Pre-Assessment
+                </a>
+                <a href="word365-chapter2-vocab.html" class="action-btn btn-warning">
+                    <span>📚</span> Vocabulary
+                </a>
+            </div>
+        </div>
+
+        <!-- Chapter 3 -->
+        <div class="chapter-card">
+            <div class="chapter-header">
+                <div class="chapter-icon chapter-3">📊</div>
+                <div>
+                    <h3 class="chapter-title">Chapter 3: Tables and Lists</h3>
+                    <p class="chapter-subtitle">Data Organization • Insert & Home Ribbons</p>
+                </div>
+            </div>
+
+            <div class="learning-objectives">
+                <strong>🎯 Learning Objectives:</strong>
+                <ul class="objectives-list">
+                    <li>Create and format professional tables</li>
+                    <li>Convert between text and table formats</li>
+                    <li>Sort and organize table data</li>
+                    <li>Design effective bulleted and numbered lists</li>
+                </ul>
+            </div>
+
+            <div class="topics-section">
+                <div class="topics-title">📋 Topics & Labs:</div>
+                <div class="topics-list">
+                    <span class="topic-tag">Create Tables</span>
+                    <span class="topic-tag">Text to Table</span>
+                    <span class="topic-tag">Table to Text</span>
+                    <span class="topic-tag">Sort Tables</span>
+                    <span class="topic-tag">Table Layout</span>
+                    <span class="topic-tag">Bulleted Lists</span>
+                    <span class="topic-tag">Numbered Lists</span>
+                    <span class="topic-tag">List Levels</span>
+                </div>
+            </div>
+
+            <div class="chapter-actions">
+                <a href="word365-chapter3.html" class="action-btn btn-primary">
+                    <span>🚀</span> Start Chapter
+                </a>
+                <a href="word365-chapter3-pre.html" class="action-btn btn-secondary">
+                    <span>📝</span> Pre-Assessment
+                </a>
+                <a href="word365-chapter3-vocab.html" class="action-btn btn-warning">
+                    <span>📚</span> Vocabulary
+                </a>
+            </div>
+        </div>
+
+        <!-- Chapter 4 -->
+        <div class="chapter-card">
+            <div class="chapter-header">
+                <div class="chapter-icon chapter-4">📖</div>
+                <div>
+                    <h3 class="chapter-title">Chapter 4: References & Citations</h3>
+                    <p class="chapter-subtitle">Academic Writing • References Ribbon</p>
+                </div>
+            </div>
+
+            <div class="learning-objectives">
+                <strong>🎯 Learning Objectives:</strong>
+                <ul class="objectives-list">
+                    <li>Insert and manage footnotes and endnotes</li>
+                    <li>Create automatic table of contents</li>
+                    <li>Format citations and bibliographies</li>
+                    <li>Navigate long documents efficiently</li>
+                </ul>
+            </div>
+
+            <div class="topics-section">
+                <div class="topics-title">📋 Topics & Labs:</div>
+                <div class="topics-list">
+                    <span class="topic-tag">Footnotes</span>
+                    <span class="topic-tag">Endnotes</span>
+                    <span class="topic-tag">Table of Contents</span>
+                    <span class="topic-tag">Citations</span>
+                    <span class="topic-tag">Bibliography</span>
+                    <span class="topic-tag">Cross-References</span>
+                </div>
+            </div>
+
+            <div class="chapter-actions">
+                <a href="word365-chapter4.html" class="action-btn btn-primary">
+                    <span>🚀</span> Start Chapter
+                </a>
+                <a href="word365-chapter4-pre.html" class="action-btn btn-secondary">
+                    <span>📝</span> Pre-Assessment
+                </a>
+                <a href="word365-chapter4-vocab.html" class="action-btn btn-warning">
+                    <span>📚</span> Vocabulary
+                </a>
+            </div>
+        </div>
+
+        <!-- Chapter 5 -->
+        <div class="chapter-card">
+            <div class="chapter-header">
+                <div class="chapter-icon chapter-5">🎨</div>
+                <div>
+                    <h3 class="chapter-title">Chapter 5: Graphics & Visual Elements</h3>
+                    <p class="chapter-subtitle">Visual Design • Insert & Design Ribbons</p>
+                </div>
+            </div>
+
+            <div class="learning-objectives">
+                <strong>🎯 Learning Objectives:</strong>
+                <ul class="objectives-list">
+                    <li>Insert and format shapes and graphics</li>
+                    <li>Work with pictures and 3D models</li>
+                    <li>Create professional SmartArt diagrams</li>
+                    <li>Design effective text boxes and callouts</li>
+                </ul>
+            </div>
+
+            <div class="topics-section">
+                <div class="topics-title">📋 Topics & Labs:</div>
+                <div class="topics-list">
+                    <span class="topic-tag">Shapes</span>
+                    <span class="topic-tag">Pictures</span>
+                    <span class="topic-tag">3D Models</span>
+                    <span class="topic-tag">SmartArt</span>
+                    <span class="topic-tag">Text Boxes</span>
+                    <span class="topic-tag">WordArt</span>
+                    <span class="topic-tag">Screenshots</span>
+                    <span class="topic-tag">Icons</span>
+                </div>
+            </div>
+
+            <div class="chapter-actions">
+                <a href="word365-chapter5.html" class="action-btn btn-primary">
+                    <span>🚀</span> Start Chapter
+                </a>
+                <a href="word365-chapter5-pre.html" class="action-btn btn-secondary">
+                    <span>📝</span> Pre-Assessment
+                </a>
+                <a href="word365-chapter5-vocab.html" class="action-btn btn-warning">
+                    <span>📚</span> Vocabulary
+                </a>
+            </div>
+        </div>
+
+        <!-- Chapter 6 -->
+        <div class="chapter-card">
+            <div class="chapter-header">
+                <div class="chapter-icon chapter-6">👥</div>
+                <div>
+                    <h3 class="chapter-title">Chapter 6: Collaboration & Review</h3>
+                    <p class="chapter-subtitle">Teamwork Skills • Review Ribbon</p>
+                </div>
+            </div>
+
+            <div class="learning-objectives">
+                <strong>🎯 Learning Objectives:</strong>
+                <ul class="objectives-list">
+                    <li>Add and manage document comments</li>
+                    <li>Track and review document changes</li>
+                    <li>Collaborate effectively with teams</li>
+                    <li>Ensure document quality and accessibility</li>
+                </ul>
+            </div>
+
+            <div class="topics-section">
+                <div class="topics-title">📋 Topics & Labs:</div>
+                <div class="topics-list">
+                    <span class="topic-tag">Comments</span>
+                    <span class="topic-tag">Track Changes</span>
+                    <span class="topic-tag">Compare Documents</span>
+                    <span class="topic-tag">Sharing</span>
+                    <span class="topic-tag">Proofing</span>
+                    <span class="topic-tag">Accessibility Check</span>
+                </div>
+            </div>
+
+            <div class="chapter-actions">
+                <a href="word365-chapter6.html" class="action-btn btn-primary">
+                    <span>🚀</span> Start Chapter
+                </a>
+                <a href="word365-chapter6-pre.html" class="action-btn btn-secondary">
+                    <span>📝</span> Pre-Assessment
+                </a>
+                <a href="word365-chapter6-vocab.html" class="action-btn btn-warning">
+                    <span>📚</span> Vocabulary
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="assessment-info">
+        <h3>📊 Assessment Structure</h3>
+        <p>Each chapter follows a comprehensive learning model:</p>
+        <ul>
+            <li><strong>Pre-Assessment:</strong> Evaluate your current knowledge level</li>
+            <li><strong>Interactive Labs:</strong> Hands-on practice with real scenarios</li>
+            <li><strong>Vocabulary Building:</strong> Master technical terminology</li>
+            <li><strong>Practical Projects:</strong> Apply skills to real-world tasks</li>
+            <li><strong>Post-Assessment:</strong> Measure your learning progress</li>
+        </ul>
+    </div>
+
+    <div class="skills-matrix">
+        <h2 style="text-align: center; color: var(--dark-gray);">🎯 Skills Development Matrix</h2>
+        <table class="skills-table">
+            <thead>
+                <tr>
+                    <th>Ribbon</th>
+                    <th>Key Skills</th>
+                    <th>Chapter Coverage</th>
+                    <th>Difficulty</th>
+                    <th>Real-World Applications</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>File</strong></td>
+                    <td>Document management, properties, sharing</td>
+                    <td>Chapters 1, 6</td>
+                    <td><span class="difficulty-badge difficulty-beginner">Beginner</span></td>
+                    <td>Professional documentation, version control</td>
+                </tr>
+                <tr>
+                    <td><strong>Home</strong></td>
+                    <td>Text formatting, styles, clipboard operations</td>
+                    <td>Chapters 1, 2, 3</td>
+                    <td><span class="difficulty-badge difficulty-beginner">Beginner</span></td>
+                    <td>Letters, reports, basic documents</td>
+                </tr>
+                <tr>
+                    <td><strong>Insert</strong></td>
+                    <td>Tables, images, headers, symbols, objects</td>
+                    <td>Chapters 3, 5</td>
+                    <td><span class="difficulty-badge difficulty-intermediate">Intermediate</span></td>
+                    <td>Presentations, manuals, newsletters</td>
+                </tr>
+                <tr>
+                    <td><strong>Design</strong></td>
+                    <td>Themes, colors, page backgrounds</td>
+                    <td>Chapters 1, 5</td>
+                    <td><span class="difficulty-badge difficulty-intermediate">Intermediate</span></td>
+                    <td>Marketing materials, branded documents</td>
+                </tr>
+                <tr>
+                    <td><strong>Layout</strong></td>
+                    <td>Margins, columns, page setup, spacing</td>
+                    <td>Chapters 1, 2</td>
+                    <td><span class="difficulty-badge difficulty-intermediate">Intermediate</span></td>
+                    <td>Books, magazines, academic papers</td>
+                </tr>
+                <tr>
+                    <td><strong>References</strong></td>
+                    <td>Citations, footnotes, table of contents</td>
+                    <td>Chapter 4</td>
+                    <td><span class="difficulty-badge difficulty-advanced">Advanced</span></td>
+                    <td>Research papers, academic writing, books</td>
+                </tr>
+                <tr>
+                    <td><strong>Mailings</strong></td>
+                    <td>Mail merge, envelopes, labels</td>
+                    <td>Advanced Projects</td>
+                    <td><span class="difficulty-badge difficulty-advanced">Advanced</span></td>
+                    <td>Mass communications, marketing campaigns</td>
+                </tr>
+                <tr>
+                    <td><strong>Review</strong></td>
+                    <td>Comments, track changes, proofing</td>
+                    <td>Chapter 6</td>
+                    <td><span class="difficulty-badge difficulty-intermediate">Intermediate</span></td>
+                    <td>Collaborative editing, quality assurance</td>
+                </tr>
+                <tr>
+                    <td><strong>View</strong></td>
+                    <td>Document views, navigation, ruler</td>
+                    <td>All Chapters</td>
+                    <td><span class="difficulty-badge difficulty-beginner">Beginner</span></td>
+                    <td>Efficient document navigation and editing</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="text-align: center; padding: 40px; background: white; border-radius: 15px; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: var(--primary-blue); margin-bottom: 20px;">🚀 Ready to Master Word 365?</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 25px;">Start your comprehensive learning journey and become proficient in every aspect of Microsoft Word!</p>
+        <a href="word365-chapter1.html" class="action-btn btn-primary" style="font-size: 1.1rem; padding: 15px 30px;">
+            <span>🎯</span> Begin Chapter 1: Manage Documents
+        </a>
+    </div>
+
+    <script>
+        // Track progress
+        function updateProgress() {
+            const chapters = ['chapter1', 'chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6'];
+            let completed = 0;
+            
+            chapters.forEach(chapter => {
+                if (localStorage.getItem(`word365_${chapter}_completed`)) {
+                    completed++;
+                }
+            });
+            
+            const percentage = (completed / chapters.length) * 100;
+            document.querySelector('.progress-fill').style.width = percentage + '%';
+            document.querySelector('.progress-bar + p').innerHTML = 
+                `<strong>Progress:</strong> ${completed} of ${chapters.length} chapters completed (${Math.round(percentage)}%)`;
+        }
+
+        // Initialize progress on page load
+        document.addEventListener('DOMContentLoaded', updateProgress);
+    </script>
+</body>
+</html>

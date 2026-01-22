@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Basics Challenge - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/pyodide@0.24.1/pyodide.js"></script>
+  
+  <!-- Monaco Editor -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #00ff96, #00cc7a);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 5px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(45deg, #00ff96, #00cc7a);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 30px;
+      margin: 30px 0;
+    }
+    
+    .challenge-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .challenge-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .challenge-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .challenge-icon {
+      background: linear-gradient(45deg, #00ff96, #00cc7a);
+      color: #000;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 1.2rem;
+    }
+    
+    .challenge-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    
+    .challenge-difficulty {
+      margin-left: auto;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .difficulty-easy { background: #4CAF50; }
+    .difficulty-medium { background: #FF9800; }
+    .difficulty-hard { background: #F44336; }
+    
+    .challenge-description {
+      margin-bottom: 20px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+    
+    .expected-output {
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 4px solid #00ff96;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .monaco-editor-container {
+      width: 100%;
+      height: 250px;
+      border: 2px solid #444;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 15px 0;
+      transition: border-color 0.3s ease;
+    }
+    
+    .monaco-editor-container:focus-within {
+      border-color: #00ff96;
+    }
+    
+    .challenge-controls {
+      display: flex;
+      gap: 10px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(45deg, #00ff96, #00cc7a);
+      color: #000;
+    }
+    
+    .btn-secondary {
+      background: #444;
+      color: #fff;
+      border: 1px solid #666;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .output-area {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+      min-height: 80px;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 200px;
+    }
+    
+    .challenge-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    
+    .status-pending {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+    
+    .status-success {
+      background: rgba(76, 175, 80, 0.2);
+      color: #4caf50;
+    }
+    
+    .status-error {
+      background: rgba(244, 67, 54, 0.2);
+      color: #f44336;
+    }
+    
+    .hint-section {
+      background: rgba(33, 150, 243, 0.1);
+      border-left: 4px solid #2196f3;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+    }
+    
+    .hint-toggle {
+      background: none;
+      border: none;
+      color: #2196f3;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .hint-content {
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .navigation-bar {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .nav-link {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-link.active {
+      background: linear-gradient(45deg, #00ff96, #00cc7a);
+      color: #000;
+    }
+    
+    @media (max-width: 768px) {
+      .challenge-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        padding: 10px;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-code"></i> Python Basics Challenge</h1>
+      <p>Master the fundamentals with hands-on coding exercises</p>
+      
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+      <p id="progressText">0 of 6 challenges completed</p>
+    </div>
+    
+    <div class="navigation-bar">
+      <a href="/loops-presentation.html" class="nav-link">
+        <i class="fas fa-sync"></i> Loops
+      </a>
+      <a href="/python-basics-challenge.html" class="nav-link active">
+        <i class="fas fa-play"></i> Basics
+      </a>
+      <a href="/functions-challenge.html" class="nav-link">
+        <i class="fas fa-cogs"></i> Functions
+      </a>
+      <a href="/data-structures-challenge.html" class="nav-link">
+        <i class="fas fa-database"></i> Data Structures
+      </a>
+      <a href="/dashboard.html" class="nav-link">
+        <i class="fas fa-home"></i> Dashboard
+      </a>
+    </div>
+
+    <div class="challenge-grid">
+      <!-- Challenge 1: Variables and Data Types -->
+      <div class="challenge-card">
+        <div class="challenge-header">
+          <div class="challenge-icon">
+            <i class="fas fa-cube"></i>
+          </div>
+          <div class="challenge-title">Variables & Data Types</div>
+          <div class="challenge-difficulty difficulty-easy">Easy</div>
+        </div>
+        
+        <div class="challenge-description">
+          Create variables for different data types and display them with type information.
+          <br><br>
+          <strong>Task:</strong> Create a string, integer, float, and boolean variable. Print each variable along with its type.
+        </div>
+        
+        <div class="expected-output">
+          <strong>Expected Output:</strong><br>
+          Name: Alice (type: &lt;class 'str'&gt;)<br>
+          Age: 25 (type: &lt;class 'int'&gt;)<br>
+          Height: 5.6 (type: &lt;class 'float'&gt;)<br>
+          Is Student: True (type: &lt;class 'bool'&gt;)
+        </div>
+        
+        <div class="monaco-editor-container" id="editor1"></div>
+        
+        <div class="challenge-controls">
+          <button class="btn btn-primary" onclick="runCode('editor1', 1)">
+            <i class="fas fa-play"></i> Run Code
+          </button>
+          <button class="btn btn-secondary" onclick="loadTemplate('editor1', 'variables')">
+            <i class="fas fa-lightbulb"></i> Template
+          </button>
+          <button class="btn btn-secondary" onclick="clearCode('editor1')">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+        
+        <div class="hint-section">
+          <button class="hint-toggle" onclick="toggleHint(1)">
+            <i class="fas fa-question-circle"></i> Show Hint
+          </button>
+          <div class="hint-content" id="hint1">
+            Use the <code>type()</code> function to get the type of a variable.
+            Example: <code>print(f"Value: {my_var} (type: {type(my_var)})")</code>
+          </div>
+        </div>
+        
+        <div class="output-area" id="output1"></div>
+        <div class="challenge-status status-pending" id="status1">
+          <i class="fas fa-clock"></i> Not attempted yet
+        </div>
+      </div>
+
+      <!-- Challenge 2: Input and String Operations -->
+      <div class="challenge-card">
+        <div class="challenge-header">
+          <div class="challenge-icon">
+            <i class="fas fa-keyboard"></i>
+          </div>
+          <div class="challenge-title">Input & String Operations</div>
+          <div class="challenge-difficulty difficulty-easy">Easy</div>
+        </div>
+        
+        <div class="challenge-description">
+          Get user input and perform string manipulations.
+          <br><br>
+          <strong>Task:</strong> Ask for the user's first and last name, then display a formatted greeting with their full name in uppercase.
+        </div>
+        
+        <div class="expected-output">
+          <strong>Expected Output:</strong><br>
+          Enter your first name: Alice<br>
+          Enter your last name: Johnson<br>
+          Hello, ALICE JOHNSON! Welcome to Python programming!
+        </div>
+        
+        <div class="monaco-editor-container" id="editor2"></div>
+        
+        <div class="challenge-controls">
+          <button class="btn btn-primary" onclick="runCode('editor2', 2)">
+            <i class="fas fa-play"></i> Run Code
+          </button>
+          <button class="btn btn-secondary" onclick="loadTemplate('editor2', 'input_strings')">
+            <i class="fas fa-lightbulb"></i> Template
+          </button>
+          <button class="btn btn-secondary" onclick="clearCode('editor2')">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+        
+        <div class="hint-section">
+          <button class="hint-toggle" onclick="toggleHint(2)">
+            <i class="fas fa-question-circle"></i> Show Hint
+          </button>
+          <div class="hint-content" id="hint2">
+            Use <code>input()</code> to get user input and <code>.upper()</code> to convert to uppercase.
+            Combine strings with <code>+</code> or use f-strings: <code>f"Hello, {name}!"</code>
+          </div>
+        </div>
+        
+        <div class="output-area" id="output2"></div>
+        <div class="challenge-status status-pending" id="status2">
+          <i class="fas fa-clock"></i> Not attempted yet
+        </div>
+      </div>
+
+      <!-- Challenge 3: Math Operations -->
+      <div class="challenge-card">
+        <div class="challenge-header">
+          <div class="challenge-icon">
+            <i class="fas fa-calculator"></i>
+          </div>
+          <div class="challenge-title">Math Operations</div>
+          <div class="challenge-difficulty difficulty-easy">Easy</div>
+        </div>
+        
+        <div class="challenge-description">
+          Create a simple calculator that performs basic operations.
+          <br><br>
+          <strong>Task:</strong> Get two numbers from the user and display addition, subtraction, multiplication, and division results.
+        </div>
+        
+        <div class="expected-output">
+          <strong>Expected Output:</strong><br>
+          Enter first number: 10<br>
+          Enter second number: 3<br>
+          10 + 3 = 13<br>
+          10 - 3 = 7<br>
+          10 * 3 = 30<br>
+          10 / 3 = 3.33
+        </div>
+        
+        <div class="monaco-editor-container" id="editor3"></div>
+        
+        <div class="challenge-controls">
+          <button class="btn btn-primary" onclick="runCode('editor3', 3)">
+            <i class="fas fa-play"></i> Run Code
+          </button>
+          <button class="btn btn-secondary" onclick="loadTemplate('editor3', 'math_ops')">
+            <i class="fas fa-lightbulb"></i> Template
+          </button>
+          <button class="btn btn-secondary" onclick="clearCode('editor3')">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+        
+        <div class="hint-section">
+          <button class="hint-toggle" onclick="toggleHint(3)">
+            <i class="fas fa-question-circle"></i> Show Hint
+          </button>
+          <div class="hint-content" id="hint3">
+            Use <code>float(input())</code> to convert input to numbers.
+            For formatting decimals, use <code>round(result, 2)</code> or f-strings: <code>f"{result:.2f}"</code>
+          </div>
+        </div>
+        
+        <div class="output-area" id="output3"></div>
+        <div class="challenge-status status-pending" id="status3">
+          <i class="fas fa-clock"></i> Not attempted yet
+        </div>
+      </div>
+
+      <!-- Challenge 4: Conditionals -->
+      <div class="challenge-card">
+        <div class="challenge-header">
+          <div class="challenge-icon">
+            <i class="fas fa-code-branch"></i>
+          </div>
+          <div class="challenge-title">Conditional Logic</div>
+          <div class="challenge-difficulty difficulty-medium">Medium</div>
+        </div>
+        
+        <div class="challenge-description">
+          Create a grade evaluator using if/elif/else statements.
+          <br><br>
+          <strong>Task:</strong> Ask for a score (0-100) and display the corresponding letter grade and a message.
+        </div>
+        
+        <div class="expected-output">
+          <strong>Expected Output:</strong><br>
+          Enter your score (0-100): 87<br>
+          Score: 87<br>
+          Grade: B<br>
+          Great job! You're doing well!
+        </div>
+        
+        <div class="monaco-editor-container" id="editor4"></div>
+        
+        <div class="challenge-controls">
+          <button class="btn btn-primary" onclick="runCode('editor4', 4)">
+            <i class="fas fa-play"></i> Run Code
+          </button>
+          <button class="btn btn-secondary" onclick="loadTemplate('editor4', 'conditionals')">
+            <i class="fas fa-lightbulb"></i> Template
+          </button>
+          <button class="btn btn-secondary" onclick="clearCode('editor4')">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+        
+        <div class="hint-section">
+          <button class="hint-toggle" onclick="toggleHint(4)">
+            <i class="fas fa-question-circle"></i> Show Hint
+          </button>
+          <div class="hint-content" id="hint4">
+            Grade scale: A (90-100), B (80-89), C (70-79), D (60-69), F (below 60).
+            Use <code>elif</code> for multiple conditions: <code>if score >= 90: ... elif score >= 80: ...</code>
+          </div>
+        </div>
+        
+        <div class="output-area" id="output4"></div>
+        <div class="challenge-status status-pending" id="status4">
+          <i class="fas fa-clock"></i> Not attempted yet
+        </div>
+      </div>
+
+      <!-- Challenge 5: Lists and Loops -->
+      <div class="challenge-card">
+        <div class="challenge-header">
+          <div class="challenge-icon">
+            <i class="fas fa-list"></i>
+          </div>
+          <div class="challenge-title">Lists & Loops</div>
+          <div class="challenge-difficulty difficulty-medium">Medium</div>
+        </div>
+        
+        <div class="challenge-description">
+          Work with lists and loops to process data.
+          <br><br>
+          <strong>Task:</strong> Create a list of at least 5 numbers, find the sum, average, maximum, and minimum values.
+        </div>
+        
+        <div class="expected-output">
+          <strong>Expected Output:</strong><br>
+          Numbers: [10, 25, 3, 78, 45, 12]<br>
+          Sum: 173<br>
+          Average: 28.83<br>
+          Maximum: 78<br>
+          Minimum: 3
+        </div>
+        
+        <div class="monaco-editor-container" id="editor5"></div>
+        
+        <div class="challenge-controls">
+          <button class="btn btn-primary" onclick="runCode('editor5', 5)">
+            <i class="fas fa-play"></i> Run Code
+          </button>
+          <button class="btn btn-secondary" onclick="loadTemplate('editor5', 'lists_loops')">
+            <i class="fas fa-lightbulb"></i> Template
+          </button>
+          <button class="btn btn-secondary" onclick="clearCode('editor5')">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+        
+        <div class="hint-section">
+          <button class="hint-toggle" onclick="toggleHint(5)">
+            <i class="fas fa-question-circle"></i> Show Hint
+          </button>
+          <div class="hint-content" id="hint5">
+            Use <code>sum()</code>, <code>max()</code>, <code>min()</code>, and <code>len()</code> functions.
+            Average = sum / length. Use <code>round()</code> for formatting decimals.
+          </div>
+        </div>
+        
+        <div class="output-area" id="output5"></div>
+        <div class="challenge-status status-pending" id="status5">
+          <i class="fas fa-clock"></i> Not attempted yet
+        </div>
+      </div>
+
+      <!-- Challenge 6: Final Project -->
+      <div class="challenge-card">
+        <div class="challenge-header">
+          <div class="challenge-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="challenge-title">Mini Project: Personal Info</div>
+          <div class="challenge-difficulty difficulty-hard">Hard</div>
+        </div>
+        
+        <div class="challenge-description">
+          Combine all concepts to create a personal information collector and processor.
+          <br><br>
+          <strong>Task:</strong> Create a program that collects personal info, calculates age from birth year, and displays a formatted profile.
+        </div>
+        
+        <div class="expected-output">
+          <strong>Expected Output:</strong><br>
+          Enter your name: Alice Johnson<br>
+          Enter your birth year: 1998<br>
+          Enter your favorite color: Blue<br>
+          Enter 3 hobbies (separated by commas): reading, coding, hiking<br>
+          <br>
+          === PERSONAL PROFILE ===<br>
+          Name: ALICE JOHNSON<br>
+          Age: 25 years old<br>
+          Favorite Color: Blue<br>
+          Hobbies: Reading, Coding, Hiking<br>
+          Profile Score: 85/100
+        </div>
+        
+        <div class="monaco-editor-container" id="editor6"></div>
+        
+        <div class="challenge-controls">
+          <button class="btn btn-primary" onclick="runCode('editor6', 6)">
+            <i class="fas fa-play"></i> Run Code
+          </button>
+          <button class="btn btn-secondary" onclick="loadTemplate('editor6', 'mini_project')">
+            <i class="fas fa-lightbulb"></i> Template
+          </button>
+          <button class="btn btn-secondary" onclick="clearCode('editor6')">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+        
+        <div class="hint-section">
+          <button class="hint-toggle" onclick="toggleHint(6)">
+            <i class="fas fa-question-circle"></i> Show Hint
+          </button>
+          <div class="hint-content" id="hint6">
+            Calculate age: <code>2025 - birth_year</code>. Split hobbies: <code>hobbies.split(',')</code>. 
+            Capitalize each hobby: <code>hobby.strip().title()</code>. 
+            Profile score can be based on age and number of hobbies.
+          </div>
+        </div>
+        
+        <div class="output-area" id="output6"></div>
+        <div class="challenge-status status-pending" id="status6">
+          <i class="fas fa-clock"></i> Not attempted yet
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let pyodideInstance = null;
+    let monacoEditors = new Map();
+    let completedChallenges = new Set();
+    
+    // Initialize Monaco Editor
+    require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' }});
+    
+    require(['vs/editor/editor.main'], function() {
+      initializeMonacoEditors();
+    });
+    
+    // Initialize Pyodide
+    async function initPyodide() {
+      if (!pyodideInstance) {
+        pyodideInstance = await loadPyodide();
+        console.log("Python environment ready!");
+      }
+      return pyodideInstance;
+    }
+    
+    // Initialize Monaco editors
+    function initializeMonacoEditors() {
+      for (let i = 1; i <= 6; i++) {
+        const container = document.getElementById(`editor${i}`);
+        if (container) {
+          const editor = monaco.editor.create(container, {
+            value: getDefaultCode(i),
+            language: 'python',
+            theme: 'vs-dark',
+            minimap: { enabled: false },
+            fontSize: 14,
+            fontFamily: 'JetBrains Mono, Fira Code, Courier New, monospace',
+            lineNumbers: 'on',
+            roundedSelection: false,
+            scrollBeyondLastLine: false,
+            automaticLayout: true,
+            tabSize: 4,
+            insertSpaces: true,
+            wordWrap: 'on',
+            bracketPairColorization: { enabled: true },
+            suggest: {
+              showKeywords: true,
+              showSnippets: true
+            }
+          });
+          
+          monacoEditors.set(`editor${i}`, editor);
+          
+          // Add keyboard shortcuts
+          editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, function() {
+            runCode(`editor${i}`, i);
+          });
+        }
+      }
+    }
+    
+    // Default starter code for each challenge
+    function getDefaultCode(challengeNumber) {
+      const defaults = {
+        1: '# Challenge 1: Variables and Data Types\n# Create variables for different data types\n\n',
+        2: '# Challenge 2: Input and String Operations\n# Get user input and manipulate strings\n\n',
+        3: '# Challenge 3: Math Operations\n# Create a simple calculator\n\n',
+        4: '# Challenge 4: Conditional Logic\n# Create a grade evaluator\n\n',
+        5: '# Challenge 5: Lists and Loops\n# Work with lists and calculate statistics\n\n',
+        6: '# Challenge 6: Mini Project\n# Personal information collector\n\n'
+      };
+      return defaults[challengeNumber] || '';
+    }
+    
+    // Code templates
+    const codeTemplates = {
+      variables: `# Variables and Data Types
+name = "Alice"
+age = 25
+height = 5.6
+is_student = True
+
+print(f"Name: {name} (type: {type(name)})")
+print(f"Age: {age} (type: {type(age)})")
+print(f"Height: {height} (type: {type(height)})")
+print(f"Is Student: {is_student} (type: {type(is_student)})")`,
+
+      input_strings: `# Input and String Operations
+first_name = input("Enter your first name: ")
+last_name = input("Enter your last name: ")
+
+full_name = (first_name + " " + last_name).upper()
+print(f"Hello, {full_name}! Welcome to Python programming!")`,
+
+      math_ops: `# Math Operations Calculator
+num1 = float(input("Enter first number: "))
+num2 = float(input("Enter second number: "))
+
+print(f"{num1} + {num2} = {num1 + num2}")
+print(f"{num1} - {num2} = {num1 - num2}")
+print(f"{num1} * {num2} = {num1 * num2}")
+print(f"{num1} / {num2} = {num1 / num2:.2f}")`,
+
+      conditionals: `# Grade Evaluator
+score = float(input("Enter your score (0-100): "))
+
+print(f"Score: {score}")
+
+if score >= 90:
+    grade = "A"
+    message = "Excellent work! You're a star!"
+elif score >= 80:
+    grade = "B"
+    message = "Great job! You're doing well!"
+elif score >= 70:
+    grade = "C"
+    message = "Good effort! Keep improving!"
+elif score >= 60:
+    grade = "D"
+    message = "You're passing, but try harder!"
+else:
+    grade = "F"
+    message = "Don't give up! Practice makes perfect!"
+
+print(f"Grade: {grade}")
+print(message)`,
+
+      lists_loops: `# Lists and Statistics
+numbers = [10, 25, 3, 78, 45, 12]
+
+print(f"Numbers: {numbers}")
+print(f"Sum: {sum(numbers)}")
+print(f"Average: {sum(numbers) / len(numbers):.2f}")
+print(f"Maximum: {max(numbers)}")
+print(f"Minimum: {min(numbers)}")`,
+
+      mini_project: `# Personal Information Collector
+import datetime
+
+name = input("Enter your name: ")
+birth_year = int(input("Enter your birth year: "))
+color = input("Enter your favorite color: ")
+hobbies_input = input("Enter 3 hobbies (separated by commas): ")
+
+# Calculate age
+current_year = 2025
+age = current_year - birth_year
+
+# Process hobbies
+hobbies = [hobby.strip().title() for hobby in hobbies_input.split(',')]
+
+# Calculate profile score
+profile_score = min(100, age + len(hobbies) * 10)
+
+# Display profile
+print("\\n=== PERSONAL PROFILE ===")
+print(f"Name: {name.upper()}")
+print(f"Age: {age} years old")
+print(f"Favorite Color: {color}")
+print(f"Hobbies: {', '.join(hobbies)}")
+print(f"Profile Score: {profile_score}/100")`
+    };
+    
+    // Run code function
+    async function runCode(editorId, challengeNumber) {
+      const editor = monacoEditors.get(editorId);
+      const outputArea = document.getElementById(`output${challengeNumber}`);
+      const statusArea = document.getElementById(`status${challengeNumber}`);
+      
+      if (!editor) return;
+      
+      const code = editor.getValue().trim();
+      
+      if (!code) {
+        outputArea.innerHTML = '<span style="color: #ff6b6b;">Please enter some Python code to run!</span>';
+        return;
+      }
+      
+      try {
+        statusArea.className = 'challenge-status status-pending';
+        statusArea.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running code...';
+        outputArea.innerHTML = '<span style="color: #58a6ff;">Executing Python code...</span>';
+        
+        const pyodide = await initPyodide();
+        
+        // Setup environment
+        pyodide.runPython(`
+          import sys
+          from io import StringIO
+          import builtins
+          
+          sys.stdout = StringIO()
+          
+          # Clear previous variables
+          for name in list(globals().keys()):
+              if not name.startswith('__') and name not in dir(builtins):
+                  del globals()[name]
+        `);
+        
+        // Enhanced input function
+        let inputCount = 0;
+        pyodide.globals.set("input", function(prompt = "") {
+          inputCount++;
+          const displayPrompt = prompt || `Input #${inputCount}:`;
+          const value = window.prompt(displayPrompt);
+          
+          if (value === null) {
+            throw new Error("Input cancelled by user");
+          }
+          
+          return value || "";
+        });
+        
+        // Run user code
+        pyodide.runPython(code);
+        const output = pyodide.runPython("sys.stdout.getvalue()");
+        
+        if (output.trim()) {
+          outputArea.innerHTML = `<div style="color: #00ff96;">${output.replace(/\n/g, '<br>')}</div>`;
+        } else {
+          outputArea.innerHTML = '<span style="color: #00ff96;">Code executed successfully!</span>';
+        }
+        
+        // Mark as completed
+        completedChallenges.add(challengeNumber);
+        statusArea.className = 'challenge-status status-success';
+        statusArea.innerHTML = '<i class="fas fa-check-circle"></i> Challenge completed!';
+        
+        updateProgress();
+        
+      } catch (error) {
+        outputArea.innerHTML = `<div style="color: #ff6b6b;">Error: ${error.message}</div>`;
+        statusArea.className = 'challenge-status status-error';
+        statusArea.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error occurred';
+      }
+    }
+    
+    // Load template
+    function loadTemplate(editorId, templateName) {
+      const editor = monacoEditors.get(editorId);
+      if (editor && codeTemplates[templateName]) {
+        editor.setValue(codeTemplates[templateName]);
+        editor.focus();
+      }
+    }
+    
+    // Clear code
+    function clearCode(editorId) {
+      const editor = monacoEditors.get(editorId);
+      if (editor) {
+        const challengeNumber = parseInt(editorId.replace('editor', ''));
+        editor.setValue(getDefaultCode(challengeNumber));
+        editor.focus();
+        
+        // Clear output and status
+        document.getElementById(`output${challengeNumber}`).innerHTML = '';
+        const statusArea = document.getElementById(`status${challengeNumber}`);
+        statusArea.className = 'challenge-status status-pending';
+        statusArea.innerHTML = '<i class="fas fa-clock"></i> Not attempted yet';
+        
+        completedChallenges.delete(challengeNumber);
+        updateProgress();
+      }
+    }
+    
+    // Toggle hint
+    function toggleHint(challengeNumber) {
+      const hintContent = document.getElementById(`hint${challengeNumber}`);
+      const hintToggle = hintContent.previousElementSibling;
+      
+      if (hintContent.style.display === 'none' || !hintContent.style.display) {
+        hintContent.style.display = 'block';
+        hintToggle.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Hint';
+      } else {
+        hintContent.style.display = 'none';
+        hintToggle.innerHTML = '<i class="fas fa-question-circle"></i> Show Hint';
+      }
+    }
+    
+    // Update progress
+    function updateProgress() {
+      const totalChallenges = 6;
+      const completed = completedChallenges.size;
+      const percentage = (completed / totalChallenges) * 100;
+      
+      document.getElementById('progressBar').style.width = `${percentage}%`;
+      document.getElementById('progressText').textContent = `${completed} of ${totalChallenges} challenges completed`;
+    }
+  </script>
+</body>
+</html>

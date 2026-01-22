@@ -1,5 +1,5 @@
 // Firebase configuration for Code with Morais platform
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyAIwwM2V2qfPCB3TLVVeb8IW3FGxdNDhiY",
   // Use the custom domain for auth callbacks so state is persisted on your site
   authDomain: "codewithmorais.com",
@@ -10,5 +10,15 @@ export const firebaseConfig = {
   measurementId: "G-JLH66GJNFL"
 };
 
-// Also set on window for backward compatibility
+// Only try to initialize if Firebase compat SDK is available (for older pages)
+if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    console.log('Firebase (compat) initialized successfully');
+  } catch (error) {
+    console.log('Firebase compat initialization skipped:', error.message);
+  }
+}
+
+// Set on window for modular SDK pages
 window.firebaseConfig = firebaseConfig;

@@ -1,0 +1,858 @@
+<!D    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧮 Miniproject 3: AI Study Helper</title>tml lang="en">
+<head>
+    <meta cha        .code-example::before {
+            content: '📋 Code Template';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.3);
+        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧮 Miniproject 3: AI Stu        .code-example::before {
+            content: '📋 Code Template';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.3);
+        }le>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .demo-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 3px solid #2196f3;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .demo-output {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            border: 2px solid #00ff00;
+            text-align: left;
+            white-space: pre-line;
+        }
+        
+        .project-badge {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 8px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .project-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .task-card {
+            background: white;
+            margin: 25px 0;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+        
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+            border-color: #28a745;
+        }
+        
+        .task-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .ai-zone {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 2px dashed #673ab7;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(103, 58, 183, 0.1);
+        }
+        
+        .ai-zone::before {
+            content: '🤖 AI CONSULTATION ZONE';
+            position: absolute;
+            top: -12px;
+            left: 25px;
+            background: linear-gradient(45deg, #673ab7, #9c27b0);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(103, 58, 183, 0.3);
+        }
+        
+        .reveal-button {
+            background: linear-gradient(45deg, #2196f3, #21cbf3);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 15px 5px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .reveal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+            background: linear-gradient(45deg, #1976d2, #1e88e5);
+        }
+        
+        .hidden-content {
+            display: none;
+            background: #d1ecf1;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .code-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: 2px solid #6c5ce7;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.2);
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .code-example::before {
+            content: '� Python Code';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(45deg, #007acc, #00a8cc);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 122, 204, 0.3);
+        }
+        
+        /* Python syntax highlighting */
+        .keyword { color: #569cd6; font-weight: bold; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .number { color: #b5cea8; }
+        .function { color: #dcdcaa; }
+        .operator { color: #d4d4d4; }
+        .variable { color: #9cdcfe; }
+        
+        .step-counter {
+            background: #ffd700;
+            color: #000;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .deliverables {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 3px solid #28a745;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 6px 25px rgba(40, 167, 69, 0.2);
+            position: relative;
+        }
+        
+        .deliverables::before {
+            content: '🎯';
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            background: #28a745;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .progress-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        /* Submission Form Styles */
+        .submission-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+            border: 3px solid #28a745;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 8px 30px rgba(40, 167, 69, 0.2);
+            position: relative;
+        }
+        
+        .submission-section::before {
+            content: '📤';
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .submission-info {
+            margin-bottom: 30px;
+        }
+        
+        .requirement-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #28a745;
+        }
+        
+        .requirement-card h5 {
+            color: #28a745;
+            margin-top: 0;
+            font-size: 16px;
+        }
+        
+        .submission-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+        }
+        
+        .form-group small {
+            display: block;
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .submit-button {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .submission-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .submission-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .submission-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .submission-status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span style="font-size: 2em;">🧮</span> AI Study Helper <span style="font-size: 2em;">🤖</span></h1>
+            <h2>Build a Smart Grade Calculator with AI-Powered Study Tips</h2>
+            <div style="margin: 15px 0;">
+                <span class="project-badge">🎯 BEGINNER-FRIENDLY</span>
+                <span class="project-badge">📊 PRACTICAL TOOL</span>
+                <span class="project-badge">⏱️ 1-2 HOURS</span>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎯 What You're Building - Live Demo</h2>
+            <p><strong>Here's what your finished program will look like when running:</strong></p>
+            
+            <div class="demo-output">🎓 AI Study Helper 🎓
+
+Welcome! Let me help you with your grades.
+
+Enter your current grade: 78
+Enter your target grade: 90
+
+📊 Results:
+Your current grade: 78%
+Your target grade: 90%  
+You need to improve by: 12 points
+
+📚 Study Recommendation:
+• Study time: HIGH (2+ hours daily)
+• Difficulty: CHALLENGING
+• Get help from teacher or tutor!
+
+🤖 AI Study Advisor says:
+• Get a tutor or teacher's help
+• Use 25-minute focused study blocks
+• Try multiple learning resources
+
+Would you like to try again? (y/n): n
+Good luck with your studies! 📚</div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%); padding: 25px; border-radius: 15px; margin: 25px 0; border-left: 5px solid #28a745;">
+            <h3>🌟 Why You'll Love Building This:</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                <div>
+                    <ul style="margin: 0;">
+                        <li><strong>🎯 Clear Purpose:</strong> Helps with real grade planning</li>
+                        <li><strong>🧠 Smart Logic:</strong> Uses if/else decisions and math</li>
+                        <li><strong>🤖 AI-Powered:</strong> Generates personalized study tips</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul style="margin: 0;">
+                        <li><strong>⚡ Quick Build:</strong> Complete in 1-2 hours</li>
+                        <li><strong>📱 User-Friendly:</strong> Interactive and helpful</li>
+                        <li><strong>🚀 Practical Tool:</strong> You'll actually use this!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 50%, #fdcb6e 100%); padding: 25px; border-radius: 15px; margin: 25px 0; border: 2px solid #f39c12; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);">
+            <h4 style="margin-top: 0; color: #d35400; font-size: 18px;">🏆 Your Mission Roadmap</h4>
+            <div style="display: grid; gap: 12px;">
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #e67e22; display: flex; align-items: center;">
+                    <input type="checkbox" id="step1" style="transform: scale(1.2); margin-right: 15px;"> 
+                    <label for="step1" style="font-weight: 500;">🎯 Get user's current and target grades</label>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #e67e22; display: flex; align-items: center;">
+                    <input type="checkbox" id="step2" style="transform: scale(1.2); margin-right: 15px;"> 
+                    <label for="step2" style="font-weight: 500;">📊 Calculate improvement needed</label>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #e67e22; display: flex; align-items: center;">
+                    <input type="checkbox" id="step3" style="transform: scale(1.2); margin-right: 15px;"> 
+                    <label for="step3" style="font-weight: 500;">🧠 Create smart study recommendations</label>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #e67e22; display: flex; align-items: center;">
+                    <input type="checkbox" id="step4" style="transform: scale(1.2); margin-right: 15px;"> 
+                    <label for="step4" style="font-weight: 500;">🤖 Generate personalized AI study prompts</label>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #e67e22; display: flex; align-items: center;">
+                    <input type="checkbox" id="step5" style="transform: scale(1.2); margin-right: 15px;"> 
+                    <label for="step5" style="font-weight: 500;">🔄 Add repeat functionality for multiple calculations</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="task-card">
+            <div class="task-header">
+                <span class="step-counter">1</span>Get User Input (Easy!)
+            </div>
+            
+            <p><strong>Goal:</strong> Ask user for current grade and target grade.</p>
+            
+            <div class="code-example">
+<span class="comment"># Step 1: Your task - Get user input</span>
+<span class="function">print</span>(<span class="string">"Welcome message here"</span>)
+
+<span class="comment"># TODO: Ask user for their current grade</span>
+<span class="variable">current_grade</span> <span class="operator">=</span> <span class="comment"># Use float() and input() here</span>
+
+<span class="comment"># TODO: Ask user for their target grade</span>
+<span class="variable">target_grade</span> <span class="operator">=</span> <span class="comment"># Use float() and input() here</span></div>
+            
+            <div class="ai-zone">
+                <p><strong>🤖 AI Question Time:</strong></p>
+                <button class="reveal-button" onclick="toggleContent('hint1')">Get AI Guidance</button>
+                <div id="hint1" class="hidden-content no-select">
+                    <p><strong>Ask AI:</strong> "What's the safest way to get number input from a user in Python? Should I use int() or float() for grades, and how do I handle errors if they type letters instead of numbers?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="task-card">
+            <div class="task-header">
+                <span class="step-counter">2</span>Simple Math Calculation
+            </div>
+            
+            <p><strong>Goal:</strong> Calculate how many points they need to improve.</p>
+            
+            <div class="code-example">
+<span class="comment"># Step 2: Calculate the difference</span>
+<span class="variable">grade_gap</span> <span class="operator">=</span> <span class="comment"># What math operation finds the difference?</span>
+
+<span class="comment"># TODO: Display the results using f-strings</span>
+<span class="function">print</span>(<span class="string">f"Current grade: {<span class="comment">variable_name_here</span>}%"</span>)
+<span class="comment"># Add more print statements to show target grade and gap</span></div>
+            
+            <div class="ai-zone">
+                <button class="reveal-button" onclick="toggleContent('hint2')">Get Calculation Help</button>
+                <div id="hint2" class="hidden-content no-select">
+                    <p><strong>Ask AI:</strong> "If someone has a current grade and a target grade, what should I do if their target is LOWER than their current grade? How should my program handle negative numbers or weird inputs?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="task-card">
+            <div class="task-header">
+                <span class="step-counter">3</span>Decision Logic with if/elif/else
+            </div>
+            
+            <p><strong>Goal:</strong> Give different study advice based on grade gap.</p>
+            
+            <div class="code-example">
+<span class="comment"># Step 3: Decision logic structure</span>
+<span class="keyword">if</span> <span class="variable">grade_gap</span> <span class="operator"><=</span> <span class="comment"># What number for "easy" improvement?</span>
+    <span class="comment"># TODO: Print advice for small improvements</span>
+<span class="keyword">elif</span> <span class="variable">grade_gap</span> <span class="operator"><=</span> <span class="comment"># What number for "moderate"?</span>
+    <span class="comment"># TODO: Print advice for medium improvements</span>
+<span class="keyword">else</span>:
+    <span class="comment"># TODO: Print advice for major improvements</span>
+
+<span class="comment"># Think: What ranges make sense? 1-5? 6-10? 11+?</span></div>
+            
+            <div class="ai-zone">
+                <button class="reveal-button" onclick="toggleContent('hint3')">Decision Logic Help</button>
+                <div id="hint3" class="hidden-content no-select">
+                    <p><strong>Ask AI:</strong> "I want to give different study advice based on how much a student needs to improve their grade. What are reasonable ranges for 'easy improvement' vs 'hard improvement' and what advice should I give for each?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="task-card">
+            <div class="task-header">
+                <span class="step-counter">4</span>AI-Powered Study Tips (The Cool Part!)
+            </div>
+            
+            <p><strong>Goal:</strong> Use AI consultation to provide personalized study advice based on grade gap.</p>
+            
+            <div class="code-example">
+<span class="comment"># Step 4: Add AI-informed study tips</span>
+<span class="function">print</span>(<span class="string">"🤖 AI Study Advisor says:"</span>)
+
+<span class="comment"># TODO: Use same if/elif/else structure as Step 3</span>
+<span class="comment"># but add specific study tips based on Gemini's advice</span>
+
+<span class="keyword">if</span> <span class="comment"># Small improvement needed</span>
+    <span class="comment"># Add 2-3 tips from Gemini for small improvements</span>
+<span class="keyword">elif</span> <span class="comment"># Medium improvement needed</span> 
+    <span class="comment"># Add 2-3 tips from Gemini for medium improvements</span>
+<span class="keyword">else</span>:
+    <span class="comment"># Add 2-3 tips from Gemini for major improvements</span></div>
+            
+            <div class="ai-zone">
+                <button class="reveal-button" onclick="toggleContent('hint4')">Get AI Study Strategy</button>
+                <div id="hint4" class="hidden-content no-select">
+                    <p><strong>Ask Gemini:</strong> "I'm building a study helper program. For students who need to improve their grades by different amounts, what are the best study strategies? Give me specific advice for: (1) small improvements (1-5 points), (2) moderate improvements (6-10 points), and (3) major improvements (11+ points). I want practical, actionable tips."</p>
+                    <p><strong>Then:</strong> Use Gemini's advice to customize your own study tips for each grade gap range in your if/elif/else statements.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="task-card">
+            <div class="task-header">
+                <span class="step-counter">5</span>Simple Loop to Try Again
+            </div>
+            
+            <p><strong>Goal:</strong> Let them calculate multiple grades without restarting.</p>
+            
+            <div class="code-example">
+<span class="comment"># Step 5: Loop structure</span>
+<span class="keyword">while</span> <span class="keyword">True</span>:
+    <span class="comment"># TODO: Put your code from steps 1-4 here</span>
+    
+    <span class="comment"># TODO: Ask if they want to calculate another grade</span>
+    <span class="variable">again</span> <span class="operator">=</span> <span class="comment"># Get user input here</span>
+    <span class="keyword">if</span> <span class="comment"># Check if they don't want to continue</span>
+        <span class="comment"># Print goodbye message and break out of loop</span></div>
+            
+            <div class="ai-zone">
+                <button class="reveal-button" onclick="toggleContent('hint5')">Loop Design Help</button>
+                <div id="hint5" class="hidden-content no-select">
+                    <p><strong>Ask AI:</strong> "What's the simplest way to create a loop that asks if the user wants to run the program again? Should I use 'while True' with 'break' or a different approach?"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="submission-section">
+            <h3>📤 Project Submission</h3>
+            
+            <div class="submission-info">
+                <h4>What You Need to Submit:</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+                    <div class="requirement-card">
+                        <h5>💻 Your Program</h5>
+                        <p>Share a link to your <code>study_helper.py</code> file (GitHub, Replit, Google Drive, etc.)</p>
+                    </div>
+                    <div class="requirement-card">
+                        <h5>📝 AI Consultation Log</h5>
+                        <p>Document the questions you asked AI and how the advice helped</p>
+                    </div>
+                    <div class="requirement-card">
+                        <h5>🧠 Reflection</h5>
+                        <p>Share what you learned and any challenges you faced</p>
+                    </div>
+                </div>
+            </div>
+
+            <form id="submissionForm" class="submission-form">
+                <div class="form-group">
+                    <label for="studentName">👤 Your Name:</label>
+                    <input type="text" id="studentName" name="studentName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentEmail">📧 Your Email:</label>
+                    <input type="email" id="studentEmail" name="studentEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="programLink">💻 Program Link:</label>
+                    <input type="url" id="programLink" name="programLink" placeholder="https://replit.com/@yourname/study-helper or GitHub link" required>
+                    <small>Share your code via GitHub, Replit, Google Drive, or any platform</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="aiConsultation">🤖 AI Consultation Log:</label>
+                    <textarea id="aiConsultation" name="aiConsultation" rows="6" placeholder="Example:
+Step 1 - Question: How do I convert user input to float?
+Answer: Use float() function with try/except for error handling
+How it helped: I added proper input validation to prevent crashes
+
+Step 2 - Question: What's the best way to calculate percentage difference?
+Answer: Use abs(target - current) for absolute difference
+How it helped: Made my calculation more accurate..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="reflection">💭 Reflection & Learning:</label>
+                    <textarea id="reflection" name="reflection" rows="4" placeholder="What did you learn? What was challenging? How did AI help you solve problems? What would you do differently next time?" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="testResults">🧪 Test Results:</label>
+                    <textarea id="testResults" name="testResults" rows="3" placeholder="Test your program with these cases and paste the output:
+• Current: 85%, Target: 90% 
+• Current: 70%, Target: 85% 
+• Current: 95%, Target: 90%" required></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn" class="submit-button">
+                    🚀 Submit My Project
+                </button>
+
+                <div id="submissionStatus" class="submission-status"></div>
+            </form>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; text-align: center; margin: 25px 0; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);">
+            <h3 style="margin-top: 0; font-size: 24px;">🎉 Ready to Build Something Amazing?</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; backdrop-filter: blur(10px);">
+                    <strong>🎯 Perfect Skill Match</strong><br>
+                    <small>Uses your Python fundamentals</small>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; backdrop-filter: blur(10px);">
+                    <strong>⚡ Quick Success</strong><br>
+                    <small>Working program in hours, not days</small>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; backdrop-filter: blur(10px);">
+                    <strong>🤖 AI-Enhanced</strong><br>
+                    <small>Learn cutting-edge prompt engineering</small>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; backdrop-filter: blur(10px);">
+                    <strong>📚 Actually Useful</strong><br>
+                    <small>A tool you'll want to keep using</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGJ0ni9M-_g8zOKdviXZlQGGp6kxYzCOY",
+            authDomain: "code-with-morais-405.firebaseapp.com",
+            projectId: "code-with-morais-405",
+            storageBucket: "code-with-morais-405.appspot.com",
+            messagingSenderId: "784784341021",
+            appId: "1:784784341021:web:b18c15e312411d85b511e0"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Handle form submission
+        document.getElementById('submissionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const statusDiv = document.getElementById('submissionStatus');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Submitting...';
+            statusDiv.className = 'submission-status loading';
+            statusDiv.textContent = 'Submitting your project...';
+            statusDiv.style.display = 'block';
+            
+            try {
+                // Get form data
+                const formData = {
+                    studentName: document.getElementById('studentName').value,
+                    studentEmail: document.getElementById('studentEmail').value,
+                    programLink: document.getElementById('programLink').value,
+                    aiConsultation: document.getElementById('aiConsultation').value,
+                    reflection: document.getElementById('reflection').value,
+                    testResults: document.getElementById('testResults').value,
+                    submittedAt: serverTimestamp(),
+                    project: 'AI Study Helper - Miniproject 3'
+                };
+
+                // Add document to Firestore
+                const docRef = await addDoc(collection(db, 'submissions'), formData);
+                
+                // Show success message
+                statusDiv.className = 'submission-status success';
+                statusDiv.textContent = '🎉 Success! Your project has been submitted. Submission ID: ' + docRef.id.substring(0, 8);
+                
+                // Reset form
+                document.getElementById('submissionForm').reset();
+                
+            } catch (error) {
+                console.error('Error submitting project:', error);
+                statusDiv.className = 'submission-status error';
+                statusDiv.textContent = '❌ Error submitting project. Please try again or contact your teacher.';
+            } finally {
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Submit My Project';
+            }
+        });
+
+        // Make functions available globally
+        window.toggleContent = function(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = element.style.display === 'none' ? 'block' : 'none';
+        };
+    </script>
+
+    <script>
+        // Prevent copying
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && ['a','c','s','u'].includes(e.key)) e.preventDefault();
+        });
+
+        // Simple progress tracking
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const completed = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                if (completed === 5) {
+                    alert('🎉 All steps complete! Time to code your solution!');
+                }
+            });
+        });
+    </script>
+    
+    <!-- Discrete teacher access link -->
+    <div style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;">
+        <a href="teacher-submissions-dashboard.html" 
+           style="background: linear-gradient(45deg, #666, #999); color: white; padding: 8px 12px; 
+                  border-radius: 20px; text-decoration: none; font-size: 12px; opacity: 0.7;
+                  transition: opacity 0.3s ease;" 
+           onmouseover="this.style.opacity='1'" 
+           onmouseout="this.style.opacity='0.7'"
+           title="Teacher Dashboard - View Student Submissions">
+            👨‍🏫 Teacher
+        </a>
+    </div>
+</body>
+</html>

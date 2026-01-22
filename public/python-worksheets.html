@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Programming Worksheets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .worksheet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .worksheet-card {
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .worksheet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .worksheet-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .worksheet-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .print-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .print-button:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        /* Printable Worksheet Styles */
+        .worksheet {
+            display: none;
+            page-break-after: always;
+        }
+
+        .worksheet.active {
+            display: block;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+
+            .worksheet-grid, h1, .no-print {
+                display: none !important;
+            }
+
+            .worksheet {
+                display: block !important;
+                page-break-after: always;
+            }
+
+            .worksheet-header {
+                border-bottom: 3px solid #000;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+        }
+
+        .worksheet-header {
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .worksheet-header h2 {
+            color: #2c3e50;
+            font-size: 2em;
+        }
+
+        .worksheet-header .student-info {
+            margin-top: 15px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .student-info div {
+            border-bottom: 2px solid #000;
+            padding: 5px 0;
+            min-width: 200px;
+        }
+
+        /* Maze Styles */
+        .maze {
+            display: grid;
+            gap: 0;
+            width: fit-content;
+            margin: 20px auto;
+            border: 3px solid #000;
+        }
+
+        .maze-cell {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ccc;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .maze-cell.wall {
+            background: #333;
+        }
+
+        .maze-cell.start {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .maze-cell.end {
+            background: #f44336;
+            color: white;
+        }
+
+        .maze-cell.code {
+            background: #e3f2fd;
+            font-size: 0.7em;
+            padding: 2px;
+        }
+
+        /* Word Search Styles */
+        .word-search-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 2px;
+            width: fit-content;
+            margin: 20px auto;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .word-search-cell {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+        }
+
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .word-list div {
+            padding: 8px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* Crossword Styles */
+        .crossword {
+            display: grid;
+            gap: 0;
+            width: fit-content;
+            margin: 20px auto;
+        }
+
+        .crossword-cell {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #333;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .crossword-cell.black {
+            background: #000;
+        }
+
+        .crossword-cell .number {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 0.6em;
+            font-weight: bold;
+        }
+
+        .clues {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .clues h4 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .clues ol {
+            padding-left: 20px;
+        }
+
+        .clues li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        /* Code Tracing Worksheet */
+        .code-block {
+            background: #f5f5f5;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            line-height: 1.8;
+        }
+
+        .trace-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .trace-table th,
+        .trace-table td {
+            border: 2px solid #333;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .trace-table th {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Fill in the Blank */
+        .fill-blank {
+            display: inline-block;
+            border-bottom: 2px solid #000;
+            min-width: 150px;
+            margin: 0 5px;
+        }
+
+        .question {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .question strong {
+            color: #2c3e50;
+        }
+
+        /* Matching Exercise */
+        .matching {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .matching-column {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .matching-column h4 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .matching-item {
+            padding: 10px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .matching-letter {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍 Python Programming Worksheets</h1>
+        
+        <div class="worksheet-grid no-print">
+            <div class="worksheet-card" onclick="printWorksheet('worksheet1')">
+                <h3>🔍 Worksheet 1: Python Word Search</h3>
+                <p>Find 15 Python keywords and concepts hidden in the grid. Perfect for learning vocabulary!</p>
+                <button class="print-button">Print Worksheet</button>
+            </div>
+
+            <div class="worksheet-card" onclick="printWorksheet('worksheet2')">
+                <h3>🧩 Worksheet 2: Python Maze Challenge</h3>
+                <p>Navigate through a code-themed maze by solving Python syntax problems along the way.</p>
+                <button class="print-button">Print Worksheet</button>
+            </div>
+
+            <div class="worksheet-card" onclick="printWorksheet('worksheet3')">
+                <h3>📝 Worksheet 3: Code Tracing</h3>
+                <p>Trace through Python code and predict the output. Great for understanding loops and variables!</p>
+                <button class="print-button">Print Worksheet</button>
+            </div>
+
+            <div class="worksheet-card" onclick="printWorksheet('worksheet4')">
+                <h3>🔤 Worksheet 4: Python Crossword</h3>
+                <p>Test your knowledge of Python terms and concepts with this themed crossword puzzle.</p>
+                <button class="print-button">Print Worksheet</button>
+            </div>
+
+            <div class="worksheet-card" onclick="printWorksheet('worksheet5')">
+                <h3>✏️ Worksheet 5: Fill in the Blanks</h3>
+                <p>Complete Python code snippets by filling in the missing keywords and syntax.</p>
+                <button class="print-button">Print Worksheet</button>
+            </div>
+
+            <div class="worksheet-card" onclick="printWorksheet('worksheet6')">
+                <h3>🔗 Worksheet 6: Matching Exercise</h3>
+                <p>Match Python functions with their descriptions and match code with correct output.</p>
+                <button class="print-button">Print Worksheet</button>
+            </div>
+        </div>
+
+        <!-- Worksheet 1: Word Search -->
+        <div id="worksheet1" class="worksheet">
+            <div class="worksheet-header">
+                <h2>🔍 Python Word Search</h2>
+                <div class="student-info">
+                    <div><strong>Name:</strong> _________________________</div>
+                    <div><strong>Date:</strong> _________________________</div>
+                    <div><strong>Period:</strong> _________________________</div>
+                </div>
+            </div>
+
+            <p><strong>Directions:</strong> Find and circle all 15 Python keywords and concepts in the grid below. Words can be horizontal, vertical, or diagonal.</p>
+
+            <div class="word-search-grid" id="wordSearchGrid"></div>
+
+            <div class="word-list">
+                <div>✓ PRINT</div>
+                <div>✓ INPUT</div>
+                <div>✓ STRING</div>
+                <div>✓ INTEGER</div>
+                <div>✓ FLOAT</div>
+                <div>✓ BOOLEAN</div>
+                <div>✓ LIST</div>
+                <div>✓ LOOP</div>
+                <div>✓ FUNCTION</div>
+                <div>✓ VARIABLE</div>
+                <div>✓ RANGE</div>
+                <div>✓ INDEX</div>
+                <div>✓ APPEND</div>
+                <div>✓ LENGTH</div>
+                <div>✓ PYTHON</div>
+            </div>
+        </div>
+
+        <!-- Worksheet 2: Maze -->
+        <div id="worksheet2" class="worksheet">
+            <div class="worksheet-header">
+                <h2>🧩 Python Maze Challenge</h2>
+                <div class="student-info">
+                    <div><strong>Name:</strong> _________________________</div>
+                    <div><strong>Date:</strong> _________________________</div>
+                    <div><strong>Period:</strong> _________________________</div>
+                </div>
+            </div>
+
+            <p><strong>Directions:</strong> Navigate from START to FINISH by drawing a path through open spaces. Answer the Python questions in the colored cells you pass through!</p>
+
+            <div class="maze" id="mazeGrid"></div>
+
+            <div style="margin-top: 30px;">
+                <h3>Questions from the Maze:</h3>
+                <div class="question">
+                    <strong>Q1:</strong> What keyword is used to create a loop? <span class="fill-blank"></span>
+                </div>
+                <div class="question">
+                    <strong>Q2:</strong> What symbol is used for assignment? <span class="fill-blank"></span>
+                </div>
+                <div class="question">
+                    <strong>Q3:</strong> What function displays output? <span class="fill-blank"></span>
+                </div>
+                <div class="question">
+                    <strong>Q4:</strong> What data type is True/False? <span class="fill-blank"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Worksheet 3: Code Tracing -->
+        <div id="worksheet3" class="worksheet">
+            <div class="worksheet-header">
+                <h2>📝 Code Tracing Worksheet</h2>
+                <div class="student-info">
+                    <div><strong>Name:</strong> _________________________</div>
+                    <div><strong>Date:</strong> _________________________</div>
+                    <div><strong>Period:</strong> _________________________</div>
+                </div>
+            </div>
+
+            <p><strong>Directions:</strong> Trace through each code block and fill in the table showing the value of each variable after each line executes.</p>
+
+            <h3>Problem 1: Variable Updates</h3>
+            <div class="code-block">x = 5
+y = 10
+x = x + 3
+y = y - x
+z = x * 2
+print(x, y, z)</div>
+
+            <table class="trace-table">
+                <thead>
+                    <tr>
+                        <th>Line</th>
+                        <th>x</th>
+                        <th>y</th>
+                        <th>z</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>After line 1</td><td></td><td></td><td></td></tr>
+                    <tr><td>After line 2</td><td></td><td></td><td></td></tr>
+                    <tr><td>After line 3</td><td></td><td></td><td></td></tr>
+                    <tr><td>After line 4</td><td></td><td></td><td></td></tr>
+                    <tr><td>After line 5</td><td></td><td></td><td></td></tr>
+                    <tr><td><strong>Output:</strong></td><td colspan="3"></td></tr>
+                </tbody>
+            </table>
+
+            <h3>Problem 2: Loop Tracing</h3>
+            <div class="code-block">total = 0
+for i in range(1, 5):
+    total = total + i
+    print(total)</div>
+
+            <table class="trace-table">
+                <thead>
+                    <tr>
+                        <th>Iteration</th>
+                        <th>i</th>
+                        <th>total</th>
+                        <th>Output</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Before loop</td><td></td><td></td><td></td></tr>
+                    <tr><td>1</td><td></td><td></td><td></td></tr>
+                    <tr><td>2</td><td></td><td></td><td></td></tr>
+                    <tr><td>3</td><td></td><td></td><td></td></tr>
+                    <tr><td>4</td><td></td><td></td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Worksheet 4: Crossword -->
+        <div id="worksheet4" class="worksheet">
+            <div class="worksheet-header">
+                <h2>🔤 Python Crossword Puzzle</h2>
+                <div class="student-info">
+                    <div><strong>Name:</strong> _________________________</div>
+                    <div><strong>Date:</strong> _________________________</div>
+                    <div><strong>Period:</strong> _________________________</div>
+                </div>
+            </div>
+
+            <p><strong>Directions:</strong> Fill in the crossword puzzle using Python programming terms.</p>
+
+            <div class="crossword" id="crosswordGrid"></div>
+
+            <div class="clues">
+                <div>
+                    <h4>ACROSS</h4>
+                    <ol>
+                        <li>A sequence of characters (6 letters)</li>
+                        <li>Used to repeat code (4 letters)</li>
+                        <li>Stores a collection of items (4 letters)</li>
+                        <li>The position of an item in a list (5 letters)</li>
+                        <li>A whole number data type (7 letters)</li>
+                        <li>Add an item to the end of a list (6 letters)</li>
+                    </ol>
+                </div>
+                <div>
+                    <h4>DOWN</h4>
+                    <ol>
+                        <li>Function to display output (5 letters)</li>
+                        <li>True or False data type (7 letters)</li>
+                        <li>A reusable block of code (8 letters)</li>
+                        <li>A number with a decimal point (5 letters)</li>
+                        <li>Stores a value (8 letters)</li>
+                        <li>Get user input (5 letters)</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Worksheet 5: Fill in the Blanks -->
+        <div id="worksheet5" class="worksheet">
+            <div class="worksheet-header">
+                <h2>✏️ Fill in the Blanks</h2>
+                <div class="student-info">
+                    <div><strong>Name:</strong> _________________________</div>
+                    <div><strong>Date:</strong> _________________________</div>
+                    <div><strong>Period:</strong> _________________________</div>
+                </div>
+            </div>
+
+            <p><strong>Directions:</strong> Complete each Python code snippet by filling in the blanks with the correct keywords or syntax.</p>
+
+            <div class="question">
+                <strong>1.</strong> Display "Hello, World!" to the screen:<br>
+                <code><span class="fill-blank"></span>("Hello, World!")</code>
+            </div>
+
+            <div class="question">
+                <strong>2.</strong> Create a variable called age and set it to 14:<br>
+                <code>age <span class="fill-blank"></span> 14</code>
+            </div>
+
+            <div class="question">
+                <strong>3.</strong> Get the user's name:<br>
+                <code>name = <span class="fill-blank"></span>("What is your name? ")</code>
+            </div>
+
+            <div class="question">
+                <strong>4.</strong> Create a loop that runs 5 times:<br>
+                <code><span class="fill-blank"></span> i in <span class="fill-blank"></span>(5):</code>
+            </div>
+
+            <div class="question">
+                <strong>5.</strong> Create a list of three fruits:<br>
+                <code>fruits = <span class="fill-blank"></span>"apple", "banana", "orange"<span class="fill-blank"></span></code>
+            </div>
+
+            <div class="question">
+                <strong>6.</strong> Check if a number is greater than 10:<br>
+                <code><span class="fill-blank"></span> num > 10:</code><br>
+                <code>&nbsp;&nbsp;&nbsp;&nbsp;print("Greater than 10")</code>
+            </div>
+
+            <div class="question">
+                <strong>7.</strong> Get the number of items in a list:<br>
+                <code>count = <span class="fill-blank"></span>(my_list)</code>
+            </div>
+
+            <div class="question">
+                <strong>8.</strong> Add an item to the end of a list:<br>
+                <code>my_list.<span class="fill-blank"></span>("new item")</code>
+            </div>
+
+            <div class="question">
+                <strong>9.</strong> Access the first item in a list:<br>
+                <code>first = my_list<span class="fill-blank"></span></code>
+            </div>
+
+            <div class="question">
+                <strong>10.</strong> Convert a string to an integer:<br>
+                <code>number = <span class="fill-blank"></span>("42")</code>
+            </div>
+        </div>
+
+        <!-- Worksheet 6: Matching -->
+        <div id="worksheet6" class="worksheet">
+            <div class="worksheet-header">
+                <h2>🔗 Matching Exercise</h2>
+                <div class="student-info">
+                    <div><strong>Name:</strong> _________________________</div>
+                    <div><strong>Date:</strong> _________________________</div>
+                    <div><strong>Period:</strong> _________________________</div>
+                </div>
+            </div>
+
+            <p><strong>Directions:</strong> Match each Python function or concept with its correct description by writing the letter in the blank.</p>
+
+            <h3>Part A: Functions and Descriptions</h3>
+            <div class="matching">
+                <div class="matching-column">
+                    <h4>Functions</h4>
+                    <div class="matching-item">_____ 1. print()</div>
+                    <div class="matching-item">_____ 2. input()</div>
+                    <div class="matching-item">_____ 3. len()</div>
+                    <div class="matching-item">_____ 4. range()</div>
+                    <div class="matching-item">_____ 5. int()</div>
+                    <div class="matching-item">_____ 6. str()</div>
+                    <div class="matching-item">_____ 7. append()</div>
+                    <div class="matching-item">_____ 8. type()</div>
+                </div>
+                <div class="matching-column">
+                    <h4>Descriptions</h4>
+                    <div class="matching-item"><span class="matching-letter">A</span> Gets user input as a string</div>
+                    <div class="matching-item"><span class="matching-letter">B</span> Displays output to the screen</div>
+                    <div class="matching-item"><span class="matching-letter">C</span> Returns the length of a collection</div>
+                    <div class="matching-item"><span class="matching-letter">D</span> Converts a value to a string</div>
+                    <div class="matching-item"><span class="matching-letter">E</span> Generates a sequence of numbers</div>
+                    <div class="matching-item"><span class="matching-letter">F</span> Adds an item to the end of a list</div>
+                    <div class="matching-item"><span class="matching-letter">G</span> Converts a value to an integer</div>
+                    <div class="matching-item"><span class="matching-letter">H</span> Returns the data type of a value</div>
+                </div>
+            </div>
+
+            <h3>Part B: Code and Output</h3>
+            <div class="matching">
+                <div class="matching-column">
+                    <h4>Code</h4>
+                    <div class="matching-item">_____ 1. print(5 + 3)</div>
+                    <div class="matching-item">_____ 2. print("5" + "3")</div>
+                    <div class="matching-item">_____ 3. print(10 - 4)</div>
+                    <div class="matching-item">_____ 4. print(3 * 4)</div>
+                    <div class="matching-item">_____ 5. print([1, 2, 3][1])</div>
+                    <div class="matching-item">_____ 6. print(len("Hello"))</div>
+                </div>
+                <div class="matching-column">
+                    <h4>Output</h4>
+                    <div class="matching-item"><span class="matching-letter">A</span> 8</div>
+                    <div class="matching-item"><span class="matching-letter">B</span> 53</div>
+                    <div class="matching-item"><span class="matching-letter">C</span> 6</div>
+                    <div class="matching-item"><span class="matching-letter">D</span> 12</div>
+                    <div class="matching-item"><span class="matching-letter">E</span> 2</div>
+                    <div class="matching-item"><span class="matching-letter">F</span> 5</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate Word Search Grid
+        function generateWordSearch() {
+            const grid = [
+                ['P', 'R', 'I', 'N', 'T', 'X', 'L', 'O', 'O', 'P', 'Z', 'Q', 'W', 'E', 'R'],
+                ['Y', 'A', 'B', 'C', 'D', 'E', 'I', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'],
+                ['T', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A'],
+                ['H', 'G', 'S', 'T', 'R', 'I', 'N', 'G', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
+                ['O', 'E', 'I', 'N', 'T', 'E', 'G', 'E', 'R', 'J', 'K', 'L', 'M', 'N', 'O'],
+                ['N', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G'],
+                ['F', 'L', 'O', 'A', 'T', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q'],
+                ['U', 'E', 'N', 'G', 'T', 'H', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+                ['N', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A'],
+                ['C', 'G', 'B', 'O', 'O', 'L', 'E', 'A', 'N', 'C', 'D', 'E', 'F', 'G', 'H'],
+                ['T', 'T', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U'],
+                ['I', 'H', 'V', 'A', 'R', 'I', 'A', 'B', 'L', 'E', 'V', 'W', 'X', 'Y', 'Z'],
+                ['O', 'A', 'P', 'P', 'E', 'N', 'D', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
+                ['N', 'I', 'N', 'P', 'U', 'T', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'],
+                ['X', 'N', 'D', 'E', 'X', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'L', 'I']
+            ];
+
+            const gridElement = document.getElementById('wordSearchGrid');
+            grid.forEach(row => {
+                row.forEach(letter => {
+                    const cell = document.createElement('div');
+                    cell.className = 'word-search-cell';
+                    cell.textContent = letter;
+                    gridElement.appendChild(cell);
+                });
+            });
+        }
+
+        // Generate Maze
+        function generateMaze() {
+            // 0 = path, 1 = wall, 2 = start, 3 = end, 4 = question
+            const maze = [
+                [2, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 3],
+                [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+                [1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0, 1, 0, 0],
+                [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0],
+                [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1],
+                [0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ];
+
+            const questions = ['Q1', 'Q2', 'Q3', 'Q4'];
+            let qIndex = 0;
+
+            const mazeElement = document.getElementById('mazeGrid');
+            mazeElement.style.gridTemplateColumns = `repeat(15, 40px)`;
+            
+            maze.forEach(row => {
+                row.forEach(cell => {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = 'maze-cell';
+                    
+                    if (cell === 1) {
+                        cellDiv.classList.add('wall');
+                    } else if (cell === 2) {
+                        cellDiv.classList.add('start');
+                        cellDiv.textContent = 'START';
+                    } else if (cell === 3) {
+                        cellDiv.classList.add('end');
+                        cellDiv.textContent = 'END';
+                    } else if (cell === 4) {
+                        cellDiv.classList.add('code');
+                        cellDiv.textContent = questions[qIndex++];
+                    }
+                    
+                    mazeElement.appendChild(cellDiv);
+                });
+            });
+        }
+
+        // Generate Crossword
+        function generateCrossword() {
+            // Simple crossword layout (0 = white, 1 = black)
+            const layout = [
+                [1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+                [2, 0, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0],
+                [1, 0, 1, 4, 0, 0, 0, 1, 1, 0, 1, 1],
+                [1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
+                [5, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1],
+                [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
+                [1, 1, 6, 0, 0, 0, 0, 0, 1, 0, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1]
+            ];
+
+            const numbers = {
+                '1,0': '1', '8,1': '2', '3,2': '3', '0,4': '4', '2,6': '5'
+            };
+
+            const crosswordElement = document.getElementById('crosswordGrid');
+            crosswordElement.style.gridTemplateColumns = `repeat(12, 40px)`;
+            
+            layout.forEach((row, r) => {
+                row.forEach((cell, c) => {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = 'crossword-cell';
+                    
+                    if (cell === 1) {
+                        cellDiv.classList.add('black');
+                    } else {
+                        const key = `${c},${r}`;
+                        if (numbers[key]) {
+                            const numSpan = document.createElement('span');
+                            numSpan.className = 'number';
+                            numSpan.textContent = numbers[key];
+                            cellDiv.appendChild(numSpan);
+                        }
+                    }
+                    
+                    crosswordElement.appendChild(cellDiv);
+                });
+            });
+        }
+
+        // Print specific worksheet
+        function printWorksheet(worksheetId) {
+            // Hide all worksheets
+            document.querySelectorAll('.worksheet').forEach(w => {
+                w.classList.remove('active');
+            });
+            
+            // Show selected worksheet
+            document.getElementById(worksheetId).classList.add('active');
+            
+            // Print
+            window.print();
+            
+            // Hide worksheet after printing
+            setTimeout(() => {
+                document.getElementById(worksheetId).classList.remove('active');
+            }, 100);
+        }
+
+        // Initialize all puzzles on load
+        window.onload = function() {
+            generateWordSearch();
+            generateMaze();
+            generateCrossword();
+        };
+    </script>
+</body>
+</html>

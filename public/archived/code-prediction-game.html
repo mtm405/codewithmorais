@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Prediction Game - What Will It Output?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+
+        .btn.next {
+            background: #28a745;
+        }
+
+        .btn.next:hover {
+            background: #1e7e34;
+        }
+
+        .btn.prev {
+            background: #6c757d;
+        }
+
+        .btn.prev:hover {
+            background: #545b62;
+        }
+
+        .btn.reset {
+            background: #dc3545;
+        }
+
+        .btn.reset:hover {
+            background: #c82333;
+        }
+
+        .btn.hints {
+            background: #6f42c1;
+        }
+
+        .btn.hints:hover {
+            background: #5a32a3;
+        }
+
+        .problem-container {
+            padding: 40px;
+        }
+
+        .problem {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .problem.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .problem-header {
+            margin-bottom: 30px;
+        }
+
+        .problem-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .problem-description {
+            font-size: 1.1em;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+            white-space: pre;
+            border: 1px solid #3c3c3c;
+        }
+
+        .code-block::before {
+            content: "🐍 Python";
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            background: #0078d4;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Python syntax highlighting - VS Code theme */
+        .keyword {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .function {
+            color: #dcdcaa;
+        }
+
+        .number {
+            color: #b5cea8;
+        }
+
+        .builtin {
+            color: #4ec9b0;
+        }
+
+        .operator {
+            color: #d4d4d4;
+        }
+
+        .docstring {
+            color: #ce9178;
+            font-style: italic;
+        }
+
+        .indent {
+            display: inline-block;
+            width: 4ch;
+        }
+
+        .thinking-section {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            display: none;
+        }
+
+        .thinking-section.show {
+            display: block;
+        }
+
+        .thinking-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .thinking-section p {
+            color: #856404;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .reveal-section {
+            background: #d1ecf1;
+            border: 2px solid #bee5eb;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            display: none;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .reveal-section.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal-section h3 {
+            color: #0c5460;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .answer-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 16px;
+        }
+
+        .answer-item .call {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .answer-item .result {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .answer-item .explanation {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 5px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .progress {
+            background: #e9ecef;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #007bff, #17a2b8);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .problem-counter {
+            font-size: 1.1em;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .timer {
+            background: #ffc107;
+            color: #212529;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Code Prediction Game</h1>
+            <p>Can you predict what these Python functions will output?</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="prevProblem()">← Previous</button>
+            <button class="btn" onclick="toggleReveal()">🔍 Show Answer</button>
+            <button class="btn" onclick="toggleThinking()">💭 Show Hints</button>
+            <button class="btn" onclick="startTimer()">⏱️ Start Timer (2 min)</button>
+            <span class="timer" id="timer" style="display: none;">2:00</span>
+            <button class="btn next" onclick="nextProblem()">Next →</button>
+            <button class="btn reset" onclick="resetAll()">🔄 Reset All</button>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="problem-container">
+            <!-- Problem 1: Length Checker -->
+            <div class="problem active" id="problem1">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        📏 Problem 1: The Length Checker
+                    </h2>
+                    <p class="problem-description">
+                        This program uses an if/else structure to return different strings based on the length of the input word.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">check_length</span>(word):
+    if <span class="builtin">len</span>(word) > 5:
+        return <span class="string">"Long Word!"</span>
+    else:
+        return <span class="string">"Short Word."</span>
+
+<span class="builtin">print</span>(<span class="function">check_length</span>(<span class="string">"apple"</span>))
+<span class="builtin">print</span>(<span class="function">check_length</span>(<span class="string">"banana"</span>))
+<span class="builtin">print</span>(<span class="function">check_length</span>(<span class="string">"cat"</span>))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>Look at each word and count the letters. The condition checks if the length is <strong>greater than 5</strong>. 
+                    Work through each function call step by step!</p>
+                </div>
+
+                <div class="reveal-section" id="reveal1">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">check_length("apple") →</div>
+                        <div class="result">"Short Word."</div>
+                        <div class="explanation">Step-by-step: len("apple") = 5. Since 5 is NOT greater than 5 (5 > 5 is False), the condition fails and we go to the else clause, returning "Short Word."</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">check_length("banana") →</div>
+                        <div class="result">"Long Word!"</div>
+                        <div class="explanation">Step-by-step: len("banana") = 6. Since 6 IS greater than 5 (6 > 5 is True), the if condition is met and we return "Long Word!" immediately.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">check_length("cat") →</div>
+                        <div class="result">"Short Word."</div>
+                        <div class="explanation">Step-by-step: len("cat") = 3. Since 3 is NOT greater than 5 (3 > 5 is False), the condition fails and we go to the else clause, returning "Short Word."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 2: Even/Odd Multiplier -->
+            <div class="problem" id="problem2">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🔢 Problem 2: The Even/Odd Multiplier
+                    </h2>
+                    <p class="problem-description">
+                        This program checks if a number is even or odd using the modulo operator (%) and performs a different calculation based on the result.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">transform_number</span>(num):
+    <span class="comment"># Check if the number is even (remainder is 0 when divided by 2)</span>
+    if num % 2 == 0:
+        return num * 3
+    <span class="comment"># If not even, it's odd</span>
+    return num + 10
+
+<span class="builtin">print</span>(<span class="function">transform_number</span>(4))
+<span class="builtin">print</span>(<span class="function">transform_number</span>(7))
+<span class="builtin">print</span>(<span class="function">transform_number</span>(11))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The modulo operator (%) gives you the remainder after division. If a number divided by 2 has remainder 0, it's even. 
+                    What happens to even numbers? What happens to odd numbers?</p>
+                </div>
+
+                <div class="reveal-section" id="reveal2">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">transform_number(4) →</div>
+                        <div class="result">12</div>
+                        <div class="explanation">Step-by-step: 4 % 2 = 0 (when 4 is divided by 2, remainder is 0, meaning it's even). Since the condition num % 2 == 0 is True, we execute num * 3, so 4 × 3 = 12.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">transform_number(7) →</div>
+                        <div class="result">17</div>
+                        <div class="explanation">Step-by-step: 7 % 2 = 1 (when 7 is divided by 2, remainder is 1, meaning it's odd). Since 1 ≠ 0, the if condition is False, so we skip to the return statement: 7 + 10 = 17.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">transform_number(11) →</div>
+                        <div class="result">21</div>
+                        <div class="explanation">Step-by-step: 11 % 2 = 1 (when 11 is divided by 2, remainder is 1, meaning it's odd). Since 1 ≠ 0, the if condition is False, so we skip to the return statement: 11 + 10 = 21.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 3: Nested Logic Converter -->
+            <div class="problem" id="problem3">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🔄 Problem 3: The Nested Logic Converter
+                    </h2>
+                    <p class="problem-description">
+                        This program introduces a nested conditional (elif) to test for three different conditions, making the logic slightly more complex.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">score_converter</span>(score):
+    if score >= 90:
+        return <span class="string">"A"</span>
+    elif score >= 80:
+        return <span class="string">"B"</span>
+    else:
+        return <span class="string">"C"</span>
+
+<span class="builtin">print</span>(<span class="function">score_converter</span>(95))
+<span class="builtin">print</span>(<span class="function">score_converter</span>(82))
+<span class="builtin">print</span>(<span class="function">score_converter</span>(75))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>This uses if/elif/else logic. Python checks conditions in order and stops at the first one that's true. 
+                    Remember: if the first condition is false, it checks the elif. If both are false, it goes to else.</p>
+                </div>
+
+                <div class="reveal-section" id="reveal3">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">score_converter(95) →</div>
+                        <div class="result">"A"</div>
+                        <div class="explanation">Flow: Check if 95 >= 90? YES (True). Return "A" immediately. Python stops here and doesn't check the elif or else statements because a condition was already met.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">score_converter(82) →</div>
+                        <div class="result">"B"</div>
+                        <div class="explanation">Flow: Check if 82 >= 90? NO (False). Check elif 82 >= 80? YES (True). Return "B" immediately. The else clause is skipped because a condition was met.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">score_converter(75) →</div>
+                        <div class="result">"C"</div>
+                        <div class="explanation">Flow: Check if 75 >= 90? NO. Check elif 75 >= 80? NO. Check elif 75 >= 70? NO. All conditions failed, so we execute the final else clause and return "C".</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 4: The Documented Price Adjuster -->
+            <div class="problem" id="problem4">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        💰 Problem 4: The Documented Price Adjuster
+                    </h2>
+                    <p class="problem-description">
+                        This program includes a docstring and uses default values to test both documentation and function features.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">calculate_discount</span>(price, is_member=False):
+    <span class="docstring">"""
+    Calculates the final price after applying discounts.
+
+    Args:
+        price (int): The original price of the item.
+        is_member (bool, optional): True if the customer is a member.
+                                    Defaults to False.
+
+    Returns:
+        float: The discounted price.
+    """</span>
+    <span class="comment"># Check if a membership discount applies</span>
+    if is_member:
+        return price * 0.9  <span class="comment"># 10% off</span>
+    
+    <span class="comment"># Check for a bulk discount (price over 100)</span>
+    if price > 100:
+        return price - 15  <span class="comment"># $15 flat off</span>
+        
+    return price
+
+<span class="builtin">print</span>(f<span class="string">"Non-member Price: {<span class="function">calculate_discount</span>(120)}"</span>)
+<span class="builtin">print</span>(f<span class="string">"Member Price: {<span class="function">calculate_discount</span>(50, True)}"</span>)
+<span class="builtin">print</span>(f<span class="string">"Small Item: {<span class="function">calculate_discount</span>(30)}"</span>)</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>Notice the default parameter <code>is_member=False</code>. The function checks membership first, then bulk discount. 
+                    What happens when someone IS a member vs when they're not? Which discount applies to each case?</p>
+                </div>
+
+                <div class="reveal-section" id="reveal4">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">calculate_discount(120) →</div>
+                        <div class="result">105</div>
+                        <div class="explanation">Parameters: price=120, is_member=False (default). Flow: Check if is_member? NO (False). Check if 120 > 100? YES (True). Return 120 - 15 = 105. The bulk discount applies because the price exceeds $100.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">calculate_discount(50, True) →</div>
+                        <div class="result">45.0</div>
+                        <div class="explanation">Parameters: price=50, is_member=True. Flow: Check if is_member? YES (True). Return 50 * 0.9 = 45.0. The member discount takes precedence and is applied first, so we never check the bulk discount condition.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">calculate_discount(30) →</div>
+                        <div class="result">30</div>
+                        <div class="explanation">Parameters: price=30, is_member=False (default). Flow: Check if is_member? NO (False). Check if 30 > 100? NO (False). No conditions met, so return the original price: 30. No discounts apply.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 5: The Logic Error Finder -->
+            <div class="problem" id="problem5">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🐛 Problem 5: The Logic Error Finder
+                    </h2>
+                    <p class="problem-description">
+                        This program has a logic error where the sequence of if statements leads to an incorrect classification. 
+                        Can you spot what's wrong?
+                    </p>
+                </div>
+
+                <div class="code-block"><span class="comment"># --- TROUBLESHOOTING EXERCISE: Find the LOGIC ERROR ---</span>
+
+def <span class="function">check_priority</span>(value):
+    if value > 50:
+        return <span class="string">"High"</span>
+    if value > 100:  <span class="comment"># This condition is *never* reached if value > 50!</span>
+        return <span class="string">"Critical"</span>
+    return <span class="string">"Low"</span>
+
+<span class="builtin">print</span>(<span class="function">check_priority</span>(120))  <span class="comment"># Should be Critical, but...</span>
+<span class="builtin">print</span>(<span class="function">check_priority</span>(75))
+<span class="builtin">print</span>(<span class="function">check_priority</span>(25))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>Look at the order of the conditions. If a value is 120, which condition gets checked first? 
+                    Once Python finds a true condition and returns, does it check the rest?</p>
+                </div>
+
+                <div class="reveal-section" id="reveal5">
+                    <h3>✅ Correct Answers (With the Bug):</h3>
+                    <div class="answer-item">
+                        <div class="call">check_priority(120) →</div>
+                        <div class="result">"High"</div>
+                        <div class="explanation">🐛 LOGIC ERROR: Flow: Check if 120 > 50? YES (True). Return "High" immediately. The function stops here and NEVER reaches the second condition (120 > 100), even though 120 should be "Critical". This is unreachable code!</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">check_priority(75) →</div>
+                        <div class="result">"High"</div>
+                        <div class="explanation">Flow: Check if 75 > 50? YES (True). Return "High" immediately. This one actually works correctly, but shows the same pattern as the bug above.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">check_priority(25) →</div>
+                        <div class="result">"Low"</div>
+                        <div class="explanation">Flow: Check if 25 > 50? NO (False). Check if 25 > 100? NO (False). Both conditions fail, so return "Low". This works correctly.</div>
+                    </div>
+                    <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 5px;">
+                        <strong>🔧 Fix:</strong> Swap the order: check <code>if value > 100:</code> BEFORE <code>if value > 50:</code>, or use elif to ensure mutual exclusivity.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 6: The Exception Handler -->
+            <div class="problem" id="problem6">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🛡️ Problem 6: The Exception Handler
+                    </h2>
+                    <p class="problem-description">
+                        This program uses a try...except block to gracefully handle common runtime errors like division by zero.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">safe_divide</span>(numerator, denominator):
+    <span class="docstring">"""
+    Attempts division and handles a ZeroDivisionError.
+    
+    Uses try/except/else/finally.
+    """</span>
+    try:
+        result = numerator / denominator
+    except ZeroDivisionError:
+        <span class="builtin">print</span>(<span class="string">"Error: Cannot divide by zero."</span>)
+        return 0  <span class="comment"># Return 0 on error</span>
+    except TypeError:
+        <span class="builtin">print</span>(<span class="string">"Error: Invalid data type."</span>)
+        return -1
+    else:
+        <span class="comment"># Executes only if no exception occurred</span>
+        return result
+    finally:
+        <span class="comment"># Executes always</span>
+        <span class="builtin">print</span>(<span class="string">"--- Division attempt complete ---"</span>)
+
+<span class="builtin">print</span>(<span class="function">safe_divide</span>(10, 2))
+<span class="builtin">print</span>(<span class="function">safe_divide</span>(5, 0))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The <code>finally</code> block ALWAYS runs, regardless of errors. The <code>else</code> block only runs if no exception occurred. 
+                    What happens when we divide by zero vs normal division?</p>
+                </div>
+
+                <div class="reveal-section" id="reveal6">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">safe_divide(10, 2) →</div>
+                        <div class="result">--- Division attempt complete ---<br>5.0</div>
+                        <div class="explanation">Execution flow: try block runs → 10/2 = 5.0 (no exception) → else block runs (returns 5.0) → finally block runs (prints message). The except blocks are skipped because no error occurred.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">safe_divide(5, 0) →</div>
+                        <div class="result">Error: Cannot divide by zero.<br>--- Division attempt complete ---<br>0</div>
+                        <div class="explanation">Execution flow: try block runs → 5/0 causes ZeroDivisionError → except ZeroDivisionError block catches it (prints error, returns 0) → finally block runs (prints message). The else block is skipped because an exception occurred.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 7: The Parameter Check -->
+            <div class="problem" id="problem7">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🔧 Problem 7: The Parameter Check (Syntax Error)
+                    </h2>
+                    <p class="problem-description">
+                        This function includes a syntax error that students must identify. Can you spot what's wrong before running?
+                    </p>
+                </div>
+
+                <div class="code-block"><span class="comment"># --- TROUBLESHOOTING EXERCISE: Fix the SYNTAX ERROR ---</span>
+
+def <span class="function">process_data</span>(data, mode) <span class="comment"># Syntax Error: Missing colon here!</span>
+    <span class="docstring">"""Processes input data based on the specified mode."""</span>
+    
+    if mode == <span class="string">"double"</span>:
+        return data * 2
+    elif mode == <span class="string">"half"</span>:
+        return data / 2
+    return data
+
+<span class="comment"># Assume the colon has been fixed:</span>
+<span class="builtin">print</span>(<span class="function">process_data</span>(10, <span class="string">"double"</span>))
+<span class="builtin">print</span>(<span class="function">process_data</span>(9, <span class="string">"half"</span>))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>In Python, function definitions need a colon (:) after the parameter list. Once that's fixed, 
+                    trace through each function call - what does "double" mode do vs "half" mode?</p>
+                </div>
+
+                <div class="reveal-section" id="reveal7">
+                    <h3>✅ Correct Answers (After Fixing Syntax Error):</h3>
+                    <div style="margin-bottom: 15px; padding: 10px; background: #f8d7da; border-radius: 5px; color: #721c24;">
+                        <strong>🐛 Syntax Error:</strong> Missing colon (:) after <code>def process_data(data, mode)</code><br>
+                        <strong>🔧 Fix:</strong> <code>def process_data(data, mode):</code> - Python requires a colon to end function definitions.
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">process_data(10, "double") →</div>
+                        <div class="result">20</div>
+                        <div class="explanation">Parameters: data=10, mode="double". Flow: Check if mode == "double"? YES (True). Return data * 2, so 10 × 2 = 20. The elif and final return are skipped.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">process_data(9, "half") →</div>
+                        <div class="result">4.5</div>
+                        <div class="explanation">Parameters: data=9, mode="half". Flow: Check if mode == "double"? NO (False). Check elif mode == "half"? YES (True). Return data / 2, so 9 ÷ 2 = 4.5.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 8: The Error-Raising Validator -->
+            <div class="problem" id="problem8">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        ⚠️ Problem 8: The Error-Raising Validator
+                    </h2>
+                    <p class="problem-description">
+                        This program demonstrates how to explicitly raise exceptions when input constraints are violated, 
+                        using try/except to handle them gracefully.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">process_order</span>(quantity):
+    <span class="docstring">"""
+    Validates the order quantity and returns the shipping cost.
+    Raises ValueError if quantity is out of bounds.
+    """</span>
+    if quantity <= 0:
+        raise <span class="builtin">ValueError</span>(<span class="string">"Quantity must be positive."</span>)
+    if quantity > 100:
+        raise <span class="builtin">ValueError</span>(<span class="string">"Order too large."</span>)
+
+    if quantity >= 50:
+        return 5.00  <span class="comment"># Bulk shipping</span>
+    return 10.00 <span class="comment"># Standard shipping</span>
+
+try:
+    <span class="builtin">print</span>(f<span class="string">"Cost 1: {<span class="function">process_order</span>(60)}"</span>)
+    <span class="builtin">print</span>(f<span class="string">"Cost 2: {<span class="function">process_order</span>(5)}"</span>)
+    <span class="builtin">print</span>(f<span class="string">"Cost 3: {<span class="function">process_order</span>(0)}"</span>)  <span class="comment"># This will cause an error</span>
+except ValueError as e:
+    <span class="builtin">print</span>(f<span class="string">"Caught Error: {e}"</span>)</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The function validates input and <code>raise</code>s errors for invalid values. The try/except block catches these errors. 
+                    Which calls will succeed and which will raise an exception?</p>
+                </div>
+
+                <div class="reveal-section" id="reveal8">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">process_order(60) →</div>
+                        <div class="result">Cost 1: 5.0</div>
+                        <div class="explanation">Parameter: quantity=60. Validation: 60 > 0? YES (passes). 60 > 100? NO (passes). Pricing: 60 >= 50? YES (True). Return 5.00 for bulk shipping. No exceptions raised.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">process_order(5) →</div>
+                        <div class="result">Cost 2: 10.0</div>
+                        <div class="explanation">Parameter: quantity=5. Validation: 5 > 0? YES (passes). 5 > 100? NO (passes). Pricing: 5 >= 50? NO (False). Return 10.00 for standard shipping. No exceptions raised.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">process_order(0) →</div>
+                        <div class="result">Caught Error: Quantity must be positive.</div>
+                        <div class="explanation">Parameter: quantity=0. Validation: 0 <= 0? YES (True). The function raises ValueError("Quantity must be positive.") immediately. The try/except block catches this exception and prints the error message.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 9: The Membership Check -->
+            <div class="problem" id="problem9">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🧺 Problem 9: The Membership Check
+                    </h2>
+                    <p class="problem-description">
+                        This program checks if a fruit is in a list using the <code>in</code> operator.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">check_inventory</span>(fruit):
+    available = [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"kiwi"</span>]
+    if fruit in available:
+        return <span class="string">"Stocked"</span>
+    return <span class="string">"Out of Stock"</span>
+
+<span class="builtin">print</span>(<span class="function">check_inventory</span>(<span class="string">"apple"</span>))
+<span class="builtin">print</span>(<span class="function">check_inventory</span>(<span class="string">"grape"</span>))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The <code>in</code> operator checks if an item exists in a list. Look at which fruits are in the available list and which ones aren't.</p>
+                </div>
+
+                <div class="reveal-section" id="reveal9">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">check_inventory("apple") →</div>
+                        <div class="result">"Stocked"</div>
+                        <div class="explanation">The list available = ["apple", "banana", "kiwi"]. Check if "apple" in available? YES (True). The string "apple" exists at index 0 of the list, so the condition is met and we return "Stocked".</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">check_inventory("grape") →</div>
+                        <div class="result">"Out of Stock"</div>
+                        <div class="explanation">The list available = ["apple", "banana", "kiwi"]. Check if "grape" in available? NO (False). The string "grape" does not exist anywhere in the list, so the condition fails and we return "Out of Stock".</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 10: The Temperature Converter -->
+            <div class="problem" id="problem10">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🔥 Problem 10: The Temperature Converter
+                    </h2>
+                    <p class="problem-description">
+                        This program converts a temperature based on a threshold value.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">check_temp</span>(temp_f):
+    if temp_f > 80:
+        return temp_f - 10
+    return temp_f + 5
+
+<span class="builtin">print</span>(<span class="function">check_temp</span>(90))
+<span class="builtin">print</span>(<span class="function">check_temp</span>(75))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>Check if the temperature is greater than 80. If yes, subtract 10. If no, add 5. Simple math!</p>
+                </div>
+
+                <div class="reveal-section" id="reveal10">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">check_temp(90) →</div>
+                        <div class="result">80</div>
+                        <div class="explanation">Parameter: temp_f=90. Check if 90 > 80? YES (True). Execute temp_f - 10, so 90 - 10 = 80. The function returns 80 immediately without checking the else clause.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">check_temp(75) →</div>
+                        <div class="result">80</div>
+                        <div class="explanation">Parameter: temp_f=75. Check if 75 > 80? NO (False). The if condition fails, so we execute the else clause: temp_f + 5, so 75 + 5 = 80. Interestingly, both calls return 80!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 11: The Boolean NOT Operator -->
+            <div class="problem" id="problem11">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🛑 Problem 11: The Boolean NOT Operator
+                    </h2>
+                    <p class="problem-description">
+                        This program tests the use of the <code>not</code> operator with a boolean variable.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">invert_status</span>(is_active):
+    if not is_active:
+        return <span class="string">"Offline"</span>
+    return <span class="string">"Online"</span>
+
+<span class="builtin">print</span>(<span class="function">invert_status</span>(True))
+<span class="builtin">print</span>(<span class="function">invert_status</span>(False))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The <code>not</code> operator flips boolean values. <code>not True</code> becomes <code>False</code>, and <code>not False</code> becomes <code>True</code>.</p>
+                </div>
+
+                <div class="reveal-section" id="reveal11">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">invert_status(True) →</div>
+                        <div class="result">"Online"</div>
+                        <div class="explanation">Parameter: is_active=True. The not operator flips the boolean: not True = False. Check if not is_active (False)? NO (False). The if condition fails, so we execute the else clause and return "Online".</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">invert_status(False) →</div>
+                        <div class="result">"Offline"</div>
+                        <div class="explanation">Parameter: is_active=False. The not operator flips the boolean: not False = True. Check if not is_active (True)? YES (True). The if condition succeeds, so we return "Offline" immediately.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 12: The String Concatenator -->
+            <div class="problem" id="problem12">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        ➕ Problem 12: The String Concatenator
+                    </h2>
+                    <p class="problem-description">
+                        This program uses a conditional to add different prefixes to a string based on the first letter.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">add_prefix</span>(word):
+    if word.startswith(<span class="string">"a"</span>):
+        return <span class="string">"Great "</span> + word
+    return <span class="string">"Standard "</span> + word
+
+<span class="builtin">print</span>(<span class="function">add_prefix</span>(<span class="string">"apple"</span>))
+<span class="builtin">print</span>(<span class="function">add_prefix</span>(<span class="string">"banana"</span>))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The <code>startswith()</code> method checks if a string begins with a specific character or substring. Does the word start with "a"?</p>
+                </div>
+
+                <div class="reveal-section" id="reveal12">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">add_prefix("apple") →</div>
+                        <div class="result">"Great apple"</div>
+                        <div class="explanation">Parameter: word="apple". The startswith("a") method checks if the string begins with "a". Since "apple" starts with "a", the condition is True. Return "Great " + "apple" = "Great apple".</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">add_prefix("banana") →</div>
+                        <div class="result">"Standard banana"</div>
+                        <div class="explanation">Parameter: word="banana". The startswith("a") method checks if the string begins with "a". Since "banana" starts with "b" (not "a"), the condition is False. Return "Standard " + "banana" = "Standard banana".</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 13: The Multiple Condition Check (AND) -->
+            <div class="problem" id="problem13">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🧐 Problem 13: The Multiple Condition Check (AND)
+                    </h2>
+                    <p class="problem-description">
+                        This program requires TWO conditions to be true using the <code>and</code> operator.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">validate_age</span>(age, has_id):
+    if age >= 18 and has_id:
+        return <span class="string">"Access Granted"</span>
+    return <span class="string">"Access Denied"</span>
+
+<span class="builtin">print</span>(<span class="function">validate_age</span>(20, True))
+<span class="builtin">print</span>(<span class="function">validate_age</span>(16, True))
+<span class="builtin">print</span>(<span class="function">validate_age</span>(20, False))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The <code>and</code> operator requires BOTH conditions to be true. If either condition is false, the whole expression is false.</p>
+                </div>
+
+                <div class="reveal-section" id="reveal13">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">validate_age(20, True) →</div>
+                        <div class="result">"Access Granted"</div>
+                        <div class="explanation">Parameters: age=20, has_id=True. The and operator requires BOTH conditions to be True. Check: (20 >= 18) and (True) → (True) and (True) → True. Both conditions are met, so return "Access Granted".</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">validate_age(16, True) →</div>
+                        <div class="result">"Access Denied"</div>
+                        <div class="explanation">Parameters: age=16, has_id=True. Check: (16 >= 18) and (True) → (False) and (True) → False. The and operator returns False because the first condition failed. Return "Access Denied".</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">validate_age(20, False) →</div>
+                        <div class="result">"Access Denied"</div>
+                        <div class="explanation">Parameters: age=20, has_id=False. Check: (20 >= 18) and (False) → (True) and (False) → False. The and operator returns False because the second condition failed. Return "Access Denied".</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 14: The Short-Circuit Return -->
+            <div class="problem" id="problem14">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        ⚡ Problem 14: The Short-Circuit Return
+                    </h2>
+                    <p class="problem-description">
+                        This tests how an early return stops the function immediately, similar to the logic error example.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">analyze_number</span>(x):
+    if x > 100:
+        return <span class="string">"Huge"</span>
+    if x > 50:
+        return <span class="string">"Big"</span>
+    return <span class="string">"Small"</span>
+
+<span class="builtin">print</span>(<span class="function">analyze_number</span>(105))
+<span class="builtin">print</span>(<span class="function">analyze_number</span>(75))
+<span class="builtin">print</span>(<span class="function">analyze_number</span>(30))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>Once a return statement executes, the function stops immediately. Check the conditions in order from top to bottom.</p>
+                </div>
+
+                <div class="reveal-section" id="reveal14">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">analyze_number(105) →</div>
+                        <div class="result">"Huge"</div>
+                        <div class="explanation">Parameter: x=105. Flow: Check if 105 > 100? YES (True). Return "Huge" immediately and exit the function. Python never checks the remaining conditions because a return statement was executed.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">analyze_number(75) →</div>
+                        <div class="result">"Big"</div>
+                        <div class="explanation">Parameter: x=75. Flow: Check if 75 > 100? NO (False). Check if 75 > 50? YES (True). Return "Big" immediately and exit the function. The final return statement is never reached.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">analyze_number(30) →</div>
+                        <div class="result">"Small"</div>
+                        <div class="explanation">Parameter: x=30. Flow: Check if 30 > 100? NO (False). Check if 30 > 50? NO (False). Both conditions failed, so we reach the final return statement and return "Small".</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 15: The Power of Modulo -->
+            <div class="problem" id="problem15">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        ⚖️ Problem 15: The Power of Modulo (%) and Comparison
+                    </h2>
+                    <p class="problem-description">
+                        This program tests divisibility by 5 and 3 using the modulo operator and integer division.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">check_remainder</span>(n):
+    if n % 5 == 0:
+        return n // 5 <span class="comment"># Integer division</span>
+    if n % 3 == 0:
+        return n * 2
+    return n
+
+<span class="builtin">print</span>(<span class="function">check_remainder</span>(10))
+<span class="builtin">print</span>(<span class="function">check_remainder</span>(6))
+<span class="builtin">print</span>(<span class="function">check_remainder</span>(7))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The modulo operator (%) returns the remainder. If n % 5 == 0, the number is divisible by 5. The // operator does integer division (no decimals).</p>
+                </div>
+
+                <div class="reveal-section" id="reveal15">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">check_remainder(10) →</div>
+                        <div class="result">2</div>
+                        <div class="explanation">Parameter: n=10. Check if 10 % 5 == 0? Calculate: 10 ÷ 5 = 2 remainder 0, so 10 % 5 = 0. Since 0 == 0 is True, return n // 5. Integer division: 10 // 5 = 2.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">check_remainder(6) →</div>
+                        <div class="result">12</div>
+                        <div class="explanation">Parameter: n=6. Check if 6 % 5 == 0? Calculate: 6 ÷ 5 = 1 remainder 1, so 6 % 5 = 1. Since 1 ≠ 0, check next: if 6 % 3 == 0? Calculate: 6 ÷ 3 = 2 remainder 0, so 6 % 3 = 0. True! Return n * 2, so 6 × 2 = 12.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">check_remainder(7) →</div>
+                        <div class="result">7</div>
+                        <div class="explanation">Parameter: n=7. Check if 7 % 5 == 0? Calculate: 7 ÷ 5 = 1 remainder 2, so 7 % 5 = 2. Since 2 ≠ 0, check next: if 7 % 3 == 0? Calculate: 7 ÷ 3 = 2 remainder 1, so 7 % 3 = 1. Since 1 ≠ 0, both conditions fail. Return n unchanged: 7.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 16: The Basic elif Grade Scale -->
+            <div class="problem" id="problem16">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        💯 Problem 16: The Basic elif Grade Scale
+                    </h2>
+                    <p class="problem-description">
+                        This uses the standard if/elif/else structure for multiple grade possibilities.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">get_grade</span>(score):
+    if score >= 90:
+        return <span class="string">'A'</span>
+    elif score >= 80:
+        return <span class="string">'B'</span>
+    elif score >= 70:
+        return <span class="string">'C'</span>
+    return <span class="string">'D'</span>
+
+<span class="builtin">print</span>(<span class="function">get_grade</span>(85))
+<span class="builtin">print</span>(<span class="function">get_grade</span>(91))
+<span class="builtin">print</span>(<span class="function">get_grade</span>(65))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The elif statements are checked in order. Once one condition is true, the rest are skipped. What grade range does each score fall into?</p>
+                </div>
+
+                <div class="reveal-section" id="reveal16">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">get_grade(85) →</div>
+                        <div class="result">'B'</div>
+                        <div class="explanation">Parameter: score=85. Flow: Check if 85 >= 90? NO (False). Check elif 85 >= 80? YES (True). Return 'B' immediately. The remaining elif and else clauses are skipped because a condition was already met.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">get_grade(91) →</div>
+                        <div class="result">'A'</div>
+                        <div class="explanation">Parameter: score=91. Flow: Check if 91 >= 90? YES (True). Return 'A' immediately. Python stops here and doesn't evaluate any of the elif conditions because the first condition was satisfied.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">get_grade(65) →</div>
+                        <div class="result">'D'</div>
+                        <div class="explanation">Parameter: score=65. Flow: Check if 65 >= 90? NO. Check elif 65 >= 80? NO. Check elif 65 >= 70? NO. All conditions failed, so we execute the final else clause and return 'D'.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 17: The Absolute Value Check -->
+            <div class="problem" id="problem17">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        ➕/➖ Problem 17: The Absolute Value Check (Math)
+                    </h2>
+                    <p class="problem-description">
+                        This function determines if a number is positive or negative and processes it accordingly.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">process_value</span>(val):
+    if val < 0:
+        return val * -1 + 1 <span class="comment"># Makes it positive, then adds 1</span>
+    return val - 1
+
+<span class="builtin">print</span>(<span class="function">process_value</span>(10))
+<span class="builtin">print</span>(<span class="function">process_value</span>(-5))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>For negative numbers: multiply by -1 to make positive, then add 1. For positive numbers: subtract 1. Follow the math step by step!</p>
+                </div>
+
+                <div class="reveal-section" id="reveal17">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">process_value(10) →</div>
+                        <div class="result">9</div>
+                        <div class="explanation">Parameter: val=10. Check if 10 < 0? NO (False). Since the condition is false, we skip the if block and execute the else clause: return val - 1, so 10 - 1 = 9.</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">process_value(-5) →</div>
+                        <div class="result">6</div>
+                        <div class="explanation">Parameter: val=-5. Check if -5 < 0? YES (True). Execute the if block: return val * -1 + 1. Calculate step by step: (-5) × (-1) = 5, then 5 + 1 = 6. Return 6.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem 18: The String Case Changer -->
+            <div class="problem" id="problem18">
+                <div class="problem-header">
+                    <h2 class="problem-title">
+                        🔤 Problem 18: The String Case Changer
+                    </h2>
+                    <p class="problem-description">
+                        This function checks the first letter of a string to decide how to change its case.
+                    </p>
+                </div>
+
+                <div class="code-block">def <span class="function">format_word</span>(text):
+    if text[0] == <span class="string">'P'</span>:
+        return text.upper()
+    return text.lower()
+
+<span class="builtin">print</span>(<span class="function">format_word</span>(<span class="string">"Python"</span>))
+<span class="builtin">print</span>(<span class="function">format_word</span>(<span class="string">"apple"</span>))</div>
+
+                <div class="thinking-section">
+                    <h3>🤔 Think About It:</h3>
+                    <p>The <code>text[0]</code> gets the first character. If it's 'P', use <code>upper()</code>, otherwise use <code>lower()</code>. What's the first letter of each word?</p>
+                </div>
+
+                <div class="reveal-section" id="reveal18">
+                    <h3>✅ Correct Answers:</h3>
+                    <div class="answer-item">
+                        <div class="call">format_word("Python") →</div>
+                        <div class="result">"PYTHON"</div>
+                        <div class="explanation">Parameter: text="Python". String indexing: text[0] gets the first character, which is 'P'. Check if 'P' == 'P'? YES (True). Execute text.upper(), which converts "Python" to all uppercase: "PYTHON".</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="call">format_word("apple") →</div>
+                        <div class="result">"apple"</div>
+                        <div class="explanation">Parameter: text="apple". String indexing: text[0] gets the first character, which is 'a'. Check if 'a' == 'P'? NO (False). Execute the else clause: text.lower(), which converts "apple" to all lowercase. Since "apple" is already lowercase, it remains "apple".</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <span class="problem-counter" id="problemCounter">Problem 1 of 18</span>
+            <div>
+                <button class="btn" onclick="prevProblem()">← Previous</button>
+                <button class="btn next" onclick="nextProblem()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentProblem = 1;
+        const totalProblems = 18;
+        let timer = null;
+        let timeLeft = 120; // 2 minutes in seconds
+
+        function updateDisplay() {
+            // Hide all problems
+            for (let i = 1; i <= totalProblems; i++) {
+                document.getElementById(`problem${i}`).classList.remove('active');
+                document.getElementById(`reveal${i}`).classList.remove('show');
+            }
+            
+            // Show current problem
+            document.getElementById(`problem${currentProblem}`).classList.add('active');
+            
+            // Update counter
+            document.getElementById('problemCounter').textContent = `Problem ${currentProblem} of ${totalProblems}`;
+            
+            // Update progress bar
+            const progress = (currentProblem / totalProblems) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        function nextProblem() {
+            if (currentProblem < totalProblems) {
+                currentProblem++;
+                updateDisplay();
+                stopTimer();
+            }
+        }
+
+        function prevProblem() {
+            if (currentProblem > 1) {
+                currentProblem--;
+                updateDisplay();
+                stopTimer();
+            }
+        }
+
+        function toggleReveal() {
+            const revealSection = document.getElementById(`reveal${currentProblem}`);
+            const btn = event.target;
+            
+            if (revealSection.classList.contains('show')) {
+                revealSection.classList.remove('show');
+                btn.textContent = '🔍 Show Answer';
+                btn.style.background = '#007bff';
+            } else {
+                revealSection.classList.add('show');
+                btn.textContent = '👁️ Hide Answer';
+                btn.style.background = '#dc3545';
+            }
+        }
+
+        function startTimer() {
+            stopTimer(); // Stop any existing timer
+            timeLeft = 120; // Reset to 2 minutes
+            const timerDisplay = document.getElementById('timer');
+            timerDisplay.style.display = 'inline-block';
+            
+            timer = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 30) {
+                    timerDisplay.style.background = '#dc3545';
+                    timerDisplay.style.color = 'white';
+                } else if (timeLeft <= 60) {
+                    timerDisplay.style.background = '#fd7e14';
+                    timerDisplay.style.color = 'white';
+                }
+                
+                timeLeft--;
+                
+                if (timeLeft < 0) {
+                    stopTimer();
+                    timerDisplay.textContent = 'Time\'s Up!';
+                    timerDisplay.style.background = '#dc3545';
+                    timerDisplay.style.color = 'white';
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+                const timerDisplay = document.getElementById('timer');
+                timerDisplay.style.display = 'none';
+                timerDisplay.style.background = '#ffc107';
+                timerDisplay.style.color = '#212529';
+            }
+        }
+
+        function toggleThinking() {
+            const thinkingSection = document.querySelector(`#problem${currentProblem} .thinking-section`);
+            const btn = event.target;
+            
+            if (thinkingSection.classList.contains('show')) {
+                thinkingSection.classList.remove('show');
+                btn.textContent = '💭 Show Hints';
+                btn.style.background = '#6f42c1';
+            } else {
+                thinkingSection.classList.add('show');
+                btn.textContent = '🧠 Hide Hints';
+                btn.style.background = '#dc3545';
+            }
+        }
+
+        function resetAll() {
+            currentProblem = 1;
+            updateDisplay();
+            stopTimer();
+            
+            // Hide all answers and thinking sections
+            for (let i = 1; i <= totalProblems; i++) {
+                document.getElementById(`reveal${i}`).classList.remove('show');
+                const thinkingSection = document.querySelector(`#problem${i} .thinking-section`);
+                if (thinkingSection) thinkingSection.classList.remove('show');
+            }
+            
+            // Reset all reveal and thinking buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes('Hide Answer')) {
+                    btn.textContent = '🔍 Show Answer';
+                    btn.style.background = '#007bff';
+                } else if (btn.textContent.includes('Hide Hints')) {
+                    btn.textContent = '💭 Show Hints';
+                    btn.style.background = '#6f42c1';
+                }
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'n') {
+                nextProblem();
+            } else if (e.key === 'ArrowLeft' || e.key === 'p') {
+                prevProblem();
+            } else if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                toggleReveal();
+            } else if (e.key === 't') {
+                startTimer();
+            } else if (e.key === 'r') {
+                resetAll();
+            }
+        });
+
+        // Initialize display
+        updateDisplay();
+    </script>
+</body>
+</html>

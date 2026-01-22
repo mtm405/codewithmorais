@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Laboratory - Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .lab-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            min-height: 500px;
+        }
+
+        .panel-title {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            font-size: 1.2em;
+        }
+
+        .code-area {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            min-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+
+        .code-textarea {
+            width: 100%;
+            height: 300px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            padding: 15px;
+            resize: vertical;
+            outline: none;
+            border-radius: 10px;
+        }
+
+        .test-selector {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .exercise-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .exercise-tab {
+            background: #ecf0f1;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .exercise-tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .exercise-tab.completed {
+            background: #27ae60;
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success { background: #27ae60; }
+        .btn-success:hover { background: #229954; }
+
+        .btn-danger { background: #e74c3c; }
+        .btn-danger:hover { background: #c0392b; }
+
+        .btn-warning { background: #f39c12; }
+        .btn-warning:hover { background: #d68910; }
+
+        .test-results {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .test-item:last-child {
+            border-bottom: none;
+        }
+
+        .test-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .test-pass {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .test-fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .test-skip {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .assert-methods {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .assert-methods h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .assert-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .exercise-description {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .progress-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #ecf0f1;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .output-console {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .error-output {
+            color: #e74c3c;
+        }
+
+        .success-output {
+            color: #2ecc71;
+        }
+
+        .warning-output {
+            color: #f39c12;
+        }
+
+        .coverage-info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .lab-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .lab-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Testing Laboratory</h1>
+            <p>Master unit testing with unittest framework and assert methods</p>
+        </div>
+
+        <div class="progress-section">
+            <h3>Testing Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="lab-progress">0%</div>
+            </div>
+            <p>Complete all exercises to become a testing expert!</p>
+        </div>
+
+        <div class="test-selector">
+            <h3>Select Testing Exercise</h3>
+            <div class="exercise-tabs" id="exercise-tabs">
+                <!-- Tabs will be populated by JavaScript -->
+            </div>
+            
+            <div class="assert-methods">
+                <h4>Available Assert Methods</h4>
+                <div class="assert-list">
+                    <div>assertEqual(a, b)</div>
+                    <div>assertNotEqual(a, b)</div>
+                    <div>assertTrue(x)</div>
+                    <div>assertFalse(x)</div>
+                    <div>assertIs(a, b)</div>
+                    <div>assertIsNot(a, b)</div>
+                    <div>assertIsNone(x)</div>
+                    <div>assertIsNotNone(x)</div>
+                    <div>assertIn(a, b)</div>
+                    <div>assertNotIn(a, b)</div>
+                    <div>assertIsInstance(obj, cls)</div>
+                    <div>assertRaises(exc)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lab-grid">
+            <div class="lab-panel">
+                <h3 class="panel-title">📝 Code Under Test</h3>
+                <div class="controls">
+                    <button class="btn" onclick="resetCode()">🔄 Reset</button>
+                    <button class="btn btn-warning" onclick="showHint()">💡 Hint</button>
+                </div>
+                <div class="exercise-description" id="exercise-description">
+                    Select an exercise to begin testing
+                </div>
+                <textarea class="code-textarea" id="code-area" readonly></textarea>
+            </div>
+
+            <div class="lab-panel">
+                <h3 class="panel-title">🧪 Test Cases</h3>
+                <div class="controls">
+                    <button class="btn btn-success" onclick="runTests()">▶️ Run Tests</button>
+                    <button class="btn" onclick="checkCoverage()">📊 Coverage</button>
+                    <button class="btn btn-danger" onclick="showSolution()">🔑 Solution</button>
+                </div>
+                <textarea class="code-textarea" id="test-area" placeholder="Write your test cases here..."></textarea>
+                
+                <div class="coverage-info" id="coverage-info" style="display: none;">
+                    <h4>Test Coverage Analysis</h4>
+                    <div id="coverage-details"></div>
+                </div>
+            </div>
+
+            <div class="lab-panel">
+                <h3 class="panel-title">📊 Test Results</h3>
+                <div class="controls">
+                    <button class="btn" onclick="clearResults()">🗑️ Clear</button>
+                    <button class="btn" onclick="exportResults()">💾 Export</button>
+                </div>
+                
+                <div class="test-results" id="test-results">
+                    <div class="test-item">
+                        <span>No tests run yet</span>
+                        <span class="test-status test-skip">PENDING</span>
+                    </div>
+                </div>
+                
+                <div class="output-console" id="output-console">
+                    <div>Test output will appear here...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Testing exercises
+        const exercises = [
+            {
+                id: 1,
+                title: "Calculator Testing Basics",
+                description: "Write comprehensive tests for a simple calculator class using basic assert methods.",
+                difficulty: "Beginner",
+                code: `class Calculator:
+    """Simple calculator for basic arithmetic operations"""
+    
+    def add(self, a, b):
+        return a + b
+    
+    def subtract(self, a, b):
+        return a - b
+    
+    def multiply(self, a, b):
+        return a * b
+    
+    def divide(self, a, b):
+        if b == 0:
+            raise ValueError("Cannot divide by zero")
+        return a / b
+    
+    def power(self, base, exponent):
+        return base ** exponent
+    
+    def is_even(self, number):
+        return number % 2 == 0`,
+                starterTest: `import unittest
+
+class TestCalculator(unittest.TestCase):
+    
+    def setUp(self):
+        """Set up test fixtures before each test method."""
+        self.calc = Calculator()
+    
+    def test_add_positive_numbers(self):
+        """Test addition with positive numbers"""
+        # Write your test here
+        pass
+    
+    def test_add_negative_numbers(self):
+        """Test addition with negative numbers"""
+        # Write your test here
+        pass
+    
+    def test_divide_by_zero(self):
+        """Test that division by zero raises ValueError"""
+        # Write your test here using assertRaises
+        pass
+    
+    def test_is_even_true(self):
+        """Test is_even method with even numbers"""
+        # Write your test here
+        pass
+    
+    def test_is_even_false(self):
+        """Test is_even method with odd numbers"""
+        # Write your test here
+        pass
+
+if __name__ == '__main__':
+    unittest.main()`,
+                solution: `import unittest
+
+class TestCalculator(unittest.TestCase):
+    
+    def setUp(self):
+        """Set up test fixtures before each test method."""
+        self.calc = Calculator()
+    
+    def test_add_positive_numbers(self):
+        """Test addition with positive numbers"""
+        result = self.calc.add(5, 3)
+        self.assertEqual(result, 8)
+        self.assertEqual(self.calc.add(10, 20), 30)
+    
+    def test_add_negative_numbers(self):
+        """Test addition with negative numbers"""
+        result = self.calc.add(-5, -3)
+        self.assertEqual(result, -8)
+        self.assertEqual(self.calc.add(-10, 5), -5)
+    
+    def test_subtract(self):
+        """Test subtraction"""
+        self.assertEqual(self.calc.subtract(10, 4), 6)
+        self.assertEqual(self.calc.subtract(-5, -3), -2)
+    
+    def test_multiply(self):
+        """Test multiplication"""
+        self.assertEqual(self.calc.multiply(6, 7), 42)
+        self.assertEqual(self.calc.multiply(-3, 4), -12)
+    
+    def test_divide_normal(self):
+        """Test normal division"""
+        self.assertEqual(self.calc.divide(15, 3), 5)
+        self.assertAlmostEqual(self.calc.divide(1, 3), 0.3333333, places=5)
+    
+    def test_divide_by_zero(self):
+        """Test that division by zero raises ValueError"""
+        with self.assertRaises(ValueError):
+            self.calc.divide(10, 0)
+    
+    def test_power(self):
+        """Test exponentiation"""
+        self.assertEqual(self.calc.power(2, 3), 8)
+        self.assertEqual(self.calc.power(5, 0), 1)
+    
+    def test_is_even_true(self):
+        """Test is_even method with even numbers"""
+        self.assertTrue(self.calc.is_even(4))
+        self.assertTrue(self.calc.is_even(0))
+        self.assertTrue(self.calc.is_even(-6))
+    
+    def test_is_even_false(self):
+        """Test is_even method with odd numbers"""
+        self.assertFalse(self.calc.is_even(3))
+        self.assertFalse(self.calc.is_even(-5))
+        self.assertFalse(self.calc.is_even(1))
+
+if __name__ == '__main__':
+    unittest.main()`,
+                hint: "Use assertEqual for exact comparisons, assertTrue/assertFalse for boolean values, and assertRaises for exception testing.",
+                requirements: [
+                    "Test all calculator methods",
+                    "Use appropriate assert methods for each test",
+                    "Include both positive and negative test cases",
+                    "Test edge cases like division by zero",
+                    "Use descriptive test method names"
+                ]
+            },
+            {
+                id: 2,
+                title: "String Processor Testing",
+                description: "Test a string processing class with various assert methods including type checking and membership tests.",
+                difficulty: "Intermediate",
+                code: `class StringProcessor:
+    """String processing utility class"""
+    
+    def __init__(self):
+        self.processed_strings = []
+    
+    def clean_string(self, text):
+        """Remove extra whitespace and convert to lowercase"""
+        if not isinstance(text, str):
+            raise TypeError("Input must be a string")
+        
+        cleaned = text.strip().lower()
+        self.processed_strings.append(cleaned)
+        return cleaned
+    
+    def get_word_count(self, text):
+        """Count words in text"""
+        if not text or not isinstance(text, str):
+            return 0
+        return len(text.split())
+    
+    def reverse_words(self, text):
+        """Reverse the order of words in text"""
+        if not isinstance(text, str):
+            raise TypeError("Input must be a string")
+        
+        words = text.split()
+        return ' '.join(reversed(words))
+    
+    def find_common_words(self, text1, text2):
+        """Find words that appear in both texts"""
+        words1 = set(text1.lower().split())
+        words2 = set(text2.lower().split())
+        return list(words1.intersection(words2))
+    
+    def get_processed_history(self):
+        """Return list of all processed strings"""
+        return self.processed_strings.copy()
+    
+    def clear_history(self):
+        """Clear the processing history"""
+        self.processed_strings.clear()`,
+                starterTest: `import unittest
+
+class TestStringProcessor(unittest.TestCase):
+    
+    def setUp(self):
+        """Set up test fixtures"""
+        self.processor = StringProcessor()
+    
+    def test_clean_string_basic(self):
+        """Test basic string cleaning"""
+        # Test that clean_string removes whitespace and converts to lowercase
+        pass
+    
+    def test_clean_string_type_error(self):
+        """Test that clean_string raises TypeError for non-strings"""
+        # Use assertRaises to test exception handling
+        pass
+    
+    def test_word_count_normal(self):
+        """Test word counting with normal strings"""
+        # Test get_word_count method
+        pass
+    
+    def test_word_count_edge_cases(self):
+        """Test word counting edge cases"""
+        # Test with empty string, None, non-string input
+        pass
+    
+    def test_reverse_words(self):
+        """Test word reversal"""
+        # Test reverse_words method
+        pass
+    
+    def test_find_common_words(self):
+        """Test finding common words between texts"""
+        # Use assertIn/assertNotIn for membership testing
+        pass
+    
+    def test_history_tracking(self):
+        """Test processing history functionality"""
+        # Test that processed strings are tracked correctly
+        # Use assertIsInstance, assertEqual, assertIn
+        pass
+
+if __name__ == '__main__':
+    unittest.main()`,
+                solution: `import unittest
+
+class TestStringProcessor(unittest.TestCase):
+    
+    def setUp(self):
+        """Set up test fixtures"""
+        self.processor = StringProcessor()
+    
+    def test_clean_string_basic(self):
+        """Test basic string cleaning"""
+        result = self.processor.clean_string("  Hello World  ")
+        self.assertEqual(result, "hello world")
+        
+        result = self.processor.clean_string("PYTHON Programming")
+        self.assertEqual(result, "python programming")
+    
+    def test_clean_string_type_error(self):
+        """Test that clean_string raises TypeError for non-strings"""
+        with self.assertRaises(TypeError):
+            self.processor.clean_string(123)
+        
+        with self.assertRaises(TypeError):
+            self.processor.clean_string(None)
+    
+    def test_word_count_normal(self):
+        """Test word counting with normal strings"""
+        self.assertEqual(self.processor.get_word_count("hello world"), 2)
+        self.assertEqual(self.processor.get_word_count("one two three four"), 4)
+        self.assertEqual(self.processor.get_word_count("single"), 1)
+    
+    def test_word_count_edge_cases(self):
+        """Test word counting edge cases"""
+        self.assertEqual(self.processor.get_word_count(""), 0)
+        self.assertEqual(self.processor.get_word_count("   "), 0)
+        self.assertEqual(self.processor.get_word_count(None), 0)
+    
+    def test_reverse_words(self):
+        """Test word reversal"""
+        result = self.processor.reverse_words("hello world python")
+        self.assertEqual(result, "python world hello")
+        
+        result = self.processor.reverse_words("single")
+        self.assertEqual(result, "single")
+        
+        with self.assertRaises(TypeError):
+            self.processor.reverse_words(123)
+    
+    def test_find_common_words(self):
+        """Test finding common words between texts"""
+        text1 = "hello world python programming"
+        text2 = "python is great for programming"
+        
+        common = self.processor.find_common_words(text1, text2)
+        
+        self.assertIn("python", common)
+        self.assertIn("programming", common)
+        self.assertNotIn("hello", common)
+        self.assertNotIn("great", common)
+        
+        self.assertIsInstance(common, list)
+        self.assertEqual(len(common), 2)
+    
+    def test_history_tracking(self):
+        """Test processing history functionality"""
+        # Clean some strings
+        self.processor.clean_string("  TEST  ")
+        self.processor.clean_string("ANOTHER test")
+        
+        history = self.processor.get_processed_history()
+        
+        self.assertIsInstance(history, list)
+        self.assertEqual(len(history), 2)
+        self.assertIn("test", history)
+        self.assertIn("another test", history)
+        
+        # Test clear history
+        self.processor.clear_history()
+        empty_history = self.processor.get_processed_history()
+        self.assertEqual(len(empty_history), 0)
+    
+    def test_type_checking(self):
+        """Test various type checks"""
+        processor = StringProcessor()
+        
+        # Test instance type
+        self.assertIsInstance(processor, StringProcessor)
+        
+        # Test return types
+        result = processor.clean_string("test")
+        self.assertIsInstance(result, str)
+        
+        count = processor.get_word_count("test words")
+        self.assertIsInstance(count, int)
+        
+        history = processor.get_processed_history()
+        self.assertIsInstance(history, list)
+
+if __name__ == '__main__':
+    unittest.main()`,
+                hint: "Use assertIsInstance for type checking, assertIn/assertNotIn for membership tests, and test both normal cases and edge cases.",
+                requirements: [
+                    "Test all public methods",
+                    "Use assertIsInstance for type checking",
+                    "Test exception handling with assertRaises",
+                    "Use assertIn/assertNotIn for membership tests",
+                    "Test edge cases like empty strings and None values"
+                ]
+            },
+            {
+                id: 3,
+                title: "BankAccount Testing Suite",
+                description: "Create comprehensive tests for a banking system with complex business logic and state management.",
+                difficulty: "Advanced",
+                code: `class InsufficientFundsError(Exception):
+    """Raised when account has insufficient funds for withdrawal"""
+    pass
+
+class InvalidAmountError(Exception):
+    """Raised when amount is invalid (negative or zero)"""
+    pass
+
+class BankAccount:
+    """Bank account with transaction history and validation"""
+    
+    def __init__(self, account_number, initial_balance=0, account_type="checking"):
+        if initial_balance < 0:
+            raise InvalidAmountError("Initial balance cannot be negative")
+        
+        self.account_number = account_number
+        self.balance = initial_balance
+        self.account_type = account_type
+        self.transaction_history = []
+        self.is_frozen = False
+        
+        if initial_balance > 0:
+            self.transaction_history.append({
+                "type": "initial_deposit",
+                "amount": initial_balance,
+                "balance_after": initial_balance
+            })
+    
+    def deposit(self, amount):
+        """Deposit money to account"""
+        if self.is_frozen:
+            raise Exception("Account is frozen")
+        
+        if amount <= 0:
+            raise InvalidAmountError("Deposit amount must be positive")
+        
+        self.balance += amount
+        self.transaction_history.append({
+            "type": "deposit",
+            "amount": amount,
+            "balance_after": self.balance
+        })
+        
+        return self.balance
+    
+    def withdraw(self, amount):
+        """Withdraw money from account"""
+        if self.is_frozen:
+            raise Exception("Account is frozen")
+        
+        if amount <= 0:
+            raise InvalidAmountError("Withdrawal amount must be positive")
+        
+        if amount > self.balance:
+            raise InsufficientFundsError(f"Insufficient funds. Balance: {self.balance}, Requested: {amount}")
+        
+        self.balance -= amount
+        self.transaction_history.append({
+            "type": "withdrawal",
+            "amount": amount,
+            "balance_after": self.balance
+        })
+        
+        return self.balance
+    
+    def get_balance(self):
+        """Get current balance"""
+        return self.balance
+    
+    def get_transaction_history(self):
+        """Get copy of transaction history"""
+        return self.transaction_history.copy()
+    
+    def freeze_account(self):
+        """Freeze the account"""
+        self.is_frozen = True
+    
+    def unfreeze_account(self):
+        """Unfreeze the account"""
+        self.is_frozen = False
+    
+    def transfer_to(self, other_account, amount):
+        """Transfer money to another account"""
+        if not isinstance(other_account, BankAccount):
+            raise TypeError("Target must be a BankAccount instance")
+        
+        # This will raise appropriate exceptions if invalid
+        self.withdraw(amount)
+        other_account.deposit(amount)
+        
+        return True`,
+                starterTest: `import unittest
+
+class TestBankAccount(unittest.TestCase):
+    
+    def setUp(self):
+        """Set up test fixtures"""
+        # Create test accounts here
+        pass
+    
+    def test_account_creation_valid(self):
+        """Test valid account creation"""
+        # Test normal account creation
+        # Use assertEqual, assertIsInstance, etc.
+        pass
+    
+    def test_account_creation_invalid(self):
+        """Test invalid account creation"""
+        # Test creation with negative balance
+        # Use assertRaises
+        pass
+    
+    def test_deposit_valid(self):
+        """Test valid deposits"""
+        # Test normal deposit operations
+        pass
+    
+    def test_deposit_invalid(self):
+        """Test invalid deposits"""
+        # Test deposits with invalid amounts
+        pass
+    
+    def test_withdrawal_valid(self):
+        """Test valid withdrawals"""
+        # Test normal withdrawal operations
+        pass
+    
+    def test_withdrawal_insufficient_funds(self):
+        """Test withdrawal with insufficient funds"""
+        # Use assertRaises with InsufficientFundsError
+        pass
+    
+    def test_transaction_history(self):
+        """Test transaction history tracking"""
+        # Test that all transactions are recorded correctly
+        pass
+    
+    def test_account_freezing(self):
+        """Test account freeze/unfreeze functionality"""
+        # Test frozen account behavior
+        pass
+    
+    def test_transfer_between_accounts(self):
+        """Test money transfer between accounts"""
+        # Test transfer functionality
+        pass
+    
+    def test_edge_cases(self):
+        """Test various edge cases"""
+        # Test boundary conditions and edge cases
+        pass
+
+if __name__ == '__main__':
+    unittest.main()`,
+                solution: `import unittest
+
+class TestBankAccount(unittest.TestCase):
+    
+    def setUp(self):
+        """Set up test fixtures"""
+        self.account1 = BankAccount("ACC001", 1000)
+        self.account2 = BankAccount("ACC002", 500)
+        self.empty_account = BankAccount("ACC003", 0)
+    
+    def test_account_creation_valid(self):
+        """Test valid account creation"""
+        account = BankAccount("TEST123", 100, "savings")
+        
+        self.assertEqual(account.account_number, "TEST123")
+        self.assertEqual(account.balance, 100)
+        self.assertEqual(account.account_type, "savings")
+        self.assertFalse(account.is_frozen)
+        self.assertIsInstance(account.transaction_history, list)
+        self.assertEqual(len(account.transaction_history), 1)  # Initial deposit
+    
+    def test_account_creation_invalid(self):
+        """Test invalid account creation"""
+        with self.assertRaises(InvalidAmountError):
+            BankAccount("INVALID", -100)
+    
+    def test_deposit_valid(self):
+        """Test valid deposits"""
+        initial_balance = self.account1.get_balance()
+        new_balance = self.account1.deposit(200)
+        
+        self.assertEqual(new_balance, initial_balance + 200)
+        self.assertEqual(self.account1.get_balance(), 1200)
+        
+        # Check transaction history
+        history = self.account1.get_transaction_history()
+        last_transaction = history[-1]
+        self.assertEqual(last_transaction["type"], "deposit")
+        self.assertEqual(last_transaction["amount"], 200)
+    
+    def test_deposit_invalid(self):
+        """Test invalid deposits"""
+        with self.assertRaises(InvalidAmountError):
+            self.account1.deposit(0)
+        
+        with self.assertRaises(InvalidAmountError):
+            self.account1.deposit(-50)
+    
+    def test_withdrawal_valid(self):
+        """Test valid withdrawals"""
+        initial_balance = self.account1.get_balance()
+        new_balance = self.account1.withdraw(300)
+        
+        self.assertEqual(new_balance, initial_balance - 300)
+        self.assertEqual(self.account1.get_balance(), 700)
+        
+        # Check transaction history
+        history = self.account1.get_transaction_history()
+        last_transaction = history[-1]
+        self.assertEqual(last_transaction["type"], "withdrawal")
+        self.assertEqual(last_transaction["amount"], 300)
+    
+    def test_withdrawal_insufficient_funds(self):
+        """Test withdrawal with insufficient funds"""
+        with self.assertRaises(InsufficientFundsError):
+            self.account1.withdraw(2000)  # More than balance
+        
+        with self.assertRaises(InsufficientFundsError):
+            self.empty_account.withdraw(1)  # Empty account
+    
+    def test_withdrawal_invalid_amount(self):
+        """Test withdrawal with invalid amounts"""
+        with self.assertRaises(InvalidAmountError):
+            self.account1.withdraw(0)
+        
+        with self.assertRaises(InvalidAmountError):
+            self.account1.withdraw(-100)
+    
+    def test_transaction_history(self):
+        """Test transaction history tracking"""
+        self.account1.deposit(100)
+        self.account1.withdraw(50)
+        self.account1.deposit(25)
+        
+        history = self.account1.get_transaction_history()
+        
+        # Should have initial deposit + 3 new transactions = 4 total
+        self.assertEqual(len(history), 4)
+        
+        # Check transaction types
+        transaction_types = [t["type"] for t in history]
+        self.assertIn("initial_deposit", transaction_types)
+        self.assertIn("deposit", transaction_types)
+        self.assertIn("withdrawal", transaction_types)
+        
+        # Check that history is a copy (not reference)
+        original_length = len(history)
+        history.append({"fake": "transaction"})
+        new_history = self.account1.get_transaction_history()
+        self.assertEqual(len(new_history), original_length)
+    
+    def test_account_freezing(self):
+        """Test account freeze/unfreeze functionality"""
+        # Freeze account
+        self.account1.freeze_account()
+        self.assertTrue(self.account1.is_frozen)
+        
+        # Try operations on frozen account
+        with self.assertRaises(Exception):
+            self.account1.deposit(100)
+        
+        with self.assertRaises(Exception):
+            self.account1.withdraw(100)
+        
+        # Unfreeze and test operations work again
+        self.account1.unfreeze_account()
+        self.assertFalse(self.account1.is_frozen)
+        
+        # Should work now
+        self.account1.deposit(100)
+        self.assertEqual(self.account1.get_balance(), 1100)
+    
+    def test_transfer_between_accounts(self):
+        """Test money transfer between accounts"""
+        initial_balance1 = self.account1.get_balance()
+        initial_balance2 = self.account2.get_balance()
+        
+        transfer_amount = 200
+        result = self.account1.transfer_to(self.account2, transfer_amount)
+        
+        self.assertTrue(result)
+        self.assertEqual(self.account1.get_balance(), initial_balance1 - transfer_amount)
+        self.assertEqual(self.account2.get_balance(), initial_balance2 + transfer_amount)
+        
+        # Check transaction history in both accounts
+        history1 = self.account1.get_transaction_history()
+        history2 = self.account2.get_transaction_history()
+        
+        self.assertEqual(history1[-1]["type"], "withdrawal")
+        self.assertEqual(history2[-1]["type"], "deposit")
+    
+    def test_transfer_invalid_target(self):
+        """Test transfer to invalid target"""
+        with self.assertRaises(TypeError):
+            self.account1.transfer_to("not_an_account", 100)
+        
+        with self.assertRaises(TypeError):
+            self.account1.transfer_to(None, 100)
+    
+    def test_transfer_insufficient_funds(self):
+        """Test transfer with insufficient funds"""
+        with self.assertRaises(InsufficientFundsError):
+            self.account1.transfer_to(self.account2, 2000)
+    
+    def test_edge_cases(self):
+        """Test various edge cases"""
+        # Test exact balance withdrawal
+        balance = self.empty_account.get_balance()
+        if balance > 0:
+            self.empty_account.withdraw(balance)
+            self.assertEqual(self.empty_account.get_balance(), 0)
+        
+        # Test very large amounts
+        large_account = BankAccount("LARGE", 1000000)
+        large_account.deposit(999999999)
+        self.assertGreater(large_account.get_balance(), 1000000)
+        
+        # Test floating point amounts
+        float_account = BankAccount("FLOAT", 100.50)
+        float_account.deposit(25.75)
+        self.assertAlmostEqual(float_account.get_balance(), 126.25, places=2)
+    
+    def test_type_assertions(self):
+        """Test type-related assertions"""
+        self.assertIsInstance(self.account1, BankAccount)
+        self.assertIsInstance(self.account1.get_balance(), (int, float))
+        self.assertIsInstance(self.account1.get_transaction_history(), list)
+        self.assertIsInstance(self.account1.account_number, str)
+        
+        # Test that balance is not None
+        self.assertIsNotNone(self.account1.get_balance())
+        
+        # Test boolean attributes
+        self.assertIsInstance(self.account1.is_frozen, bool)
+
+if __name__ == '__main__':
+    unittest.main()`,
+                hint: "Test all public methods, edge cases, exception handling, and state changes. Use setUp for common test data.",
+                requirements: [
+                    "Test all public methods thoroughly",
+                    "Test exception handling for all custom exceptions",
+                    "Verify state changes (balance, transaction history)",
+                    "Test edge cases and boundary conditions",
+                    "Use all appropriate assert methods",
+                    "Test inter-object operations (transfers)"
+                ]
+            }
+        ];
+
+        // Game state
+        let currentExercise = 0;
+        let completedExercises = new Set();
+
+        function initializeLab() {
+            createExerciseTabs();
+            loadExercise(0);
+            updateProgress();
+        }
+
+        function createExerciseTabs() {
+            const tabsContainer = document.getElementById('exercise-tabs');
+            tabsContainer.innerHTML = '';
+
+            exercises.forEach((exercise, index) => {
+                const tab = document.createElement('button');
+                tab.className = 'exercise-tab';
+                tab.textContent = `${index + 1}. ${exercise.title}`;
+                tab.onclick = () => loadExercise(index);
+                
+                if (index === currentExercise) {
+                    tab.classList.add('active');
+                }
+                
+                if (completedExercises.has(index)) {
+                    tab.classList.add('completed');
+                }
+                
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        function loadExercise(index) {
+            currentExercise = index;
+            const exercise = exercises[index];
+            
+            document.getElementById('exercise-description').innerHTML = `
+                <h4>${exercise.title} (${exercise.difficulty})</h4>
+                <p>${exercise.description}</p>
+                <h5>Requirements:</h5>
+                <ul>${exercise.requirements.map(req => `<li>${req}</li>`).join('')}</ul>
+            `;
+            
+            document.getElementById('code-area').value = exercise.code;
+            document.getElementById('test-area').value = exercise.starterTest;
+            
+            clearResults();
+            createExerciseTabs();
+        }
+
+        function runTests() {
+            const exercise = exercises[currentExercise];
+            const testCode = document.getElementById('test-area').value;
+            const results = document.getElementById('test-results');
+            const console = document.getElementById('output-console');
+            
+            console.innerHTML = '<div class="warning-output">Running tests...</div>';
+            results.innerHTML = '<div class="test-item"><span>Executing tests...</span><span class="test-status test-skip">RUNNING</span></div>';
+            
+            // Simulate test execution
+            setTimeout(() => {
+                const testResults = simulateTestExecution(exercise, testCode);
+                displayTestResults(testResults);
+                
+                if (testResults.allPassed && !completedExercises.has(currentExercise)) {
+                    completedExercises.add(currentExercise);
+                    updateProgress();
+                    createExerciseTabs();
+                    
+                    console.innerHTML += '<div class="success-output">🎉 All tests passed! Exercise completed!</div>';
+                }
+            }, 1500);
+        }
+
+        function simulateTestExecution(exercise, testCode) {
+            const results = {
+                tests: [],
+                allPassed: true,
+                output: '',
+                coverage: 0
+            };
+            
+            // Check for basic test structure
+            const hasSetUp = testCode.includes('def setUp(');
+            const hasTestMethods = (testCode.match(/def test_/g) || []).length;
+            const hasAsserts = testCode.includes('assert');
+            const hasAssertRaises = testCode.includes('assertRaises');
+            
+            // Simulate individual test results based on exercise
+            switch (exercise.id) {
+                case 1: // Calculator tests
+                    results.tests = [
+                        { name: 'test_add_positive_numbers', passed: testCode.includes('assertEqual') && testCode.includes('add') },
+                        { name: 'test_add_negative_numbers', passed: testCode.includes('assertEqual') && testCode.includes('-') },
+                        { name: 'test_divide_by_zero', passed: testCode.includes('assertRaises') && testCode.includes('ValueError') },
+                        { name: 'test_is_even_true', passed: testCode.includes('assertTrue') && testCode.includes('is_even') },
+                        { name: 'test_is_even_false', passed: testCode.includes('assertFalse') && testCode.includes('is_even') },
+                        { name: 'test_multiply', passed: testCode.includes('multiply') && testCode.includes('assertEqual') },
+                        { name: 'test_power', passed: testCode.includes('power') && testCode.includes('assertEqual') }
+                    ];
+                    break;
+                    
+                case 2: // String processor tests
+                    results.tests = [
+                        { name: 'test_clean_string_basic', passed: testCode.includes('clean_string') && testCode.includes('assertEqual') },
+                        { name: 'test_clean_string_type_error', passed: testCode.includes('assertRaises') && testCode.includes('TypeError') },
+                        { name: 'test_word_count', passed: testCode.includes('get_word_count') && testCode.includes('assertEqual') },
+                        { name: 'test_reverse_words', passed: testCode.includes('reverse_words') && testCode.includes('assertEqual') },
+                        { name: 'test_find_common_words', passed: testCode.includes('assertIn') && testCode.includes('find_common_words') },
+                        { name: 'test_history_tracking', passed: testCode.includes('assertIsInstance') && testCode.includes('history') },
+                        { name: 'test_type_checking', passed: testCode.includes('assertIsInstance') }
+                    ];
+                    break;
+                    
+                case 3: // Bank account tests
+                    results.tests = [
+                        { name: 'test_account_creation_valid', passed: testCode.includes('BankAccount') && testCode.includes('assertEqual') },
+                        { name: 'test_account_creation_invalid', passed: testCode.includes('assertRaises') && testCode.includes('InvalidAmountError') },
+                        { name: 'test_deposit_valid', passed: testCode.includes('deposit') && testCode.includes('assertEqual') },
+                        { name: 'test_withdrawal_valid', passed: testCode.includes('withdraw') && testCode.includes('assertEqual') },
+                        { name: 'test_withdrawal_insufficient_funds', passed: testCode.includes('assertRaises') && testCode.includes('InsufficientFundsError') },
+                        { name: 'test_transaction_history', passed: testCode.includes('transaction_history') && testCode.includes('assertIn') },
+                        { name: 'test_account_freezing', passed: testCode.includes('freeze') && testCode.includes('assertTrue') },
+                        { name: 'test_transfer_between_accounts', passed: testCode.includes('transfer_to') && testCode.includes('assertEqual') }
+                    ];
+                    break;
+            }
+            
+            // Calculate overall results
+            const passedTests = results.tests.filter(t => t.passed).length;
+            results.allPassed = passedTests === results.tests.length;
+            results.coverage = Math.round((passedTests / results.tests.length) * 100);
+            
+            // Generate output
+            results.output = `
+                Ran ${results.tests.length} tests
+                Passed: ${passedTests}
+                Failed: ${results.tests.length - passedTests}
+                Coverage: ${results.coverage}%
+                
+                ${results.allPassed ? '✅ ALL TESTS PASSED' : '❌ SOME TESTS FAILED'}
+            `;
+            
+            return results;
+        }
+
+        function displayTestResults(testResults) {
+            const resultsContainer = document.getElementById('test-results');
+            const console = document.getElementById('output-console');
+            
+            let resultsHtml = '';
+            testResults.tests.forEach(test => {
+                resultsHtml += `
+                    <div class="test-item">
+                        <span>${test.name}</span>
+                        <span class="test-status ${test.passed ? 'test-pass' : 'test-fail'}">
+                            ${test.passed ? '✓ PASS' : '✗ FAIL'}
+                        </span>
+                    </div>
+                `;
+            });
+            
+            resultsContainer.innerHTML = resultsHtml;
+            
+            const outputClass = testResults.allPassed ? 'success-output' : 'error-output';
+            console.innerHTML = `<div class="${outputClass}">${testResults.output}</div>`;
+        }
+
+        function checkCoverage() {
+            const exercise = exercises[currentExercise];
+            const testCode = document.getElementById('test-area').value;
+            const coverageInfo = document.getElementById('coverage-info');
+            const coverageDetails = document.getElementById('coverage-details');
+            
+            // Analyze test coverage
+            const methods = exercise.code.match(/def \w+\(/g) || [];
+            const testedMethods = [];
+            
+            methods.forEach(method => {
+                const methodName = method.replace('def ', '').replace('(', '');
+                if (testCode.includes(methodName)) {
+                    testedMethods.push(methodName);
+                }
+            });
+            
+            const coverage = Math.round((testedMethods.length / methods.length) * 100);
+            
+            coverageDetails.innerHTML = `
+                <p><strong>Method Coverage:</strong> ${coverage}%</p>
+                <p><strong>Methods tested:</strong> ${testedMethods.length}/${methods.length}</p>
+                <p><strong>Tested methods:</strong> ${testedMethods.join(', ') || 'None'}</p>
+                <p><strong>Untested methods:</strong> ${methods.filter(m => {
+                    const name = m.replace('def ', '').replace('(', '');
+                    return !testedMethods.includes(name);
+                }).map(m => m.replace('def ', '').replace('(', '')).join(', ') || 'All covered'}</p>
+            `;
+            
+            coverageInfo.style.display = 'block';
+            
+            setTimeout(() => {
+                coverageInfo.style.display = 'none';
+            }, 8000);
+        }
+
+        function showHint() {
+            const exercise = exercises[currentExercise];
+            const console = document.getElementById('output-console');
+            
+            console.innerHTML = `<div class="warning-output">💡 Hint: ${exercise.hint}</div>`;
+        }
+
+        function resetCode() {
+            const exercise = exercises[currentExercise];
+            document.getElementById('test-area').value = exercise.starterTest;
+            clearResults();
+        }
+
+        function showSolution() {
+            const exercise = exercises[currentExercise];
+            document.getElementById('test-area').value = exercise.solution;
+            
+            const console = document.getElementById('output-console');
+            console.innerHTML = '<div class="warning-output">💡 Solution loaded. Study the test patterns and best practices!</div>';
+        }
+
+        function clearResults() {
+            document.getElementById('test-results').innerHTML = 
+                '<div class="test-item"><span>No tests run yet</span><span class="test-status test-skip">PENDING</span></div>';
+            document.getElementById('output-console').innerHTML = 
+                '<div>Test output will appear here...</div>';
+        }
+
+        function exportResults() {
+            const exercise = exercises[currentExercise];
+            const testCode = document.getElementById('test-area').value;
+            
+            const exportData = {
+                exercise: exercise.title,
+                code: exercise.code,
+                tests: testCode,
+                timestamp: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${exercise.title.replace(/\s+/g, '_')}_tests.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function updateProgress() {
+            const progress = (completedExercises.size / exercises.length) * 100;
+            const progressFill = document.getElementById('lab-progress');
+            progressFill.style.width = `${progress}%`;
+            progressFill.textContent = `${Math.round(progress)}%`;
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeLab);
+    </script>
+</body>
+</html>

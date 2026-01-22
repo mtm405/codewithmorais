@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intermediate Python Challenge - 20 Common Traps | Code With Morais</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background: var(--primary);
+            color: var(--text-inverse);
+            padding: var(--space-xl);
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin: 0 0 var(--space);
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin: 0 0 var(--space-lg);
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-inverse);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space);
+        }
+
+        .navigation {
+            display: flex;
+            gap: var(--space);
+            margin-bottom: var(--space-lg);
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: var(--bg-primary);
+            color: var(--primary);
+            padding: var(--space-sm) var(--space-md);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: var(--text-inverse);
+        }
+
+        .section {
+            background: var(--bg-primary);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .section h2 {
+            color: var(--text-primary);
+            font-size: 2rem;
+            margin-bottom: var(--space-md);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: var(--space-sm);
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space);
+            margin-bottom: var(--space-lg);
+        }
+
+        .goal-card {
+            background: var(--gray-50);
+            border-left: 4px solid var(--secondary);
+            padding: var(--space);
+            border-radius: var(--radius-md);
+        }
+
+        .goal-number {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .goal-description {
+            margin-top: var(--space-sm);
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .hint {
+            background: #fef3c7;
+            color: #92400e;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .code-container {
+            position: relative;
+            margin: var(--space-md) 0;
+            background: #1e293b;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: var(--text-inverse);
+            border: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+            transition: background-color 0.3s;
+        }
+
+        .copy-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .copy-button.copied {
+            background: var(--secondary);
+        }
+
+        pre {
+            margin: 0;
+            padding: var(--space-md);
+            overflow-x: auto;
+            background: transparent;
+        }
+
+        pre code {
+            background: transparent;
+            color: #e2e8f0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border: 1px solid var(--secondary);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .instructions h3 {
+            color: #047857;
+            margin-top: 0;
+            margin-bottom: var(--space);
+        }
+
+        .ide-link {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--text-inverse);
+            padding: var(--space-sm) var(--space-md);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            margin: var(--space) 0;
+            transition: background-color 0.3s;
+        }
+
+        .ide-link:hover {
+            background: var(--secondary-dark);
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: var(--radius-md);
+            padding: var(--space);
+            margin: var(--space) 0;
+        }
+
+        .warning-box h4 {
+            color: #92400e;
+            margin-top: 0;
+        }
+
+        .bottom-navigation {
+            text-align: center;
+            margin-top: var(--space-xl);
+        }
+
+        .nav-link {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--text-inverse);
+            padding: var(--space-sm) var(--space-md);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            margin: 0 var(--space-sm);
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: var(--space-lg);
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .goals-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space);
+            }
+            
+            .section {
+                padding: var(--space-md);
+            }
+            
+            .container {
+                padding: 0 var(--space-sm);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bottom-navigation .nav-link {
+                display: block;
+                margin: var(--space-sm) 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-code"></i> Intermediate Python Challenge</h1>
+        <p>20 Common Python Traps for Intermediate Developers</p>
+        <div class="difficulty-badge">
+            <i class="fas fa-star"></i> Intermediate Level
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="/bug-index.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Basic Challenges
+            </a>
+            <a href="/challenge.html" class="nav-btn">
+                <i class="fas fa-arrow-right"></i> Advanced Challenge
+            </a>
+            <a href="/index.html" class="nav-btn">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </div>
+
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> How to Complete This Challenge</h3>
+            <ul>
+                <li><strong>Copy the entire code</strong> below to your Python IDE</li>
+                <li><strong>Run it</strong> to see the buggy outputs and errors</li>
+                <li><strong>Fix each bug</strong> to match the specified goals</li>
+                <li><strong>Test thoroughly</strong> - these bugs focus on common Python mistakes</li>
+                <li><strong>Learn the patterns</strong> - these are traps every Python developer encounters</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-target"></i> Challenge Goals</h2>
+            <p>Each numbered bug has a specific goal. Fix the code to achieve these outcomes:</p>
+            
+            <div class="goals-grid">
+                <div class="goal-card">
+                    <div class="goal-number">Bug 1:</div>
+                    <div class="goal-description">The loop must correctly print "Item 0: Apple", "Item 1: Banana", etc. The buggy code causes an IndexError because it attempts to access an item outside the list bounds.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 2:</div>
+                    <div class="goal-description">Calling 'add_item' twice must result in two independent lists: [10] and [20]. The buggy code currently merges them because the list parameter is reused across function calls. <span class="hint">HINT: Mutable Default Arguments</span></div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 3:</div>
+                    <div class="goal-description">Check if the number 5 is strictly between 1 and 4 (exclusive). The buggy code uses the wrong logical operator, resulting in an incorrect output.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 4:</div>
+                    <div class="goal-description">The final dictionary must contain only keys 1, 3, and 5. The buggy code causes a RuntimeError because it tries to modify the dictionary while iterating over it.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 5:</div>
+                    <div class="goal-description">All numbers in the 'squares' list must be 4, 9, 16. The buggy code produces incorrect results because the list comprehension syntax is missing the calculation.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 6:</div>
+                    <div class="goal-description">The loop must print the keys ('a', 'b', 'c') of the dictionary. The buggy code currently prints the values (1, 2, 3) because of how it accesses the items.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 7:</div>
+                    <div class="goal-description">The final 'count' must be 3, correctly counting all numbers greater than 5. The buggy code stops searching too early.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 8:</div>
+                    <div class="goal-description">The final output should be 15, calculated from 5 + 10. The buggy function only prints the number 10, resulting in a TypeError when the function result is used in addition.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 9:</div>
+                    <div class="goal-description">The nested loop should print 9 pairs (3 outer × 3 inner). The buggy code only runs the inner loop once due to an incorrect range parameter.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 10:</div>
+                    <div class="goal-description">Modifying 'buggy_copy' must not change 'original'. The 'original' list must remain [1, 2, 3]. The buggy code only creates a reference to the list, not a new copy.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 11:</div>
+                    <div class="goal-description">The code attempts to access a list index that doesn't exist. It must catch the resulting IndexError. The buggy code catches the wrong type of error.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 12:</div>
+                    <div class="goal-description">The code must print "Value is invalid" for x=5. The buggy code incorrectly concludes that 5 is a valid number.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 13:</div>
+                    <div class="goal-description">The first letter of 'word' should be 'J' resulting in "Jello". The buggy code attempts to modify a string directly, causing a TypeError. <span class="hint">HINT: String Immutability</span></div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 14:</div>
+                    <div class="goal-description">The loop should run until the number is greater than 10. The buggy code uses confusing double-negation logic in the while condition.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 15:</div>
+                    <div class="goal-description">The code must check if x=5 is between 10 and 20 (inclusive). The buggy code results in an incorrect "Out of range" message.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 16:</div>
+                    <div class="goal-description">Find the first person whose age is over 30 and print their name. The buggy code prints the name of the last person who qualifies because it doesn't stop searching.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 17:</div>
+                    <div class="goal-description">The code must print "Welcome, user!". The buggy code outputs "Access Denied" due to comparing an integer to a string.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 18:</div>
+                    <div class="goal-description">The 'else' block of the loop must run ONLY if the loop finishes without hitting a break. The buggy code is not currently set up to use the else block correctly.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 19:</div>
+                    <div class="goal-description">The final printed list must be [1, 2, 3, 4]. The buggy code attempts to concatenate a list and a single integer, causing a TypeError.</div>
+                </div>
+                
+                <div class="goal-card">
+                    <div class="goal-number">Bug 20:</div>
+                    <div class="goal-description">The code must print the last element of the list, which is 'd'. The buggy code accesses the element using index -0, which is incorrect for the last item.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h4><i class="fas fa-exclamation-triangle"></i> Intermediate Level Challenge</h4>
+            <p>This challenge focuses on common Python traps that intermediate developers often encounter. Topics include scope issues, iteration problems, type mismatches, and logical errors. Perfect for developers transitioning from basic to advanced Python concepts.</p>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-code"></i> Complete Buggy Code</h2>
+            <p>Copy this entire code block and start debugging:</p>
+            
+            <div class="code-container">
+                <button class="copy-button" onclick="copyCode('challenge-code')">
+                    <i class="fas fa-copy"></i> Copy All Code
+                </button>
+                <pre><code id="challenge-code" class="language-python"># ----------------------------------------
+# --- INTERMEDIATE BUGGY PROJECTS --------
+# ----------------------------------------
+# This file contains 20 projects with common Python traps related to scope, 
+# iteration, types, and logic. Fix the code to meet the goal of each project.
+
+# Goal 1: The loop must correctly print "Item 0: Apple", "Item 1: Banana", etc. 
+# The buggy code causes an **IndexError** because it attempts to access an item outside the list bounds.
+print("\n--- BUG 1: Indexing Error in For Loop ---")
+data = ['Apple', 'Banana', 'Cherry']
+for i in range(len(data) + 1):
+    print(f"Buggy Item {i}: {data[i]}")
+
+# Goal 2: Calling 'add_item' twice must result in two independent lists: [10] and [20]. 
+# The buggy code currently merges them because the list parameter is reused across function calls.
+print("\n--- BUG 2: Mutable Default Argument Trap ---")
+def add_item(item, item_list=[]):
+    item_list.append(item)
+    return item_list
+
+list_a = add_item(10)
+list_b = add_item(20)
+print("Buggy List A:", list_a)
+print("Buggy List B:", list_b)
+
+# Goal 3: Check if the number 5 is strictly between 1 and 4 (exclusive). 
+# The buggy code uses the wrong logical operator, resulting in an incorrect output.
+print("\n--- BUG 3: Simple Logic Error (AND vs OR) ---")
+x = 5
+if x < 1 and x > 4:
+    print("Buggy Check: Correct")
+else:
+    print("Buggy Check: Incorrect")
+
+# Goal 4: The final dictionary must contain only keys 1, 3, and 5. 
+# The buggy code causes a **RuntimeError** because it tries to modify the dictionary while iterating over it.
+print("\n--- BUG 4: Modifying Dict While Iterating ---")
+numbers = {1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five'}
+try:
+    for key in numbers.keys():
+        if key % 2 == 0:
+            del numbers[key]
+    print("Buggy Final Dict:", numbers)
+except RuntimeError as e:
+    print("Buggy Code Caught Error:", e)
+
+# Goal 5: All numbers in the 'squares' list must be 4, 9, 16. 
+# The buggy code produces incorrect results because the list comprehension syntax is missing the calculation.
+print("\n--- BUG 5: List Comprehension Syntax ---")
+nums = [2, 3, 4]
+squares = [x for x in nums]
+print("Buggy Squares:", squares)
+
+# Goal 6: The loop must print the keys ('a', 'b', 'c') of the dictionary. 
+# The buggy code currently prints the values (1, 2, 3) because of how it accesses the items.
+print("\n--- BUG 6: Dictionary Iteration Keys vs Values ---")
+data = {'a': 1, 'b': 2, 'c': 3}
+for item in data:
+    print("Buggy Item:", data[item])
+
+# Goal 7: The final 'count' must be 3, correctly counting all numbers greater than 5. 
+# The buggy code stops searching too early.
+print("\n--- BUG 7: Premature Break ---")
+data = [1, 5, 3, 8, 2, 9, 4]
+count = 0
+for num in data:
+    if num > 5:
+        count = 1
+        break 
+count += 2
+print("Buggy Count:", count)
+
+# Goal 8: The final output should be 15, calculated from $5 + 10$. 
+# The buggy function only prints the number 10, resulting in a **TypeError** when the function result is used in addition.
+print("\n--- BUG 8: Missing Return Value ---")
+def calculate_ten(a):
+    result = a + 5
+    print(result)
+
+final_sum = 5 + calculate_ten(5)
+print("Buggy Final Sum:", final_sum)
+
+# Goal 9: The nested loop should print 9 pairs ($3$ outer $\times 3$ inner). 
+# The buggy code only runs the inner loop once due to an incorrect range parameter.
+print("\n--- BUG 9: Nested Loop Range ---")
+pairs = 0
+for i in range(3):
+    for j in range(3):
+        pairs += 1
+print("Buggy Pairs:", pairs)
+
+# Goal 10: Modifying 'buggy_copy' must not change 'original'. The 'original' list must remain [1, 2, 3]. 
+# The buggy code only creates a reference to the list, not a new copy.
+print("\n--- BUG 10: Reference Assignment Trap ---")
+original = [1, 2, 3]
+buggy_copy = original 
+buggy_copy.append(4)
+print("Buggy Original:", original)
+
+# Goal 11: The code attempts to access a list index that doesn't exist. It must catch the resulting **IndexError**. 
+# The buggy code catches the wrong type of error.
+print("\n--- BUG 11: Wrong Exception Type ---")
+data = [10]
+try:
+    data[1]
+except TypeError:
+    print("Buggy Exception: Caught TypeError")
+except Exception as e:
+    print("Buggy Exception: Caught generic error:", e)
+
+# Goal 12: The code must print "Value is invalid" for $x=5$. 
+# The buggy code incorrectly concludes that 5 is a valid number.
+print("\n--- BUG 12: Membership Check Misuse ---")
+x = 5
+valid_numbers = (3, 7)
+if x in valid_numbers:
+    print("Buggy Check: Value is valid")
+else:
+    print("Buggy Check: Value is invalid")
+
+# Goal 13: The first letter of 'word' should be 'J' resulting in "Jello". 
+# The buggy code attempts to modify a string directly, causing a **TypeError**.
+print("\n--- BUG 13: String Immutability ---")
+word = "hello"
+try:
+    word[0] = 'J'
+    print("Buggy Word:", word)
+except TypeError as e:
+    print("Buggy Code Caught Error:", e)
+
+# Goal 14: The loop should run until the number is greater than 10. 
+# The buggy code uses confusing double-negation logic in the `while` condition.
+print("\n--- BUG 14: While Loop Negation ---")
+num = 5
+while not num > 10: 
+    num = 12 
+    print("Buggy Num:", num)
+    break 
+if num == 12:
+    print("Buggy Loop: Exited Correctly")
+else:
+    print("Buggy Loop: Exited Incorrectly")
+
+# Goal 15: The code must check if $x=5$ is between 10 and 20 (inclusive). 
+# The buggy code results in an incorrect "Out of range" message.
+print("\n--- BUG 15: Chained Comparison Error ---")
+x = 5
+if 10 < x < 20:
+    print("Buggy Check: In range")
+else:
+    print("Buggy Check: Out of range")
+
+# Goal 16: Find the first person whose age is over 30 and print their name. 
+# The buggy code prints the name of the last person who qualifies because it doesn't stop searching.
+print("\n--- BUG 16: Forgetting Break when Finding First Item ---")
+people = [{'name': 'A', 'age': 25}, {'name': 'B', 'age': 32}, {'name': 'C', 'age': 40}]
+found_name = "None"
+for person in people:
+    if person['age'] > 30:
+        found_name = person['name']
+print("Buggy Found Name:", found_name)
+
+# Goal 17: The code must print "Welcome, user!". 
+# The buggy code outputs "Access Denied" due to comparing an integer to a string.
+print("\n--- BUG 17: Type Mismatch in Comparison ---")
+user_level = 5 
+if user_level == '5': 
+    print("Buggy Access: Welcome, user!")
+else:
+    print("Buggy Access: Access Denied")
+
+# Goal 18: The 'else' block of the loop must run ONLY if the loop finishes without hitting a `break`. 
+# The buggy code is not currently set up to use the `else` block correctly.
+print("\n--- BUG 18: Loop Else Misuse ---")
+target = 10
+for i in range(5):
+    if i == target:
+        print("Found:", i)
+        break
+else:
+    print("Buggy Else: Target not found")
+
+# Goal 19: The final printed list must be [1, 2, 3, 4]. 
+# The buggy code attempts to concatenate a list and a single integer, causing a **TypeError**.
+print("\n--- BUG 19: List Concatenation Error ---")
+my_list = [1, 2, 3]
+new_item = 4
+# The broken line is: my_list = my_list + new_item
+print("Check line above for TypeError.")
+
+# Goal 20: The code must print the last element of the list, which is 'd'. 
+# The buggy code accesses the element using index $-0$, which is incorrect for the last item.
+print("\n--- BUG 20: Negative Indexing Error ---")
+letters = ['a', 'b', 'c', 'd']
+print("Buggy Last Letter:", letters[-0])</code></pre>
+            </div>
+            
+            <a href="https://www.online-python.com" target="_blank" class="ide-link">
+                <i class="fas fa-external-link-alt"></i> Open Online Python IDE
+            </a>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-lightbulb"></i> Learning Objectives</h2>
+            <p>By completing this challenge, you'll master:</p>
+            <ul>
+                <li><strong>Index Management:</strong> Proper loop bounds and list access patterns</li>
+                <li><strong>Mutable Default Arguments:</strong> Understanding function parameter pitfalls</li>
+                <li><strong>Logical Operators:</strong> Correct use of AND, OR, and comparison chains</li>
+                <li><strong>Safe Iteration:</strong> Modifying collections without causing runtime errors</li>
+                <li><strong>List Comprehensions:</strong> Proper syntax and variable scope</li>
+                <li><strong>Dictionary Operations:</strong> Accessing keys vs values correctly</li>
+                <li><strong>Control Flow:</strong> Break statements and loop-else constructs</li>
+                <li><strong>Function Design:</strong> Return values vs side effects</li>
+                <li><strong>Reference vs Copy:</strong> Understanding Python's object model</li>
+                <li><strong>Exception Handling:</strong> Catching the right exception types</li>
+                <li><strong>Type Awareness:</strong> Avoiding type mismatches in comparisons</li>
+                <li><strong>String Immutability:</strong> Working with immutable objects correctly</li>
+            </ul>
+        </div>
+
+        <div class="bottom-navigation">
+            <a href="/bug-index.html" class="nav-link">
+                <i class="fas fa-arrow-left"></i> Basic Challenges
+            </a>
+            <a href="/challenge.html" class="nav-link">
+                <i class="fas fa-arrow-right"></i> Advanced Challenge
+            </a>
+            <a href="/index.html" class="nav-link">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script>
+    <script src="/copy-functionality.js"></script>
+    <script>
+        // Initialize syntax highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAll();
+            }
+        });
+    </script>
+</body>
+</html>

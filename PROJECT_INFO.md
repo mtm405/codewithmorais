@@ -36,17 +36,19 @@ A comprehensive Python assessment platform with Firebase integration, designed f
 - **Styling**: Professional responsive design
 
 ## Project Structure
+> **Note**: For complete project structure and setup instructions, see [README.md](README.md)
+
+Key assessment-specific files:
 ```
 public/
-├── test.html                    # Main student test interface
+├── test.html                    # Main student test interface  
 ├── test-teacher-dashboard.html  # Teacher monitoring dashboard
-├── test.js                     # Core test functionality
-├── teacher-dashboard.js        # Dashboard functionality
 ├── test-activities-simple.json # 15 beginner questions
-├── firebase-config.js          # Firebase configuration
-└── styles.css                  # Styling
+└── firebase-config.js          # Firebase configuration
 
-scripts/                        # Firebase setup utilities
+data/                           # JSON data files
+scripts/                        # Setup utilities
+└── utilities/                  # Python upload scripts
 ```
 
 ## Curriculum Focus (Beginner Level)

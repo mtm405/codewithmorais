@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 1: Deconstruction, Flow & Critical Errors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .lesson-nav {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 3px solid #667eea;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .section {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.5s;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .timer {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #856404;
+        }
+        
+        .timer .time-left {
+            font-size: 2em;
+            color: #d9534f;
+        }
+        
+        .materials-checklist {
+            background: #e7f3ff;
+            border-left: 5px solid #007bff;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        
+        .materials-checklist h3 {
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .activity {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .activity h3 {
+            color: #2a5298;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .activity h4 {
+            color: #667eea;
+            margin: 20px 0 10px 0;
+        }
+        
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            margin: 15px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block .line-number {
+            color: #5c6370;
+            margin-right: 15px;
+            user-select: none;
+        }
+        
+        .code-block .keyword {
+            color: #c678dd;
+        }
+        
+        .code-block .string {
+            color: #98c379;
+        }
+        
+        .code-block .function {
+            color: #61afef;
+        }
+        
+        .code-block .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+        
+        .code-block .error {
+            background: #ff000033;
+            border-bottom: 2px wavy #ff0000;
+            cursor: pointer;
+        }
+        
+        .interactive-code {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .interactive-code textarea {
+            width: 100%;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            animation: slideIn 0.3s;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+            display: block;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+            display: block;
+        }
+        
+        .feedback.info {
+            background: #d1ecf1;
+            border: 2px solid #17a2b8;
+            color: #0c5460;
+            display: block;
+        }
+        
+        .drag-area {
+            min-height: 200px;
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #f8f9fa;
+        }
+        
+        .draggable-item {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: move;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .draggable-item:hover {
+            background: #e7f3ff;
+            transform: scale(1.02);
+        }
+        
+        .draggable-item.dragging {
+            opacity: 0.5;
+        }
+        
+        .flow-diagram {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .flow-box {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px auto;
+            max-width: 300px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .flow-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .flow-box.active {
+            background: #28a745;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .teacher-notes {
+            background: #fff9e6;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .teacher-notes h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .teacher-notes h4:before {
+            content: '▶ ';
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+        
+        .teacher-notes.expanded h4:before {
+            transform: rotate(90deg);
+        }
+        
+        .teacher-notes .content {
+            display: none;
+            margin-top: 15px;
+        }
+        
+        .teacher-notes.expanded .content {
+            display: block;
+        }
+        
+        .answer-key {
+            background: #e7f3ff;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .trace-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+        
+        .trace-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .trace-table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+        }
+        
+        .trace-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        input[type="text"] {
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .multiple-choice {
+            margin: 15px 0;
+        }
+        
+        .choice {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .choice:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+        
+        .choice.selected {
+            border-color: #667eea;
+            background: #e7f3ff;
+        }
+        
+        .choice input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .lesson-nav, .btn-primary, .btn-success, .timer {
+                display: none;
+            }
+            
+            .section {
+                display: block !important;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Lesson 1: Deconstruction, Flow & Critical Errors</h1>
+            <p>Two-Day Interactive Workshop | 50 min per class</p>
+            <p><strong>Quiz Preparation for Thursday</strong></p>
+        </header>
+        
+        <nav class="lesson-nav">
+            <button class="nav-btn active" onclick="showSection('materials')">📝 Materials</button>
+            <button class="nav-btn" onclick="showSection('warmup')">🔥 Warm-up (10 min)</button>
+            <button class="nav-btn" onclick="showSection('core')">⚙️ Core Logic (15 min)</button>
+            <button class="nav-btn" onclick="showSection('workshop')">🎯 Workshop (15 min)</button>
+            <button class="nav-btn" onclick="showSection('exit')">✅ Exit Ticket (10 min)</button>
+        </nav>
+        
+        <!-- MATERIALS SECTION -->
+        <div id="materials" class="section active">
+            <h2 style="color: #2a5298; margin-bottom: 20px;">📝 Materials Checklist for Lesson 1</h2>
+            
+            <div class="materials-checklist">
+                <h3>Required Materials</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="mat1">
+                    <label for="mat1"><strong>Code Tracing Worksheet</strong> - Must contain Nested Loop problem (Q7) and Conditional Function Trace (Q41)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="mat2">
+                    <label for="mat2"><strong>Exception Flow Diagram</strong> - Printed diagram of try/except/else/finally flow</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="mat3">
+                    <label for="mat3"><strong>Blank Code Blocks</strong> - Areas for students to write their own try/except code</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="mat4">
+                    <label for="mat4"><strong>Whiteboards/Markers</strong> - For interactive code tracing</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="mat5">
+                    <label for="mat5"><strong>Projector/Screen</strong> - Display code examples and flow diagrams</label>
+                </div>
+            </div>
+            
+            <div class="teacher-notes">
+                <h4 onclick="toggleNotes(this)">👨‍🏫 Lesson Overview & Objectives</h4>
+                <div class="content">
+                    <p><strong>Primary Focus Areas:</strong></p>
+                    <ul>
+                        <li>Distinguish between Syntax Errors and Runtime Errors</li>
+                        <li>Trace loop execution with nested structures</li>
+                        <li>Master exception handling flow (try/except/finally)</li>
+                        <li>Debug complex conditional logic</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>Common Student Mistakes to Address:</strong></p>
+                    <ul>
+                        <li>Missing colons after if/for/def statements</li>
+                        <li>Incorrect indentation in code blocks</li>
+                        <li>Confusion about when finally block executes</li>
+                        <li>Not understanding continue vs break in loops</li>
+                        <li>Misunderstanding nested loop execution order</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- WARM-UP SECTION -->
+        <div id="warmup" class="section">
+            <div class="timer">
+                <div>⏱️ Warm-up Activity</div>
+                <div class="time-left">10 minutes</div>
+            </div>
+            
+            <h2 style="color: #2a5298; margin-bottom: 20px;">🔥 Warm-up: Code Failure Diagnosis</h2>
+            
+            <div class="activity">
+                <h3>Activity A: Syntax Failure - The Missing Colon</h3>
+                <p><strong>Concept:</strong> A Syntax Error means the code can't even start because Python doesn't recognize the structure.</p>
+                
+                <div class="code-block">
+<span class="line-number">1</span><span class="keyword">if</span> condition == <span class="keyword">True</span><span class="error" title="Missing colon!"></span>
+<span class="line-number">2</span>    <span class="function">print</span>(<span class="string">"Error"</span>)
+                </div>
+                
+                <p style="margin: 15px 0;"><strong>Question:</strong> What's wrong with this code? Click on the error.</p>
+                
+                <button class="btn-primary" onclick="checkSyntaxError()">Check Answer</button>
+                <div id="syntax-feedback" class="feedback"></div>
+                
+                <div class="teacher-notes">
+                    <h4 onclick="toggleNotes(this)">👨‍🏫 Teaching Tips</h4>
+                    <div class="content">
+                        <p><strong>Discussion Points:</strong></p>
+                        <ul>
+                            <li>The missing colon (:) after the if statement prevents Python from understanding where the code block begins</li>
+                            <li>Indentation alone is NOT enough - the colon is required for if, for, while, def, class, try, except, etc.</li>
+                            <li>This is a <strong>Syntax Error</strong> - the program won't even start running</li>
+                        </ul>
+                        <div class="answer-key">
+                            <strong>Correct Code:</strong>
+                            <pre>if condition == True:
+    print("Error")</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity">
+                <h3>Activity B: Runtime Failure - Index Out of Bounds</h3>
+                <p><strong>Concept:</strong> A Runtime Error occurs while the program is executing a valid line of code.</p>
+                
+                <div class="code-block">
+<span class="line-number">1</span>my_list = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>]  <span class="comment"># Has indices 0, 1, 2</span>
+<span class="line-number">2</span><span class="function">print</span>(my_list[<span class="error">3</span>])  <span class="comment"># Accessing index 3</span>
+                </div>
+                
+                <p style="margin: 15px 0;"><strong>Question:</strong> What type of error does this generate?</p>
+                
+                <div class="multiple-choice">
+                    <div class="choice" onclick="selectChoice(this, 'runtime-q', false)">
+                        <input type="radio" name="runtime-q">
+                        <label>A) SyntaxError</label>
+                    </div>
+                    <div class="choice" onclick="selectChoice(this, 'runtime-q', false)">
+                        <input type="radio" name="runtime-q">
+                        <label>B) NameError</label>
+                    </div>
+                    <div class="choice" onclick="selectChoice(this, 'runtime-q', true)">
+                        <input type="radio" name="runtime-q">
+                        <label>C) IndexError (Runtime Error)</label>
+                    </div>
+                    <div class="choice" onclick="selectChoice(this, 'runtime-q', false)">
+                        <input type="radio" name="runtime-q">
+                        <label>D) TypeError</label>
+                    </div>
+                </div>
+                
+                <div id="runtime-feedback" class="feedback"></div>
+                
+                <div class="teacher-notes">
+                    <h4 onclick="toggleNotes(this)">👨‍🏫 Teaching Tips</h4>
+                    <div class="content">
+                        <p><strong>Key Differences:</strong></p>
+                        <ul>
+                            <li><strong>Syntax Error:</strong> Code structure is wrong, program won't start</li>
+                            <li><strong>Runtime Error:</strong> Code structure is valid, but something goes wrong during execution</li>
+                        </ul>
+                        <div class="answer-key">
+                            <strong>Answer:</strong> C) IndexError (Runtime Error)
+                            <p>The list only has indices 0, 1, 2. Trying to access index 3 causes an IndexError when the code runs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CORE LOGIC SECTION -->
+        <div id="core" class="section">
+            <div class="timer">
+                <div>⏱️ Core Logic Practice</div>
+                <div class="time-left">15 minutes</div>
+            </div>
+            
+            <h2 style="color: #2a5298; margin-bottom: 20px;">⚙️ Core Logic: Tracing Iteration</h2>
+            
+            <div class="activity">
+                <h3>Activity A: Loop Control - The Continue Command</h3>
+                <p><strong>Vocab-to-Code:</strong> When you need to <strong>skip the current task</strong> and move to the <strong>next item in a sequence</strong>, use <code>continue</code>.</p>
+                
+                <div class="code-block">
+<span class="line-number">1</span><span class="keyword">for</span> day <span class="keyword">in</span> <span class="function">range</span>(<span class="string">1</span>, <span class="string">31</span>):
+<span class="line-number">2</span>    <span class="keyword">if</span> day == <span class="string">15</span>:
+<span class="line-number">3</span>        <span class="comment"># Skip the activity for the rest of this loop cycle</span>
+<span class="line-number">4</span>        <span class="function">print</span>(<span class="string">"Skipping day 15"</span>)
+<span class="line-number">5</span>        <span class="keyword">continue</span>
+<span class="line-number">6</span>    <span class="function">print</span>(<span class="string">f"Doing activity on day {day}"</span>)
+                </div>
+                
+                <p style="margin: 15px 0;"><strong>Question:</strong> What will this code print for days 14, 15, and 16?</p>
+                
+                <button class="btn-primary" onclick="runContinueDemo()">Run Step-by-Step</button>
+                <div id="continue-output" class="feedback info" style="display: none;"></div>
+                
+                <div class="teacher-notes">
+                    <h4 onclick="toggleNotes(this)">👨‍🏫 Teaching Tips</h4>
+                    <div class="content">
+                        <div class="answer-key">
+                            <strong>Expected Output:</strong>
+                            <pre>Doing activity on day 14
+Skipping day 15
+Doing activity on day 16</pre>
+                            <p><strong>Explanation:</strong> On day 15, the continue statement skips line 6 and goes to the next iteration (day 16).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity">
+                <h3>Activity B: Nested Loop Trace (Collaborative Practice)</h3>
+                <p><strong>Rule:</strong> The Outer Loop runs once, and the Inner Loop runs to completion before the Outer Loop advances again.</p>
+                
+                <p style="margin: 15px 0;"><strong>Task:</strong> Arrange the following lines to correctly print all 7 days for each of the 10 students.</p>
+                
+                <div class="drag-area" id="available-lines">
+                    <h4>Available Lines (Drag to the Solution Area):</h4>
+                    <div class="draggable-item" draggable="true" data-order="1">1. for student in range(1, 11):</div>
+                    <div class="draggable-item" draggable="true" data-order="2">2. print(f"Student: {student}")</div>
+                    <div class="draggable-item" draggable="true" data-order="3">3. for classDay in range(1, 8):</div>
+                    <div class="draggable-item" draggable="true" data-order="4">4. print(f"Day: {classDay}")</div>
+                </div>
+                
+                <div class="drag-area" id="solution-area" style="min-height: 250px; background: #e7f3ff;">
+                    <h4>Your Solution (Drag lines here in correct order):</h4>
+                </div>
+                
+                <button class="btn-success" onclick="checkNestedLoop()">Check My Answer</button>
+                <button class="btn-primary" onclick="resetDragDrop()">Reset</button>
+                <div id="nested-feedback" class="feedback"></div>
+                
+                <div class="teacher-notes">
+                    <h4 onclick="toggleNotes(this)">👨‍🏫 Teaching Tips</h4>
+                    <div class="content">
+                        <div class="answer-key">
+                            <strong>Correct Order:</strong> 1, 2, 3, 4
+                            <p><strong>Key Concept:</strong> Lines 3 and 4 must be <strong>nested under</strong> (indented inside) lines 1 and 2.</p>
+                            <p><strong>Execution Flow:</strong></p>
+                            <ul>
+                                <li>Student 1 → Days 1-7 printed</li>
+                                <li>Student 2 → Days 1-7 printed</li>
+                                <li>... (continues for all 10 students)</li>
+                            </ul>
+                            <p>Total output: 10 students × 7 days = 70 day printouts</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CRITICAL WORKSHOP SECTION -->
+        <div id="workshop" class="section">
+            <div class="timer">
+                <div>⏱️ Critical Workshop</div>
+                <div class="time-left">15 minutes</div>
+            </div>
+            
+            <h2 style="color: #2a5298; margin-bottom: 20px;">🎯 Critical Workshop: Exception Handling Structure</h2>
+            <p style="font-size: 1.1em; color: #d9534f; margin-bottom: 20px;"><strong>⚠️ HIGHEST-PRIORITY WEAKNESS AREA - Focus on the flow, not just the code!</strong></p>
+            
+            <div class="activity">
+                <h3>Activity A: The Error Flow Rule</h3>
+                <p><strong>Visual Aid:</strong> Click through the three possible execution paths:</p>
+                
+                <div class="flow-diagram">
+                    <div class="flow-box" id="flow-try" onclick="highlightFlow('try')">
+                        <strong>try:</strong><br>
+                        Attempt risky code
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div style="display: flex; justify-content: space-around; gap: 20px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <div class="flow-box" id="flow-success" onclick="highlightFlow('success')" style="background: #28a745;">
+                                ✓ Success Path<br>
+                                No error occurred
+                            </div>
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <div class="flow-box" id="flow-except" onclick="highlightFlow('except')" style="background: #dc3545;">
+                                except:<br>
+                                Handle the error
+                            </div>
+                        </div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-box" id="flow-finally" onclick="highlightFlow('finally')" style="background: #ffc107; color: #000;">
+                        <strong>finally:</strong><br>
+                        ALWAYS executes (cleanup code)
+                    </div>
+                </div>
+                
+                <p style="margin: 20px 0; font-size: 1.1em;"><strong>Key Fact:</strong> The <code>finally</code> block <strong>always executes</strong>, regardless of whether the try block succeeded, failed, or raised an unhandled error.</p>
+                
+                <div class="teacher-notes">
+                    <h4 onclick="toggleNotes(this)">👨‍🏫 Teaching Tips</h4>
+                    <div class="content">
+                        <p><strong>Three Execution Paths:</strong></p>
+                        <ol>
+                            <li><strong>Success:</strong> try → finally (no error occurred)</li>
+                            <li><strong>Handled Error:</strong> try → except → finally (error caught and handled)</li>
+                            <li><strong>Unhandled Error:</strong> try → finally → crash (error not caught, but finally still runs)</li>
+                        </ol>
+                        <div class="answer-key">
+                            <strong>Common Quiz Question:</strong> "Does the finally block execute if there's an error?"
+                            <p><strong>Answer:</strong> YES - finally ALWAYS runs, even if there's an error!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity">
+                <h3>Activity B: Vocab-to-Code - Safe Division</h3>
+                <p><strong>Prompt Goal:</strong> Attempt a risky action (try), provide a backup plan if it fails (except), and tell the user why it failed.</p>
+                
+                <div class="interactive-code">
+                    <h4>Fill in the blanks to complete the safe division code:</h4>
+                    <div class="code-block" style="background: white; color: #000;">
+<span class="line-number">1</span>a = float(input("Num 1: "))
+<span class="line-number">2</span>b = float(input("Num 2: "))
+<span class="line-number">3</span>
+<span class="line-number">4</span><input type="text" id="blank1" placeholder="keyword" style="width: 80px;"> :  <span class="comment"># Start of risky code block</span>
+<span class="line-number">5</span>    print(a / b)
+<span class="line-number">6</span><input type="text" id="blank2" placeholder="keyword" style="width: 80px;"> :  <span class="comment"># What to do if an error occurs</span>
+<span class="line-number">7</span>    print("Error: Cannot divide by zero or invalid input.")
+                    </div>
+                </div>
+                
+                <button class="btn-success" onclick="checkSafeDivision()">Check My Code</button>
+                <div id="division-feedback" class="feedback"></div>
+                
+                <div class="teacher-notes">
+                    <h4 onclick="toggleNotes(this)">👨‍🏫 Teaching Tips</h4>
+                    <div class="content">
+                        <div class="answer-key">
+                            <strong>Correct Answer:</strong>
+                            <pre>try:
+    print(a / b)
+except:
+    print("Error: Cannot divide by zero or invalid input.")</pre>
+                            <p><strong>Extension:</strong> Could also use <code>except ZeroDivisionError:</code> to be more specific.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- EXIT TICKET SECTION -->
+        <div id="exit" class="section">
+            <div class="timer">
+                <div>⏱️ Exit Ticket</div>
+                <div class="time-left">10 minutes</div>
+            </div>
+            
+            <h2 style="color: #2a5298; margin-bottom: 20px;">✅ Exit Ticket: Function Logic Trace</h2>
+            <p style="font-size: 1.1em; margin-bottom: 20px;"><strong>Test full understanding of flow control with the most complex logic problem.</strong></p>
+            
+            <div class="activity">
+                <h3>Conditional Function Trace</h3>
+                <p><strong>Rule:</strong> if/elif statements <strong>short-circuit</strong>. Once one condition is met, the rest of the elif/else blocks are skipped.</p>
+                
+                <div class="code-block">
+<span class="line-number">1</span><span class="keyword">def</span> <span class="function">score_adj</span>(score, bonus):
+<span class="line-number">2</span>    <span class="keyword">if</span> score >= <span class="string">5000</span> <span class="keyword">and</span> bonus >= <span class="string">5</span>:
+<span class="line-number">3</span>        <span class="keyword">return</span> score * <span class="string">1.5</span>
+<span class="line-number">4</span>    <span class="keyword">elif</span> score >= <span class="string">3000</span>:
+<span class="line-number">5</span>        <span class="keyword">return</span> score * <span class="string">1.2</span>
+<span class="line-number">6</span>    <span class="keyword">else</span>:
+<span class="line-number">7</span>        <span class="keyword">return</span> score
+                </div>
+                
+                <p style="margin: 20px 0;"><strong>Practice:</strong> Trace the output for these two calls:</p>
+                
+                <table class="trace-table">
+                    <thead>
+                        <tr>
+                            <th>Function Call</th>
+                            <th>score value</th>
+                            <th>bonus value</th>
+                            <th>Which line executes?</th>
+                            <th>Return value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>score_adj(3000, 3)</code></td>
+                            <td><input type="text" id="trace1-score" value="3000" readonly style="width: 60px;"></td>
+                            <td><input type="text" id="trace1-bonus" value="3" readonly style="width: 60px;"></td>
+                            <td><input type="text" id="trace1-line" placeholder="Line #" style="width: 80px;"></td>
+                            <td><input type="text" id="trace1-return" placeholder="Result" style="width: 80px;"></td>
+                        </tr>
+                        <tr>
+                            <td><code>score_adj(5000, 5)</code></td>
+                            <td><input type="text" id="trace2-score" value="5000" readonly style="width: 60px;"></td>
+                            <td><input type="text" id="trace2-bonus" value="5" readonly style="width: 60px;"></td>
+                            <td><input type="text" id="trace2-line" placeholder="Line #" style="width: 80px;"></td>
+                            <td><input type="text" id="trace2-return" placeholder="Result" style="width: 80px;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <button class="btn-success" onclick="checkTrace()">Check My Trace</button>
+                <div id="trace-feedback" class="feedback"></div>
+                
+                <div class="teacher-notes">
+                    <h4 onclick="toggleNotes(this)">👨‍🏫 Teaching Tips</h4>
+                    <div class="content">
+                        <div class="answer-key">
+                            <strong>Answers:</strong>
+                            <ol>
+                                <li><code>score_adj(3000, 3)</code>
+                                    <ul>
+                                        <li>Line 2: score >= 5000? NO (3000 < 5000)</li>
+                                        <li>Line 4: score >= 3000? YES (3000 >= 3000)</li>
+                                        <li><strong>Executes Line 5</strong></li>
+                                        <li><strong>Returns: 3600</strong> (3000 × 1.2)</li>
+                                    </ul>
+                                </li>
+                                <li><code>score_adj(5000, 5)</code>
+                                    <ul>
+                                        <li>Line 2: score >= 5000 AND bonus >= 5? YES (both true)</li>
+                                        <li><strong>Executes Line 3</strong></li>
+                                        <li><strong>Returns: 7500</strong> (5000 × 1.5)</li>
+                                        <li>Lines 4-7 are skipped (short-circuit)</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity">
+                <h3>Final Code Question: Function Definition</h3>
+                <p><strong>Prompt:</strong> Write a one-line Python function named <code>calculate_tax</code> that accepts an amount and uses a <strong>default tax rate of 8%</strong> (0.08).</p>
+                
+                <div class="interactive-code">
+                    <textarea id="tax-function" placeholder="Write your function here..."></textarea>
+                </div>
+                
+                <button class="btn-success" onclick="checkTaxFunction()">Check My Function</button>
+                <div id="tax-feedback" class="feedback"></div>
+                
+                <div class="teacher-notes">
+                    <h4 onclick="toggleNotes(this)">👨‍🏫 Teaching Tips</h4>
+                    <div class="content">
+                        <div class="answer-key">
+                            <strong>Correct Answer:</strong>
+                            <pre>def calculate_tax(amount, tax=0.08):
+    return amount * tax</pre>
+                            <p><strong>Key Concepts:</strong></p>
+                            <ul>
+                                <li>Default parameter: <code>tax=0.08</code></li>
+                                <li>Can be called as <code>calculate_tax(100)</code> (uses default 8%) or <code>calculate_tax(100, 0.10)</code> (uses 10%)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Toggle teacher notes
+        function toggleNotes(element) {
+            element.parentElement.classList.toggle('expanded');
+        }
+        
+        // Warm-up: Syntax Error
+        function checkSyntaxError() {
+            const feedback = document.getElementById('syntax-feedback');
+            feedback.className = 'feedback correct';
+            feedback.innerHTML = '<strong>✓ Correct!</strong> The missing colon (:) after the if statement on line 1 causes a SyntaxError. Python requires a colon to indicate the start of a code block.';
+        }
+        
+        // Warm-up: Runtime Error
+        function selectChoice(element, question, isCorrect) {
+            document.querySelectorAll(`input[name="${question}"]`).forEach(input => {
+                input.parentElement.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            element.querySelector('input').checked = true;
+            
+            const feedback = document.getElementById('runtime-feedback');
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<strong>✓ Correct!</strong> IndexError is a Runtime Error. The code is syntactically valid, but accessing index 3 in a list with only 3 elements (indices 0-2) causes an error during execution.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = '<strong>✗ Not quite.</strong> Try again. Think about what happens when the program tries to access an array position that doesn\'t exist.';
+            }
+        }
+        
+        // Core Logic: Continue Demo
+        let continueStep = 0;
+        function runContinueDemo() {
+            const output = document.getElementById('continue-output');
+            output.style.display = 'block';
+            
+            const steps = [
+                '<strong>Day 14:</strong><br>• Check: 14 == 15? No<br>• Print: "Doing activity on day 14"',
+                '<strong>Day 15:</strong><br>• Check: 15 == 15? Yes<br>• Print: "Skipping day 15"<br>• Execute continue (skip to next iteration)',
+                '<strong>Day 16:</strong><br>• Check: 16 == 15? No<br>• Print: "Doing activity on day 16"'
+            ];
+            
+            if (continueStep < steps.length) {
+                output.innerHTML = steps[continueStep];
+                continueStep++;
+            } else {
+                output.className = 'feedback correct';
+                output.innerHTML = '<strong>Complete!</strong> Notice how line 6 was skipped on day 15 because of the continue statement.';
+                continueStep = 0;
+            }
+        }
+        
+        // Drag and Drop for Nested Loops
+        let draggedElement = null;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            setupDragDrop();
+        });
+        
+        function setupDragDrop() {
+            const draggables = document.querySelectorAll('.draggable-item');
+            const dropZones = [document.getElementById('available-lines'), document.getElementById('solution-area')];
+            
+            draggables.forEach(item => {
+                item.addEventListener('dragstart', function() {
+                    draggedElement = this;
+                    this.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    if (draggedElement && this.id !== 'available-lines' || this.querySelectorAll('.draggable-item').length === 0) {
+                        this.appendChild(draggedElement);
+                    }
+                });
+            });
+        }
+        
+        function checkNestedLoop() {
+            const solution = document.getElementById('solution-area');
+            const items = solution.querySelectorAll('.draggable-item');
+            const feedback = document.getElementById('nested-feedback');
+            
+            if (items.length !== 4) {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = '<strong>✗ Incomplete!</strong> You need all 4 lines in the solution area.';
+                return;
+            }
+            
+            const order = Array.from(items).map(item => item.getAttribute('data-order'));
+            const correctOrder = ['1', '2', '3', '4'];
+            
+            if (JSON.stringify(order) === JSON.stringify(correctOrder)) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<strong>✓ Perfect!</strong> The correct order is 1→2→3→4. The inner loop (lines 3-4) must be nested inside the outer loop (lines 1-2).';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = '<strong>✗ Not quite.</strong> Remember: the outer loop runs once, then the inner loop runs to completion. Try again!';
+            }
+        }
+        
+        function resetDragDrop() {
+            const available = document.getElementById('available-lines');
+            const solution = document.getElementById('solution-area');
+            const items = solution.querySelectorAll('.draggable-item');
+            
+            items.forEach(item => available.appendChild(item));
+            document.getElementById('nested-feedback').style.display = 'none';
+        }
+        
+        // Flow Diagram
+        function highlightFlow(path) {
+            document.querySelectorAll('.flow-box').forEach(box => box.classList.remove('active'));
+            
+            document.getElementById('flow-try').classList.add('active');
+            
+            setTimeout(() => {
+                if (path === 'success') {
+                    document.getElementById('flow-success').classList.add('active');
+                } else if (path === 'except') {
+                    document.getElementById('flow-except').classList.add('active');
+                }
+                
+                setTimeout(() => {
+                    document.getElementById('flow-finally').classList.add('active');
+                }, 500);
+            }, 500);
+        }
+        
+        // Safe Division Check
+        function checkSafeDivision() {
+            const blank1 = document.getElementById('blank1').value.trim().toLowerCase();
+            const blank2 = document.getElementById('blank2').value.trim().toLowerCase();
+            const feedback = document.getElementById('division-feedback');
+            
+            if (blank1 === 'try' && blank2 === 'except') {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<strong>✓ Excellent!</strong> <code>try</code> starts the risky code block, and <code>except</code> handles any errors that occur.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                let hint = '';
+                if (blank1 !== 'try') hint += 'Blank 1 should be "try". ';
+                if (blank2 !== 'except') hint += 'Blank 2 should be "except". ';
+                feedback.innerHTML = '<strong>✗ Not quite.</strong> ' + hint;
+            }
+        }
+        
+        // Function Trace Check
+        function checkTrace() {
+            const line1 = document.getElementById('trace1-line').value.trim();
+            const return1 = document.getElementById('trace1-return').value.trim();
+            const line2 = document.getElementById('trace2-line').value.trim();
+            const return2 = document.getElementById('trace2-return').value.trim();
+            
+            const feedback = document.getElementById('trace-feedback');
+            
+            const correct1 = (line1 === '5' || line1 === 'Line 5') && (return1 === '3600' || return1 === '3600.0');
+            const correct2 = (line2 === '3' || line2 === 'Line 3') && (return2 === '7500' || return2 === '7500.0');
+            
+            if (correct1 && correct2) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<strong>✓ Perfect Trace!</strong><br>' +
+                    '• <code>score_adj(3000, 3)</code>: Line 5 executes (3000 ≥ 3000), returns 3600<br>' +
+                    '• <code>score_adj(5000, 5)</code>: Line 3 executes (both conditions true), returns 7500';
+            } else {
+                feedback.className = 'feedback incorrect';
+                let hints = '<strong>✗ Check your work:</strong><br>';
+                if (!correct1) hints += '• First call: Which elif/else line runs when score=3000?<br>';
+                if (!correct2) hints += '• Second call: Do BOTH conditions in line 2 evaluate to True?<br>';
+                feedback.innerHTML = hints;
+            }
+        }
+        
+        // Tax Function Check
+        function checkTaxFunction() {
+            const code = document.getElementById('tax-function').value.trim();
+            const feedback = document.getElementById('tax-feedback');
+            
+            const hasDefKeyword = code.includes('def');
+            const hasFunctionName = code.includes('calculate_tax');
+            const hasDefaultParam = code.includes('tax=0.08') || code.includes('tax = 0.08');
+            const hasReturn = code.includes('return');
+            const hasMultiply = code.includes('amount * tax') || code.includes('amount*tax');
+            
+            if (hasDefKeyword && hasFunctionName && hasDefaultParam && hasReturn && hasMultiply) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<strong>✓ Excellent!</strong> Your function correctly uses a default parameter (tax=0.08) and returns the calculated tax.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                let hints = '<strong>✗ Missing elements:</strong><br>';
+                if (!hasDefKeyword) hints += '• Need "def" keyword to define a function<br>';
+                if (!hasFunctionName) hints += '• Function name should be "calculate_tax"<br>';
+                if (!hasDefaultParam) hints += '• Need default parameter: tax=0.08<br>';
+                if (!hasReturn) hints += '• Need "return" statement<br>';
+                if (!hasMultiply) hints += '• Should return amount * tax<br>';
+                feedback.innerHTML = hints;
+            }
+        }
+    </script>
+</body>
+</html>

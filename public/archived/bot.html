@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeBot - Your Coding Companion | Code with Morais</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --bg-color: #f8fafc;
+            --text-color: #2d3748;
+            --chat-bg: #ffffff;
+            --user-msg: #667eea;
+            --bot-msg: #e2e8f0;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--chat-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .bot-avatar {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 24px;
+        }
+
+        .bot-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .bot-status {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--bg-color);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+
+        .message.bot .message-content {
+            background: var(--bot-msg);
+            color: var(--text-color);
+            border-bottom-left-radius: 6px;
+        }
+
+        .message.user .message-content {
+            background: var(--user-msg);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-color);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .commands-panel {
+            background: rgba(255,255,255,0.95);
+            padding: 15px;
+            margin: 10px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .commands-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .command-list {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 8px 16px;
+            background: var(--bot-msg);
+            border-radius: 18px;
+            border-bottom-left-radius: 6px;
+            max-width: fit-content;
+            margin-bottom: 15px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                height: 90vh;
+                margin: 10px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--chat-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .bot-avatar {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 24px;
+        }
+
+        .bot-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .bot-status {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--bg-color);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-content {
+            background: var(--bot-msg);
+            color: var(--text-color);
+            border-bottom-left-radius: 6px;
+        }
+
+        .message.user .message-content {
+            background: var(--user-msg);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-color);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .commands-panel {
+            background: rgba(255,255,255,0.95);
+            padding: 15px;
+            margin: 10px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .commands-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .command-list {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 8px 16px;
+            background: var(--bot-msg);
+            border-radius: 18px;
+            border-bottom-left-radius: 6px;
+            max-width: fit-content;
+            margin-bottom: 15px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                height: 90vh;
+                margin: 10px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="bot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="bot-name">CodeBot 🤖</div>
+            <div class="bot-status">Your friendly coding companion</div>
+        </div>
+
+        <div class="commands-panel">
+            <div class="commands-title">🎯 Try these commands:</div>
+            <div class="command-list">
+                <strong>Basic:</strong> hello, hi, bye, help<br>
+                <strong>Fun:</strong> joke, fact, quote, story<br>
+                <strong>Learning:</strong> tips, languages, challenge<br>
+                <strong>Lists:</strong> colors, animals, foods, games
+            </div>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="welcome-message">
+                👋 Welcome! I'm CodeBot, your friendly coding companion ready to chat about anything!
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="messageInput" class="input-field" placeholder="Type a message... Try 'hello' or 'help'!">
+            <button id="sendBtn" class="send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        class CodeBot {
+            constructor() {
+                this.name = "CodeBot";
+                this.mood = "happy";
+                this.chatArea = document.getElementById('chatArea');
+                this.messageInput = document.getElementById('messageInput');
+                this.sendBtn = document.getElementById('sendBtn');
+                this.typingIndicator = document.getElementById('typingIndicator');
+                
+                // Conversation memory and context
+                this.conversationHistory = [];
+                this.userPreferences = {
+                    name: null,
+                    favoriteSubjects: [],
+                    interests: [],
+                    programmingLevel: null
+                };
+                this.lastTopic = null;
+                this.questionAsked = false;
+                
+                // Bot's personality data - demonstrates lists and data structures
+                this.jokes = [
+                    "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
+                    "How many programmers does it take to change a light bulb? None, that's a hardware problem! 💡",
+                    "Why do Java developers wear glasses? Because they can't C# 👓",
+                    "What's a programmer's favorite hangout place? Foo Bar! 🍺",
+                    "Why did the programmer quit his job? He didn't get arrays! 📊"
+                ];
+
+                this.facts = [
+                    "The first computer bug was an actual bug found in 1947! 🐛",
+                    "Python is named after Monty Python's Flying Circus! 🐍",
+                    "The term 'debugging' was coined by Grace Hopper! 👩‍💻",
+                    "JavaScript was created in just 10 days! ⚡",
+                    "The first programmer was Ada Lovelace in 1843! 👩‍🔬"
+                ];
+
+                this.quotes = [
+                    "\"Code is like humor. When you have to explain it, it's bad.\" - Cory House",
+                    "\"First, solve the problem. Then, write the code.\" - John Johnson",
+                    "\"Experience is the name everyone gives to their mistakes.\" - Oscar Wilde",
+                    "\"The best error message is the one that never shows up.\" - Thomas Fuchs",
+                    "\"Code never lies, comments sometimes do.\" - Ron Jeffries"
+                ];
+
+                this.codingTips = [
+                    "Start with pseudocode before writing actual code! ✍️",
+                    "Use meaningful variable names - your future self will thank you! 📝",
+                    "Don't repeat yourself (DRY principle)! ♻️",
+                    "Test your code frequently with small inputs! 🧪",
+                    "Comment your code to explain the 'why', not the 'what'! 💭"
+                ];
+
+                this.languages = [
+                    "🐍 Python - Great for beginners and data science!",
+                    "☕ Java - Popular for enterprise applications!",
+                    "🌐 JavaScript - Powers the web!",
+                    "⚡ C++ - Fast and powerful for games!",
+                    "💎 Ruby - Elegant and developer-friendly!"
+                ];
+
+                this.colors = ["🔴 Red", "🟠 Orange", "🟡 Yellow", "🟢 Green", "🔵 Blue", "🟣 Purple", "🟤 Brown", "⚫ Black"];
+                this.animals = ["🐶 Dog", "🐱 Cat", "🐰 Rabbit", "🐸 Frog", "🐧 Penguin", "🦁 Lion", "🐘 Elephant", "🦋 Butterfly"];
+                this.foods = ["🍕 Pizza", "🍔 Burger", "🍣 Sushi", "🍝 Pasta", "🌮 Tacos", "🍦 Ice Cream", "🍪 Cookies", "🥗 Salad"];
+                this.games = ["🎮 Video Games", "♟️ Chess", "🃏 Card Games", "🏀 Basketball", "⚽ Soccer", "🎯 Darts", "🎲 Board Games", "🧩 Puzzles"];
+
+                // Enhanced conversation topics
+                this.conversationStarters = [
+                    "What's your favorite subject in school?",
+                    "Have you ever tried coding before?",
+                    "What do you like to do in your free time?",
+                    "What's the coolest technology you've seen recently?",
+                    "Do you prefer math, science, or creative subjects?",
+                    "What's something you're really curious about?",
+                    "Have you ever built or created anything cool?",
+                    "What superpower would you want and why?"
+                ];
+
+                // Python concepts teaching content
+                this.pythonConcepts = {
+                    variables: {
+                        explanation: "Variables are like containers that store information! Think of them as labeled boxes where you can put different things.",
+                        examples: [
+                            "name = 'Alex' # This puts the text 'Alex' in a box labeled 'name'",
+                            "age = 15 # This stores the number 15 in a box called 'age'",
+                            "score = 98.5 # You can store decimal numbers too!",
+                            "is_student = True # Even yes/no answers can be stored!"
+                        ],
+                        analogy: "It's like having labeled jars in your kitchen - one might hold 'sugar', another 'flour'. Variables hold your data!"
+                    },
+                    
+                    if_statements: {
+                        explanation: "If statements help computers make decisions! They're like asking 'what if' questions.",
+                        examples: [
+                            "if age >= 13:\n    print('You can have social media!')",
+                            "if weather == 'sunny':\n    print('Perfect day for a picnic!')\nelse:\n    print('Maybe stay inside today')",
+                            "if grade >= 90:\n    print('A+ student!')\nelif grade >= 80:\n    print('Great job!')\nelse:\n    print('Keep trying!')"
+                        ],
+                        analogy: "Like a flowchart in your brain - IF it's raining, THEN take an umbrella!"
+                    },
+
+                    loops: {
+                        explanation: "Loops help us repeat things without writing the same code over and over!",
+                        while_loop: {
+                            explanation: "While loops keep going AS LONG AS something is true - like 'while I'm hungry, keep eating'",
+                            examples: [
+                                "count = 1\nwhile count <= 5:\n    print(f'Count is {count}')\n    count = count + 1",
+                                "playing = True\nwhile playing:\n    answer = input('Keep playing? (yes/no)')\n    if answer == 'no':\n        playing = False"
+                            ]
+                        },
+                        for_loop: {
+                            explanation: "For loops go through lists of things - like checking each item in your backpack",
+                            examples: [
+                                "fruits = ['apple', 'banana', 'orange']\nfor fruit in fruits:\n    print(f'I like {fruit}!')",
+                                "for number in range(1, 6):\n    print(f'{number} squared is {number * number}')"
+                            ]
+                        }
+                    },
+
+                    fstrings: {
+                        explanation: "F-strings let you put variables inside text - like filling in blanks in a sentence!",
+                        examples: [
+                            "name = 'Maya'\nprint(f'Hello {name}, nice to meet you!')",
+                            "score = 95\nprint(f'Your score is {score}%')",
+                            "x = 10\ny = 5\nprint(f'{x} plus {y} equals {x + y}')"
+                        ],
+                        analogy: "Like Mad Libs - you have a sentence with blanks, and variables fill in the blanks!"
+                    },
+
+                    operators: {
+                        explanation: "Operators are symbols that do things with your data - like math symbols but cooler!",
+                        math: ["+ (plus)", "- (minus)", "* (multiply)", "/ (divide)", "** (power)"],
+                        comparison: ["== (equals)", "!= (not equals)", "> (greater than)", "< (less than)"],
+                        logical: ["and (both must be true)", "or (either can be true)", "not (opposite)"],
+                        examples: [
+                            "total = price + tax # Math operator",
+                            "if age >= 16 and has_license: # Comparison + logical",
+                            "password_good = len(password) > 8 # Comparison"
+                        ]
+                    }
+                };
+
+                this.followUpQuestions = {
+                    math: ["What's your favorite type of math problem?", "Do you like solving puzzles?", "Have you heard of how math is used in games?"],
+                    science: ["What area of science interests you most?", "Have you done any cool experiments?", "Do you know coding is used a lot in science?"],
+                    games: ["What's your favorite game?", "Do you ever wonder how games are made?", "Have you tried any coding games?"],
+                    art: ["Do you like drawing or digital art?", "Have you seen computer-generated art?", "Did you know you can code to create art?"],
+                    music: ["What kind of music do you like?", "Do you play any instruments?", "Have you heard of music made with code?"],
+                    sports: ["What sports do you enjoy?", "Do you know about sports analytics?", "Have you seen how tech is used in sports?"]
+                };
+
+                this.smartResponses = {
+                    positive: ["That's awesome!", "Cool!", "That sounds amazing!", "I love that!", "Fascinating!"],
+                    curious: ["Tell me more about that!", "That's interesting! What got you into that?", "I'd love to learn more!", "What's the best part about it?"],
+                    encouraging: ["You seem really smart!", "That's a great way to think!", "I bet you'd be good at coding!", "You have a creative mind!"]
+                };
+
+                this.greetings = [
+                    "Hello there! 👋 Ready for some fun coding conversations?",
+                    "Hi! 😊 I'm excited to chat with you!",
+                    "Hey! 🌟 What brings you here today?",
+                    "Greetings, future programmer! 🚀",
+                    "Hello! 💫 Let's have an awesome chat!"
+                ];
+
+                this.goodbyes = [
+                    "Goodbye! 👋 Happy coding!",
+                    "See you later! 🌟 Keep practicing!",
+                    "Bye! 🚀 Go build something amazing!",
+                    "Until next time! 💻 Code responsibly!",
+                    "Farewell! 🎯 May your code compile on the first try!"
+                ];
+
+                this.setupEventListeners();
+                this.addMessage("bot", this.getRandomItem(this.greetings));
+            }
+
+            setupEventListeners() {
+                this.sendBtn.addEventListener('click', () => this.handleSend());
+                this.messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.handleSend();
+                });
+            }
+
+            handleSend() {
+                const message = this.messageInput.value.trim();
+                if (message) {
+                    this.addMessage("user", message);
+                    this.messageInput.value = "";
+                    this.showTyping();
+                    setTimeout(() => this.processMessage(message), 1000 + Math.random() * 1000);
+                }
+            }
+
+            addMessage(sender, content) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.textContent = content;
+                
+                messageDiv.appendChild(contentDiv);
+                this.chatArea.appendChild(messageDiv);
+                this.scrollToBottom();
+            }
+
+            showTyping() {
+                this.typingIndicator.style.display = 'block';
+                this.scrollToBottom();
+            }
+
+            hideTyping() {
+                this.typingIndicator.style.display = 'none';
+            }
+
+            scrollToBottom() {
+                this.chatArea.scrollTop = this.chatArea.scrollHeight;
+            }
+
+            getRandomItem(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
+
+            processMessage(message) {
+                this.hideTyping();
+                this.conversationHistory.push({user: message, timestamp: Date.now()});
+                
+                const lowerMessage = message.toLowerCase();
+                let response = "";
+
+                // Smart greeting with name detection
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                    if (this.userPreferences.name) {
+                        response = `Hey ${this.userPreferences.name}! ${this.getRandomItem(this.greetings)}`;
+                    } else {
+                        response = this.getRandomItem(this.greetings);
+                        // Sometimes ask for their name
+                        if (Math.random() < 0.3) {
+                            response += "\n\nBy the way, what's your name? I'd love to know who I'm chatting with!";
+                        }
+                    }
+                }
+                // Name detection and storage
+                else if (lowerMessage.includes('my name is') || lowerMessage.includes("i'm ") || lowerMessage.includes("i am ")) {
+                    const nameMatch = message.match(/(?:my name is|i'm|i am)\s+([a-zA-Z]+)/i);
+                    if (nameMatch) {
+                        this.userPreferences.name = nameMatch[1];
+                        response = `Nice to meet you, ${this.userPreferences.name}! That's a cool name. ${this.getRandomItem(this.conversationStarters)}`;
+                    } else {
+                        response = "Cool! Thanks for telling me. " + this.getRandomItem(this.conversationStarters);
+                    }
+                }
+                // Goodbye handling
+                else if (lowerMessage.includes('bye') || lowerMessage.includes('goodbye') || lowerMessage.includes('see you')) {
+                    response = this.getRandomItem(this.goodbyes);
+                }
+                // Step 3: Specific commands using if/elif
+                else if (lowerMessage.includes('joke') || lowerMessage.includes('funny')) {
+                    response = this.getRandomItem(this.jokes);
+                }
+                else if (lowerMessage.includes('fact') || lowerMessage.includes('learn')) {
+                    response = this.getRandomItem(this.facts);
+                }
+                else if (lowerMessage.includes('quote') || lowerMessage.includes('inspiration')) {
+                    response = this.getRandomItem(this.quotes);
+                }
+                else if (lowerMessage.includes('tip') || lowerMessage.includes('advice')) {
+                    response = this.getRandomItem(this.codingTips);
+                }
+                else if (lowerMessage.includes('language') || lowerMessage.includes('programming')) {
+                    response = "Here are some popular programming languages:\n" + this.languages.join('\n');
+                }
+                // Step 5: Lists with for loops
+                else if (lowerMessage.includes('colors') || lowerMessage.includes('color')) {
+                    response = "Here are some beautiful colors:\n" + this.colors.join(', ');
+                }
+                else if (lowerMessage.includes('animals') || lowerMessage.includes('animal')) {
+                    response = "Check out these amazing animals:\n" + this.animals.join(', ');
+                }
+                else if (lowerMessage.includes('food') || lowerMessage.includes('eat')) {
+                    response = "Yummy foods to try:\n" + this.foods.join(', ');
+                }
+                else if (lowerMessage.includes('game') || lowerMessage.includes('play')) {
+                    response = "Fun games to enjoy:\n" + this.games.join(', ');
+                }
+                else if (lowerMessage.includes('story')) {
+                    response = this.tellStory();
+                }
+                else if (lowerMessage.includes('challenge')) {
+                    response = this.giveCodingChallenge();
+                }
+                // Python concept teaching
+                else if (lowerMessage.includes('variable') || lowerMessage.includes('store')) {
+                    response = this.explainConcept('variables');
+                }
+                else if (lowerMessage.includes('if') || lowerMessage.includes('decision') || lowerMessage.includes('condition')) {
+                    response = this.explainConcept('if_statements');
+                }
+                else if (lowerMessage.includes('loop') || lowerMessage.includes('repeat')) {
+                    if (lowerMessage.includes('while')) {
+                        response = this.explainConcept('while_loop');
+                    } else if (lowerMessage.includes('for')) {
+                        response = this.explainConcept('for_loop');
+                    } else {
+                        response = this.explainConcept('loops');
+                    }
+                }
+                else if (lowerMessage.includes('fstring') || lowerMessage.includes('f-string') || lowerMessage.includes('format')) {
+                    response = this.explainConcept('fstrings');
+                }
+                else if (lowerMessage.includes('operator') || lowerMessage.includes('math') || lowerMessage.includes('comparison')) {
+                    response = this.explainConcept('operators');
+                }
+                else if (lowerMessage.includes('teach') || lowerMessage.includes('learn') || lowerMessage.includes('python')) {
+                    response = this.offerPythonLessons();
+                }
+                else if (lowerMessage.includes('help') || lowerMessage.includes('command')) {
+                    response = this.showHelp();
+                }
+                else if (lowerMessage.includes('what are') || lowerMessage.includes('explain') || lowerMessage.includes('how do')) {
+                    response = this.handleWhatQuestions(message, lowerMessage);
+                }
+                else if (lowerMessage.includes('name')) {
+                    response = `My name is ${this.name}! I'm a friendly chatbot who loves teaching and chatting! 🤖`;
+                }
+                else if (lowerMessage.includes('how are you') || lowerMessage.includes('how do you feel')) {
+                    const moods = ["fantastic", "amazing", "great", "wonderful", "excited"];
+                    this.mood = this.getRandomItem(moods);
+                    response = `I'm feeling ${this.mood} today! Thanks for asking! How are you doing? 😊`;
+                }
+                else {
+                    // Enhanced smart conversation handling
+                    response = this.handleSmartConversation(message, lowerMessage);
+                }
+
+                this.addMessage("bot", response);
+            }
+
+            handleSmartConversation(message, lowerMessage) {
+                // Subject and interest detection
+                if (lowerMessage.includes('math') || lowerMessage.includes('mathematics') || lowerMessage.includes('algebra') || lowerMessage.includes('geometry')) {
+                    this.userPreferences.favoriteSubjects.push('math');
+                    this.lastTopic = 'math';
+                    return `Math is awesome! ${this.getRandomItem(this.smartResponses.positive)} ${this.getRandomItem(this.followUpQuestions.math)} Did you know coding uses a lot of math concepts?`;
+                }
+                
+                if (lowerMessage.includes('science') || lowerMessage.includes('biology') || lowerMessage.includes('chemistry') || lowerMessage.includes('physics')) {
+                    this.userPreferences.favoriteSubjects.push('science');
+                    this.lastTopic = 'science';
+                    return `Science rocks! ${this.getRandomItem(this.smartResponses.positive)} ${this.getRandomItem(this.followUpQuestions.science)}`;
+                }
+
+                if (lowerMessage.includes('game') || lowerMessage.includes('gaming') || lowerMessage.includes('minecraft') || lowerMessage.includes('fortnite') || lowerMessage.includes('roblox')) {
+                    this.userPreferences.interests.push('games');
+                    this.lastTopic = 'games';
+                    return `Gaming is so cool! ${this.getRandomItem(this.smartResponses.positive)} ${this.getRandomItem(this.followUpQuestions.games)}`;
+                }
+
+                if (lowerMessage.includes('art') || lowerMessage.includes('draw') || lowerMessage.includes('paint') || lowerMessage.includes('design')) {
+                    this.userPreferences.interests.push('art');
+                    this.lastTopic = 'art';
+                    return `Art is amazing! ${this.getRandomItem(this.smartResponses.curious)} ${this.getRandomItem(this.followUpQuestions.art)}`;
+                }
+
+                if (lowerMessage.includes('music') || lowerMessage.includes('song') || lowerMessage.includes('instrument') || lowerMessage.includes('piano') || lowerMessage.includes('guitar')) {
+                    this.userPreferences.interests.push('music');
+                    this.lastTopic = 'music';
+                    return `Music is incredible! ${this.getRandomItem(this.smartResponses.positive)} ${this.getRandomItem(this.followUpQuestions.music)}`;
+                }
+
+                if (lowerMessage.includes('sport') || lowerMessage.includes('football') || lowerMessage.includes('soccer') || lowerMessage.includes('basketball') || lowerMessage.includes('baseball')) {
+                    this.userPreferences.interests.push('sports');
+                    this.lastTopic = 'sports';
+                    return `Sports are exciting! ${this.getRandomItem(this.smartResponses.positive)} ${this.getRandomItem(this.followUpQuestions.sports)}`;
+                }
+
+                // Programming experience detection with teaching offers
+                if (lowerMessage.includes('code') || lowerMessage.includes('programming') || lowerMessage.includes('python') || lowerMessage.includes('javascript')) {
+                    if (lowerMessage.includes('never') || lowerMessage.includes("don't") || lowerMessage.includes('no')) {
+                        this.userPreferences.programmingLevel = 'beginner';
+                        return "No worries! Everyone starts somewhere. Programming is like learning a new language - once you get the basics, it becomes really fun! Want me to explain what **variables** are? They're like labeled boxes for storing information!";
+                    } else if (lowerMessage.includes('hard') || lowerMessage.includes('difficult') || lowerMessage.includes('confusing')) {
+                        return "I totally get that! Programming can seem tricky at first, but it's like learning to ride a bike - once it clicks, it's amazing! What part seemed hardest? Maybe I can explain it in a simpler way!";
+                    } else {
+                        this.userPreferences.programmingLevel = 'some_experience';
+                        return "That's awesome that you've tried coding! What did you think of it? I can teach you cool Python concepts like **loops** that make computers repeat things, or **if statements** that help them make decisions!";
+                    }
+                }
+
+                // Emotional responses
+                if (lowerMessage.includes('boring') || lowerMessage.includes('hate') || lowerMessage.includes("don't like")) {
+                    return "I get it, not everything clicks right away! What kind of stuff do you actually enjoy doing? I bet there's something cool we can talk about!";
+                }
+
+                if (lowerMessage.includes('love') || lowerMessage.includes('awesome') || lowerMessage.includes('amazing') || lowerMessage.includes('cool')) {
+                    return `${this.getRandomItem(this.smartResponses.encouraging)} What got you so excited about that?`;
+                }
+
+                // Question responses
+                if (message.includes('?')) {
+                    return this.handleQuestion(message, lowerMessage);
+                }
+
+                // Contextual follow-ups based on conversation history
+                if (this.conversationHistory.length > 2) {
+                    return this.generateContextualResponse(message, lowerMessage);
+                }
+
+                // Engaging fallback responses
+                const engagingResponses = [
+                    `That's interesting! ${this.getRandomItem(this.conversationStarters)}`,
+                    `Cool! ${this.getRandomItem(this.smartResponses.curious)}`,
+                    `${this.getRandomItem(this.smartResponses.encouraging)} What else are you into?`,
+                    "I love learning new things from students! Tell me something that made you smile today!",
+                    "You seem really thoughtful! What's something you've been wondering about lately?"
+                ];
+                
+                return this.getRandomItem(engagingResponses);
+            }
+
+            handleQuestion(message, lowerMessage) {
+                if (lowerMessage.includes('how old') || lowerMessage.includes('age')) {
+                    return "I'm not sure about my age in human years, but I feel pretty young and energetic! How old are you? What grade are you in?";
+                }
+                
+                if (lowerMessage.includes('where') || lowerMessage.includes('live')) {
+                    return "I live in the internet! It's pretty cool here - I get to meet students from all over the world. Where are you from?";
+                }
+                
+                if (lowerMessage.includes('favorite') || lowerMessage.includes('like best')) {
+                    return "I love learning about what makes people excited! Speaking of favorites, what's your favorite thing to do when you're not in school?";
+                }
+                
+                if (lowerMessage.includes('why') || lowerMessage.includes('how')) {
+                    return "Great question! I love curious minds. What made you think about that? Are you someone who likes to figure out how things work?";
+                }
+                
+                return "That's a really good question! I'm still learning too. What do you think the answer might be?";
+            }
+
+            generateContextualResponse(message, lowerMessage) {
+                const recentMessages = this.conversationHistory.slice(-3);
+                
+                // If they mentioned school recently
+                if (recentMessages.some(msg => msg.user.toLowerCase().includes('school'))) {
+                    return "Speaking of school, what's been the most interesting thing you've learned lately?";
+                }
+                
+                // If they've been talking about interests
+                if (this.userPreferences.interests.length > 0) {
+                    const interest = this.userPreferences.interests[this.userPreferences.interests.length - 1];
+                    return `You seem to really be into ${interest}! Have you ever thought about how technology connects to the things you love?`;
+                }
+                
+                // If conversation is getting long, suggest something new
+                if (this.conversationHistory.length > 8) {
+                    return "We've been having such a great chat! Want to try something fun? Ask me for a 'challenge' or a 'story'!";
+                }
+                
+                return "You're fun to talk to! What else would you like to chat about?";
+            }
+
+            tellStory() {
+                const stories = [
+                    "Once upon a time, there was a little robot who loved to code. Every day, it would write beautiful programs that helped people solve problems. The robot's favorite language was Python because it was so friendly! 🐍✨",
+                    "In a world made of code, there lived a brave function named Loop. Loop's job was to repeat important tasks until they were perfect. One day, Loop met Variable, and together they created the most amazing program ever! 🔄💫",
+                    "There was once a debugging detective who could find any bug, no matter how small. Armed with print statements and patience, the detective solved mysteries that stumped even the most experienced programmers! 🕵️‍♀️🐛"
+                ];
+                return this.getRandomItem(stories);
+            }
+
+            giveCodingChallenge() {
+                // Personalized challenges based on interests
+                if (this.userPreferences.interests.includes('games')) {
+                    const gameChallenges = [
+                        "� Challenge: Imagine creating a simple guessing game!",
+                        "🎮 Challenge: Think about how you'd make a character move in a game!",
+                        "� Challenge: What if you could code your own quiz game?"
+                    ];
+                    return this.getRandomItem(gameChallenges);
+                }
+                
+                if (this.userPreferences.interests.includes('art')) {
+                    const artChallenges = [
+                        "🎨 Challenge: Imagine drawing patterns with code!",
+                        "🎨 Challenge: What if you could code different colors and shapes?",
+                        "� Challenge: Think about creating digital art with programming!"
+                    ];
+                    return this.getRandomItem(artChallenges);
+                }
+                
+                const generalChallenges = [
+                    "🎯 Challenge: Think about how you'd make a computer count to 10!",
+                    "🎯 Challenge: Imagine creating a program that remembers your favorite things!",
+                    "🎯 Challenge: What would you want a computer to help you with?",
+                    "🎯 Challenge: Think about making a simple calculator!",
+                    "🎯 Challenge: Imagine a program that could tell jokes!"
+                ];
+                return this.getRandomItem(generalChallenges);
+            }
+
+            showHelp() {
+                let helpMessage = `🤖 Hey there! I'm CodeBot and I love chatting with students!
+
+� **I can talk about:**
+• Your favorite subjects and hobbies
+• Cool technology and how things work
+• Fun facts and jokes
+• Stories and challenges
+• Pretty much anything you're curious about!
+
+🎯 **Try asking me:**
+• "What's your favorite [subject]?"
+• "Tell me a joke" or "Give me a fact"
+• "I like [hobby/interest]"
+• "How does [something] work?"`;
+
+                if (this.userPreferences.name) {
+                    helpMessage += `\n\n😊 I remember you're ${this.userPreferences.name}! What would you like to chat about?`;
+                }
+
+                return helpMessage;
+            }
+
+            explainConcept(conceptName) {
+                let explanation = "";
+                
+                switch(conceptName) {
+                    case 'variables':
+                        const varConcept = this.pythonConcepts.variables;
+                        explanation = `🎯 **Variables in Python**\n\n${varConcept.explanation}\n\n💡 ${varConcept.analogy}\n\n**Examples:**\n`;
+                        varConcept.examples.forEach(example => {
+                            explanation += `\`${example}\`\n`;
+                        });
+                        explanation += "\nTry thinking: what would you want to store in a variable?";
+                        break;
+
+                    case 'if_statements':
+                        const ifConcept = this.pythonConcepts.if_statements;
+                        explanation = `🤔 **If Statements - Making Decisions**\n\n${ifConcept.explanation}\n\n💡 ${ifConcept.analogy}\n\n**Examples:**\n`;
+                        ifConcept.examples.forEach(example => {
+                            explanation += `\`\`\`\n${example}\n\`\`\`\n`;
+                        });
+                        explanation += "\nWhat decision would you want a computer to make?";
+                        break;
+
+                    case 'loops':
+                        explanation = `🔄 **Loops - Repeating Actions**\n\n${this.pythonConcepts.loops.explanation}\n\n**Two main types:**\n\n🔄 **While Loops:** ${this.pythonConcepts.loops.while_loop.explanation}\n\n🔄 **For Loops:** ${this.pythonConcepts.loops.for_loop.explanation}\n\nWhich type sounds more interesting to you?`;
+                        break;
+
+                    case 'while_loop':
+                        const whileConcept = this.pythonConcepts.loops.while_loop;
+                        explanation = `🔄 **While Loops**\n\n${whileConcept.explanation}\n\n**Examples:**\n`;
+                        whileConcept.examples.forEach(example => {
+                            explanation += `\`\`\`\n${example}\n\`\`\`\n`;
+                        });
+                        explanation += "\nThink of something you do 'while' a condition is true!";
+                        break;
+
+                    case 'for_loop':
+                        const forConcept = this.pythonConcepts.loops.for_loop;
+                        explanation = `🔄 **For Loops**\n\n${forConcept.explanation}\n\n**Examples:**\n`;
+                        forConcept.examples.forEach(example => {
+                            explanation += `\`\`\`\n${example}\n\`\`\`\n`;
+                        });
+                        explanation += "\nWhat list of things would you want to go through?";
+                        break;
+
+                    case 'fstrings':
+                        const fConcept = this.pythonConcepts.fstrings;
+                        explanation = `🔤 **F-Strings - Mixing Text and Variables**\n\n${fConcept.explanation}\n\n💡 ${fConcept.analogy}\n\n**Examples:**\n`;
+                        fConcept.examples.forEach(example => {
+                            explanation += `\`${example}\`\n`;
+                        });
+                        explanation += "\nWhat message would you want to personalize with your name?";
+                        break;
+
+                    case 'operators':
+                        const opConcept = this.pythonConcepts.operators;
+                        explanation = `⚡ **Operators - Doing Things with Data**\n\n${opConcept.explanation}\n\n**Math Operators:** ${opConcept.math.join(', ')}\n**Comparison Operators:** ${opConcept.comparison.join(', ')}\n**Logical Operators:** ${opConcept.logical.join(', ')}\n\n**Examples:**\n`;
+                        opConcept.examples.forEach(example => {
+                            explanation += `\`${example}\`\n`;
+                        });
+                        break;
+                }
+                
+                return explanation;
+            }
+
+            offerPythonLessons() {
+                const lessons = [
+                    "I can teach you about **variables** - like containers for your data!",
+                    "Want to learn about **if statements** - how computers make decisions?",
+                    "Curious about **loops** - making computers repeat tasks?",
+                    "Interested in **f-strings** - putting variables into text?",
+                    "Want to explore **operators** - the symbols that do the work?"
+                ];
+
+                let response = "🐍 **I love teaching Python!** Here's what I can help with:\n\n";
+                lessons.forEach((lesson, index) => {
+                    response += `${index + 1}. ${lesson}\n`;
+                });
+
+                response += "\nJust ask me about any of these topics! For example: 'What are variables?' or 'Tell me about loops!'";
+                
+                if (this.userPreferences.name) {
+                    response += `\n\nWhat interests you most, ${this.userPreferences.name}?`;
+                }
+
+                return response;
+            }
+
+            handleWhatQuestions(message, lowerMessage) {
+                if (lowerMessage.includes('variable')) {
+                    return "🎯 Variables are like labeled boxes that store information! For example:\n\nname = 'Sarah'  # Stores text\nage = 16       # Stores a number\nscore = 98.5   # Stores a decimal\n\nThink of them as containers - what would you want to store in a variable?";
+                }
+                
+                if (lowerMessage.includes('loop')) {
+                    return "🔄 Loops make computers repeat things! There are two main types:\n\n• **While loops** - keep going while something is true (like 'while hungry, keep eating')\n• **For loops** - go through a list of items (like checking each book on a shelf)\n\nWhich sounds more interesting to you?";
+                }
+                
+                if (lowerMessage.includes('if statement') || lowerMessage.includes('condition')) {
+                    return "🤔 If statements help computers make decisions! Like this:\n\nif temperature > 80:\n    print('Wear shorts!')\nelse:\n    print('Wear a jacket!')\n\nIt's like a flowchart - IF something is true, THEN do this!";
+                }
+                
+                if (lowerMessage.includes('f-string') || lowerMessage.includes('format')) {
+                    return "🔤 F-strings let you put variables inside text! Like this:\n\nname = 'Alex'\nprint(f'Hello {name}!')  # Prints 'Hello Alex!'\n\nIt's like filling in blanks in a sentence with your variables!";
+                }
+                
+                if (lowerMessage.includes('operator')) {
+                    return "⚡ Operators are symbols that do things with data!\n\n• Math: + - * / (plus, minus, multiply, divide)\n• Compare: == != > < (equals, not equals, greater, less)\n• Logic: and, or, not\n\nExample: if age >= 13 and age <= 19:\n    print('You are a teenager!')\n\nWhat would you want to calculate or compare?";
+                }
+                
+                return "Great question! I love teaching about Python concepts like variables, loops, if statements, f-strings, and operators. What specifically would you like to know about?";
+            }
+        }
+
+        // Initialize the bot when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new CodeBot();
+        });
+    </script>
+</body>
+</html>

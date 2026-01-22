@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code with Morais - Navigation Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .search-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .category-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-icon {
+            font-size: 2rem;
+        }
+
+        .lessons { border-left: 5px solid #28a745; }
+        .lessons .category-icon { color: #28a745; }
+
+        .projects { border-left: 5px solid #ffc107; }
+        .projects .category-icon { color: #ffc107; }
+
+        .challenges { border-left: 5px solid #dc3545; }
+        .challenges .category-icon { color: #dc3545; }
+
+        .tools { border-left: 5px solid #17a2b8; }
+        .tools .category-icon { color: #17a2b8; }
+
+        .dashboards { border-left: 5px solid #6f42c1; }
+        .dashboards .category-icon { color: #6f42c1; }
+
+        .games { border-left: 5px solid #fd7e14; }
+        .games .category-icon { color: #fd7e14; }
+
+        .special { border-left: 5px solid #e83e8c; }
+        .special .category-icon { color: #e83e8c; }
+
+        .page-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .page-item {
+            margin-bottom: 10px;
+        }
+
+        .page-link {
+            display: block;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #495057;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .page-link:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+            border-left-color: #667eea;
+            color: #343a40;
+        }
+
+        .page-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .stats-box {
+            background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-card {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Code with Morais - Navigation Hub</h1>
+            <p>Your central access point to all Python learning resources</p>
+        </div>
+
+        <div class="content">
+            <!-- Statistics Overview -->
+            <div class="stats-box">
+                <h3>📊 Platform Overview</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="lessonCount">25</div>
+                        <div class="stat-label">Lessons</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="projectCount">15</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="challengeCount">30</div>
+                        <div class="stat-label">Challenges</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="toolCount">12</div>
+                        <div class="stat-label">Tools</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search for lessons, projects, challenges, or tools...">
+            </div>
+
+            <!-- Categories Grid -->
+            <div class="category-grid">
+                
+                <!-- Core Lessons -->
+                <div class="category-card lessons">
+                    <div class="category-title">
+                        <span class="category-icon">📚</span>
+                        Core Python Lessons
+                    </div>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="io.html" class="page-link">
+                                <strong>File Input/Output (I/O)</strong>
+                                <div class="page-description">Master file operations with hands-on examples</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="def.html" class="page-link">
+                                <strong>Functions (DEF)</strong>
+                                <div class="page-description">Learn to create and use Python functions</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="python-fundamentals.html" class="page-link">
+                                <strong>Python Fundamentals</strong>
+                                <div class="page-description">Core programming concepts and syntax</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="loops-presentation.html" class="page-link">
+                                <strong>Loops Presentation</strong>
+                                <div class="page-description">Interactive lesson on for and while loops</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="lesson-variables.html" class="page-link">
+                                <strong>Variables Lesson</strong>
+                                <div class="page-description">Understanding data storage and variables</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="lesson-operators.html" class="page-link">
+                                <strong>Operators Lesson</strong>
+                                <div class="page-description">Mathematical and logical operations</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="lesson-control-flow.html" class="page-link">
+                                <strong>Control Flow</strong>
+                                <div class="page-description">If statements and decision making</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Projects -->
+                <div class="category-card projects">
+                    <div class="category-title">
+                        <span class="category-icon">🛠️</span>
+                        Programming Projects
+                    </div>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="python-chatbot-project.html" class="page-link">
+                                <strong>Python Chatbot Project</strong>
+                                <div class="page-description">Build an interactive chatbot</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="python-wordle.html" class="page-link">
+                                <strong>Python Wordle Game</strong>
+                                <div class="page-description">Create the popular word guessing game</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="dream-career-project.html" class="page-link">
+                                <strong>Dream Career Project</strong>
+                                <div class="page-description">Explore programming career paths</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="sports-videogame-hero-project.html" class="page-link">
+                                <strong>Sports Video Game Hero</strong>
+                                <div class="page-description">Character development project</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="miniproject-3-ai-code-reviewer.html" class="page-link">
+                                <strong>AI Code Reviewer</strong>
+                                <div class="page-description">Build an automated code review tool</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="hands-on-projects.html" class="page-link">
+                                <strong>Hands-on Projects Hub</strong>
+                                <div class="page-description">Collection of practical coding projects</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Challenges & Practice -->
+                <div class="category-card challenges">
+                    <div class="category-title">
+                        <span class="category-icon">🎯</span>
+                        Challenges & Practice
+                    </div>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="challenge.html" class="page-link">
+                                <strong>Python Challenge</strong>
+                                <div class="page-description">Test your Python skills</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="looping-challenges.html" class="page-link">
+                                <strong>Looping Challenges</strong>
+                                <div class="page-description">Master loops with practice problems</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="debug-challenge.html" class="page-link">
+                                <strong>Debug Challenge</strong>
+                                <div class="page-description">Find and fix code errors</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="buggy-code-exercises.html" class="page-link">
+                                <strong>Buggy Code Exercises</strong>
+                                <div class="page-description">Practice debugging skills</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="quick-code-challenges.html" class="page-link">
+                                <strong>Quick Code Challenges</strong>
+                                <div class="page-description">Short programming puzzles</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="tech-skills-challenge.html" class="page-link">
+                                <strong>Tech Skills Challenge</strong>
+                                <div class="page-description">Comprehensive skill assessment</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Interactive Tools -->
+                <div class="category-card tools">
+                    <div class="category-title">
+                        <span class="category-icon">🔧</span>
+                        Interactive Tools
+                    </div>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="ide.html" class="page-link">
+                                <strong>Python IDE</strong>
+                                <div class="page-description">Online Python code editor</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="ai.html" class="page-link">
+                                <strong>AI Assistant</strong>
+                                <div class="page-description">Get help with your code</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="ai-helper.html" class="page-link">
+                                <strong>AI Helper Tool</strong>
+                                <div class="page-description">Advanced AI programming assistance</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="troubleshooting-guide.html" class="page-link">
+                                <strong>Troubleshooting Guide</strong>
+                                <div class="page-description">Common error solutions</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="operators-reference.html" class="page-link">
+                                <strong>Operators Reference</strong>
+                                <div class="page-description">Quick reference for Python operators</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Games & Interactive -->
+                <div class="category-card games">
+                    <div class="category-title">
+                        <span class="category-icon">🎮</span>
+                        Games & Interactive
+                    </div>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="code-prediction-game.html" class="page-link">
+                                <strong>Code Prediction Game</strong>
+                                <div class="page-description">Guess what the code will output</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="gamepy.html" class="page-link">
+                                <strong>GamePy</strong>
+                                <div class="page-description">Interactive Python games</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="error-detective-activity.html" class="page-link">
+                                <strong>Error Detective</strong>
+                                <div class="page-description">Solve coding mysteries</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="bot.html" class="page-link">
+                                <strong>Interactive Bot</strong>
+                                <div class="page-description">Chat with a programming bot</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Teacher Dashboards -->
+                <div class="category-card dashboards">
+                    <div class="category-title">
+                        <span class="category-icon">👨‍🏫</span>
+                        Teacher Dashboards
+                    </div>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="teacher-dashboard.html" class="page-link">
+                                <strong>Teacher Dashboard</strong>
+                                <div class="page-description">Main teacher control panel</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="teacher-progress-dashboard.html" class="page-link">
+                                <strong>Progress Dashboard</strong>
+                                <div class="page-description">Track student progress</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="teacher-submissions-dashboard.html" class="page-link">
+                                <strong>Submissions Dashboard</strong>
+                                <div class="page-description">Review student submissions</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="quiz-teacher-dashboard.html" class="page-link">
+                                <strong>Quiz Dashboard</strong>
+                                <div class="page-description">Manage quizzes and assessments</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="student-showcase.html" class="page-link">
+                                <strong>Student Showcase</strong>
+                                <div class="page-description">Display student achievements</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Specialized Content -->
+                <div class="category-card special">
+                    <div class="category-title">
+                        <span class="category-icon">⭐</span>
+                        Specialized Content
+                    </div>
+                    <ul class="page-list">
+                        <li class="page-item">
+                            <a href="word365-learning-system.html" class="page-link">
+                                <strong>Word365 Learning System</strong>
+                                <div class="page-description">Microsoft Word integration</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="assessment-center.html" class="page-link">
+                                <strong>Assessment Center</strong>
+                                <div class="page-description">Comprehensive skill evaluation</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="exception-workshop.html" class="page-link">
+                                <strong>Exception Workshop</strong>
+                                <div class="page-description">Advanced error handling</div>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="coding-solutions-hub.html" class="page-link">
+                                <strong>Solutions Hub</strong>
+                                <div class="page-description">Common coding solutions</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const categoryCards = document.querySelectorAll('.category-card');
+        const pageItems = document.querySelectorAll('.page-item');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            // If search is empty, show all
+            if (searchTerm === '') {
+                categoryCards.forEach(card => card.style.display = 'block');
+                pageItems.forEach(item => item.style.display = 'block');
+                return;
+            }
+
+            // Hide all items first
+            pageItems.forEach(item => item.style.display = 'none');
+            
+            // Show matching items
+            pageItems.forEach(item => {
+                const link = item.querySelector('.page-link');
+                const title = link.querySelector('strong').textContent.toLowerCase();
+                const description = link.querySelector('.page-description').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    item.style.display = 'block';
+                }
+            });
+
+            // Hide categories with no visible items
+            categoryCards.forEach(card => {
+                const visibleItems = card.querySelectorAll('.page-item[style*="block"], .page-item:not([style])');
+                const hasVisibleItems = Array.from(card.querySelectorAll('.page-item')).some(item => 
+                    item.style.display !== 'none'
+                );
+                
+                card.style.display = hasVisibleItems ? 'block' : 'none';
+            });
+        });
+
+        // Update stats on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Count actual items in each category
+            const lessonCount = document.querySelectorAll('.lessons .page-item').length;
+            const projectCount = document.querySelectorAll('.projects .page-item').length;
+            const challengeCount = document.querySelectorAll('.challenges .page-item').length;
+            const toolCount = document.querySelectorAll('.tools .page-item').length;
+
+            document.getElementById('lessonCount').textContent = lessonCount;
+            document.getElementById('projectCount').textContent = projectCount;
+            document.getElementById('challengeCount').textContent = challengeCount;
+            document.getElementById('toolCount').textContent = toolCount;
+        });
+
+        // Add keyboard shortcut for search
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === '/') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>

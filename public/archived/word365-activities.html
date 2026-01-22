@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word 365 Formatting Fix Activities</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .activity-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .activity-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #0078d4;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .activity-title {
+            color: #0078d4;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .activity-emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        
+        .copy-section {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .copy-header {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .copy-btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #106ebe;
+        }
+        
+        .copy-content {
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Times New Roman', serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            overflow-x: auto;
+            min-height: 150px;
+        }
+        
+        .messy-title {
+            font-size: 22pt;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .messy-subtitle {
+            font-size: 16pt;
+            font-weight: bold;
+            margin: 15px 0 5px 0;
+        }
+        
+        .spaced-indent {
+            padding-left: 50px;
+        }
+        
+        .extra-spacing {
+            line-height: 3.0;
+        }
+        
+        .small-text {
+            font-size: 8pt;
+        }
+        
+        .large-text {
+            font-size: 18pt;
+        }
+        
+        .neon-green {
+            color: #00ff00;
+        }
+        
+        .red-text {
+            color: red;
+        }
+        
+        .blue-text {
+            color: blue;
+        }
+        
+        .green-text {
+            color: green;
+        }
+        
+        .tiny-font {
+            font-size: 9pt;
+        }
+        
+        .expected-outcome {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .expected-header {
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .expected-content {
+            background: white;
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Times New Roman', serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            pointer-events: none;
+        }
+        
+        .expected-content::selection {
+            background: none;
+        }
+        
+        .expected-content::-moz-selection {
+            background: none;
+        }
+        
+        .proper-title {
+            font-size: 18pt;
+            font-weight: bold;
+            text-align: center;
+            font-family: Calibri, sans-serif;
+            color: black;
+            margin-bottom: 15px;
+        }
+        
+        .proper-heading {
+            font-size: 14pt;
+            font-weight: bold;
+            font-family: Calibri, sans-serif;
+            color: black;
+            margin: 10px 0 5px 0;
+        }
+        
+        .proper-body {
+            font-size: 12pt;
+            font-family: Calibri, sans-serif;
+            color: black;
+            line-height: 1.15;
+        }
+        
+        .proper-bullets {
+            font-size: 12pt;
+            font-family: Calibri, sans-serif;
+            color: black;
+            margin-left: 20px;
+        }
+        
+        .checklist {
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .checklist h4 {
+            color: #28a745;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .checklist-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .checklist-table th {
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .checklist-table td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .checklist-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .checklist-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .instructions strong {
+            color: #856404;
+        }
+        
+        .navigation {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .nav-link {
+            color: #0078d4;
+            text-decoration: none;
+            padding: 10px 15px;
+            border: 2px solid #0078d4;
+            border-radius: 25px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background: #0078d4;
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .warning {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .activity-container {
+                padding: 0 15px;
+            }
+            
+            .activity-card {
+                padding: 20px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+        
+        .page-navigation {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .page-nav-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            background: #0078d4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .page-nav-btn:hover {
+            background: #106ebe;
+        }
+        
+        .page-nav-btn.current {
+            background: #666;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📝 Word 365 Formatting Fix Activities</h1>
+        <p>Practice fixing common formatting mistakes in Microsoft Word</p>
+    </div>
+    
+    <div class="navigation">
+        <h3 style="text-align: center; margin-top: 0; color: #495057;">Quick Navigation</h3>
+        <div class="nav-links">
+            <a href="#activity1" class="nav-link">1. School Newspaper 📰</a>
+            <a href="#activity2" class="nav-link">2. Club Rules ❌</a>
+            <a href="#activity3" class="nav-link">3. Research Report 📝</a>
+            <a href="#activity4" class="nav-link">4. Recipe Card 🍪</a>
+            <a href="#activity5" class="nav-link">5. Certificate 🏅</a>
+            <a href="#activity6" class="nav-link">6. Footnote Fiasco 💡</a>
+            <a href="#activity7" class="nav-link">7. Heading Headache 🎨</a>
+            <a href="#activity8" class="nav-link">8. Section Separation ✂️</a>
+            <a href="#activity9" class="nav-link">9. Quick Reference 📝</a>
+            <a href="#activity10" class="nav-link">10. Budget Breakdown 💰</a>
+            <a href="#activity11" class="nav-link">11. Job Application Letter 💼</a>
+            <a href="#activity12" class="nav-link">12. Event Flyer 🎉</a>
+            <a href="#activity13" class="nav-link">13. Meeting Minutes 📋</a>
+            <a href="#activity14" class="nav-link">14. Product Comparison 📊</a>
+            <a href="#activity15" class="nav-link">15. Travel Itinerary ✈️</a>
+        </div>
+    </div>
+    
+    <div class="success">
+        <strong>Instructions:</strong> 
+        <ol>
+            <li>Copy the <strong>already messy</strong> text from each "Text to Copy" section below</li>
+            <li>Paste it into a new Word document on <strong>office.com</strong></li>
+            <li>The text will already have formatting problems - use this page as your guide!</li>
+            <li>Follow the Student Checklist to fix all 4 formatting problems</li>
+        </ol>
+    </div>
+    
+    <div class="activity-container">
+        <!-- Activity 1: School Newspaper -->
+        <div class="activity-card" id="activity1">
+            <div class="activity-title">
+                <span class="activity-emoji">📰</span>
+                1. The School Newspaper Disaster
+            </div>
+            <p><strong>Focus:</strong> Font Formatting & Text Spacing</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('newspaper-text')">Copy Text</button>
+                </div>
+                <div class="copy-content" id="newspaper-text">
+                    <span style="font-family: Comic Sans MS; font-size: 8pt; color: purple;">THE SCHOOL NEWS: WEEKLY UPDATE!</span>
+
+                    <span style="font-family: Times New Roman; font-size: 24pt; color: red;">Don't miss the next meeting. It will be super fun!</span>
+
+
+
+                    <span style="font-family: Arial; font-size: 14pt; font-weight: bold; text-decoration: underline;">LOCKER CLEANING TIPS</span>
+
+                                        <span style="font-family: Courier; font-size: 10pt;">Always clean your locker out on Friday</span>
+
+
+                                        <span style="font-family: Calibri; font-size: 16pt;">Get rid of old papers</span>
+
+
+                                        <span style="font-family: Verdana; font-size: 12pt; font-style: italic;">Bring home empty lunch containers</span>
+
+
+
+                    <span style="font-family: Georgia; font-size: 18pt; line-height: 3.0; font-weight: bold;">This week, we are shining a spotlight on our new Robotics Team! They had their first meeting on Monday and already have 40 members. The team is building a rover that can navigate a small obstacle course. This is a great chance to learn about engineering and programming. The team meets every Tuesday and Thursday in Room 101. No experience is necessary, and they are always looking for more members. Contact Mr. Smith for more details.</span>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> Multiple fonts, random colors and sizes, excessive spacing, and unprofessional formatting!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-title">THE SCHOOL NEWS: WEEKLY UPDATE!</div>
+                    <div class="proper-body">Don't miss the next meeting. It will be super fun!</div>
+                    <div class="proper-heading">LOCKER CLEANING TIPS</div>
+                    <ul class="proper-bullets">
+                        <li>Always clean your locker out on Friday</li>
+                        <li>Get rid of old papers</li>
+                        <li>Bring home empty lunch containers</li>
+                    </ul>
+                    <div class="proper-body">This week, we are shining a spotlight on our new Robotics Team! They had their first meeting on Monday and already have 40 members. The team is building a rover that can navigate a small obstacle course. This is a great chance to learn about engineering and programming. The team meets every Tuesday and Thursday in Room 101. No experience is necessary, and they are always looking for more members. Contact Mr. Smith for more details.</div>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The document uses many different fonts (Comic Sans, Times, Arial, Courier, etc.).</td>
+                        <td>Select all text → Home tab → Font → Choose one professional font like Calibri for the entire document.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Text has random colors (purple title, red subtitle) that look unprofessional.</td>
+                        <td>Select colored text → Home tab → Font Color → Change all text to black for a professional look.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Font sizes are inconsistent and some text is too small or too large.</td>
+                        <td>Select title → Set to 18pt. Select headings → Set to 14pt. Select body text → Set to 12pt.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Bullet points use spaces for indentation instead of proper bullets.</td>
+                        <td>Select the indented lines → Home tab → Bullets → Apply proper bullet formatting.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Activity 2: Club Rules -->
+        <div class="activity-card" id="activity2">
+            <div class="activity-title">
+                <span class="activity-emoji">❌</span>
+                2. The Club Rules Takedown
+            </div>
+            <p><strong>Focus:</strong> Lists & Alignment</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('club-text')">Copy Text</button>
+                </div>
+                <div class="copy-content" id="club-text">
+                    <div style="font-size: 28pt; margin: 0; text-align: left; padding-left: 180px;">CLUB NAME: THE BOOK WORMS!</div>
+                    <div class="messy-subtitle" style="font-family: Comic Sans MS;">Rules for All Members</div>
+                    <div style="font-family: Times New Roman;">A. Be Quiet During Reading Time</div>
+                    <div style="font-family: Times New Roman;">B. Bring Your Book</div>
+                    <div style="font-family: Times New Roman;">C. Do Not Eat During Meetings</div>
+                    <div class="messy-subtitle" style="font-family: Arial;">Meeting Schedule</div>
+                    <div style="font-family: Calibri;">- Monday: Mystery</div>
+                    <div style="font-family: Calibri;">- Tuesday: Fantasy</div>
+                    <div style="font-family: Calibri;">- Wednesday: Sci-Fi</div>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> The title is centered with spaces, lists use manual typing, and fonts are inconsistent!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-title">CLUB NAME: THE BOOK WORMS!</div>
+                    <div class="proper-heading">Rules for All Members</div>
+                    <ol class="proper-bullets">
+                        <li>Be Quiet During Reading Time</li>
+                        <li>Bring Your Book</li>
+                        <li>Do Not Eat During Meetings</li>
+                    </ol>
+                    <div class="proper-heading">Meeting Schedule</div>
+                    <ul class="proper-bullets">
+                        <li>Monday: Mystery</li>
+                        <li>Tuesday: Fantasy</li>
+                        <li>Wednesday: Sci-Fi</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The main title is pushed to the center with the spacebar.</td>
+                        <td>Delete the spaces and use the Center Alignment tool (on the Home tab).</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The "Rules" section uses manual letters and periods, not an actual list.</td>
+                        <td>Select the lines → Home tab → Apply the Numbered List tool.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The "Schedule" section uses manual hyphens, not a proper bullet list.</td>
+                        <td>Select the lines → Home tab → Apply the Bulleted List tool.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The document uses inconsistent fonts throughout.</td>
+                        <td>Select all text → Home tab → Set a consistent font (e.g., Calibri).</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Activity 3: Research Report -->
+        <div class="activity-card" id="activity3">
+            <div class="activity-title">
+                <span class="activity-emoji">📝</span>
+                3. The Research Report Mess
+            </div>
+            <p><strong>Focus:</strong> Styles & Breaks</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('research-text')">Copy Text</button>
+                </div>
+                <div class="copy-content" id="research-text">
+                    <div style="font-size: 24pt; font-weight: bold; text-align: center; margin-bottom: 20px;">The History of the Bicycle</div>
+                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                    <div style="font-size: 16pt; font-weight: bold; margin: 15px 0 5px 0;">Chapter 1: Early Designs</div>
+                    <div>The first concept for a human-powered vehicle appeared in the 1400s. The early bicycle was called a "velocipede."</div>
+                    <div style="font-size: 16pt; font-weight: bold; margin: 15px 0 5px 0;">Chapter 2: The Modern Era</div>
+                    <div>By the late 1800s, the "safety bicycle" with same-sized wheels became popular.</div>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> Manual formatting instead of styles, excessive blank lines instead of page breaks, and no table of contents!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-title">The History of the Bicycle</div>
+                    <div style="margin: 20px 0; font-style: italic; color: #666;">Table of Contents</div>
+                    <div style="margin: 10px 0;">Chapter 1: Early Designs ........................... 2</div>
+                    <div style="margin: 10px 0;">Chapter 2: The Modern Era ........................ 3</div>
+                    <div style="margin: 30px 0; page-break-before: always;">--- Page Break ---</div>
+                    <div class="proper-heading">Chapter 1: Early Designs</div>
+                    <div class="proper-body">The first concept for a human-powered vehicle appeared in the 1400s. The early bicycle was called a "velocipede."</div>
+                    <div style="margin: 30px 0; page-break-before: always;">--- Page Break ---</div>
+                    <div class="proper-heading">Chapter 2: The Modern Era</div>
+                    <div class="proper-body">By the late 1800s, the "safety bicycle" with same-sized wheels became popular.</div>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The main title is not set up correctly for the Table of Contents (TOC).</td>
+                        <td>Select the title → Home tab → Apply the Title or Heading 1 Style.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The chapter titles use bold text instead of proper styles.</td>
+                        <td>Select the chapter titles → Home tab → Apply Heading 1 Style.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Chapter 1 and Chapter 2 are on the same page, but should be separated.</td>
+                        <td>Delete the manual Enter marks and insert a proper Page Break between the chapters (Insert tab → Page Break).</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The report is missing a Table of Contents.</td>
+                        <td>Place cursor at the start of the second page → References tab → Table of Contents → Insert a Style.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Activity 4: Recipe Card -->
+        <div class="activity-card" id="activity4">
+            <div class="activity-title">
+                <span class="activity-emoji">🍪</span>
+                4. The Recipe Card Chaos
+            </div>
+            <p><strong>Focus:</strong> Font Consistency & Text Formatting</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('recipe-text')">Copy Messy Text</button>
+                </div>
+                <div class="copy-content" id="recipe-text">
+CHOCOLATE CHIP COOKIES
+
+ingredients:
+Butter...................1/2 cup
+Flour....................2 cups
+Sugar...................3/4 cup
+Chocolate chips..........1 cup
+
+
+DIRECTIONS:
+1.Mix all wet ingredients together in a large bowl
+2.Add dry ingredients slowly
+3.Fold in chocolate chips
+4.Bake for 20 minutes at 350°F
+5.Allow to cool completely before serving
+
+
+Prep Time:15 minutes
+Cook Time:20 minutes
+Total Time:35 minutes
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> Inconsistent capitalization, manual dots, poor list formatting, and missing proper spacing!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-title">Chocolate Chip Cookies</div>
+                    <div class="proper-heading">INGREDIENTS</div>
+                    <ul class="proper-bullets">
+                        <li>Butter - 1/2 cup</li>
+                        <li>Flour - 2 cups</li>
+                        <li>Sugar - 3/4 cup</li>
+                        <li>Chocolate chips - 1 cup</li>
+                    </ul>
+                    <div class="proper-heading">DIRECTIONS</div>
+                    <ol class="proper-bullets">
+                        <li>Mix all wet ingredients together in a large bowl</li>
+                        <li>Add dry ingredients slowly</li>
+                        <li>Fold in chocolate chips</li>
+                        <li>Bake for 20 minutes at 350°F</li>
+                        <li>Allow to cool completely before serving</li>
+                    </ol>
+                    <div class="proper-body"><strong>Prep Time:</strong> 15 minutes<br>
+                    <strong>Cook Time:</strong> 20 minutes<br>
+                    <strong>Total Time:</strong> 35 minutes</div>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The title and "ingredients:" have inconsistent capitalization.</td>
+                        <td>Select title → Apply Title case. Select "ingredients:" → Make it "INGREDIENTS" and apply Heading 2 style.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The ingredients use manual dots instead of proper formatting.</td>
+                        <td>Select ingredients → Home tab → Bullets. Delete the dots and align properly.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The directions are numbered manually and poorly spaced.</td>
+                        <td>Select direction steps → Home tab → Numbered List tool for proper formatting.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The recipe info at bottom runs together without proper formatting.</td>
+                        <td>Add line breaks and use Home tab → Bold to make "Prep Time:", "Cook Time:", "Total Time:" stand out.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Activity 5: Certificate -->
+        <div class="activity-card" id="activity5">
+            <div class="activity-title">
+                <span class="activity-emoji">🏅</span>
+                5. The Certificate of Excellence
+            </div>
+            <p><strong>Focus:</strong> Font Colors & Text Alignment</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('certificate-text')">Copy Messy Text</button>
+                </div>
+                <div class="copy-content" id="certificate-text">
+                    <span style="color: #00ff00; font-size: 24pt; font-weight: bold;">certificate of EXCELLENCE!</span>
+                    
+                    
+Presented to:
+
+                                        STUDENT NAME
+
+
+for outstanding Achievement in:
+
+mathematics
+
+                    STAR
+
+
+Awarded on this day of: _______________
+
+                                                        Principal Smith
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> Neon green title, inconsistent capitalization, poor alignment, and unprofessional spacing!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-title" style="color: #003366;">Certificate of Excellence</div>
+                    <div style="text-align: center; margin: 20px 0;">Presented to:</div>
+                    <div style="text-align: center; font-size: 16pt; font-weight: bold; margin: 15px 0;">STUDENT NAME</div>
+                    <div style="text-align: center; margin: 20px 0;">For Outstanding Achievement in:</div>
+                    <div style="text-align: center; margin: 15px 0;">Mathematics</div>
+                    <div style="text-align: center; font-size: 24pt; color: gold; margin: 20px 0;">★</div>
+                    <div style="text-align: center; margin: 20px 0;">Awarded on this day of: _______________</div>
+                    <div style="text-align: right; margin-top: 40px;">Principal Smith</div>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The title has an unprofessional neon green color.</td>
+                        <td>Select the title → Home tab → Font Color → Change to professional dark blue or black.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The title has inconsistent capitalization ("certificate" vs "EXCELLENCE").</td>
+                        <td>Select title → Fix capitalization to "Certificate of Excellence" with proper Title Case.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Text alignment is messy with irregular spacing and indentation.</td>
+                        <td>Center the title and student name. Use Home tab → Center alignment tool instead of spaces.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The word "STAR" should be replaced with an actual symbol.</td>
+                        <td>Select "STAR" → Insert tab → Symbol → Choose a star symbol (★) to replace the text.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Activity 6: Footnote Fiasco -->
+        <div class="activity-card" id="activity6">
+            <div class="activity-title">
+                <span class="activity-emoji">💡</span>
+                6. The Footnote Fiasco
+            </div>
+            <p><strong>Focus:</strong> References & Spelling</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('footnote-text')">Copy Messy Text</button>
+                </div>
+                <div class="copy-content" id="footnote-text">
+                    <div class="extra-spacing" style="font-weight: bold;">The Amazon Rainforest is home to many unique animals. Scentists agree that this important ecosystem must be preserved. We must study how the forest interacts with the global climate. Many scentists believe immediate action is required.</div>
+                    <br>
+                    <div class="small-text">(Source: Green Earth Journal, 2022)</div>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> Spelling errors, entire paragraph is bold, excessive line spacing, and manual source instead of footnote!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-body">The Amazon Rainforest is home to many unique animals. Scientists agree that this important ecosystem must be preserved. We must study how the forest interacts with the global climate. Many scientists believe immediate action is required.<sup>1</sup></div>
+                    <hr style="margin: 20px 0; border: 1px solid #ccc;">
+                    <div style="font-size: 10pt; margin-top: 15px;"><sup>1</sup> Green Earth Journal, 2022</div>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>A source is manually typed at the bottom of the page, not a proper citation.</td>
+                        <td>Delete the manual source → References tab → Insert Footnote → Re-type the source into the new footnote box.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The word "scientists" is misspelled in the text.</td>
+                        <td>Home tab → Find and Replace → Replace "scentists" with "scientists" (Replace All).</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The entire body paragraph is Bold, making it difficult to read.</td>
+                        <td>Select the body text → Home tab → Remove the Bold formatting.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The line spacing is too wide (e.g., set to 3.0).</td>
+                        <td>Home tab → Line Spacing → Set to 1.5 or 1.15.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Activity 7: Heading Headache -->
+        <div class="activity-card" id="activity7">
+            <div class="activity-title">
+                <span class="activity-emoji">🎨</span>
+                7. The Heading Headache
+            </div>
+            <p><strong>Focus:</strong> Consistency & Styles</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('heading-text')">Copy Messy Text</button>
+                </div>
+                <div class="copy-content" id="heading-text">
+                    <div class="red-text" style="font-size: 24pt; font-weight: bold; margin-bottom: 50px;">MY PROJECT</div>
+                    <div class="blue-text" style="font-size: 16pt; font-weight: bold; margin-bottom: 50px;">INTRODUCTION</div>
+                    <div class="large-text">This project is about exploring the effects of different variables on plant growth. We conducted experiments over six weeks to gather comprehensive data.</div>
+                    <div class="green-text" style="font-size: 16pt; font-weight: bold; margin: 50px 0 50px 0;">METHOD</div>
+                    <div>We used a survey to collect initial data, then conducted controlled experiments with different light conditions and watering schedules.</div>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> Manual formatting with random colors, excessive spacing, inconsistent font sizes, no proper styles!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-title">MY PROJECT</div>
+                    <div class="proper-heading">INTRODUCTION</div>
+                    <div class="proper-body">This project is about exploring the effects of different variables on plant growth. We conducted experiments over six weeks to gather comprehensive data.</div>
+                    <div class="proper-heading">METHOD</div>
+                    <div class="proper-body">We used a survey to collect initial data, then conducted controlled experiments with different light conditions and watering schedules.</div>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The main title is styled manually and not set up as a document title.</td>
+                        <td>Select the main title → Home tab → Apply the Title Style.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The section headings (INTRODUCTION, METHOD) use random colors and are not proper styles.</td>
+                        <td>Select each heading → Home tab → Apply the Heading 1 Style to all of them.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The spacing after each heading is huge (e.g., set to 36 pt).</td>
+                        <td>Select a heading → Home tab → Line Spacing → Line Spacing Options → Set Spacing After to 0 pt.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The formatting on the introduction paragraph is too big (e.g., set to Size 18).</td>
+                        <td>Select the introduction → Home tab → Set the font size to the standard 12 pt.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Activity 8: Section Separation -->
+        <div class="activity-card" id="activity8">
+            <div class="activity-title">
+                <span class="activity-emoji">✂️</span>
+                8. The Section Separation Snafu
+            </div>
+            <p><strong>Focus:</strong> Breaks & Page Numbers</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('section-text')">Copy Messy Text</button>
+                </div>
+                <div class="copy-content" id="section-text">
+                    <div class="tiny-font">Title Page</div>
+                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                    <div class="tiny-font">Section 1: Data</div>
+                    <div class="tiny-font">Section 2: Analysis</div>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> Tiny font size, manual line breaks instead of page breaks, sections too close together, wrong page numbering!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-title">Title Page</div>
+                    <div style="margin: 30px 0; text-align: center; color: #666; font-style: italic;">--- Page Break (No page number on title page) ---</div>
+                    <div class="proper-heading">Section 1: Data</div>
+                    <div class="proper-body">Page 1 content starts here...</div>
+                    <div style="margin: 30px 0; text-align: center; color: #666; font-style: italic;">--- Page Break ---</div>
+                    <div class="proper-heading">Section 2: Analysis</div>
+                    <div class="proper-body">Page 2 content starts here...</div>
+                    <div style="text-align: center; margin-top: 20px; font-size: 10pt;">Page numbering: 1, 2, etc.</div>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Page numbering starts on the Title Page, but should start on the second page.</td>
+                        <td>Insert tab → Header & Footer → Options → Check Different First Page.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The entire document is too small to read.</td>
+                        <td>Select all text → Home tab → Set the font size to 12 pt.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Section 1 and Section 2 are too close together.</td>
+                        <td>Place the cursor before "Section 2" → Layout tab → Breaks → Insert a Next Page Section Break.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The two main sections are on the same page, but should be separated.</td>
+                        <td>Delete the manual Enter marks and insert a proper Page Break between the sections.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Activity 9: Quick Reference -->
+        <div class="activity-card" id="activity9">
+            <div class="activity-title">
+                <span class="activity-emoji">📝</span>
+                9. The Line Spacing Disaster
+            </div>
+            <p><strong>Focus:</strong> Line Spacing & Paragraph Formatting</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('reference-text')">Copy Messy Text</button>
+                </div>
+                <div class="copy-content" id="reference-text">
+                    <span style="font-size: 28pt; font-weight: bold; color: purple; text-decoration: underline;">STUDENT HANDBOOK</span>
+
+
+
+                    <span style="font-size: 20pt; color: red; font-style: italic;">Important Rules and Guidelines</span>
+
+
+
+
+                    <span style="line-height: 3.5; font-size: 14pt;">All students must arrive on time to class. Late arrivals will not be accepted after the bell rings. Please bring all necessary materials including notebooks, pens, and textbooks.</span>
+
+
+
+
+                    <span style="font-size: 10pt; color: blue;">Homework Policy</span>
+
+
+
+
+                    <span style="line-height: 2.8; font-size: 16pt;">All homework assignments must be completed and turned in on the due date. No late assignments will be accepted unless you have a valid excuse from your parents or the school office.</span>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> Huge font sizes, excessive line spacing, multiple colors, and poor paragraph formatting!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-title">STUDENT HANDBOOK</div>
+                    <div class="proper-heading">Important Rules and Guidelines</div>
+                    <div class="proper-body">All students must arrive on time to class. Late arrivals will not be accepted after the bell rings. Please bring all necessary materials including notebooks, pens, and textbooks.</div>
+                    <div class="proper-heading">Homework Policy</div>
+                    <div class="proper-body">All homework assignments must be completed and turned in on the due date. No late assignments will be accepted unless you have a valid excuse from your parents or the school office.</div>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The title uses an unprofessional purple color and underline.</td>
+                        <td>Select the title → Home tab → Font Color → Change to black. Remove underline formatting.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Font sizes are inconsistent and some text is too large or too small.</td>
+                        <td>Select title → Set to 18pt. Select headings → Set to 14pt. Select body text → Set to 12pt.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Line spacing is excessive, making the document hard to read.</td>
+                        <td>Select all text → Home tab → Line Spacing → Set to 1.15 or 1.5 for better readability.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Too many blank lines between paragraphs create poor formatting.</td>
+                        <td>Remove extra blank lines and use Home tab → Paragraph → Spacing After to control paragraph spacing.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Activity 10: Budget Breakdown -->
+        <div class="activity-card" id="activity10">
+            <div class="activity-title">
+                <span class="activity-emoji">💰</span>
+                10. The Budget Breakdown Blunder
+            </div>
+            <p><strong>Focus:</strong> Table Structure</p>
+            
+            <div class="copy-section">
+                <div class="copy-header">
+                    Text to Copy (Already Has Formatting Errors!)
+                    <button class="copy-btn" onclick="copyToClipboard('budget-text')">Copy Messy Text</button>
+                </div>
+                <div class="copy-content" id="budget-text">
+                    <div style="font-size: 18pt; font-weight: bold; margin-bottom: 20px;">Project Budget</div>
+                    <table style="background-color: yellow; border-collapse: collapse; width: 100%;">
+                        <tr>
+                            <td style="border: 3px solid black; padding: 8px; width: 20%;"><strong>Item</strong></td>
+                            <td style="border: 3px solid black; padding: 8px; width: 20%;"><strong>Cost</strong></td>
+                            <td style="border: 3px solid black; padding: 8px; width: 60%;"><strong>Total</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 3px solid black; padding: 8px;">        Item Name</td>
+                            <td style="border: 3px solid black; padding: 8px;">Price</td>
+                            <td style="border: 3px solid black; padding: 8px;">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 3px solid black; padding: 8px;">Pencils</td>
+                            <td style="border: 3px solid black; padding: 8px;">$5.00</td>
+                            <td style="border: 3px solid black; padding: 8px;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 3px solid black; padding: 8px;">Paper</td>
+                            <td style="border: 3px solid black; padding: 8px;">$10.00</td>
+                            <td style="border: 3px solid black; padding: 8px;"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="warning">
+                <strong>What's Wrong?</strong> Header cells not merged, bright yellow background, text aligned with spaces, poor column width distribution!
+            </div>
+            
+            <div class="expected-outcome">
+                <div class="expected-header">
+                    ✅ Expected Outcome (What Your Document Should Look Like)
+                    <span style="font-size: 12px; color: #666;">Cannot be copied - for reference only</span>
+                </div>
+                <div class="expected-content">
+                    <div class="proper-title">Project Budget</div>
+                    <table style="border-collapse: collapse; width: 100%; border: 1px solid #333; margin: 15px 0;">
+                        <tr>
+                            <td colspan="3" style="border: 1px solid #333; padding: 8px; background: #f8f8f8; text-align: center; font-weight: bold;">Budget Items</td>
+                        </tr>
+                        <tr style="background: #f0f0f0;">
+                            <td style="border: 1px solid #333; padding: 8px; font-weight: bold; width: 40%;">Item</td>
+                            <td style="border: 1px solid #333; padding: 8px; font-weight: bold; width: 30%;">Cost</td>
+                            <td style="border: 1px solid #333; padding: 8px; font-weight: bold; width: 30%;">Total</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #333; padding: 8px;">Pencils</td>
+                            <td style="border: 1px solid #333; padding: 8px;">$5.00</td>
+                            <td style="border: 1px solid #333; padding: 8px;">$5.00</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #333; padding: 8px;">Paper</td>
+                            <td style="border: 1px solid #333; padding: 8px;">$10.00</td>
+                            <td style="border: 1px solid #333; padding: 8px;">$10.00</td>
+                        </tr>
+                        <tr style="background: #f0f0f0; font-weight: bold;">
+                            <td style="border: 1px solid #333; padding: 8px;">Grand Total</td>
+                            <td style="border: 1px solid #333; padding: 8px;">-</td>
+                            <td style="border: 1px solid #333; padding: 8px;">$15.00</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist (4 Fixes)</h4>
+                <table class="checklist-table">
+                    <tr>
+                        <th>#</th>
+                        <th>The Problem to Fix</th>
+                        <th>Menu/Tool to Use</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The main header row (Item, Cost, Total) is three separate cells when it should be one title.</td>
+                        <td>Select the header cells → Table Layout tab → Merge Cells.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The table uses a bright color that is unprofessional.</td>
+                        <td>Select the entire table → Table Design tab → Shading → Set to No Color or a very light gray.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The text in the first column is aligned with the spacebar.</td>
+                        <td>Select the cells → Delete the spaces → Use the Left Align tool (on the Home tab).</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The columns are too wide or too narrow for the content.</td>
+                        <td>Select the table → Table Layout tab → AutoFit → Select AutoFit Contents or AutoFit Window.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Activity 11: Job Application Letter -->
+        <div class="activity-card" id="activity11">
+            <div class="activity-title">
+                <span class="activity-emoji">💼</span>
+                Activity 11: Job Application Letter
+            </div>
+            
+            <div class="instructions">
+                <strong>Scenario:</strong> You're applying for your dream job, but someone messed up your application letter formatting! Fix the alignment, font consistency, spacing, and make it look professional.
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist - Fix These 4 Problems:</h4>
+                <div class="checklist-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Problem</th>
+                            <th>How to Fix It</th>
+                        </tr>
+                        <tr>
+                            <td>❌ Header is not centered</td>
+                            <td>Select header text and use center alignment</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Inconsistent font sizes</td>
+                            <td>Make body text 12pt, headings 14pt</td>
+                        </tr>
+                        <tr>
+                            <td>❌ No proper paragraph spacing</td>
+                            <td>Add space after each paragraph (6pt)</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Date is not right-aligned</td>
+                            <td>Right-align the date at the top</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <h3>Text to Copy:</h3>
+            <button class="copy-btn" onclick="copyToClipboard('job-letter-text')">📋 Copy This Messy Text</button>
+            
+            <div class="copy-content" id="job-letter-text">
+                <div style="text-align: left; font-size: 10pt;">March 15, 2024</div>
+                <br>
+                <div style="text-align: left; font-size: 16pt; font-weight: bold;">SARAH JOHNSON</div>
+                <div style="font-size: 8pt;">123 Main Street, City, ST 12345</div>
+                <div style="font-size: 14pt;">sarah.johnson@email.com | (555) 123-4567</div>
+                <br><br><br>
+                <div style="font-size: 12pt;">Ms. Jennifer Smith<br>
+                Hiring Manager<br>
+                ABC Company<br>
+                456 Business Ave<br>
+                City, ST 12345</div>
+                <br><br>
+                <div style="font-size: 16pt; font-weight: bold;">Dear Ms. Smith,</div>
+                <br>
+                <div style="font-size: 11pt;">I am writing to express my strong interest in the Marketing Coordinator position at ABC Company. With my background in digital marketing and my passion for creative campaigns, I believe I would be a valuable addition to your team.</div>
+                <div style="font-size: 13pt;">In my previous role at XYZ Marketing, I successfully managed social media campaigns that increased engagement by 40%. I also collaborated with cross-functional teams to develop innovative marketing strategies that boosted sales by 25%.</div>
+                <div style="font-size: 12pt;">I am excited about the opportunity to contribute to ABC Company's continued success and would welcome the chance to discuss how my skills and enthusiasm can benefit your marketing team.</div>
+                <br><br>
+                <div style="font-size: 14pt;">Sincerely,<br>
+                Sarah Johnson</div>
+            </div>
+
+            <h3>Expected Outcome:</h3>
+            <div class="expected-content">
+                <div class="proper-body" style="text-align: right; margin-bottom: 15px;">March 15, 2024</div>
+                
+                <div class="proper-title">SARAH JOHNSON</div>
+                <div class="proper-body" style="text-align: center;">123 Main Street, City, ST 12345</div>
+                <div class="proper-body" style="text-align: center; margin-bottom: 15px;">sarah.johnson@email.com | (555) 123-4567</div>
+                
+                <div class="proper-body" style="margin-bottom: 15px;">Ms. Jennifer Smith<br>
+                Hiring Manager<br>
+                ABC Company<br>
+                456 Business Ave<br>
+                City, ST 12345</div>
+                
+                <div class="proper-heading" style="margin-bottom: 10px;">Dear Ms. Smith,</div>
+                
+                <div class="proper-body" style="margin-bottom: 10px;">I am writing to express my strong interest in the Marketing Coordinator position at ABC Company. With my background in digital marketing and my passion for creative campaigns, I believe I would be a valuable addition to your team.</div>
+                
+                <div class="proper-body" style="margin-bottom: 10px;">In my previous role at XYZ Marketing, I successfully managed social media campaigns that increased engagement by 40%. I also collaborated with cross-functional teams to develop innovative marketing strategies that boosted sales by 25%.</div>
+                
+                <div class="proper-body" style="margin-bottom: 15px;">I am excited about the opportunity to contribute to ABC Company's continued success and would welcome the chance to discuss how my skills and enthusiasm can benefit your marketing team.</div>
+                
+                <div class="proper-body">Sincerely,<br>
+                Sarah Johnson</div>
+            </div>
+        </div>
+
+        <!-- Activity 12: Event Flyer -->
+        <div class="activity-card" id="activity12">
+            <div class="activity-title">
+                <span class="activity-emoji">🎉</span>
+                Activity 12: Event Flyer
+            </div>
+            
+            <div class="instructions">
+                <strong>Scenario:</strong> You're creating a flyer for the school dance, but the text formatting is a mess! Fix the title centering, font sizes, bullet points, and color scheme.
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist - Fix These 4 Problems:</h4>
+                <div class="checklist-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Problem</th>
+                            <th>How to Fix It</th>
+                        </tr>
+                        <tr>
+                            <td>❌ Title not centered and too small</td>
+                            <td>Center the title and make it 20pt, bold</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Inconsistent text colors</td>
+                            <td>Make all text black except title (keep colorful)</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Information not properly bulleted</td>
+                            <td>Format event details as a bulleted list</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Date and time not emphasized</td>
+                            <td>Make date and time bold and 14pt</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <h3>Text to Copy:</h3>
+            <button class="copy-btn" onclick="copyToClipboard('flyer-text')">📋 Copy This Messy Text</button>
+            
+            <div class="copy-content" id="flyer-text">
+                <div style="text-align: left; font-size: 14pt; color: purple;">SPRING DANCE 2024</div>
+                <br>
+                <div style="font-size: 10pt; color: red;">Get ready for the most amazing night of the year!</div>
+                <br>
+                <div style="font-size: 12pt; color: blue;">DATE: Friday, April 26th, 2024</div>
+                <div style="font-size: 11pt; color: green;">TIME: 7:00 PM - 11:00 PM</div>
+                <div style="font-size: 13pt; color: orange;">LOCATION: School Gymnasium</div>
+                <div style="font-size: 9pt; color: purple;">DRESS CODE: Semi-formal</div>
+                <div style="font-size: 14pt; color: pink;">TICKETS: $15 per person</div>
+                <div style="font-size: 8pt; color: brown;">DJ: Mike "The Mix" Martinez</div>
+                <br>
+                <div style="font-size: 11pt; color: red;">Special Features:</div>
+                <div style="font-size: 10pt; color: blue;">Photo booth with props</div>
+                <div style="font-size: 12pt; color: green;">Professional DJ and light show</div>
+                <div style="font-size: 9pt; color: orange;">Refreshments and snacks</div>
+                <div style="font-size: 13pt; color: purple;">Prize giveaways every hour</div>
+                <br>
+                <div style="font-size: 15pt; color: red;">Tickets available at the main office or online at schoolevents.com</div>
+                <br>
+                <div style="font-size: 10pt; color: blue;">Questions? Contact Mrs. Anderson at manderson@school.edu</div>
+            </div>
+
+            <h3>Expected Outcome:</h3>
+            <div class="expected-content">
+                <div style="text-align: center; font-size: 20pt; font-weight: bold; color: purple; margin-bottom: 15px;">SPRING DANCE 2024</div>
+                
+                <div class="proper-body" style="text-align: center; margin-bottom: 15px;">Get ready for the most amazing night of the year!</div>
+                
+                <div class="proper-body" style="font-weight: bold; font-size: 14pt; margin-bottom: 5px;">DATE: Friday, April 26th, 2024</div>
+                <div class="proper-body" style="font-weight: bold; font-size: 14pt; margin-bottom: 15px;">TIME: 7:00 PM - 11:00 PM</div>
+                
+                <ul class="proper-bullets">
+                    <li>LOCATION: School Gymnasium</li>
+                    <li>DRESS CODE: Semi-formal</li>
+                    <li>TICKETS: $15 per person</li>
+                    <li>DJ: Mike "The Mix" Martinez</li>
+                </ul>
+                
+                <div class="proper-heading" style="margin-top: 15px;">Special Features:</div>
+                <ul class="proper-bullets">
+                    <li>Photo booth with props</li>
+                    <li>Professional DJ and light show</li>
+                    <li>Refreshments and snacks</li>
+                    <li>Prize giveaways every hour</li>
+                </ul>
+                
+                <div class="proper-body" style="margin-top: 15px; margin-bottom: 10px;">Tickets available at the main office or online at schoolevents.com</div>
+                
+                <div class="proper-body">Questions? Contact Mrs. Anderson at manderson@school.edu</div>
+            </div>
+        </div>
+
+        <!-- Activity 13: Meeting Minutes -->
+        <div class="activity-card" id="activity13">
+            <div class="activity-title">
+                <span class="activity-emoji">📋</span>
+                Activity 13: Meeting Minutes
+            </div>
+            
+            <div class="instructions">
+                <strong>Scenario:</strong> You're taking minutes for the Student Council meeting, but the formatting is unprofessional! Fix the heading structure, alignment, spacing, and list formatting.
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist - Fix These 4 Problems:</h4>
+                <div class="checklist-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Problem</th>
+                            <th>How to Fix It</th>
+                        </tr>
+                        <tr>
+                            <td>❌ Title and headers not properly formatted</td>
+                            <td>Make title 16pt bold, section headers 14pt bold</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Meeting details not organized</td>
+                            <td>Format meeting info as a clean list</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Action items not clearly listed</td>
+                            <td>Use numbered list for action items</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Inconsistent line spacing</td>
+                            <td>Use consistent 1.15 line spacing throughout</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <h3>Text to Copy:</h3>
+            <button class="copy-btn" onclick="copyToClipboard('minutes-text')">📋 Copy This Messy Text</button>
+            
+            <div class="copy-content" id="minutes-text">
+                <div style="font-size: 12pt;">Student Council Meeting Minutes</div>
+                <br><br><br>
+                <div style="font-size: 10pt;">Date: March 20, 2024</div>
+                <div style="font-size: 14pt;">Time: 3:30 PM - 4:15 PM    Location: Room 205</div>
+                <div style="font-size: 8pt;">Chair: Alex Thompson    Secretary: Maria Garcia</div>
+                <br>
+                <div style="font-size: 11pt;">Attendees:</div>
+                <div style="font-size: 12pt;">Alex Thompson (President) Maria Garcia (Secretary) Josh Kim (Treasurer) Sarah Wilson (VP) Mike Chen (Events) Lisa Park (Communications)</div>
+                <br><br>
+                <div style="font-size: 13pt;">AGENDA ITEMS DISCUSSED</div>
+                <br>
+                <div style="font-size: 10pt; line-height: 3.0;">Spring Dance Planning - Mike reported that the venue is booked and DJ confirmed. Ticket sales start next week.</div>
+                <div style="font-size: 12pt; line-height: 1.0;">Fundraising Update - Josh shared that we raised $1,200 from the car wash. Goal is $2,000 by May.</div>
+                <div style="font-size: 14pt; line-height: 2.0;">New Recycling Initiative - Sarah proposed new recycling bins for each classroom. Need to get approval from administration.</div>
+                <br>
+                <div style="font-size: 15pt;">Action Items:</div>
+                <div style="font-size: 11pt;">Mike - Order dance decorations by March 25</div>
+                <div style="font-size: 9pt;">Lisa - Create social media posts for dance promotion</div>
+                <div style="font-size: 13pt;">Sarah - Meet with Principal Johnson about recycling bins</div>
+                <div style="font-size: 10pt;">Josh - Prepare budget report for next meeting</div>
+                <br>
+                <div style="font-size: 12pt;">Next Meeting: April 3, 2024 at 3:30 PM in Room 205</div>
+            </div>
+
+            <h3>Expected Outcome:</h3>
+            <div class="expected-content">
+                <div style="text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 20px;">Student Council Meeting Minutes</div>
+                
+                <div class="proper-body"><strong>Date:</strong> March 20, 2024</div>
+                <div class="proper-body"><strong>Time:</strong> 3:30 PM - 4:15 PM</div>
+                <div class="proper-body"><strong>Location:</strong> Room 205</div>
+                <div class="proper-body"><strong>Chair:</strong> Alex Thompson</div>
+                <div class="proper-body" style="margin-bottom: 15px;"><strong>Secretary:</strong> Maria Garcia</div>
+                
+                <div class="proper-heading">Attendees:</div>
+                <ul class="proper-bullets">
+                    <li>Alex Thompson (President)</li>
+                    <li>Maria Garcia (Secretary)</li>
+                    <li>Josh Kim (Treasurer)</li>
+                    <li>Sarah Wilson (VP)</li>
+                    <li>Mike Chen (Events)</li>
+                    <li>Lisa Park (Communications)</li>
+                </ul>
+                
+                <div class="proper-heading">Agenda Items Discussed:</div>
+                <div class="proper-body"><strong>Spring Dance Planning:</strong> Mike reported that the venue is booked and DJ confirmed. Ticket sales start next week.</div>
+                <div class="proper-body"><strong>Fundraising Update:</strong> Josh shared that we raised $1,200 from the car wash. Goal is $2,000 by May.</div>
+                <div class="proper-body" style="margin-bottom: 15px;"><strong>New Recycling Initiative:</strong> Sarah proposed new recycling bins for each classroom. Need to get approval from administration.</div>
+                
+                <div class="proper-heading">Action Items:</div>
+                <ol class="proper-bullets">
+                    <li>Mike - Order dance decorations by March 25</li>
+                    <li>Lisa - Create social media posts for dance promotion</li>
+                    <li>Sarah - Meet with Principal Johnson about recycling bins</li>
+                    <li>Josh - Prepare budget report for next meeting</li>
+                </ol>
+                
+                <div class="proper-body" style="margin-top: 15px;"><strong>Next Meeting:</strong> April 3, 2024 at 3:30 PM in Room 205</div>
+            </div>
+        </div>
+
+        <!-- Activity 14: Product Comparison -->
+        <div class="activity-card" id="activity14">
+            <div class="activity-title">
+                <span class="activity-emoji">📊</span>
+                Activity 14: Product Comparison
+            </div>
+            
+            <div class="instructions">
+                <strong>Scenario:</strong> You're comparing smartphones for a tech blog, but the formatting makes it hard to read! Fix the table structure, alignment, headings, and spacing to make it professional.
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist - Fix These 4 Problems:</h4>
+                <div class="checklist-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Problem</th>
+                            <th>How to Fix It</th>
+                        </tr>
+                        <tr>
+                            <td>❌ Title not centered or emphasized</td>
+                            <td>Center title and make it 18pt, bold</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Comparison data not in table format</td>
+                            <td>Convert text to a proper table with borders</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Inconsistent font sizes in comparison</td>
+                            <td>Make all comparison text 11pt</td>
+                        </tr>
+                        <tr>
+                            <td>❌ No clear section breaks</td>
+                            <td>Add proper spacing between sections</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <h3>Text to Copy:</h3>
+            <button class="copy-btn" onclick="copyToClipboard('comparison-text')">📋 Copy This Messy Text</button>
+            
+            <div class="copy-content" id="comparison-text">
+                <div style="text-align: left; font-size: 14pt;">Smartphone Comparison Guide 2024</div>
+                <br>
+                <div style="font-size: 10pt;">When choosing a new smartphone, it's important to compare key features and specifications.</div>
+                <br><br>
+                <div style="font-size: 13pt; font-weight: bold;">Top 3 Smartphones:</div>
+                <br>
+                <div style="font-size: 8pt;">iPhone 15 Pro - Price: $999 - Camera: 48MP - Battery: 23 hours - Storage: 128GB - Display: 6.1"</div>
+                <div style="font-size: 12pt;">Samsung Galaxy S24 - Price: $899 - Camera: 50MP - Battery: 25 hours - Storage: 256GB - Display: 6.2"</div>
+                <div style="font-size: 14pt;">Google Pixel 8 Pro - Price: $799 - Camera: 50MP - Battery: 24 hours - Storage: 128GB - Display: 6.7"</div>
+                <br><br>
+                <div style="font-size: 11pt;">DETAILED COMPARISON:</div>
+                <div style="font-size: 9pt;">CAMERA QUALITY iPhone 15 Pro: Excellent low-light performance, advanced video features Samsung Galaxy S24: Great zoom capabilities, AI-enhanced photos Google Pixel 8 Pro: Best computational photography, natural colors</div>
+                <div style="font-size: 13pt;">BATTERY LIFE iPhone 15 Pro: All-day usage, fast charging Samsung Galaxy S24: Longest lasting, wireless charging Google Pixel 8 Pro: Solid performance, adaptive battery</div>
+                <div style="font-size: 10pt;">DISPLAY QUALITY iPhone 15 Pro: Super Retina XDR, bright and clear Samsung Galaxy S24: Dynamic AMOLED, vibrant colors Google Pixel 8 Pro: LTPO OLED, smooth 120Hz</div>
+                <br>
+                <div style="font-size: 15pt;">Conclusion: All three phones offer excellent performance, choose based on your priorities and budget.</div>
+            </div>
+
+            <h3>Expected Outcome:</h3>
+            <div class="expected-content">
+                <div style="text-align: center; font-size: 18pt; font-weight: bold; margin-bottom: 20px;">Smartphone Comparison Guide 2024</div>
+                
+                <div class="proper-body" style="margin-bottom: 20px;">When choosing a new smartphone, it's important to compare key features and specifications.</div>
+                
+                <div class="proper-heading">Top 3 Smartphones:</div>
+                
+                <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                    <tr style="background: #f8f9fa;">
+                        <th style="border: 1px solid #dee2e6; padding: 10px; text-align: left;">Model</th>
+                        <th style="border: 1px solid #dee2e6; padding: 10px; text-align: left;">Price</th>
+                        <th style="border: 1px solid #dee2e6; padding: 10px; text-align: left;">Camera</th>
+                        <th style="border: 1px solid #dee2e6; padding: 10px; text-align: left;">Battery</th>
+                        <th style="border: 1px solid #dee2e6; padding: 10px; text-align: left;">Storage</th>
+                        <th style="border: 1px solid #dee2e6; padding: 10px; text-align: left;">Display</th>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">iPhone 15 Pro</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">$999</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">48MP</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">23 hours</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">128GB</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">6.1"</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">Samsung Galaxy S24</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">$899</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">50MP</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">25 hours</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">256GB</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">6.2"</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">Google Pixel 8 Pro</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">$799</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">50MP</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">24 hours</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">128GB</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px; font-size: 11pt;">6.7"</td>
+                    </tr>
+                </table>
+                
+                <div class="proper-heading">Detailed Comparison:</div>
+                
+                <div class="proper-body"><strong>Camera Quality:</strong></div>
+                <ul class="proper-bullets">
+                    <li>iPhone 15 Pro: Excellent low-light performance, advanced video features</li>
+                    <li>Samsung Galaxy S24: Great zoom capabilities, AI-enhanced photos</li>
+                    <li>Google Pixel 8 Pro: Best computational photography, natural colors</li>
+                </ul>
+                
+                <div class="proper-body"><strong>Battery Life:</strong></div>
+                <ul class="proper-bullets">
+                    <li>iPhone 15 Pro: All-day usage, fast charging</li>
+                    <li>Samsung Galaxy S24: Longest lasting, wireless charging</li>
+                    <li>Google Pixel 8 Pro: Solid performance, adaptive battery</li>
+                </ul>
+                
+                <div class="proper-body"><strong>Display Quality:</strong></div>
+                <ul class="proper-bullets">
+                    <li>iPhone 15 Pro: Super Retina XDR, bright and clear</li>
+                    <li>Samsung Galaxy S24: Dynamic AMOLED, vibrant colors</li>
+                    <li>Google Pixel 8 Pro: LTPO OLED, smooth 120Hz</li>
+                </ul>
+                
+                <div class="proper-body" style="margin-top: 20px;"><strong>Conclusion:</strong> All three phones offer excellent performance, choose based on your priorities and budget.</div>
+            </div>
+        </div>
+
+        <!-- Activity 15: Travel Itinerary -->
+        <div class="activity-card" id="activity15">
+            <div class="activity-title">
+                <span class="activity-emoji">✈️</span>
+                Activity 15: Travel Itinerary
+            </div>
+            
+            <div class="instructions">
+                <strong>Scenario:</strong> You're planning a family vacation to Paris, but your itinerary looks chaotic! Fix the formatting to make it easy to read and follow during your trip.
+            </div>
+            
+            <div class="checklist">
+                <h4>Student Checklist - Fix These 4 Problems:</h4>
+                <div class="checklist-table">
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Problem</th>
+                            <th>How to Fix It</th>
+                        </tr>
+                        <tr>
+                            <td>❌ Title not centered and emphasized</td>
+                            <td>Center title and make it 20pt, bold</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Days not clearly separated</td>
+                            <td>Make each day a 16pt bold heading</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Activities not properly organized</td>
+                            <td>Use time-based bullet points for each day</td>
+                        </tr>
+                        <tr>
+                            <td>❌ Important info not highlighted</td>
+                            <td>Make times bold and addresses italic</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <h3>Text to Copy:</h3>
+            <button class="copy-btn" onclick="copyToClipboard('itinerary-text')">📋 Copy This Messy Text</button>
+            
+            <div class="copy-content" id="itinerary-text">
+                <div style="text-align: left; font-size: 14pt;">Paris Vacation Itinerary</div>
+                <div style="font-size: 10pt;">April 15-18, 2024</div>
+                <br><br>
+                <div style="font-size: 12pt;">DAY 1 - APRIL 15TH</div>
+                <div style="font-size: 9pt;">8:00 AM Arrive at Charles de Gaulle Airport</div>
+                <div style="font-size: 11pt;">10:00 AM Check into Hotel Rivoli 107 Rue de Rivoli, 75001 Paris</div>
+                <div style="font-size: 13pt;">12:00 PM Lunch at Café de Flore 172 Boulevard Saint-Germain</div>
+                <div style="font-size: 10pt;">2:00 PM Visit Louvre Museum Rue de Rivoli, 75001 Paris</div>
+                <div style="font-size: 14pt;">6:00 PM Dinner at Le Comptoir du Relais 9 Carrefour de l'Odéon</div>
+                <br>
+                <div style="font-size: 15pt;">DAY 2 - APRIL 16TH</div>
+                <div style="font-size: 8pt;">9:00 AM Breakfast at hotel</div>
+                <div style="font-size: 12pt;">10:30 AM Eiffel Tower Tour Champ de Mars, 5 Avenue Anatole France</div>
+                <div style="font-size: 9pt;">1:00 PM Lunch at Breizh Café 109 Rue Vieille du Temple</div>
+                <div style="font-size: 11pt;">3:00 PM Seine River Cruise Port de la Bourdonnais</div>
+                <div style="font-size: 13pt;">7:30 PM Dinner at L'Ami Jean 27 Rue Malar</div>
+                <br><br>
+                <div style="font-size: 11pt;">DAY 3 - APRIL 17TH</div>
+                <div style="font-size: 14pt;">9:30 AM Visit Notre-Dame Cathedral 6 Parvis Notre-Dame</div>
+                <div style="font-size: 10pt;">11:30 AM Walk through Latin Quarter Rue de la Huchette area</div>
+                <div style="font-size: 12pt;">1:30 PM Lunch at Le Procope 13 Rue de l'Ancienne Comédie</div>
+                <div style="font-size: 8pt;">3:30 PM Musée d'Orsay 1 Rue de la Légion d'Honneur</div>
+                <div style="font-size: 15pt;">8:00 PM Dinner at Le Grand Véfour 17 Rue de Beaujolais</div>
+                <br>
+                <div style="font-size: 13pt;">DAY 4 - APRIL 18TH</div>
+                <div style="font-size: 11pt;">10:00 AM Check out of hotel</div>
+                <div style="font-size: 9pt;">11:00 AM Last minute shopping at Champs-Élysées</div>
+                <div style="font-size: 12pt;">1:00 PM Lunch at Ladurée 75 Avenue des Champs-Élysées</div>
+                <div style="font-size: 10pt;">3:00 PM Depart for airport</div>
+                <div style="font-size: 14pt;">6:00 PM Flight departure</div>
+            </div>
+
+            <h3>Expected Outcome:</h3>
+            <div class="expected-content">
+                <div style="text-align: center; font-size: 20pt; font-weight: bold; margin-bottom: 10px;">Paris Vacation Itinerary</div>
+                <div style="text-align: center; font-size: 14pt; margin-bottom: 25px;">April 15-18, 2024</div>
+                
+                <div style="font-size: 16pt; font-weight: bold; margin: 20px 0 10px 0;">DAY 1 - APRIL 15TH</div>
+                <ul class="proper-bullets">
+                    <li><strong>8:00 AM</strong> - Arrive at Charles de Gaulle Airport</li>
+                    <li><strong>10:00 AM</strong> - Check into Hotel Rivoli <em>(107 Rue de Rivoli, 75001 Paris)</em></li>
+                    <li><strong>12:00 PM</strong> - Lunch at Café de Flore <em>(172 Boulevard Saint-Germain)</em></li>
+                    <li><strong>2:00 PM</strong> - Visit Louvre Museum <em>(Rue de Rivoli, 75001 Paris)</em></li>
+                    <li><strong>6:00 PM</strong> - Dinner at Le Comptoir du Relais <em>(9 Carrefour de l'Odéon)</em></li>
+                </ul>
+                
+                <div style="font-size: 16pt; font-weight: bold; margin: 20px 0 10px 0;">DAY 2 - APRIL 16TH</div>
+                <ul class="proper-bullets">
+                    <li><strong>9:00 AM</strong> - Breakfast at hotel</li>
+                    <li><strong>10:30 AM</strong> - Eiffel Tower Tour <em>(Champ de Mars, 5 Avenue Anatole France)</em></li>
+                    <li><strong>1:00 PM</strong> - Lunch at Breizh Café <em>(109 Rue Vieille du Temple)</em></li>
+                    <li><strong>3:00 PM</strong> - Seine River Cruise <em>(Port de la Bourdonnais)</em></li>
+                    <li><strong>7:30 PM</strong> - Dinner at L'Ami Jean <em>(27 Rue Malar)</em></li>
+                </ul>
+                
+                <div style="font-size: 16pt; font-weight: bold; margin: 20px 0 10px 0;">DAY 3 - APRIL 17TH</div>
+                <ul class="proper-bullets">
+                    <li><strong>9:30 AM</strong> - Visit Notre-Dame Cathedral <em>(6 Parvis Notre-Dame)</em></li>
+                    <li><strong>11:30 AM</strong> - Walk through Latin Quarter <em>(Rue de la Huchette area)</em></li>
+                    <li><strong>1:30 PM</strong> - Lunch at Le Procope <em>(13 Rue de l'Ancienne Comédie)</em></li>
+                    <li><strong>3:30 PM</strong> - Musée d'Orsay <em>(1 Rue de la Légion d'Honneur)</em></li>
+                    <li><strong>8:00 PM</strong> - Dinner at Le Grand Véfour <em>(17 Rue de Beaujolais)</em></li>
+                </ul>
+                
+                <div style="font-size: 16pt; font-weight: bold; margin: 20px 0 10px 0;">DAY 4 - APRIL 18TH</div>
+                <ul class="proper-bullets">
+                    <li><strong>10:00 AM</strong> - Check out of hotel</li>
+                    <li><strong>11:00 AM</strong> - Last minute shopping at Champs-Élysées</li>
+                    <li><strong>1:00 PM</strong> - Lunch at Ladurée <em>(75 Avenue des Champs-Élysées)</em></li>
+                    <li><strong>3:00 PM</strong> - Depart for airport</li>
+                    <li><strong>6:00 PM</strong> - Flight departure</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-navigation" style="margin-top: 40px;">
+        <span class="page-nav-btn current">Complete Activities Collection</span>
+        <a href="index.html" class="page-nav-btn">← Back to Home</a>
+    </div>
+
+    <div style="text-align: center; padding: 30px; color: #666;">
+        <p><strong>🎉 Congratulations!</strong> You've completed all 15 Word 365 formatting activities!</p>
+        <p>You've mastered essential document formatting skills! 📝✨</p>
+        <p><strong>Skills Practiced:</strong> Text alignment, font consistency, spacing, bullets, tables, headers, and professional document structure!</p>
+    </div>
+    
+    <div class="warning">
+        <strong>Remember:</strong> The goal is to learn proper Word formatting techniques. Always use the built-in tools and styles rather than manual formatting with spaces, enters, and manual font changes!
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            
+            // Create a temporary container to properly extract formatted text
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = element.innerHTML;
+            
+            // Convert HTML formatting to plain text but preserve the visual layout
+            const text = tempDiv.innerText || tempDiv.textContent;
+            
+            navigator.clipboard.writeText(text).then(function() {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                button.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = '#0078d4';
+                }, 2000);
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    const button = event.target;
+                    const originalText = button.textContent;
+                    button.textContent = '✓ Copied!';
+                    button.style.background = '#28a745';
+                    
+                    setTimeout(function() {
+                        button.textContent = originalText;
+                        button.style.background = '#0078d4';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Fallback: Could not copy text: ', err);
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Prevent copying from expected outcome sections
+        document.querySelectorAll('.expected-content').forEach(section => {
+            section.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            section.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            section.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            section.addEventListener('copy', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

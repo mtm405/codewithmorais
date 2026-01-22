@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Programming Crossword Puzzle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .student-info {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .student-info div {
+            border-bottom: 2px solid #000;
+            padding: 5px 10px;
+            min-width: 200px;
+            font-size: 1.1em;
+        }
+
+        .instructions {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .instructions strong {
+            color: #856404;
+        }
+
+        .crossword-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .puzzle-section {
+            grid-column: 1 / 2;
+        }
+
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 40px);
+            grid-template-rows: repeat(15, 40px);
+            gap: 0;
+            margin: 0 auto;
+            width: fit-content;
+            border: 3px solid #000;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            position: relative;
+            background: white;
+        }
+
+        .cell.black {
+            background: #000;
+            border: 2px solid #000;
+        }
+
+        .cell .number {
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .clues-section {
+            grid-column: 2 / 3;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            align-content: start;
+        }
+
+        .clues {
+            margin-bottom: 30px;
+        }
+
+        .clues h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+
+        .clues ol {
+            padding-left: 25px;
+        }
+
+        .clues li {
+            margin: 12px 0;
+            line-height: 1.6;
+            font-size: 1.05em;
+        }
+
+        .print-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s ease;
+        }
+
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 15px;
+                margin: 0;
+            }
+
+            .print-button {
+                display: none;
+            }
+
+            .header {
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+                margin-bottom: 5px;
+            }
+
+            .student-info {
+                margin-top: 8px;
+                gap: 15px;
+                font-size: 0.9em;
+            }
+
+            .student-info div {
+                min-width: 150px;
+                padding: 3px 5px;
+            }
+
+            .instructions {
+                padding: 8px 12px;
+                margin: 10px 0;
+                font-size: 0.9em;
+            }
+
+            .crossword-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                margin-top: 10px;
+            }
+
+            .puzzle-section {
+                grid-column: 1 / 2;
+            }
+
+            .clues-section {
+                grid-column: 2 / 3;
+            }
+
+            .crossword-grid {
+                grid-template-columns: repeat(13, 28px);
+                grid-template-rows: repeat(15, 28px);
+            }
+
+            .cell {
+                width: 28px;
+                height: 28px;
+                border: 2px solid #000;
+            }
+
+            .cell.black {
+                background: #000;
+                border: 2px solid #000;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .cell .number {
+                font-size: 7px;
+                top: 1px;
+                left: 2px;
+            }
+
+            .clues h3 {
+                font-size: 1.1em;
+                margin-bottom: 8px;
+                padding-bottom: 3px;
+            }
+
+            .clues {
+                margin-bottom: 15px;
+            }
+
+            .clues ol {
+                padding-left: 18px;
+            }
+
+            .clues li {
+                margin: 5px 0;
+                font-size: 0.85em;
+                line-height: 1.3;
+            }
+
+
+        }
+
+        @media (max-width: 768px) {
+            .crossword-container {
+                flex-direction: column;
+            }
+
+            .crossword-grid {
+                grid-template-columns: repeat(13, 30px);
+                grid-template-rows: repeat(15, 30px);
+            }
+
+            .cell {
+                width: 30px;
+                height: 30px;
+            }
+
+            .cell .number {
+                font-size: 8px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐍 Python Programming Crossword Puzzle</h1>
+            <div class="student-info">
+                <div><strong>Name:</strong> _________________________</div>
+                <div><strong>Date:</strong> _________________________</div>
+                <div><strong>Period:</strong> _________________________</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <strong>📋 Directions:</strong> Fill in the crossword puzzle using Python programming terms. Use the clues below and the word bank to help you. All answers should be written in CAPITAL LETTERS.
+        </div>
+
+        <button class="print-button" onclick="window.print()">🖨️ Print This Puzzle</button>
+
+        <div class="crossword-container">
+            <div class="puzzle-section">
+                <div class="crossword-grid" id="crosswordGrid"></div>
+            </div>
+
+            <div class="clues-section">
+                <div class="clues">
+                    <h3>ACROSS ➡️</h3>
+                    <ol>
+                        <li><strong>1.</strong> Function to display output (5)</li>
+                        <li><strong>5.</strong> Decision statement (2)</li>
+                        <li><strong>6.</strong> Get user input (5)</li>
+                        <li><strong>8.</strong> Whole number type (7)</li>
+                        <li><strong>10.</strong> Decimal number type (5)</li>
+                        <li><strong>12.</strong> Used to repeat code (4)</li>
+                        <li><strong>14.</strong> Collection in square brackets (4)</li>
+                        <li><strong>15.</strong> Position in a list (5)</li>
+                        <li><strong>16.</strong> Add to end of list (6)</li>
+                        <li><strong>17.</strong> Otherwise condition (4)</li>
+                    </ol>
+                </div>
+
+                <div class="clues">
+                    <h3>DOWN ⬇️</h3>
+                    <ol>
+                        <li><strong>1.</strong> The language name (6)</li>
+                        <li><strong>2.</strong> Text in quotes (6)</li>
+                        <li><strong>3.</strong> Stores a value (8)</li>
+                        <li><strong>4.</strong> True or False type (7)</li>
+                        <li><strong>7.</strong> Convert to number (3)</li>
+                        <li><strong>9.</strong> Loop with 'in' keyword (3)</li>
+                        <li><strong>11.</strong> Number of items (3)</li>
+                        <li><strong>13.</strong> Generate numbers (5)</li>
+                        <li><strong>14.</strong> Define function keyword (3)</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        // Crossword grid layout - 13x13 grid
+        // ACROSS: 1.PRINT 5.IF 6.INPUT 8.INTEGER 10.FLOAT 12.LOOP 14.LIST 15.INDEX 16.APPEND 17.ELSE
+        // DOWN: 1.PYTHON 2.STRING 3.VARIABLE 4.BOOLEAN 7.INT 9.FOR 11.LEN 13.RANGE 14.DEF
+        const gridLayout = [
+            // Row 0: PRINT starts, STRING down, VARIABLE down
+            [{num: 1, black: false}, {num: 0, black: false}, {num: 2, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 3, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}],
+            // Row 1
+            [{num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 4, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 2
+            [{num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 3: IF starts, INPUT starts
+            [{num: 0, black: false}, {num: 5, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 6, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 4
+            [{num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 7, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 5
+            [{num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 6: INTEGER starts, FOR starts
+            [{num: 8, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 9, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 7
+            [{num: 0, black: true}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 8: FLOAT starts, LEN starts
+            [{num: 10, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 11, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 9
+            [{num: 0, black: true}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 10: LOOP starts, RANGE starts
+            [{num: 12, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 13, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 11
+            [{num: 0, black: true}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 12: LIST starts, DEF down
+            [{num: 14, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 13: INDEX starts
+            [{num: 15, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}, {num: 0, black: true}],
+            // Row 14: APPEND starts, ELSE starts
+            [{num: 16, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 17, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: false}, {num: 0, black: true}, {num: 0, black: true}]
+        ];
+
+        // Generate the crossword grid
+        function generateCrossword() {
+            const grid = document.getElementById('crosswordGrid');
+            
+            gridLayout.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = 'cell';
+                    
+                    if (cell.black) {
+                        cellDiv.classList.add('black');
+                    } else {
+                        if (cell.num > 0) {
+                            const numSpan = document.createElement('span');
+                            numSpan.className = 'number';
+                            numSpan.textContent = cell.num;
+                            cellDiv.appendChild(numSpan);
+                        }
+                    }
+                    
+                    grid.appendChild(cellDiv);
+                });
+            });
+        }
+
+        // Initialize on page load
+        window.onload = generateCrossword;
+    </script>
+</body>
+</html>

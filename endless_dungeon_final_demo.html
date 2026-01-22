@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ The Endless Dungeon - Final Product Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 40px 30px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.1em;
+        }
+
+        .final-product-page {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            border: 2px solid #6366f1;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .final-product-page h2 {
+            color: #6366f1;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .final-product-page > p {
+            color: #555;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .terminal-output {
+            background: #f8f8f8;
+            border: 2px solid #6366f1;
+            border-radius: 5px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            line-height: 2;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            margin: 8px 0;
+        }
+
+        .terminal-input {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .terminal-success {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .terminal-damage {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .code-files {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .code-files {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .code-file {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #6366f1;
+        }
+
+        .code-file h3 {
+            color: #6366f1;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        pre {
+            background: #f8f8f8 !important;
+            padding: 20px !important;
+            border-radius: 5px !important;
+            border-left: 4px solid #6366f1 !important;
+            color: #333 !important;
+            overflow-x: auto !important;
+        }
+
+        code {
+            color: #333 !important;
+            font-family: 'Courier New', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.6 !important;
+        }
+
+        .hljs {
+            background: transparent !important;
+            color: #333 !important;
+        }
+
+        .hljs-string {
+            color: #059669 !important;
+        }
+
+        .hljs-number {
+            color: #d97706 !important;
+        }
+
+        .hljs-literal {
+            color: #d97706 !important;
+        }
+
+        .hljs-attr {
+            color: #6366f1 !important;
+        }
+
+        .hljs-title {
+            color: #6366f1 !important;
+        }
+
+        .hljs-keyword {
+            color: #dc2626 !important;
+        }
+
+        .hljs-built_in {
+            color: #6366f1 !important;
+        }
+
+        .hljs-comment {
+            color: #999 !important;
+        }
+
+        .section {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #dc2626;
+            margin-top: 30px;
+        }
+
+        .section h2 {
+            color: #6366f1;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .section p {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .section ul {
+            margin-left: 20px;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        .section li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #6366f1;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: #4f46e5;
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="endless_dungeon_classroom.html" class="back-link">← Back to Instructions</a>
+
+        <div class="header">
+            <h1>⚔️ THE ENDLESS DUNGEON ⚔️</h1>
+            <p>✨ Final Product Demo - Show This AFTER Students Complete the Activity</p>
+        </div>
+
+        <div class="final-product-page">
+            <h2>🎮 What Your Game Looks Like</h2>
+            
+            <p>When students finish building their game and run <span class="highlight">main.py</span>, this is what they will see:</p>
+
+            <div class="terminal-output">
+                <div class="terminal-line">⚔️ WELCOME TO THE DUNGEON ⚔️</div>
+                <div class="terminal-line">A wild Dragon appears with 18 HP!</div>
+                <div class="terminal-line"></div>
+                <div class="terminal-line terminal-input">Press Enter to attack...</div>
+                <div class="terminal-line">🎲 You rolled: 14</div>
+                <div class="terminal-line terminal-success">✅ HIT! You dealt 7 damage!</div>
+                <div class="terminal-line terminal-damage">⚡ Dragon hits you for 4 damage!</div>
+                <div class="terminal-line">You have 46 HP left.</div>
+                <div class="terminal-line"></div>
+                <div class="terminal-line terminal-input">Press Enter to attack...</div>
+                <div class="terminal-line">🎲 You rolled: 19</div>
+                <div class="terminal-line terminal-success">✅ HIT! You dealt 9 damage!</div>
+                <div class="terminal-line terminal-damage">⚡ Dragon hits you for 4 damage!</div>
+                <div class="terminal-line">You have 42 HP left.</div>
+                <div class="terminal-line"></div>
+                <div class="terminal-line terminal-input">Press Enter to attack...</div>
+                <div class="terminal-line">🎲 You rolled: 17</div>
+                <div class="terminal-line terminal-success">✅ HIT! You dealt 8 damage!</div>
+                <div class="terminal-line" style="color: #10b981; font-weight: bold;">🎉 YOU WON! THE MONSTER IS DEFEATED!</div>
+                <div class="terminal-line" style="color: #d97706; font-weight: bold;">💎 You found: Gold</div>
+            </div>
+
+            <h2>📝 The Complete Code Files</h2>
+            
+            <div class="code-files">
+                <div class="code-file">
+                    <h3>🎲 dice_master.py</h3>
+                    <pre><code class="language-python">import random
+
+def roll_d20():
+    """Returns a random integer between 1 and 20"""
+    return random.randint(1, 20)
+
+def roll_damage(min_dmg, max_dmg):
+    """Returns a random integer between min and max"""
+    return random.randint(min_dmg, max_dmg)
+
+if __name__ == "__main__":
+    print("Testing D20 Roll:", roll_d20())</code></pre>
+                </div>
+
+                <div class="code-file">
+                    <h3>🐉 encounters.py</h3>
+                    <pre><code class="language-python">import random
+
+def get_random_monster():
+    """Returns a dictionary with monster stats"""
+    names = ["Goblin", "Skeleton", "Slime", "Dragon"]
+    
+    monster = {
+        "name": random.choice(names),
+        "hp": random.randint(10, 20),
+        "strength": random.randint(2, 5)
+    }
+    return monster
+
+if __name__ == "__main__":
+    print("Testing Monster Gen:", get_random_monster())</code></pre>
+                </div>
+
+                <div class="code-file">
+                    <h3>💰 treasure.py</h3>
+                    <pre><code class="language-python">import random
+
+def search_chest():
+    """Returns a string item or None"""
+    chance = random.random()
+    
+    if chance < 0.20:
+        return "Potion"
+    elif chance < 0.50:
+        return "Gold"
+    else:
+        return None
+
+if __name__ == "__main__":
+    print("Testing Chest:", search_chest())</code></pre>
+                </div>
+
+                <div class="code-file">
+                    <h3>👑 main.py</h3>
+                    <pre><code class="language-python">import dice_master
+import encounters
+import treasure
+
+player_hp = 50
+
+print("⚔️ WELCOME TO THE DUNGEON ⚔️")
+
+# 1. SPAWN A MONSTER
+enemy = encounters.get_random_monster()
+print(f"A wild {enemy['name']} appears with {enemy['hp']} HP!")
+
+# 2. THE COMBAT LOOP
+while player_hp > 0 and enemy['hp'] > 0:
+    input("Press Enter to attack...")
+    
+    # PLAYER ATTACKS
+    roll = dice_master.roll_d20()
+    
+    if roll >= 10:
+        dmg = dice_master.roll_damage(5, 10)
+        enemy['hp'] = enemy['hp'] - dmg
+        print(f"✅ HIT! You dealt {dmg} damage!")
+    else:
+        print("❌ You missed!")
+        
+    # MONSTER ATTACKS
+    if enemy['hp'] > 0:
+        player_hp -= enemy['strength']
+        print(f"⚡ {enemy['name']} hits you for {enemy['strength']} damage!")
+        print(f"You have {player_hp} HP left.")
+
+# 3. END GAME
+if player_hp > 0:
+    print("🎉 YOU WON!")
+    loot = treasure.search_chest()
+    print(f"💎 You found: {loot}")
+else:
+    print("💀 GAME OVER.")</code></pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎯 What Students Built</h2>
+                <p>This is the complete, working game. Your students worked as a team to:</p>
+                <ul>
+                    <li><strong>Roles 1-3:</strong> Built the modules by understanding how to use the random library and create functions</li>
+                    <li><strong>Role 4:</strong> Combined them into a working game using imports</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>When they run <span class="highlight">main.py</span>, it imports all three modules and plays this exact game!</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Highlight code on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('code').forEach(code => {
+                hljs.highlightElement(code);
+            });
+        });
+    </script>
+</body>
+</html>

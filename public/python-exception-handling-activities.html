@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Exception Handling - Practice Activities 🎯</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .student-info {
+            background: linear-gradient(135deg, #74b9ff 0%, #a29bfe 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .student-info h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-field label {
+            display: block;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .submit-section {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .submit-section h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .btn-submit {
+            background: white;
+            color: #00b894;
+            border: none;
+            padding: 20px 60px;
+            border-radius: 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 3px solid #28a745;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            font-size: 1.2em;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 3px solid #dc3545;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            font-size: 1.2em;
+        }
+
+        .activity-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .activity-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .activity-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .activity-header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .code-block {
+            background: #2d3436;
+            color: #00ff00;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .keyword {
+            color: #ff79c6;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #f1fa8c;
+        }
+
+        .comment {
+            color: #6272a4;
+        }
+
+        .function {
+            color: #50fa7b;
+        }
+
+        .error {
+            color: #ff5555;
+            font-weight: bold;
+        }
+
+        .blank {
+            color: #ffeaa7;
+            background: rgba(255, 234, 167, 0.2);
+            padding: 2px 15px;
+            border-radius: 4px;
+            border: 2px dashed #ffeaa7;
+        }
+
+        .question {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 6px solid #667eea;
+            font-size: 1.15em;
+        }
+
+        .question strong {
+            color: #667eea;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .option {
+            background: white;
+            border: 3px solid #dfe6e9;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-3px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            background: #f8f9fa;
+            border: 3px solid #dfe6e9;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            margin: 10px 0;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        textarea {
+            background: #f8f9fa;
+            border: 3px solid #dfe6e9;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            min-height: 150px;
+            margin: 10px 0;
+            resize: vertical;
+            transition: border-color 0.3s;
+            line-height: 1.6;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 6px solid #f39c12;
+            font-size: 1.1em;
+        }
+
+        .instructions strong {
+            color: #d35400;
+        }
+
+        .hint {
+            background: linear-gradient(135deg, #74b9ff 0%, #a29bfe 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 1em;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .nav-buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .section-divider {
+            text-align: center;
+            margin: 50px 0 30px 0;
+            position: relative;
+        }
+
+        .section-divider h2 {
+            color: white;
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 50px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .btn {
+                display: none;
+            }
+            .nav-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐍 Python Exception Handling</h1>
+            <p>Practice Activities & Exercises</p>
+        </div>
+
+        <!-- Student Information -->
+        <div class="activity-card student-info">
+            <h3>👤 Student Information</h3>
+            <div class="info-grid">
+                <div class="info-field">
+                    <label for="studentName">Full Name: *</label>
+                    <input type="text" id="studentName" placeholder="Enter your full name" required>
+                </div>
+                <div class="info-field">
+                    <label for="studentEmail">Email:</label>
+                    <input type="text" id="studentEmail" placeholder="Enter your email (optional)">
+                </div>
+                <div class="info-field">
+                    <label for="studentPeriod">Class Period: *</label>
+                    <input type="text" id="studentPeriod" placeholder="e.g., Period 3" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Error Type Identification -->
+        <div class="section-divider">
+            <h2>🔍 Section 1: Identify the Error Type</h2>
+        </div>
+
+        <div class="activity-card">
+            <div class="activity-header">
+                <h2>Activity 1: Name That Error! 🎯</h2>
+                <p>Look at each code snippet and identify which type of error it will cause.</p>
+            </div>
+
+            <div class="instructions">
+                <strong>Instructions:</strong> For each code example below, write which error type will occur: <code>NameError</code>, <code>TypeError</code>, <code>ValueError</code>, or <code>ZeroDivisionError</code>
+            </div>
+
+            <div class="question">
+                <strong>Question 1:</strong>
+                <div class="code-block">
+<span class="function">print</span>(my_variable)
+                </div>
+                <strong>Error Type:</strong>
+                <input type="text" id="errorTypeQ1" placeholder="Type your answer here...">
+            </div>
+
+            <div class="question">
+                <strong>Question 2:</strong>
+                <div class="code-block">
+age = <span class="string">25</span><br>
+name = <span class="string">"Alice"</span><br>
+result = age + name
+                </div>
+                <strong>Error Type:</strong>
+                <input type="text" id="errorTypeQ2" placeholder="Type your answer here...">
+            </div>
+
+            <div class="question">
+                <strong>Question 3:</strong>
+                <div class="code-block">
+score = <span class="function">int</span>(<span class="string">"ninety-five"</span>)
+                </div>
+                <strong>Error Type:</strong>
+                <input type="text" id="errorTypeQ3" placeholder="Type your answer here...">
+            </div>
+
+            <div class="question">
+                <strong>Question 4:</strong>
+                <div class="code-block">
+total = <span class="string">100</span><br>
+students = <span class="string">0</span><br>
+average = total / students
+                </div>
+                <strong>Error Type:</strong>
+                <input type="text" id="errorTypeQ4" placeholder="Type your answer here...">
+            </div>
+
+            <div class="question">
+                <strong>Question 5:</strong>
+                <div class="code-block">
+<span class="function">print</span>(<span class="string">"Hello"</span> * <span class="string">"World"</span>)
+                </div>
+                <strong>Error Type:</strong>
+                <input type="text" id="errorTypeQ5" placeholder="Type your answer here...">
+            </div>
+        </div>
+
+        <!-- Section 2: Fill in the Blanks -->
+        <div class="section-divider">
+            <h2>✏️ Section 2: Fill in the Blanks</h2>
+        </div>
+
+        <div class="activity-card">
+            <div class="activity-header">
+                <h2>Activity 2: Complete the Exception Handler 📝</h2>
+                <p>Fill in the missing keywords to create proper exception handling.</p>
+            </div>
+
+            <div class="instructions">
+                <strong>Instructions:</strong> Fill in the blanks with the correct keywords: <code>try</code>, <code>except</code>, <code>else</code>, <code>finally</code>, <code>raise</code>
+            </div>
+
+            <div class="question">
+                <strong>Challenge 1:</strong> Basic exception handling
+                <div class="code-block">
+<span class="blank">________</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Testing code"</span>)<br>
+&nbsp;&nbsp;result = <span class="string">10</span> / <span class="string">2</span><br>
+<span class="blank">________</span> <span class="error">ZeroDivisionError</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Cannot divide by zero!"</span>)<br>
+<span class="blank">________</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Success!"</span>)<br>
+<span class="blank">________</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Cleanup complete"</span>)
+                </div>
+                <strong>Your Answer:</strong>
+                <textarea placeholder="Write the complete code with blanks filled in..."></textarea>
+            </div>
+
+            <div class="question">
+                <strong>Challenge 2:</strong> Raising an exception
+                <div class="code-block">
+age = <span class="string">-5</span><br>
+<br>
+<span class="keyword">if</span> age &lt; <span class="string">0</span>:<br>
+&nbsp;&nbsp;<span class="blank">________</span> <span class="error">ValueError</span>(<span class="string">"Age cannot be negative!"</span>)
+                </div>
+                <strong>Your Answer:</strong>
+                <input type="text" placeholder="Type the missing keyword...">
+            </div>
+
+            <div class="hint">
+                💡 <strong>Hint:</strong> Remember the order: try → except → else → finally
+            </div>
+        </div>
+
+        <!-- Section 3: Fix the Code -->
+        <div class="section-divider">
+            <h2>🔧 Section 3: Debug & Fix</h2>
+        </div>
+
+        <div class="activity-card">
+            <div class="activity-header">
+                <h2>Activity 3: Fix the Broken Code 🛠️</h2>
+                <p>Each code snippet has a problem. Rewrite it with proper exception handling.</p>
+            </div>
+
+            <div class="instructions">
+                <strong>Instructions:</strong> Add exception handling to make the code safe and prevent crashes.
+            </div>
+
+            <div class="question">
+                <strong>Broken Code 1:</strong>
+                <div class="code-block">
+user_input = <span class="function">input</span>(<span class="string">"Enter a number: "</span>)<br>
+number = <span class="function">int</span>(user_input)<br>
+<span class="function">print</span>(<span class="string">f"Your number is {number}"</span>)
+                </div>
+                <strong>Problem:</strong> What if the user types "hello" instead of a number?<br><br>
+                <strong>Your Fixed Code:</strong>
+                <textarea placeholder="Rewrite the code with try/except to handle ValueError..."></textarea>
+            </div>
+
+            <div class="question">
+                <strong>Broken Code 2:</strong>
+                <div class="code-block">
+numbers = [<span class="string">10</span>, <span class="string">20</span>, <span class="string">30</span>]<br>
+total = <span class="function">sum</span>(numbers)<br>
+count = <span class="function">len</span>(numbers)<br>
+average = total / count<br>
+<span class="function">print</span>(<span class="string">f"Average: {average}"</span>)
+                </div>
+                <strong>Problem:</strong> What if the list is empty?<br><br>
+                <strong>Your Fixed Code:</strong>
+                <textarea placeholder="Add exception handling for ZeroDivisionError..."></textarea>
+            </div>
+
+            <div class="question">
+                <strong>Broken Code 3:</strong>
+                <div class="code-block">
+data = <span class="string">"100"</span><br>
+value = <span class="function">int</span>(data)<br>
+result = value + <span class="string">50</span><br>
+<span class="function">print</span>(result)
+                </div>
+                <strong>Problem:</strong> What if data = "abc" instead?<br><br>
+                <strong>Your Fixed Code:</strong>
+                <textarea placeholder="Add try/except with else and finally blocks..."></textarea>
+            </div>
+        </div>
+
+        <!-- Section 4: Predict the Output -->
+        <div class="section-divider">
+            <h2>🔮 Section 4: Predict the Output</h2>
+        </div>
+
+        <div class="activity-card">
+            <div class="activity-header">
+                <h2>Activity 4: What Will Happen? 🤔</h2>
+                <p>Read each code snippet and predict the exact output.</p>
+            </div>
+
+            <div class="instructions">
+                <strong>Instructions:</strong> Write what you think will be printed to the console.
+            </div>
+
+            <div class="question">
+                <strong>Code 1:</strong>
+                <div class="code-block">
+<span class="keyword">try</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"A"</span>)<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">5</span> / <span class="string">0</span>)<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"B"</span>)<br>
+<span class="keyword">except</span> <span class="error">ZeroDivisionError</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"C"</span>)<br>
+<span class="keyword">else</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"D"</span>)<br>
+<span class="keyword">finally</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"E"</span>)
+                </div>
+                <strong>Predicted Output:</strong>
+                <textarea placeholder="Write the output line by line..."></textarea>
+            </div>
+
+            <div class="question">
+                <strong>Code 2:</strong>
+                <div class="code-block">
+<span class="keyword">try</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Start"</span>)<br>
+&nbsp;&nbsp;x = <span class="string">10</span><br>
+&nbsp;&nbsp;<span class="function">print</span>(x)<br>
+<span class="keyword">except</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Error"</span>)<br>
+<span class="keyword">else</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"Success"</span>)<br>
+<span class="keyword">finally</span>:<br>
+&nbsp;&nbsp;<span class="function">print</span>(<span class="string">"End"</span>)
+                </div>
+                <strong>Predicted Output:</strong>
+                <textarea placeholder="Write the output line by line..."></textarea>
+            </div>
+
+            <div class="question">
+                <strong>Code 3:</strong>
+                <div class="code-block">
+x = <span class="string">-10</span><br>
+<br>
+<span class="keyword">if</span> x &lt; <span class="string">0</span>:<br>
+&nbsp;&nbsp;<span class="keyword">raise</span> <span class="error">ValueError</span>(<span class="string">"Negative numbers not allowed"</span>)<br>
+<br>
+<span class="function">print</span>(<span class="string">"This line will not run"</span>)
+                </div>
+                <strong>Predicted Output:</strong>
+                <textarea placeholder="What error message will appear?"></textarea>
+            </div>
+        </div>
+
+        <!-- Section 5: Write Your Own -->
+        <div class="section-divider">
+            <h2>✍️ Section 5: Create Your Own</h2>
+        </div>
+
+        <div class="activity-card">
+            <div class="activity-header">
+                <h2>Activity 5: Build From Scratch 🚀</h2>
+                <p>Write complete exception handling code based on the requirements.</p>
+            </div>
+
+            <div class="question">
+                <strong>Challenge 1:</strong> Safe Division Calculator
+                <div class="instructions">
+                    Write a program that:
+                    <ul style="margin-left: 25px; margin-top: 10px;">
+                        <li>Takes two numbers (a and b)</li>
+                        <li>Tries to divide a by b</li>
+                        <li>Catches ZeroDivisionError with message "Cannot divide by zero!"</li>
+                        <li>Prints the result in the else block</li>
+                        <li>Prints "Calculation complete" in finally block</li>
+                    </ul>
+                </div>
+                <strong>Your Code:</strong>
+                <textarea placeholder="Write your complete code here..."></textarea>
+            </div>
+
+            <div class="question">
+                <strong>Challenge 2:</strong> Age Validator
+                <div class="instructions">
+                    Write a program that:
+                    <ul style="margin-left: 25px; margin-top: 10px;">
+                        <li>Prompts user for their age</li>
+                        <li>Converts input to integer (handle ValueError)</li>
+                        <li>If age < 0 or age > 120, raise ValueError with appropriate message</li>
+                        <li>If valid, print "Valid age: [age]"</li>
+                    </ul>
+                </div>
+                <strong>Your Code:</strong>
+                <textarea placeholder="Write your complete code here..."></textarea>
+            </div>
+
+            <div class="question">
+                <strong>Challenge 3:</strong> Multi-Exception Handler
+                <div class="instructions">
+                    Write a program that handles THREE different exceptions:
+                    <ul style="margin-left: 25px; margin-top: 10px;">
+                        <li>NameError: trying to use undefined variable</li>
+                        <li>TypeError: adding incompatible types</li>
+                        <li>ValueError: converting invalid string to int</li>
+                        <li>Each exception should have its own specific error message</li>
+                    </ul>
+                </div>
+                <strong>Your Code:</strong>
+                <textarea placeholder="Write your complete code here..."></textarea>
+            </div>
+
+            <div class="hint">
+                💡 <strong>Bonus Challenge:</strong> Can you add an else block that only runs if NO errors occurred?
+            </div>
+        </div>
+
+        <!-- Section 6: True or False -->
+        <div class="section-divider">
+            <h2>✅ Section 6: True or False</h2>
+        </div>
+
+        <div class="activity-card">
+            <div class="activity-header">
+                <h2>Activity 6: Test Your Knowledge 📚</h2>
+                <p>Determine if each statement is true or false.</p>
+            </div>
+
+            <div class="question">
+                <strong>Statement 1:</strong> The 'except' block always runs, even if there's no error.
+                <div class="options">
+                    <div class="option" onclick="selectTrueFalse(this, 'q1', 'True')">True</div>
+                    <div class="option" onclick="selectTrueFalse(this, 'q1', 'False')">False</div>
+                </div>
+                <input type="hidden" id="q1" name="q1">
+            </div>
+
+            <div class="question">
+                <strong>Statement 2:</strong> The 'finally' block executes no matter what happens.
+                <div class="options">
+                    <div class="option" onclick="selectTrueFalse(this, 'q2', 'True')">True</div>
+                    <div class="option" onclick="selectTrueFalse(this, 'q2', 'False')">False</div>
+                </div>
+                <input type="hidden" id="q2" name="q2">
+            </div>
+
+            <div class="question">
+                <strong>Statement 3:</strong> You can have multiple 'except' blocks for different error types.
+                <div class="options">
+                    <div class="option" onclick="selectTrueFalse(this, 'q3', 'True')">True</div>
+                    <div class="option" onclick="selectTrueFalse(this, 'q3', 'False')">False</div>
+                </div>
+                <input type="hidden" id="q3" name="q3">
+            </div>
+
+            <div class="question">
+                <strong>Statement 4:</strong> The 'else' block runs when an error occurs.
+                <div class="options">
+                    <div class="option" onclick="selectTrueFalse(this, 'q4', 'True')">True</div>
+                    <div class="option" onclick="selectTrueFalse(this, 'q4', 'False')">False</div>
+                </div>
+                <input type="hidden" id="q4" name="q4">
+            </div>
+
+            <div class="question">
+                <strong>Statement 5:</strong> 'raise' is used to intentionally throw an exception.
+                <div class="options">
+                    <div class="option" onclick="selectTrueFalse(this, 'q5', 'True')">True</div>
+                    <div class="option" onclick="selectTrueFalse(this, 'q5', 'False')">False</div>
+                </div>
+                <input type="hidden" id="q5" name="q5">
+            </div>
+
+            <div class="question">
+                <strong>Statement 6:</strong> A 'NameError' occurs when you try to divide by zero.
+                <div class="options">
+                    <div class="option" onclick="selectTrueFalse(this, 'q6', 'True')">True</div>
+                    <div class="option" onclick="selectTrueFalse(this, 'q6', 'False')">False</div>
+                </div>
+                <input type="hidden" id="q6" name="q6">
+            </div>
+
+            <div class="question">
+                <strong>Statement 7:</strong> You must always include an 'else' block in exception handling.
+                <div class="options">
+                    <div class="option" onclick="selectTrueFalse(this, 'q7', 'True')">True</div>
+                    <div class="option" onclick="selectTrueFalse(this, 'q7', 'False')">False</div>
+                </div>
+                <input type="hidden" id="q7" name="q7">
+            </div>
+
+            <div class="question">
+                <strong>Statement 8:</strong> 'TypeError' occurs when operations use wrong data types.
+                <div class="options">
+                    <div class="option" onclick="selectTrueFalse(this, 'q8', 'True')">True</div>
+                    <div class="option" onclick="selectTrueFalse(this, 'q8', 'False')">False</div>
+                </div>
+                <input type="hidden" id="q8" name="q8">
+            </div>
+        </div>
+
+        <!-- Submit Section -->
+        <div class="activity-card submit-section">
+            <h3>📤 Submit Your Work</h3>
+            <p style="color: white; margin-bottom: 20px; font-size: 1.1em;">Click below to submit all your answers to your teacher</p>
+            <button class="btn-submit" onclick="submitAnswers()">Submit All Answers</button>
+            <div class="success-message" id="successMessage">✅ Success! Your answers have been submitted to your teacher.</div>
+            <div class="error-message" id="errorMessage">❌ Please fill in your name and class period before submitting.</div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <button class="btn" onclick="window.location.href='python-exception-handling.html'">← Back to Lesson</button>
+            <button class="btn" onclick="window.print()">🖨️ Print Worksheet</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXKDA8pjLQLeNlOEUD6tD5y5TtAGQD6NE",
+            authDomain: "code-with-morais-405.firebaseapp.com",
+            projectId: "code-with-morais-405",
+            storageBucket: "code-with-morais-405.firebasestorage.app",
+            messagingSenderId: "241626302672",
+            appId: "1:241626302672:web:14f9a90ef90dabb1be6d24"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Handle True/False button clicks
+        function selectTrueFalse(element, questionId, value) {
+            // Remove selected class from siblings
+            const parent = element.parentElement;
+            const options = parent.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store value in hidden input
+            document.getElementById(questionId).value = value;
+        }
+
+        // Collect all answers
+        function collectAnswers() {
+            const answers = {
+                studentInfo: {
+                    name: document.getElementById('studentName').value.trim(),
+                    email: document.getElementById('studentEmail').value.trim(),
+                    period: document.getElementById('studentPeriod').value.trim()
+                },
+                section1: {
+                    q1: document.querySelectorAll('#errorTypeQ1')[0]?.value || '',
+                    q2: document.querySelectorAll('#errorTypeQ2')[0]?.value || '',
+                    q3: document.querySelectorAll('#errorTypeQ3')[0]?.value || '',
+                    q4: document.querySelectorAll('#errorTypeQ4')[0]?.value || '',
+                    q5: document.querySelectorAll('#errorTypeQ5')[0]?.value || ''
+                },
+                section2: {
+                    challenge1: document.querySelectorAll('textarea')[0]?.value || '',
+                    challenge2: document.querySelectorAll('input[type="text"]')[3]?.value || ''
+                },
+                section3: {
+                    fix1: document.querySelectorAll('textarea')[1]?.value || '',
+                    fix2: document.querySelectorAll('textarea')[2]?.value || '',
+                    fix3: document.querySelectorAll('textarea')[3]?.value || ''
+                },
+                section4: {
+                    predict1: document.querySelectorAll('textarea')[4]?.value || '',
+                    predict2: document.querySelectorAll('textarea')[5]?.value || '',
+                    predict3: document.querySelectorAll('textarea')[6]?.value || ''
+                },
+                section5: {
+                    create1: document.querySelectorAll('textarea')[7]?.value || '',
+                    create2: document.querySelectorAll('textarea')[8]?.value || '',
+                    create3: document.querySelectorAll('textarea')[9]?.value || ''
+                },
+                section6: {
+                    q1: document.getElementById('q1').value,
+                    q2: document.getElementById('q2').value,
+                    q3: document.getElementById('q3').value,
+                    q4: document.getElementById('q4').value,
+                    q5: document.getElementById('q5').value,
+                    q6: document.getElementById('q6').value,
+                    q7: document.getElementById('q7').value,
+                    q8: document.getElementById('q8').value
+                },
+                timestamp: new Date().toISOString(),
+                submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            return answers;
+        }
+
+        // Submit answers to Firestore
+        async function submitAnswers() {
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+            
+            // Hide previous messages
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+
+            const answers = collectAnswers();
+
+            // Validate required fields
+            if (!answers.studentInfo.name || !answers.studentInfo.period) {
+                errorMsg.style.display = 'block';
+                errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            try {
+                // Save to Firestore
+                await db.collection('pythonExceptionHandlingSubmissions').add(answers);
+                
+                successMsg.style.display = 'block';
+                successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                console.log('Answers submitted successfully!');
+            } catch (error) {
+                console.error('Error submitting answers:', error);
+                errorMsg.textContent = '❌ Error submitting. Please try again.';
+                errorMsg.style.display = 'block';
+                errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    </script>
+</body>
+</html>

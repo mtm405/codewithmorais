@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dream Career Project Guide | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --text-dark: #2d3748;
+            --text-light: #4a5568;
+            --bg-light: #f7fafc;
+            --bg-white: #ffffff;
+            --border-color: #e2e8f0;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --info-color: #4299e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--bg-light) 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: var(--bg-white);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            padding: 0.5rem;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .steps-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .step {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .step h3 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .step p, .step ul {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .step ul {
+            padding-left: 1.5rem;
+        }
+
+        .step li {
+            margin-bottom: 0.3rem;
+        }
+
+        .slide-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide-table th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .slide-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .slide-table tr:hover {
+            background-color: var(--bg-light);
+        }
+
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .career-category {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .career-category h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .career-category h4 i {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .career-item {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .career-item strong {
+            color: var(--text-dark);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff5f5, #fed7e2);
+            border: 1px solid #fc8181;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .highlight-box strong {
+            color: #c53030;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .back-nav {
+            margin-bottom: 1rem;
+        }
+
+        .back-nav a {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .back-nav a:hover {
+            background-color: var(--bg-light);
+            text-decoration: none;
+        }
+
+        .back-nav i {
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .slide-table {
+                font-size: 0.9rem;
+            }
+
+            .slide-table th,
+            .slide-table td {
+                padding: 0.8rem;
+            }
+        }
+
+        .emoji {
+            font-style: normal;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-nav">
+            <a href="index.html">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </div>
+
+        <div class="header">
+            <h1><i class="fas fa-briefcase"></i> My Dream Career Project Guide</h1>
+            <p>Create an awesome 5-7 slide PowerPoint presentation about the career you want to have when you grow up. Show off your research and PowerPoint skills!</p>
+        </div>
+
+        <!-- Part 1: Step-by-Step Instructions -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h2><span class="emoji">🚀</span> Part 1: Step-by-Step Instructions</h2>
+            </div>
+            <p style="margin-bottom: 1.5rem; color: var(--text-light); font-size: 1.1rem;">Follow these steps in order to complete your project:</p>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <h3>Step 1: Research Your Career (Find the Facts)</h3>
+                    <ul>
+                        <li><strong>Pick Your Job:</strong> Choose one job you are genuinely interested in. (See the career ideas section below!)</li>
+                        <li><strong>Find the Education:</strong> What kind of schooling or training do you need? (e.g., college degree, specific certificate, trade school, on-the-job training).</li>
+                        <li><strong>Find the Skills:</strong> What personality traits and abilities are needed? (e.g., patient, good at math, creative, good communicator).</li>
+                        <li><strong>Find the Money:</strong> What is the average yearly salary? (You can use terms like "Starting Salary" or "Average Salary.")</li>
+                        <li><strong>Find the Future:</strong> Will this job be in demand in the next 10 years? Will it be easy or hard to find a job?</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h3>Step 2: Organize Your Slides (Plan the Flow)</h3>
+                    <ul>
+                        <li><strong>Title Slide:</strong> Write your job title and your name.</li>
+                        <li><strong>Overview Slide:</strong> List the job description and 3 main responsibilities.</li>
+                        <li><strong>The Journey (Flow Chart Slide):</strong> Create your Flow Chart showing the steps.</li>
+                        <li><strong>Money & Future Slide:</strong> Put the salary and job outlook here.</li>
+                        <li><strong>Conclusion Slide:</strong> Summarize why this career is a great choice for you.</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h3>Step 3: Create Your Presentation (Design & Build)</h3>
+                    <div class="highlight-box">
+                        <strong>Start with the Flow Chart (Mandatory!):</strong> Use the SmartArt or Shapes tool in PowerPoint to create a process graphic or flow chart showing the steps from "Now" to "Working in my Career." (Example steps: High School > College > Internship > First Job).
+                    </div>
+                    <ul>
+                        <li><strong>High-Quality Images:</strong> Find clear, professional images related to your career. Do not use blurry or cartoonish images.</li>
+                        <li><strong>Keep it Simple:</strong> Use bullet points, not long sentences or paragraphs. The text on your slides should be a guide for what you say, not a script.</li>
+                        <li><strong>Check the Rubric:</strong> Use the rubric to make sure you have included all 5 required elements.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 2: Slide-by-Slide Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h2><span class="emoji">📝</span> Part 2: Slide-by-Slide Breakdown</h2>
+            </div>
+            <p style="margin-bottom: 1rem; color: var(--text-light);">Your presentation should have 5 to 7 slides. Here is what should be included on each one:</p>
+            
+            <table class="slide-table">
+                <thead>
+                    <tr>
+                        <th>Slide #</th>
+                        <th>Slide Title (Example)</th>
+                        <th>Required Content</th>
+                        <th>Visuals/Design Focus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>My Dream Career: Marine Biologist</td>
+                        <td>Your Name and the Title of your Career.</td>
+                        <td>Use a clear, appropriate Design Theme.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>What is a [Job Title]?</td>
+                        <td>3 Key Responsibilities of the Job. 2-3 important personality traits/skills.</td>
+                        <td>A large, engaging professional image of someone doing that job.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>The Path to My Career</td>
+                        <td>The Mandatory Flow Chart or Process Graphic (from now to the job). List the schooling/training steps needed.</td>
+                        <td>Clear use of SmartArt or connecting shapes to show the steps.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Money & Growth</td>
+                        <td>Average Yearly Salary (a specific number). Is the job demand Growing, Stable, or Declining?</td>
+                        <td>A simple Bar Chart or Icon to represent money or growth (optional).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>Why This Job Is For Me</td>
+                        <td>1-2 reasons why you chose this job and how it fits your interests.</td>
+                        <td>An image that represents you and your interests.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6-7</strong></td>
+                        <td>Bonus/Extra Slides (Optional)</td>
+                        <td>Use these slides to share a fun fact, a famous person in that career, or a quote.</td>
+                        <td>Use of an Animation or a unique visual element.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Part 3: Dream Career Ideas -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h2><span class="emoji">💡</span> Part 3: Dream Career Ideas for Research</h2>
+            </div>
+            <p style="margin-bottom: 1.5rem; color: var(--text-light);">If you're having trouble picking a job, here are some great ideas that are easy to research and have clear paths:</p>
+
+            <div class="career-grid">
+                <div class="career-category">
+                    <h4><i class="fas fa-palette" style="color: #e91e63;"></i> Creative & Design Careers</h4>
+                    <div class="career-item">
+                        <strong>Video Game Designer:</strong> Someone who plans the world, characters, and rules of a game.
+                    </div>
+                    <div class="career-item">
+                        <strong>Architect:</strong> Someone who designs buildings, houses, and schools.
+                    </div>
+                    <div class="career-item">
+                        <strong>Chef/Baker:</strong> Someone who creates and manages a restaurant or bakery.
+                    </div>
+                </div>
+
+                <div class="career-category">
+                    <h4><i class="fas fa-microscope" style="color: #4caf50;"></i> Science & Tech Careers</h4>
+                    <div class="career-item">
+                        <strong>Veterinarian:</strong> A doctor for animals.
+                    </div>
+                    <div class="career-item">
+                        <strong>Computer Programmer/Coder:</strong> Someone who writes the instructions for apps and websites.
+                    </div>
+                    <div class="career-item">
+                        <strong>Astronaut/Aerospace Engineer:</strong> Someone who designs rockets or studies space.
+                    </div>
+                </div>
+
+                <div class="career-category">
+                    <h4><i class="fas fa-heart" style="color: #ff5722;"></i> Service & Community Careers</h4>
+                    <div class="career-item">
+                        <strong>Firefighter:</strong> Someone who fights fires and provides emergency services.
+                    </div>
+                    <div class="career-item">
+                        <strong>Teacher/Professor:</strong> Someone who teaches students in a school or college.
+                    </div>
+                    <div class="career-item">
+                        <strong>Physical Therapist:</strong> Someone who helps people recover from injuries.
+                    </div>
+                </div>
+
+                <div class="career-category">
+                    <h4><i class="fas fa-chart-line" style="color: #2196f3;"></i> Business & Finance Careers</h4>
+                    <div class="career-item">
+                        <strong>Sports Agent:</strong> Someone who manages athletes and negotiates their contracts.
+                    </div>
+                    <div class="career-item">
+                        <strong>Librarian:</strong> Someone who organizes information and helps people find books and resources.
+                    </div>
+                    <div class="career-item">
+                        <strong>Financial Analyst:</strong> Someone who gives advice on how to invest money.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips for Success -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h2><span class="emoji">⭐</span> Tips for Success</h2>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <h3>Research Tips</h3>
+                    <ul>
+                        <li>Use reliable sources like Bureau of Labor Statistics (BLS.gov)</li>
+                        <li>Look at company websites and job postings</li>
+                        <li>Consider interviewing someone in your chosen field</li>
+                        <li>Check multiple sources to verify salary information</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h3>Design Tips</h3>
+                    <ul>
+                        <li>Choose a consistent color scheme and font</li>
+                        <li>Use high-resolution images (avoid pixelated photos)</li>
+                        <li>Keep text large enough to read from the back of the room</li>
+                        <li>Practice your presentation timing</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h3>Flow Chart Ideas</h3>
+                    <ul>
+                        <li><strong>Basic Path:</strong> High School → College → Entry-Level Job → Advanced Position</li>
+                        <li><strong>Alternative Path:</strong> High School → Trade School → Apprenticeship → Licensed Professional</li>
+                        <li><strong>Advanced Path:</strong> High School → Bachelor's → Master's → Specialization → Career Goal</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="index.html" class="btn">
+                <i class="fas fa-home"></i> Return to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add hover effects to career items
+        document.querySelectorAll('.career-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+                this.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.15)';
+            });
+
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+
+        // Add animation to steps when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.step').forEach(step => {
+            step.style.opacity = '0';
+            step.style.transform = 'translateY(20px)';
+            step.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(step);
+        });
+    </script>
+</body>
+</html>

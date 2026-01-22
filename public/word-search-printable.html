@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Word - Word Search Puzzle</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 0.5in;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .instructions {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .instructions h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 25px;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .puzzle-section {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .word-grid {
+            flex: 2;
+        }
+
+        .word-grid table {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        .word-grid td {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #333;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            background: white;
+            vertical-align: middle;
+        }
+
+        .word-list {
+            flex: 1;
+        }
+
+        .word-list h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .word-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .word-list li {
+            background: #f8f9ff;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            border-left: 4px solid #667eea;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .print-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .print-button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .no-print {
+                display: none;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .header {
+                border-bottom: 3px solid #333;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+            }
+            
+            .header h1 {
+                color: #000;
+                font-size: 1.8em;
+            }
+            
+            .header .subtitle {
+                color: #333;
+                font-size: 1em;
+            }
+            
+            .instructions {
+                background: #f0f0f0;
+                border-left: 5px solid #333;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .instructions h2 {
+                color: #000;
+                font-size: 1.1em;
+                margin-bottom: 8px;
+            }
+            
+            .instructions li {
+                font-size: 0.9em;
+                line-height: 1.5;
+            }
+            
+            .puzzle-section {
+                display: flex;
+                gap: 20px;
+                page-break-inside: avoid;
+            }
+            
+            .word-grid {
+                flex: 2;
+            }
+            
+            .word-grid td {
+                width: 30px;
+                height: 30px;
+                font-size: 1.1em;
+                border: 1.5px solid #000;
+            }
+            
+            .word-list {
+                flex: 1;
+            }
+            
+            .word-list h2 {
+                color: #000;
+                font-size: 1.1em;
+            }
+            
+            .word-list li {
+                background: white;
+                border: 1.5px solid #333;
+                border-left: 4px solid #333;
+                padding: 6px;
+                margin-bottom: 5px;
+                font-size: 0.85em;
+            }
+            
+            .footer {
+                font-size: 0.8em;
+                margin-top: 15px;
+                padding-top: 10px;
+                border-top: 2px solid #333;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Microsoft Word - Word Search 🔍</h1>
+            <p class="subtitle">Find the Microsoft Word terms hidden in the puzzle!</p>
+        </div>
+
+        <div class="instructions">
+            <h2>📋 Instructions:</h2>
+            <ul>
+                <li>🔎 Find all <strong>15 words</strong> hidden in the grid below</li>
+                <li>➡️ Words can be found going <strong>across (left to right)</strong> or <strong>down (top to bottom)</strong></li>
+                <li>✏️ Circle or highlight each word as you find it</li>
+                <li>✅ Check off each word from the word list on the right</li>
+                <li>🎯 Challenge: How fast can you find all the words?</li>
+            </ul>
+        </div>
+
+        <button class="print-button no-print" onclick="window.print()">🖨️ Print This Puzzle</button>
+
+        <div class="puzzle-section">
+            <div class="word-grid">
+                <table id="wordSearchGrid"></table>
+            </div>
+
+            <div class="word-list">
+                <h2>🎯 Words to Find:</h2>
+                <ul>
+                    <li>✓ BOLD</li>
+                    <li>✓ ITALIC</li>
+                    <li>✓ FONT</li>
+                    <li>✓ PRINT</li>
+                    <li>✓ SAVE</li>
+                    <li>✓ COPY</li>
+                    <li>✓ PASTE</li>
+                    <li>✓ UNDO</li>
+                    <li>✓ REDO</li>
+                    <li>✓ TABLE</li>
+                    <li>✓ PARAGRAPH</li>
+                    <li>✓ HEADER</li>
+                    <li>✓ FOOTER</li>
+                    <li>✓ DOCUMENT</li>
+                    <li>✓ SPELL</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💡 <strong>Tip:</strong> Start by looking for the longer words like PARAGRAPH and DOCUMENT!</p>
+            <p>📚 Learn more about Microsoft Word at codewithmorais.com</p>
+        </div>
+    </div>
+
+    <script>
+        // Word list with their positions
+        const words = [
+            { word: 'BOLD', row: 0, col: 0, direction: 'across' },
+            { word: 'ITALIC', row: 1, col: 2, direction: 'across' },
+            { word: 'FONT', row: 2, col: 8, direction: 'down' },
+            { word: 'PRINT', row: 3, col: 1, direction: 'across' },
+            { word: 'SAVE', row: 4, col: 9, direction: 'down' },
+            { word: 'COPY', row: 5, col: 0, direction: 'across' },
+            { word: 'PASTE', row: 6, col: 5, direction: 'across' },
+            { word: 'UNDO', row: 7, col: 2, direction: 'across' },
+            { word: 'REDO', row: 8, col: 7, direction: 'across' },
+            { word: 'TABLE', row: 0, col: 5, direction: 'down' },
+            { word: 'PARAGRAPH', row: 9, col: 0, direction: 'across' },
+            { word: 'HEADER', row: 2, col: 0, direction: 'down' },
+            { word: 'FOOTER', row: 10, col: 3, direction: 'across' },
+            { word: 'DOCUMENT', row: 1, col: 10, direction: 'down' },
+            { word: 'SPELL', row: 11, col: 5, direction: 'across' }
+        ];
+
+        const gridSize = 12;
+        const grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
+
+        // Place words in grid
+        words.forEach(({ word, row, col, direction }) => {
+            for (let i = 0; i < word.length; i++) {
+                if (direction === 'across') {
+                    grid[row][col + i] = word[i];
+                } else {
+                    grid[row + i][col] = word[i];
+                }
+            }
+        });
+
+        // Fill empty spaces with random letters
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for (let i = 0; i < gridSize; i++) {
+            for (let j = 0; j < gridSize; j++) {
+                if (grid[i][j] === '') {
+                    grid[i][j] = alphabet[Math.floor(Math.random() * alphabet.length)];
+                }
+            }
+        }
+
+        // Render grid
+        const table = document.getElementById('wordSearchGrid');
+        for (let i = 0; i < gridSize; i++) {
+            const row = table.insertRow();
+            for (let j = 0; j < gridSize; j++) {
+                const cell = row.insertCell();
+                cell.textContent = grid[i][j];
+            }
+        }
+    </script>
+</body>
+</html>

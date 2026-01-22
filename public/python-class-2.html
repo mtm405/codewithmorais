@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔁 Class 2: Flow Control with Decisions and Loops | Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #f0f0f0;
+        }
+
+        .objectives {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .objectives h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .objectives ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .objectives li:before {
+            content: "✓";
+            position: absolute;
+            left: 5px;
+            color: #50fa7b;
+            font-weight: bold;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .section ul li {
+            font-size: 1.02rem;
+            line-height: 1.75;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            color: #ffd700;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subsection-title {
+            color: #8be9fd;
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+        }
+
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .vocab-table th {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .vocab-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vocab-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .vocab-table .term {
+            font-weight: bold;
+            color: #ff79c6;
+            width: 20%;
+        }
+
+        .code-block {
+            background: #282a36;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #50fa7b;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .code-block .keyword { color: #ff79c6; }
+        .code-block .function { color: #50fa7b; }
+        .code-block .string { color: #f1fa8c; }
+        .code-block .number { color: #bd93f9; }
+        .code-block .comment { color: #6272a4; font-style: italic; }
+        .code-block .operator { color: #ff79c6; }
+        .code-block .variable { color: #8be9fd; }
+
+        .example-box {
+            background: rgba(80, 250, 123, 0.1);
+            border-left: 4px solid #50fa7b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-title {
+            color: #50fa7b;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .activity-box {
+            background: rgba(189, 147, 249, 0.1);
+            border-left: 4px solid #bd93f9;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .activity-title {
+            color: #bd93f9;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .quiz-box {
+            background: rgba(255, 121, 198, 0.1);
+            border-left: 4px solid #ff79c6;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .quiz-question {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .quiz-question h4 {
+            color: #ff79c6;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .quiz-options li {
+            padding: 8px 0;
+            padding-left: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-options li:hover {
+            padding-left: 30px;
+            color: #ffd700;
+        }
+
+        .answer-reveal {
+            background: rgba(80, 250, 123, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .answer-reveal.show {
+            display: block;
+        }
+
+        .btn-show-answer {
+            background: #ff79c6;
+            color: #282a36;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-show-answer:hover {
+            background: #ff92d0;
+            transform: translateY(-2px);
+        }
+
+        .math-formula {
+            color: #f1fa8c;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            background: rgba(241, 250, 140, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffd700;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+        <div style="text-align: center; margin-bottom: 10px;">
+            <h3 style="color: #8be9fd; font-size: 1.1rem; font-weight: 500; margin: 0;">🎓 Python Exam Review</h3>
+        </div>
+
+        <div class="header">
+            <h1>🔁 Flow Control with Decisions and Loops</h1>
+            <p>Master branching statements and iteration for powerful program control</p>
+        </div>
+
+        <div class="objectives">
+            <h2>🎯 Learning Objectives</h2>
+            <ul>
+                <li><strong>Objective 2.1:</strong> Construct and analyze code segments that use branching statements</li>
+                <li><strong>Objective 2.2:</strong> Construct and analyze code segments that perform iteration</li>
+            </ul>
+        </div>
+
+        <!-- Key Vocabulary -->
+        <div class="section">
+            <h2 class="section-title">💡 Key Vocabulary</h2>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Definition</th>
+                        <th>Context/Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term">Branching/Decision</td>
+                        <td>Code execution based on a condition, leading to different paths in the program</td>
+                        <td><span class="math-formula">if, elif, else</span> statements</td>
+                    </tr>
+                    <tr>
+                        <td class="term">Iteration/Looping</td>
+                        <td>The process of repeating a sequence of instructions until a specific condition is met or for every item in a sequence</td>
+                        <td><span class="math-formula">while</span> and <span class="math-formula">for</span> loops</td>
+                    </tr>
+                    <tr>
+                        <td class="term">Nested</td>
+                        <td>Placing one flow control structure (like an if statement or a loop) inside another</td>
+                        <td>A <span class="math-formula">for</span> loop inside another <span class="math-formula">for</span> loop</td>
+                    </tr>
+                    <tr>
+                        <td class="term">break</td>
+                        <td>A statement used to immediately exit the innermost loop structure</td>
+                        <td>Used to stop searching a list once an item is found</td>
+                    </tr>
+                    <tr>
+                        <td class="term">continue</td>
+                        <td>A statement used to skip the rest of the current loop iteration and move to the next iteration</td>
+                        <td>Used to bypass processing for specific conditions (e.g., negative numbers)</td>
+                    </tr>
+                    <tr>
+                        <td class="term">pass</td>
+                        <td>A null operation; it does nothing. Used as a placeholder where a statement is required syntactically</td>
+                        <td>Used in incomplete function or class definitions</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detailed Information -->
+        <div class="section">
+            <h2 class="section-title">📝 Detailed Information and Examples</h2>
+
+            <h3 class="subsection-title">A. Branching Statements (Objective 2.1)</h3>
+            <p>Python uses <span class="highlight">if, elif, and else</span> for decision making, supporting nested and compound conditional expressions.</p>
+
+            <div class="example-box">
+                <div class="example-title">Example 1: Basic and Compound Branching</div>
+                <div class="code-block"><span class="variable">score</span> <span class="operator">=</span> <span class="number">85</span>
+
+<span class="comment"># Basic Branching</span>
+<span class="keyword">if</span> <span class="variable">score</span> <span class="operator">>=</span> <span class="number">90</span>:
+    <span class="function">print</span>(<span class="string">"A"</span>)
+<span class="keyword">elif</span> <span class="variable">score</span> <span class="operator">>=</span> <span class="number">80</span> <span class="keyword">and</span> <span class="variable">score</span> <span class="operator"><</span> <span class="number">90</span>:  <span class="comment"># Compound conditional expression</span>
+    <span class="function">print</span>(<span class="string">"B"</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"C"</span>)
+<span class="comment"># Output: B</span>
+
+<span class="comment"># Nested Branching</span>
+<span class="variable">is_premium</span> <span class="operator">=</span> <span class="keyword">True</span>
+<span class="keyword">if</span> <span class="variable">score</span> <span class="operator">></span> <span class="number">70</span>:
+    <span class="keyword">if</span> <span class="variable">is_premium</span>:
+        <span class="function">print</span>(<span class="string">"Congrats, Premium!"</span>) <span class="comment"># Nested check</span>
+    <span class="keyword">else</span>:
+        <span class="function">print</span>(<span class="string">"Congrats!"</span>)
+<span class="comment"># Output: Congrats, Premium!</span></div>
+            </div>
+
+            <h3 class="subsection-title">B. Iteration Statements (Objective 2.2)</h3>
+            <p>Python uses <span class="highlight">while</span> (for conditional repetition) and <span class="highlight">for</span> (for sequence iteration).</p>
+
+            <div class="example-box">
+                <div class="example-title">Example 2: for loop and while loop</div>
+                <div class="code-block"><span class="comment"># for loop (Iterating over a sequence/list)</span>
+<span class="variable">my_list</span> <span class="operator">=</span> [<span class="string">'apple'</span>, <span class="string">'banana'</span>, <span class="string">'cherry'</span>]
+
+<span class="keyword">for</span> <span class="variable">item</span> <span class="keyword">in</span> <span class="variable">my_list</span>:
+    <span class="function">print</span>(<span class="string">f"Fruit: <span class="variable">{item}</span>"</span>)
+
+<span class="comment"># Output:</span>
+<span class="comment"># Fruit: apple</span>
+<span class="comment"># Fruit: banana</span>
+<span class="comment"># Fruit: cherry</span>
+
+
+<span class="comment"># while loop (Conditional repetition)</span>
+<span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>
+
+<span class="keyword">while</span> <span class="variable">count</span> <span class="operator"><</span> <span class="number">3</span>:
+    <span class="function">print</span>(<span class="string">f"Count is: <span class="variable">{count}</span>"</span>)
+    <span class="variable">count</span> <span class="operator">+=</span> <span class="number">1</span>
+
+<span class="comment"># Output: Count is: 0, 1, 2</span></div>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">Example 3: break, continue, and pass</div>
+                <div class="code-block"><span class="variable">numbers</span> <span class="operator">=</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]
+
+<span class="keyword">for</span> <span class="variable">num</span> <span class="keyword">in</span> <span class="variable">numbers</span>:
+    <span class="keyword">if</span> <span class="variable">num</span> <span class="operator">%</span> <span class="number">2</span> <span class="operator">!=</span> <span class="number">0</span>:
+        <span class="keyword">continue</span>  <span class="comment"># Skip odd numbers (1, 3, 5)</span>
+    
+    <span class="keyword">if</span> <span class="variable">num</span> <span class="operator">></span> <span class="number">5</span>:
+        <span class="keyword">break</span>  <span class="comment"># Stop loop when we hit 6</span>
+    
+    <span class="function">print</span>(<span class="string">f"Even number: <span class="variable">{num}</span>"</span>)
+
+<span class="comment"># Output:</span>
+<span class="comment"># Even number: 2</span>
+<span class="comment"># Even number: 4</span>
+
+
+<span class="comment"># The pass statement does nothing</span>
+<span class="keyword">def</span> <span class="function">placeholder_function</span>():
+    <span class="keyword">pass</span>  <span class="comment"># Use pass as a placeholder for future code</span></div>
+            </div>
+        </div>
+
+        <!-- Practical Activities -->
+        <div class="section">
+            <h2 class="section-title">🛠️ Practical Activities</h2>
+
+            <div class="activity-box">
+                <div class="activity-title">Activity 1: Logic Analysis</div>
+                <p><strong>Instructions:</strong> Analyze the following code segment and determine the final output.</p>
+                <div class="code-block"><span class="variable">data</span> <span class="operator">=</span> [<span class="number">10</span>, <span class="number">25</span>, <span class="number">50</span>, <span class="number">75</span>, <span class="number">100</span>]
+<span class="variable">result</span> <span class="operator">=</span> <span class="number">0</span>
+<span class="keyword">for</span> <span class="variable">value</span> <span class="keyword">in</span> <span class="variable">data</span>:
+    <span class="keyword">if</span> <span class="variable">value</span> <span class="operator"><</span> <span class="number">50</span>:
+        <span class="keyword">continue</span>
+    <span class="keyword">if</span> <span class="variable">value</span> <span class="operator">==</span> <span class="number">75</span>:
+        <span class="variable">result</span> <span class="operator">+=</span> <span class="number">10</span>
+    <span class="keyword">elif</span> <span class="variable">value</span> <span class="operator">></span> <span class="number">90</span>:
+        <span class="keyword">break</span>
+    <span class="keyword">else</span>:
+        <span class="variable">result</span> <span class="operator">+=</span> <span class="number">1</span>
+<span class="function">print</span>(<span class="variable">result</span>)</div>
+                <button class="btn-show-answer" onclick="toggleAnswer('activity1-answer')">Show Solution</button>
+                <div id="activity1-answer" class="answer-reveal">
+                    <strong>Step-by-step Analysis:</strong><br>
+                    • <span class="math-formula">10, 25</span>: <span class="highlight">continue</span> (Skipped because value < 50)<br>
+                    • <span class="math-formula">50</span>: Goes to else block, result becomes <span class="math-formula">1</span> (0+1)<br>
+                    • <span class="math-formula">75</span>: Matches condition, result becomes <span class="math-formula">11</span> (1+10)<br>
+                    • <span class="math-formula">100</span>: Matches > 90 condition, <span class="highlight">break</span> exits loop<br>
+                    <strong>Final Output: 11</strong>
+                </div>
+            </div>
+
+            <div class="activity-box">
+                <div class="activity-title">Activity 2: Code Construction: Login Check</div>
+                <p><strong>Instructions:</strong> Write a code segment that:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Asks the user to enter a PIN (using <span class="math-formula">input()</span>)</li>
+                    <li>Uses a <span class="math-formula">while</span> loop to allow up to 3 attempts</li>
+                    <li>The correct PIN is <span class="math-formula">1234</span></li>
+                    <li>If the PIN is correct, print "Login Successful" and exit the loop immediately</li>
+                    <li>If the PIN is wrong after 3 attempts, print "Account Locked."</li>
+                </ul>
+                <button class="btn-show-answer" onclick="toggleAnswer('activity2-answer')">Show Solution</button>
+                <div id="activity2-answer" class="answer-reveal">
+                    <div class="code-block"><span class="variable">CORRECT_PIN</span> <span class="operator">=</span> <span class="string">"1234"</span>
+<span class="variable">attempts</span> <span class="operator">=</span> <span class="number">0</span>
+
+<span class="keyword">while</span> <span class="variable">attempts</span> <span class="operator"><</span> <span class="number">3</span>:
+    <span class="variable">pin</span> <span class="operator">=</span> <span class="function">input</span>(<span class="string">"Enter PIN: "</span>)
+    <span class="keyword">if</span> <span class="variable">pin</span> <span class="operator">==</span> <span class="variable">CORRECT_PIN</span>:
+        <span class="function">print</span>(<span class="string">"Login Successful"</span>)
+        <span class="keyword">break</span>
+    <span class="keyword">else</span>:
+        <span class="variable">attempts</span> <span class="operator">+=</span> <span class="number">1</span>
+
+<span class="keyword">if</span> <span class="variable">attempts</span> <span class="operator">==</span> <span class="number">3</span>:
+    <span class="function">print</span>(<span class="string">"Account Locked."</span>)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="section">
+            <h2 class="section-title">❓ Quiz: Review Check</h2>
+
+            <div class="quiz-box">
+                <div class="quiz-question">
+                    <h4>Question 1: What is the purpose of the elif statement in Python?</h4>
+                    <ul class="quiz-options">
+                        <li>a) To end an if statement</li>
+                        <li>b) To execute code when the initial if condition is False</li>
+                        <li>c) To check a second condition only if the previous if or elif conditions were False ✓</li>
+                        <li>d) To force an error</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q1-answer')">Show Explanation</button>
+                    <div id="q1-answer" class="answer-reveal">
+                        <strong>Answer: c)</strong><br>
+                        <span class="math-formula">elif</span> allows checking multiple conditions in sequence. It only runs if all previous conditions were False.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 2: Which statement is used to immediately exit a loop?</h4>
+                    <ul class="quiz-options">
+                        <li>a) <span class="math-formula">continue</span></li>
+                        <li>b) <span class="math-formula">pass</span></li>
+                        <li>c) <span class="math-formula">exit()</span></li>
+                        <li>d) <span class="math-formula">break</span> ✓</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q2-answer')">Show Explanation</button>
+                    <div id="q2-answer" class="answer-reveal">
+                        <strong>Answer: d) break</strong><br>
+                        <span class="math-formula">break</span> immediately exits the innermost loop. <span class="math-formula">continue</span> skips to the next iteration.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 3: What is the output of the following nested loop?</h4>
+                    <div class="code-block" style="margin: 10px 0;"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">2</span>):
+    <span class="keyword">for</span> <span class="variable">j</span> <span class="keyword">in</span> <span class="function">range</span>(<span class="number">1</span>):
+        <span class="function">print</span>(<span class="variable">i</span> <span class="operator">*</span> <span class="variable">j</span>)</div>
+                    <ul class="quiz-options">
+                        <li>a) 0, 0 ✓</li>
+                        <li>b) 0, 1</li>
+                        <li>c) 0, 1, 2</li>
+                        <li>d) 0, 1, 0, 1</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q3-answer')">Show Explanation</button>
+                    <div id="q3-answer" class="answer-reveal">
+                        <strong>Answer: a) 0, 0</strong><br>
+                        Outer loop runs twice (i=0, i=1). Inner loop runs once each time (j=0).<br>
+                        First iteration: 0 * 0 = 0<br>
+                        Second iteration: 1 * 0 = 0
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 4: If a condition in a while loop is never met, what will occur?</h4>
+                    <ul class="quiz-options">
+                        <li>a) A syntax error</li>
+                        <li>b) An infinite loop ✓</li>
+                        <li>c) The code will skip the loop entirely</li>
+                        <li>d) A runtime error</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q4-answer')">Show Explanation</button>
+                    <div id="q4-answer" class="answer-reveal">
+                        <strong>Answer: b) An infinite loop</strong><br>
+                        If the loop condition never becomes False, the loop will run forever (infinite loop).
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 5: The keyword pass can be used as a temporary placeholder in which flow control structures?</h4>
+                    <ul class="quiz-options">
+                        <li>a) <span class="math-formula">if/else</span> statements</li>
+                        <li>b) <span class="math-formula">while</span> loops</li>
+                        <li>c) <span class="math-formula">for</span> loops</li>
+                        <li>d) All of the above ✓</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q5-answer')">Show Explanation</button>
+                    <div id="q5-answer" class="answer-reveal">
+                        <strong>Answer: d) All of the above</strong><br>
+                        <span class="math-formula">pass</span> is a null operation that can be used anywhere a statement is syntactically required but no action is needed.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

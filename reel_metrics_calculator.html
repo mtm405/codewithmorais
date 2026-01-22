@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Reel Performance Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2::before {
+            content: "📊";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .score-number {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .score-label {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .metric-card h3 {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .metric-status {
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .status-excellent { color: #10b981; }
+        .status-good { color: #3b82f6; }
+        .status-average { color: #f59e0b; }
+        .status-poor { color: #ef4444; }
+
+        .recommendations {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .recommendations h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .recommendations ul {
+            list-style-position: inside;
+            color: #856404;
+        }
+
+        .recommendations li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .prediction {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .prediction h3 {
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+
+        .prediction-item {
+            color: #0c5460;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .viral-indicator {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .viral-high {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .viral-medium {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffc107;
+        }
+
+        .viral-low {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .score-number {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📈 Instagram Reel Performance Calculator</h1>
+        <p class="subtitle">Predict your reel's success based on engagement metrics</p>
+
+        <div class="section">
+            <h2>Reel Metrics</h2>
+            
+            <div class="input-group">
+                <label for="views">Total Views</label>
+                <input type="number" id="views" placeholder="e.g., 5000" min="0">
+            </div>
+
+            <div class="input-group">
+                <label for="likes">Total Likes</label>
+                <input type="number" id="likes" placeholder="e.g., 250" min="0">
+            </div>
+
+            <div class="input-group">
+                <label for="comments">Total Comments</label>
+                <input type="number" id="comments" placeholder="e.g., 30" min="0">
+            </div>
+
+            <div class="input-group">
+                <label for="shares">Total Shares</label>
+                <input type="number" id="shares" placeholder="e.g., 15" min="0">
+            </div>
+
+            <div class="input-group">
+                <label for="saves">Total Saves</label>
+                <input type="number" id="saves" placeholder="e.g., 20" min="0">
+            </div>
+
+            <div class="input-group">
+                <label for="followers">Your Current Follower Count</label>
+                <input type="number" id="followers" placeholder="e.g., 139" min="0">
+            </div>
+
+            <div class="input-group">
+                <label for="retention">Average Watch Time (%)</label>
+                <input type="number" id="retention" placeholder="e.g., 65" min="0" max="100">
+            </div>
+
+            <button class="calculate-btn" onclick="calculateMetrics()">Calculate Performance</button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="score-card">
+                <div class="score-label">Overall Performance Score</div>
+                <div class="score-number" id="overallScore">0</div>
+                <div class="score-label">out of 100</div>
+            </div>
+
+            <div class="viral-indicator" id="viralIndicator"></div>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <h3>Engagement Rate</h3>
+                    <div class="metric-value" id="engagementRate">0%</div>
+                    <div class="metric-status" id="engagementStatus"></div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Share Rate</h3>
+                    <div class="metric-value" id="shareRate">0%</div>
+                    <div class="metric-status" id="shareStatus"></div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Save Rate</h3>
+                    <div class="metric-value" id="saveRate">0%</div>
+                    <div class="metric-status" id="saveStatus"></div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Comment Rate</h3>
+                    <div class="metric-value" id="commentRate">0%</div>
+                    <div class="metric-status" id="commentStatus"></div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Retention Score</h3>
+                    <div class="metric-value" id="retentionScore">0</div>
+                    <div class="metric-status" id="retentionStatus"></div>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Viral Potential</h3>
+                    <div class="metric-value" id="viralScore">0%</div>
+                    <div class="metric-status" id="viralStatus"></div>
+                </div>
+            </div>
+
+            <div class="prediction">
+                <h3>📊 Performance Predictions</h3>
+                <div class="prediction-item" id="viewsPrediction"></div>
+                <div class="prediction-item" id="followersPrediction"></div>
+                <div class="prediction-item" id="reachPrediction"></div>
+            </div>
+
+            <div class="recommendations">
+                <h3>💡 Recommendations to Improve</h3>
+                <ul id="recommendationsList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateMetrics() {
+            // Get input values
+            const views = parseInt(document.getElementById('views').value) || 0;
+            const likes = parseInt(document.getElementById('likes').value) || 0;
+            const comments = parseInt(document.getElementById('comments').value) || 0;
+            const shares = parseInt(document.getElementById('shares').value) || 0;
+            const saves = parseInt(document.getElementById('saves').value) || 0;
+            const followers = parseInt(document.getElementById('followers').value) || 0;
+            const retention = parseInt(document.getElementById('retention').value) || 0;
+
+            if (views === 0) {
+                alert('Please enter at least the number of views');
+                return;
+            }
+
+            // Calculate rates
+            const engagementRate = ((likes + comments + shares + saves) / views * 100).toFixed(2);
+            const shareRate = (shares / views * 100).toFixed(2);
+            const saveRate = (saves / views * 100).toFixed(2);
+            const commentRate = (comments / views * 100).toFixed(2);
+            const likeRate = (likes / views * 100).toFixed(2);
+
+            // Calculate scores (0-100)
+            const retentionScore = retention;
+            const engagementScore = Math.min((engagementRate / 10) * 100, 100);
+            const shareScore = Math.min((shareRate / 5) * 100, 100);
+            const saveScore = Math.min((saveRate / 3) * 100, 100);
+            const commentScore = Math.min((commentRate / 1) * 100, 100);
+
+            // Overall score (weighted average)
+            const overallScore = Math.round(
+                (retentionScore * 0.30) +
+                (shareScore * 0.25) +
+                (saveScore * 0.20) +
+                (engagementScore * 0.15) +
+                (commentScore * 0.10)
+            );
+
+            // Viral potential
+            const viralPotential = Math.round(
+                (shareScore * 0.40) +
+                (retentionScore * 0.30) +
+                (saveScore * 0.20) +
+                (commentScore * 0.10)
+            );
+
+            // Display results
+            document.getElementById('overallScore').textContent = overallScore;
+            document.getElementById('engagementRate').textContent = engagementRate + '%';
+            document.getElementById('shareRate').textContent = shareRate + '%';
+            document.getElementById('saveRate').textContent = saveRate + '%';
+            document.getElementById('commentRate').textContent = commentRate + '%';
+            document.getElementById('retentionScore').textContent = retention + '%';
+            document.getElementById('viralScore').textContent = viralPotential + '%';
+
+            // Status labels
+            document.getElementById('engagementStatus').innerHTML = getStatus(engagementRate, [8, 5, 3]);
+            document.getElementById('shareStatus').innerHTML = getStatus(shareRate, [5, 3, 1]);
+            document.getElementById('saveStatus').innerHTML = getStatus(saveRate, [3, 2, 1]);
+            document.getElementById('commentStatus').innerHTML = getStatus(commentRate, [1, 0.5, 0.2]);
+            document.getElementById('retentionStatus').innerHTML = getStatus(retention, [70, 60, 50]);
+            document.getElementById('viralStatus').innerHTML = getViralStatus(viralPotential);
+
+            // Viral indicator
+            const viralIndicator = document.getElementById('viralIndicator');
+            if (viralPotential >= 75) {
+                viralIndicator.className = 'viral-indicator viral-high';
+                viralIndicator.textContent = '🚀 HIGH VIRAL POTENTIAL - This could blow up!';
+            } else if (viralPotential >= 50) {
+                viralIndicator.className = 'viral-indicator viral-medium';
+                viralIndicator.textContent = '⚡ MODERATE VIRAL POTENTIAL - Good performance expected';
+            } else {
+                viralIndicator.className = 'viral-indicator viral-low';
+                viralIndicator.textContent = '📊 LOW VIRAL POTENTIAL - Room for improvement';
+            }
+
+            // Predictions
+            const expectedReach = views * (1 + (viralPotential / 100));
+            const expectedFollowers = Math.round(views * 0.05 * (viralPotential / 50));
+            
+            document.getElementById('viewsPrediction').textContent = 
+                `Expected Final Views: ${Math.round(expectedReach).toLocaleString()} (current: ${views.toLocaleString()})`;
+            document.getElementById('followersPrediction').textContent = 
+                `Expected New Followers: ${expectedFollowers.toLocaleString()} from this reel`;
+            document.getElementById('reachPrediction').textContent = 
+                `Explore Page Probability: ${viralPotential > 70 ? 'High (70%+)' : viralPotential > 50 ? 'Medium (40-70%)' : 'Low (< 40%)'}`;
+
+            // Recommendations
+            const recommendations = [];
+            
+            if (retention < 60) {
+                recommendations.push('🎬 Low retention - Cut to 12-15s max, change scenes every 2-3 seconds');
+            }
+            if (shareRate < 3) {
+                recommendations.push('📤 Low shares - Add more relatable/controversial content worth sending to friends');
+            }
+            if (saveRate < 2) {
+                recommendations.push('💾 Low saves - Include helpful tips or information people want to reference later');
+            }
+            if (commentRate < 0.5) {
+                recommendations.push('💬 Low comments - End with a specific question to drive discussion');
+            }
+            if (engagementRate < 5) {
+                recommendations.push('👥 Low overall engagement - Improve hook (first 1 second) to stop the scroll');
+            }
+            if (views < followers * 2) {
+                recommendations.push('📊 Low reach - Use trending audio and post during peak times (7-9 AM or 6-8 PM)');
+            }
+            if (recommendations.length === 0) {
+                recommendations.push('🎉 Great performance! Keep doing what you\'re doing!');
+                recommendations.push('💡 To go viral: Add more controversial or emotional elements');
+                recommendations.push('🔄 Replicate this format for your next reel');
+            }
+
+            const recList = document.getElementById('recommendationsList');
+            recList.innerHTML = '';
+            recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recList.appendChild(li);
+            });
+
+            // Show results
+            document.getElementById('results').classList.add('show');
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function getStatus(value, thresholds) {
+            const val = parseFloat(value);
+            if (val >= thresholds[0]) {
+                return '<span class="status-excellent">✅ Excellent</span>';
+            } else if (val >= thresholds[1]) {
+                return '<span class="status-good">👍 Good</span>';
+            } else if (val >= thresholds[2]) {
+                return '<span class="status-average">⚠️ Average</span>';
+            } else {
+                return '<span class="status-poor">❌ Needs Work</span>';
+            }
+        }
+
+        function getViralStatus(score) {
+            if (score >= 75) {
+                return '<span class="status-excellent">🚀 Very High</span>';
+            } else if (score >= 60) {
+                return '<span class="status-good">⚡ High</span>';
+            } else if (score >= 40) {
+                return '<span class="status-average">📈 Moderate</span>';
+            } else {
+                return '<span class="status-poor">📊 Low</span>';
+            }
+        }
+    </script>
+</body>
+</html>

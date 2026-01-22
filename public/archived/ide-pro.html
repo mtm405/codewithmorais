@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python IDE Pro - Code with Morais</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
+      color: #f0f6fc;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .ide-container {
+      display: grid;
+      grid-template-rows: 60px 1fr 40px;
+      height: 100vh;
+    }
+    
+    /* Enhanced Header */
+    .ide-header {
+      background: linear-gradient(135deg, #21262d, #30363d);
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      border-bottom: 1px solid #30363d;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-right: 2rem;
+    }
+    
+    .header-brand i {
+      color: #58a6ff;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      flex: 1;
+    }
+    
+    .action-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .header-btn {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #f0f6fc;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+    
+    .header-btn:hover {
+      background: #30363d;
+      border-color: #58a6ff;
+    }
+    
+    .header-btn.primary {
+      background: #238636;
+      border-color: #238636;
+    }
+    
+    .header-btn.primary:hover {
+      background: #2ea043;
+    }
+    
+    .header-btn.danger {
+      background: #da3633;
+      border-color: #da3633;
+    }
+    
+    .header-btn.danger:hover {
+      background: #f85149;
+    }
+    
+    /* Main IDE Layout */
+    .ide-main {
+      display: grid;
+      grid-template-columns: 300px 1fr 350px;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    /* Enhanced File Explorer */
+    .file-explorer {
+      background: #161b22;
+      border-right: 1px solid #30363d;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .explorer-header {
+      padding: 1rem;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .explorer-header h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f0f6fc;
+    }
+    
+    .explorer-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .explorer-btn {
+      background: none;
+      border: none;
+      color: #8b949e;
+      cursor: pointer;
+      padding: 0.2rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+    }
+    
+    .explorer-btn:hover {
+      background: #21262d;
+      color: #f0f6fc;
+    }
+    
+    .file-tree {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+    
+    .file-item, .folder-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin-bottom: 2px;
+    }
+    
+    .file-item:hover, .folder-item:hover {
+      background: #21262d;
+    }
+    
+    .file-item.active {
+      background: #1f6feb;
+      color: white;
+    }
+    
+    .file-icon {
+      width: 16px;
+      text-align: center;
+    }
+    
+    .file-icon.python { color: #3776ab; }
+    .file-icon.folder { color: #58a6ff; }
+    .file-icon.json { color: #f1c40f; }
+    .file-icon.txt { color: #8b949e; }
+    
+    /* Enhanced Editor Area */
+    .editor-area {
+      background: #0d1117;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .editor-tabs {
+      background: #161b22;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      overflow-x: auto;
+      min-height: 40px;
+    }
+    
+    .editor-tab {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #21262d;
+      border-right: 1px solid #30363d;
+      cursor: pointer;
+      font-size: 0.85rem;
+      min-width: 120px;
+      position: relative;
+    }
+    
+    .editor-tab.active {
+      background: #0d1117;
+      border-bottom: 2px solid #58a6ff;
+    }
+    
+    .editor-tab:hover {
+      background: #30363d;
+    }
+    
+    .tab-close {
+      color: #8b949e;
+      margin-left: auto;
+      padding: 0.1rem;
+      border-radius: 2px;
+    }
+    
+    .tab-close:hover {
+      background: #f85149;
+      color: white;
+    }
+    
+    .editor-container {
+      flex: 1;
+      position: relative;
+    }
+    
+    #monaco-editor {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Enhanced Output Panel */
+    .output-panel {
+      background: #161b22;
+      border-left: 1px solid #30363d;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .output-header {
+      padding: 1rem;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .output-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .output-tab {
+      background: none;
+      border: none;
+      color: #8b949e;
+      cursor: pointer;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+    
+    .output-tab.active {
+      background: #21262d;
+      color: #f0f6fc;
+    }
+    
+    .console-output, .debug-output, .test-output {
+      flex: 1;
+      background: #0d1117;
+      padding: 1rem;
+      overflow-y: auto;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    
+    .console-input {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #21262d;
+      border-top: 1px solid #30363d;
+    }
+    
+    .console-prompt {
+      color: #58a6ff;
+      font-family: monospace;
+    }
+    
+    .console-input input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #f0f6fc;
+      outline: none;
+      font-family: monospace;
+    }
+    
+    /* Status Bar */
+    .status-bar {
+      background: #21262d;
+      border-top: 1px solid #30363d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      color: #8b949e;
+    }
+    
+    .status-left, .status-right {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    /* Project Templates Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      background: #21262d;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 1px solid #30363d;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: #8b949e;
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+    
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    
+    .template-card {
+      background: #161b22;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .template-card:hover {
+      border-color: #58a6ff;
+      background: #1c2128;
+    }
+    
+    .template-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #58a6ff;
+    }
+    
+    .template-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .template-description {
+      color: #8b949e;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .ide-main {
+        grid-template-columns: 250px 1fr 300px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .ide-main {
+        grid-template-columns: 1fr;
+      }
+      
+      .file-explorer, .output-panel {
+        display: none;
+      }
+    }
+    
+    /* Loading States */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
+      color: #8b949e;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #30363d;
+      border-radius: 50%;
+      border-top-color: #58a6ff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Syntax Highlighting for Output */
+    .output-line {
+      margin-bottom: 0.2rem;
+    }
+    
+    .output-error {
+      color: #f85149;
+    }
+    
+    .output-warning {
+      color: #d29922;
+    }
+    
+    .output-info {
+      color: #58a6ff;
+    }
+    
+    .output-success {
+      color: #238636;
+    }
+  </style>
+</head>
+<body>
+  <div class="ide-container">
+    <!-- Enhanced Header -->
+    <header class="ide-header">
+      <div class="header-brand">
+        <i class="fab fa-python"></i>
+        <span>Python IDE Pro</span>
+      </div>
+      
+      <div class="header-actions">
+        <div class="action-group">
+          <button class="header-btn" id="new-file-btn">
+            <i class="fas fa-file"></i>
+            New File
+          </button>
+          <button class="header-btn" id="new-project-btn">
+            <i class="fas fa-folder-plus"></i>
+            New Project
+          </button>
+          <button class="header-btn" id="open-file-btn">
+            <i class="fas fa-folder-open"></i>
+            Open
+          </button>
+          <button class="header-btn" id="save-btn">
+            <i class="fas fa-save"></i>
+            Save
+          </button>
+        </div>
+        
+        <div class="action-group">
+          <button class="header-btn primary" id="run-btn">
+            <i class="fas fa-play"></i>
+            Run
+          </button>
+          <button class="header-btn" id="debug-btn">
+            <i class="fas fa-bug"></i>
+            Debug
+          </button>
+          <button class="header-btn danger" id="stop-btn" disabled>
+            <i class="fas fa-stop"></i>
+            Stop
+          </button>
+        </div>
+        
+        <div class="action-group" style="margin-left: auto;">
+          <button class="header-btn" id="share-btn">
+            <i class="fas fa-share"></i>
+            Share
+          </button>
+          <button class="header-btn" id="settings-btn">
+            <i class="fas fa-cog"></i>
+            Settings
+          </button>
+          <a href="/dashboard.html" class="header-btn">
+            <i class="fas fa-home"></i>
+            Dashboard
+          </a>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Main IDE Area -->
+    <main class="ide-main">
+      <!-- Enhanced File Explorer -->
+      <aside class="file-explorer">
+        <div class="explorer-header">
+          <h3>Explorer</h3>
+          <div class="explorer-actions">
+            <button class="explorer-btn" id="new-folder-btn" title="New Folder">
+              <i class="fas fa-folder-plus"></i>
+            </button>
+            <button class="explorer-btn" id="new-file-explorer-btn" title="New File">
+              <i class="fas fa-file-plus"></i>
+            </button>
+            <button class="explorer-btn" id="refresh-btn" title="Refresh">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="file-tree" id="file-tree">
+          <!-- Project Structure -->
+          <div class="folder-item" data-path="my-project">
+            <i class="fas fa-folder file-icon folder"></i>
+            <span>My Python Project</span>
+          </div>
+          <div class="file-item active" data-path="main.py">
+            <i class="fab fa-python file-icon python"></i>
+            <span>main.py</span>
+          </div>
+          <div class="file-item" data-path="utils.py">
+            <i class="fab fa-python file-icon python"></i>
+            <span>utils.py</span>
+          </div>
+          <div class="file-item" data-path="data.json">
+            <i class="fas fa-code file-icon json"></i>
+            <span>data.json</span>
+          </div>
+          <div class="file-item" data-path="readme.txt">
+            <i class="fas fa-file-alt file-icon txt"></i>
+            <span>readme.txt</span>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Enhanced Editor Area -->
+      <section class="editor-area">
+        <div class="editor-tabs" id="editor-tabs">
+          <div class="editor-tab active" data-file="main.py">
+            <i class="fab fa-python file-icon python"></i>
+            <span>main.py</span>
+            <i class="fas fa-times tab-close"></i>
+          </div>
+        </div>
+        
+        <div class="editor-container">
+          <div id="monaco-editor"></div>
+        </div>
+      </section>
+      
+      <!-- Enhanced Output Panel -->
+      <aside class="output-panel">
+        <div class="output-header">
+          <div class="output-tabs">
+            <button class="output-tab active" data-tab="console">Console</button>
+            <button class="output-tab" data-tab="debug">Debug</button>
+            <button class="output-tab" data-tab="tests">Tests</button>
+          </div>
+          <button class="explorer-btn" id="clear-output-btn" title="Clear Output">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+        
+        <div class="console-output" id="console-output">
+          <div class="output-line output-info">Python IDE Pro - Ready to code! 🐍</div>
+          <div class="output-line">Welcome to your enhanced Python development environment.</div>
+          <div class="output-line">Type your code and press Run to execute.</div>
+        </div>
+        
+        <div class="debug-output" id="debug-output" style="display: none;">
+          <div class="loading">
+            <div class="spinner"></div>
+            <span style="margin-left: 1rem;">Debug panel ready</span>
+          </div>
+        </div>
+        
+        <div class="test-output" id="test-output" style="display: none;">
+          <div class="output-line output-info">Test Runner - No tests found</div>
+          <div class="output-line">Create test files to run automated tests.</div>
+        </div>
+        
+        <div class="console-input">
+          <span class="console-prompt">>>> </span>
+          <input type="text" placeholder="Interactive Python console (coming soon...)" disabled>
+        </div>
+      </aside>
+    </main>
+    
+    <!-- Status Bar -->
+    <footer class="status-bar">
+      <div class="status-left">
+        <div class="status-item">
+          <i class="fas fa-code-branch"></i>
+          <span>main</span>
+        </div>
+        <div class="status-item">
+          <i class="fas fa-file"></i>
+          <span id="current-file">main.py</span>
+        </div>
+        <div class="status-item">
+          <i class="fas fa-info-circle"></i>
+          <span id="cursor-position">Ln 1, Col 1</span>
+        </div>
+      </div>
+      
+      <div class="status-right">
+        <div class="status-item">
+          <i class="fab fa-python"></i>
+          <span>Python 3.11</span>
+        </div>
+        <div class="status-item">
+          <i class="fas fa-circle" style="color: #238636;"></i>
+          <span>Ready</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  
+  <!-- Project Templates Modal -->
+  <div class="modal" id="templates-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Choose a Project Template</h2>
+        <button class="modal-close" onclick="closeTemplatesModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="template-grid">
+        <div class="template-card" onclick="createProject('basic-script')">
+          <div class="template-icon">
+            <i class="fas fa-file-code"></i>
+          </div>
+          <div class="template-title">Basic Script</div>
+          <div class="template-description">
+            A simple Python script with basic structure and comments.
+          </div>
+        </div>
+        
+        <div class="template-card" onclick="createProject('data-analysis')">
+          <div class="template-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <div class="template-title">Data Analysis</div>
+          <div class="template-description">
+            Project setup for data analysis with pandas and matplotlib imports.
+          </div>
+        </div>
+        
+        <div class="template-card" onclick="createProject('web-scraper')">
+          <div class="template-icon">
+            <i class="fas fa-spider"></i>
+          </div>
+          <div class="template-title">Web Scraper</div>
+          <div class="template-description">
+            Template for web scraping projects with requests and BeautifulSoup.
+          </div>
+        </div>
+        
+        <div class="template-card" onclick="createProject('game-dev')">
+          <div class="template-icon">
+            <i class="fas fa-gamepad"></i>
+          </div>
+          <div class="template-title">Game Development</div>
+          <div class="template-description">
+            Basic game structure using pygame for simple 2D games.
+          </div>
+        </div>
+        
+        <div class="template-card" onclick="createProject('api-client')">
+          <div class="template-icon">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div class="template-title">API Client</div>
+          <div class="template-description">
+            Template for building REST API clients with error handling.
+          </div>
+        </div>
+        
+        <div class="template-card" onclick="createProject('automation')">
+          <div class="template-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="template-title">Automation Script</div>
+          <div class="template-description">
+            Boilerplate for automation tasks and system administration.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let editor = null;
+    let pyodide = null;
+    let currentFile = 'main.py';
+    let files = {
+      'main.py': `# Welcome to Python IDE Pro!
+# This is an enhanced Python development environment
+
+def main():
+    print("Hello, Python World! 🐍")
+    
+    # Try some basic Python concepts
+    name = input("What's your name? ")
+    print(f"Nice to meet you, {name}!")
+    
+    # Basic calculations
+    numbers = [1, 2, 3, 4, 5]
+    total = sum(numbers)
+    print(f"Sum of {numbers} = {total}")
+    
+    # Simple function demonstration
+    result = calculate_square(7)
+    print(f"Square of 7 = {result}")
+
+def calculate_square(number):
+    """Calculate the square of a number."""
+    return number ** 2
+
+if __name__ == "__main__":
+    main()`,
+      'utils.py': `# Utility functions for your project
+
+def format_currency(amount):
+    """Format a number as currency."""
+    return f"$\{amount:.2f}"
+
+def validate_email(email):
+    """Basic email validation."""
+    return "@" in email and "." in email.split("@")[1]
+
+def fibonacci(n):
+    """Generate fibonacci sequence up to n numbers."""
+    if n <= 0:
+        return []
+    elif n == 1:
+        return [0]
+    elif n == 2:
+        return [0, 1]
+    
+    fib = [0, 1]
+    for i in range(2, n):
+        fib.append(fib[i-1] + fib[i-2])
+    return fib
+
+class Calculator:
+    """Simple calculator class."""
+    
+    @staticmethod
+    def add(a, b):
+        return a + b
+    
+    @staticmethod
+    def multiply(a, b):
+        return a * b
+    
+    @staticmethod
+    def divide(a, b):
+        if b == 0:
+            raise ValueError("Cannot divide by zero")
+        return a / b`,
+      'data.json': `{
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "role": "developer"
+    },
+    {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@example.com",
+      "role": "designer"
+    }
+  ],
+  "settings": {
+    "theme": "dark",
+    "language": "en",
+    "notifications": true
+  }
+}`,
+      'readme.txt': `Python IDE Pro - Project README
+
+This is your Python development workspace! Here's what you can do:
+
+🚀 FEATURES:
+- Multi-file editing with tabs
+- Syntax highlighting and IntelliSense
+- Real-time code execution
+- Project templates
+- File management
+- Debug capabilities (coming soon)
+
+📁 PROJECT STRUCTURE:
+- main.py: Your main application file
+- utils.py: Utility functions and classes
+- data.json: Sample data file
+- readme.txt: This file!
+
+🎯 GETTING STARTED:
+1. Edit your code in the Monaco editor
+2. Click "Run" to execute your Python code
+3. View output in the console panel
+4. Save your work using Ctrl+S
+5. Create new files with the "New File" button
+
+💡 TIPS:
+- Use the file explorer to navigate between files
+- Try the project templates for quick starts
+- The editor supports all Monaco Editor features
+- Your code runs in the browser using Pyodide
+
+Happy coding! 🐍`
+    };
+    let isRunning = false;
+
+    // Initialize Monaco Editor
+    require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' }});
+    
+    require(['vs/editor/editor.main'], function () {
+      editor = monaco.editor.create(document.getElementById('monaco-editor'), {
+        value: files[currentFile],
+        language: getLanguageFromFile(currentFile),
+        theme: 'vs-dark',
+        fontSize: 14,
+        minimap: { enabled: true },
+        wordWrap: 'on',
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+        renderWhitespace: 'selection',
+        rulers: [80, 120],
+        bracketPairColorization: { enabled: true },
+        suggest: {
+          showKeywords: true,
+          showSnippets: true,
+          showFunctions: true
+        }
+      });
+      
+      // Track cursor position
+      editor.onDidChangeCursorPosition((e) => {
+        document.getElementById('cursor-position').textContent = 
+          `Ln ${e.position.lineNumber}, Col ${e.position.column}`;
+      });
+      
+      // Auto-save on change
+      editor.onDidChangeModelContent(() => {
+        files[currentFile] = editor.getValue();
+      });
+    });
+
+    // Initialize Pyodide
+    async function initPyodide() {
+      if (!pyodide) {
+        addOutput('Initializing Python environment...', 'info');
+        pyodide = await loadPyodide({
+          indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+        });
+        addOutput('Python environment ready! 🐍', 'success');
+      }
+    }
+
+    // File operations
+    function switchFile(filename) {
+      // Save current file
+      if (editor && currentFile) {
+        files[currentFile] = editor.getValue();
+      }
+      
+      currentFile = filename;
+      document.getElementById('current-file').textContent = filename;
+      
+      // Update editor content
+      if (editor) {
+        const model = monaco.editor.createModel(files[filename] || '', getLanguageFromFile(filename));
+        editor.setModel(model);
+      }
+      
+      // Update active tab
+      document.querySelectorAll('.editor-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.file === filename);
+      });
+      
+      // Update active file in explorer
+      document.querySelectorAll('.file-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.path === filename);
+      });
+    }
+
+    function getLanguageFromFile(filename) {
+      const ext = filename.split('.').pop().toLowerCase();
+      const langMap = {
+        'py': 'python',
+        'js': 'javascript',
+        'json': 'json',
+        'txt': 'plaintext',
+        'md': 'markdown',
+        'html': 'html',
+        'css': 'css'
+      };
+      return langMap[ext] || 'plaintext';
+    }
+
+    function createNewFile() {
+      const filename = prompt('Enter filename (e.g., script.py):');
+      if (filename) {
+        files[filename] = '# New Python file\n\n';
+        addFileToExplorer(filename);
+        addEditorTab(filename);
+        switchFile(filename);
+      }
+    }
+
+    function addFileToExplorer(filename) {
+      const fileTree = document.getElementById('file-tree');
+      const fileItem = document.createElement('div');
+      fileItem.className = 'file-item';
+      fileItem.dataset.path = filename;
+      
+      const icon = getFileIcon(filename);
+      fileItem.innerHTML = `
+        <i class="${icon.class} file-icon ${icon.color}"></i>
+        <span>${filename}</span>
+      `;
+      
+      fileItem.onclick = () => switchFile(filename);
+      fileTree.appendChild(fileItem);
+    }
+
+    function addEditorTab(filename) {
+      const tabsContainer = document.getElementById('editor-tabs');
+      const tab = document.createElement('div');
+      tab.className = 'editor-tab';
+      tab.dataset.file = filename;
+      
+      const icon = getFileIcon(filename);
+      tab.innerHTML = `
+        <i class="${icon.class} file-icon ${icon.color}"></i>
+        <span>${filename}</span>
+        <i class="fas fa-times tab-close" onclick="closeTab('${filename}', event)"></i>
+      `;
+      
+      tab.onclick = (e) => {
+        if (!e.target.classList.contains('tab-close')) {
+          switchFile(filename);
+        }
+      };
+      
+      tabsContainer.appendChild(tab);
+    }
+
+    function closeTab(filename, event) {
+      event.stopPropagation();
+      
+      // Remove tab
+      const tab = document.querySelector(`[data-file="${filename}"]`);
+      if (tab) tab.remove();
+      
+      // Remove file from memory
+      delete files[filename];
+      
+      // Switch to another file if this was active
+      if (currentFile === filename) {
+        const remainingFiles = Object.keys(files);
+        if (remainingFiles.length > 0) {
+          switchFile(remainingFiles[0]);
+        }
+      }
+    }
+
+    function getFileIcon(filename) {
+      const ext = filename.split('.').pop().toLowerCase();
+      const iconMap = {
+        'py': { class: 'fab fa-python', color: 'python' },
+        'js': { class: 'fab fa-js-square', color: 'javascript' },
+        'json': { class: 'fas fa-code', color: 'json' },
+        'txt': { class: 'fas fa-file-alt', color: 'txt' },
+        'md': { class: 'fab fa-markdown', color: 'markdown' }
+      };
+      return iconMap[ext] || { class: 'fas fa-file', color: 'txt' };
+    }
+
+    // Code execution
+    async function runCode() {
+      if (isRunning) return;
+      
+      isRunning = true;
+      document.getElementById('run-btn').disabled = true;
+      document.getElementById('stop-btn').disabled = false;
+      
+      try {
+        await initPyodide();
+        
+        const code = editor.getValue();
+        addOutput(`Running ${currentFile}...`, 'info');
+        addOutput('=' * 50, 'info');
+        
+        // Capture output
+        pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+        `);
+        
+        // Run the code
+        pyodide.runPython(code);
+        
+        // Get stdout
+        const stdout = pyodide.runPython('sys.stdout.getvalue()');
+        if (stdout) {
+          addOutput(stdout, 'success');
+        }
+        
+        // Get stderr
+        const stderr = pyodide.runPython('sys.stderr.getvalue()');
+        if (stderr) {
+          addOutput(stderr, 'error');
+        }
+        
+        if (!stdout && !stderr) {
+          addOutput('Code executed successfully (no output)', 'info');
+        }
+        
+      } catch (error) {
+        addOutput(`Error: ${error.message}`, 'error');
+      } finally {
+        isRunning = false;
+        document.getElementById('run-btn').disabled = false;
+        document.getElementById('stop-btn').disabled = true;
+        addOutput('=' * 50, 'info');
+      }
+    }
+
+    function addOutput(text, type = 'info') {
+      const output = document.getElementById('console-output');
+      const line = document.createElement('div');
+      line.className = `output-line output-${type}`;
+      line.textContent = text;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function clearOutput() {
+      const output = document.getElementById('console-output');
+      output.innerHTML = '<div class="output-line output-info">Console cleared</div>';
+    }
+
+    // Output tab switching
+    function switchOutputTab(tab) {
+      // Hide all output panels
+      document.getElementById('console-output').style.display = 'none';
+      document.getElementById('debug-output').style.display = 'none';
+      document.getElementById('test-output').style.display = 'none';
+      
+      // Show selected panel
+      document.getElementById(`${tab}-output`).style.display = 'block';
+      
+      // Update active tab
+      document.querySelectorAll('.output-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.tab === tab);
+      });
+    }
+
+    // Project templates
+    function openTemplatesModal() {
+      document.getElementById('templates-modal').style.display = 'flex';
+    }
+
+    function closeTemplatesModal() {
+      document.getElementById('templates-modal').style.display = 'none';
+    }
+
+    function createProject(templateType) {
+      const templates = {
+        'basic-script': {
+          'main.py': `#!/usr/bin/env python3
+"""
+Basic Python Script Template
+"""
+
+def main():
+    """Main function - entry point of the program."""
+    print("Welcome to your new Python script!")
+    
+    # Your code here
+    name = input("Enter your name: ")
+    greet_user(name)
+
+def greet_user(name):
+    """Greet the user with a personalized message."""
+    print(f"Hello, {name}! Nice to meet you.")
+    print("Happy coding! 🐍")
+
+if __name__ == "__main__":
+    main()`,
+          'utils.py': `"""
+Utility functions for your project
+"""
+
+def format_text(text, style='normal'):
+    """Format text with different styles."""
+    if style == 'upper':
+        return text.upper()
+    elif style == 'lower':
+        return text.lower()
+    elif style == 'title':
+        return text.title()
+    else:
+        return text
+
+def calculate_average(numbers):
+    """Calculate the average of a list of numbers."""
+    if not numbers:
+        return 0
+    return sum(numbers) / len(numbers)`
+        },
+        'data-analysis': {
+          'analysis.py': `#!/usr/bin/env python3
+"""
+Data Analysis Project Template
+"""
+
+# Note: In a full environment, you would import:
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import numpy as np
+
+def load_data():
+    """Load your dataset here."""
+    # Sample data for demonstration
+    data = {
+        'sales': [100, 150, 200, 175, 300, 250],
+        'months': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    }
+    return data
+
+def analyze_data(data):
+    """Perform data analysis."""
+    sales = data['sales']
+    
+    # Basic statistics
+    total_sales = sum(sales)
+    avg_sales = total_sales / len(sales)
+    max_sales = max(sales)
+    min_sales = min(sales)
+    
+    return {
+        'total': total_sales,
+        'average': avg_sales,
+        'maximum': max_sales,
+        'minimum': min_sales
+    }
+
+def main():
+    print("📊 Data Analysis Project")
+    print("=" * 30)
+    
+    data = load_data()
+    results = analyze_data(data)
+    
+    print(f"Total Sales: {results['total']}")
+    print(f"Average Sales: {results['average']:.2f}")
+    print(f"Best Month: {results['maximum']}")
+    print(f"Worst Month: {results['minimum']}")
+
+if __name__ == "__main__":
+    main()`,
+          'data.csv': `month,sales,profit
+January,100,25
+February,150,40
+March,200,55
+April,175,35
+May,300,80
+June,250,65`
+        },
+        'web-scraper': {
+          'scraper.py': `#!/usr/bin/env python3
+"""
+Web Scraper Template
+Note: requests and BeautifulSoup would be imported in a full environment
+"""
+
+def fetch_webpage(url):
+    """Fetch webpage content."""
+    # In a real environment:
+    # response = requests.get(url)
+    # return response.text
+    
+    # Sample HTML for demonstration
+    return '''
+    <html>
+        <head><title>Sample Page</title></head>
+        <body>
+            <h1>Welcome to Sample Site</h1>
+            <p>This is sample content.</p>
+            <div class="content">
+                <p>Some important data here.</p>
+            </div>
+        </body>
+    </html>
+    '''
+
+def parse_content(html):
+    """Parse HTML content and extract data."""
+    # In a real environment:
+    # soup = BeautifulSoup(html, 'html.parser')
+    # return soup.find_all('p')
+    
+    # Simple text extraction for demo
+    lines = html.split('\\n')
+    content = []
+    for line in lines:
+        if '<p>' in line:
+            # Extract text between <p> tags
+            start = line.find('<p>') + 3
+            end = line.find('</p>')
+            if start < end:
+                content.append(line[start:end])
+    return content
+
+def main():
+    print("🕷️ Web Scraper Template")
+    print("=" * 25)
+    
+    url = "https://example.com"
+    html = fetch_webpage(url)
+    content = parse_content(html)
+    
+    print(f"Scraped content from {url}:")
+    for i, text in enumerate(content, 1):
+        print(f"{i}. {text}")
+
+if __name__ == "__main__":
+    main()`
+        }
+        // Add more templates as needed
+      };
+      
+      const template = templates[templateType];
+      if (template) {
+        // Clear current files
+        files = {};
+        
+        // Add template files
+        Object.keys(template).forEach(filename => {
+          files[filename] = template[filename];
+        });
+        
+        // Update UI
+        const firstFile = Object.keys(files)[0];
+        currentFile = firstFile;
+        
+        // Rebuild file explorer
+        rebuildFileExplorer();
+        
+        // Rebuild tabs
+        rebuildEditorTabs();
+        
+        // Switch to first file
+        switchFile(firstFile);
+      }
+      
+      closeTemplatesModal();
+    }
+
+    function rebuildFileExplorer() {
+      const fileTree = document.getElementById('file-tree');
+      fileTree.innerHTML = '';
+      
+      // Add project folder
+      const folderItem = document.createElement('div');
+      folderItem.className = 'folder-item';
+      folderItem.innerHTML = `
+        <i class="fas fa-folder file-icon folder"></i>
+        <span>My Python Project</span>
+      `;
+      fileTree.appendChild(folderItem);
+      
+      // Add files
+      Object.keys(files).forEach(filename => {
+        addFileToExplorer(filename);
+      });
+    }
+
+    function rebuildEditorTabs() {
+      const tabsContainer = document.getElementById('editor-tabs');
+      tabsContainer.innerHTML = '';
+      
+      Object.keys(files).forEach(filename => {
+        addEditorTab(filename);
+      });
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Pyodide
+      initPyodide();
+      
+      // Header button events
+      document.getElementById('new-file-btn').onclick = createNewFile;
+      document.getElementById('new-project-btn').onclick = openTemplatesModal;
+      document.getElementById('run-btn').onclick = runCode;
+      document.getElementById('clear-output-btn').onclick = clearOutput;
+      
+      // File explorer events
+      document.querySelectorAll('.file-item').forEach(item => {
+        item.onclick = () => switchFile(item.dataset.path);
+      });
+      
+      // Output tab events
+      document.querySelectorAll('.output-tab').forEach(tab => {
+        tab.onclick = () => switchOutputTab(tab.dataset.tab);
+      });
+      
+      // Keyboard shortcuts
+      document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+          switch(e.key) {
+            case 's':
+              e.preventDefault();
+              // Save functionality would go here
+              addOutput('File saved locally', 'success');
+              break;
+            case 'r':
+              e.preventDefault();
+              runCode();
+              break;
+            case 'n':
+              e.preventDefault();
+              createNewFile();
+              break;
+          }
+        }
+        
+        // F5 to run
+        if (e.key === 'F5') {
+          e.preventDefault();
+          runCode();
+        }
+      });
+    });
+
+    // Initialize file explorer with click events
+    setTimeout(() => {
+      document.querySelectorAll('.file-item').forEach(item => {
+        item.onclick = () => switchFile(item.dataset.path);
+      });
+    }, 100);
+  </script>
+</body>
+</html>

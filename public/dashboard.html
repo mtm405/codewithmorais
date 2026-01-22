@@ -1,1311 +1,660 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard — Code with Morais</title>
-  <link rel="stylesheet" href="/styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* Prevent flash of unstyled content */
-    .dashboard-main {
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-    }
-    .dashboard-main.loaded {
-      opacity: 1;
-    }
-    /* Loading animation for stats */
-    .stat-number {
-      min-width: 2ch;
-      display: inline-block;
-    }
-    
-    /* Enhanced Dashboard Styles */
-    .welcome-section {
-      background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #3182ce 100%);
-      color: white;
-      padding: 4rem 0 3rem;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .welcome-section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.05)"><polygon points="0,100 1000,0 1000,100"/></svg>');
-      background-size: cover;
-    }
-    
-    .welcome-section .container {
-      position: relative;
-      z-index: 1;
-    }
-    
-    .welcome-content {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .welcome-content h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-      text-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      letter-spacing: -0.02em;
-    }
-    
-    .welcome-subtitle {
-      font-size: 1.3rem;
-      opacity: 0.9;
-      margin-bottom: 3rem;
-      font-weight: 400;
-      line-height: 1.6;
-    }
-    
-    /* Learning Path Styles */
-    .learning-path {
-      background: rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 2.5rem;
-      margin: 3rem 0;
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    }
-    
-    .learning-path h3 {
-      margin-bottom: 2rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-      text-align: center;
-    }
-    
-    .path-steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-    
-    .path-step {
-      background: rgba(255,255,255,0.05);
-      border-radius: 16px;
-      padding: 2rem;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .path-step::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      transition: all 0.3s ease;
-    }
-    
-    .path-step.completed::before {
-      background: linear-gradient(180deg, #48bb78, #38a169);
-    }
-    
-    .path-step.current::before {
-      background: linear-gradient(180deg, #ed8936, #dd6b20);
-      animation: pulse-glow 2s infinite;
-    }
-    
-    .path-step.future::before {
-      background: linear-gradient(180deg, #718096, #4a5568);
-    }
-    
-    .path-step:hover {
-      transform: translateY(-4px);
-      background: rgba(255,255,255,0.1);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-    }
-    
-    @keyframes pulse-glow {
-      0%, 100% { 
-        box-shadow: 0 0 0 0 rgba(237,137,54,0.4);
-      }
-      50% { 
-        box-shadow: 0 0 0 8px rgba(237,137,54,0);
-      }
-    }
-    
-    .step-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    .step-icon {
-      font-size: 1.8rem;
-      min-width: 3rem;
-      height: 3rem;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-    }
-    
-    .path-step.completed .step-icon {
-      background: rgba(72,187,120,0.2);
-      color: #68d391;
-    }
-    
-    .path-step.current .step-icon {
-      background: rgba(237,137,54,0.2);
-      color: #f6ad55;
-    }
-    
-    .path-step.future .step-icon {
-      background: rgba(113,128,150,0.2);
-      color: #a0aec0;
-    }
-    
-    .step-content h4 {
-      margin-bottom: 0.75rem;
-      font-size: 1.3rem;
-      font-weight: 700;
-      line-height: 1.3;
-    }
-    
-    .step-content p {
-      margin-bottom: 1.5rem;
-      opacity: 0.9;
-      line-height: 1.5;
-      font-weight: 400;
-    }
-    
-    .step-topics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-    
-    .topic-tag {
-      background: rgba(255,255,255,0.15);
-      padding: 0.5rem 1rem;
-      border-radius: 25px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.3s ease;
-    }
-    
-    .topic-tag:hover {
-      background: rgba(255,255,255,0.2);
-      transform: translateY(-1px);
-    }
-    
-    .topic-tag.next {
-      background: rgba(237,137,54,0.2);
-      border: 1px solid rgba(237,137,54,0.4);
-      color: #f6ad55;
-    }
-    
-    .topic-tag.future {
-      background: rgba(113,128,150,0.15);
-      border: 1px solid rgba(113,128,150,0.3);
-      color: #cbd5e0;
-    }
-    
-    /* Quick Actions Styles */
-    .quick-actions {
-      margin: 3rem 0;
-    }
-    
-    .quick-actions h3 {
-      margin-bottom: 2rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-      text-align: center;
-    }
-    
-    .action-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-    
-    .action-card {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 1.5rem;
-      background: rgba(255,255,255,0.08);
-      border-radius: 16px;
-      text-decoration: none;
-      color: white;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
-    }
-    
-    .action-card:hover {
-      transform: translateY(-4px);
-      background: rgba(255,255,255,0.15);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-      border-color: rgba(255,255,255,0.2);
-    }
-    
-    .action-icon {
-      font-size: 2rem;
-      min-width: 3rem;
-      height: 3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-    }
-    
-    .action-content h4 {
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    
-    .action-content p {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      margin: 0;
-      line-height: 1.4;
-    }
-    
-    /* Progress Stats */
-    .progress-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-    
-    .stat-card {
-      background: rgba(255,255,255,0.12);
-      padding: 2rem;
-      border-radius: 16px;
-      text-align: center;
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.3s ease;
-    }
-    
-    .stat-card:hover {
-      transform: translateY(-4px);
-      background: rgba(255,255,255,0.18);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-    }
-    
-    .stat-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      display: block;
-      opacity: 0.9;
-    }
-    
-    .stat-content {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #ffd700;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    
-    .stat-label {
-      font-weight: 600;
-      font-size: 1.1rem;
-      margin-bottom: 0.25rem;
-    }
-    
-    .stat-sublabel {
-      font-size: 0.85rem;
-      opacity: 0.7;
-      font-weight: 400;
-    }
-    
-    /* Modules Section */
-    .modules-section {
-      padding: 4rem 0;
-      background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
-    }
-    
-    .modules-section h2 {
-      text-align: center;
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-      color: #1a202c;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-    
-    .section-subtitle {
-      text-align: center;
-      font-size: 1.2rem;
-      color: #4a5568;
-      margin-bottom: 4rem;
-      font-weight: 400;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .modules-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-      gap: 2.5rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    
-    .module-card {
-      background: white;
-      border-radius: 20px;
-      padding: 2.5rem;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-      transition: all 0.4s ease;
-      border: 1px solid #e2e8f0;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .module-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      transition: all 0.3s ease;
-    }
-    
-    .module-card.current::before {
-      background: linear-gradient(90deg, #ed8936, #dd6b20);
-    }
-    
-    .module-card.next::before {
-      background: linear-gradient(90deg, #4299e1, #3182ce);
-    }
-    
-    .module-card.future::before {
-      background: linear-gradient(90deg, #718096, #4a5568);
-    }
-    
-    .module-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 48px rgba(0,0,0,0.12);
-    }
-    
-    .module-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    
-    .module-icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      color: white;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    }
-    
-    .module-card.current .module-icon {
-      background: linear-gradient(135deg, #ed8936, #dd6b20);
-    }
-    
-    .module-card.next .module-icon {
-      background: linear-gradient(135deg, #4299e1, #3182ce);
-    }
-    
-    .module-card.future .module-icon {
-      background: linear-gradient(135deg, #718096, #4a5568);
-    }
-    
-    .status-badge {
-      padding: 0.6rem 1.2rem;
-      border-radius: 25px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .status-badge.in-progress {
-      background: linear-gradient(135deg, #fed7d7, #fbb6ce);
-      color: #c53030;
-    }
-    
-    .status-badge.upcoming {
-      background: linear-gradient(135deg, #bee3f8, #90cdf4);
-      color: #2b6cb0;
-    }
-    
-    .status-badge.future {
-      background: linear-gradient(135deg, #e2e8f0, #cbd5e0);
-      color: #4a5568;
-    }
-    
-    .module-content h3 {
-      font-size: 1.6rem;
-      margin-bottom: 0.75rem;
-      color: #1a202c;
-      font-weight: 700;
-      line-height: 1.3;
-    }
-    
-    .module-content > p {
-      color: #4a5568;
-      margin-bottom: 2rem;
-      line-height: 1.6;
-      font-size: 1rem;
-    }
-    
-    .module-progress {
-      margin-bottom: 2.5rem;
-    }
-    
-    .progress-bar {
-      width: 100%;
-      height: 10px;
-      background: #edf2f7;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-bottom: 0.75rem;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-    }
-    
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #48bb78, #38a169);
-      transition: width 0.6s ease;
-      position: relative;
-    }
-    
-    .progress-fill::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      animation: shimmer 2s infinite;
-    }
-    
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-    
-    .progress-text {
-      font-size: 0.95rem;
-      color: #4a5568;
-      font-weight: 600;
-    }
-    
-    .module-topics h4 {
-      margin-bottom: 1.25rem;
-      color: #1a202c;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-    
-    .topic-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-    }
-    
-    .topic-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-size: 0.95rem;
-      padding: 0.75rem;
-      background: #f8fafc;
-      border-radius: 10px;
-      transition: all 0.3s ease;
-    }
-    
-    .topic-item:hover {
-      background: #edf2f7;
-      transform: translateX(4px);
-    }
-    
-    .topic-icon {
-      font-size: 0.9rem;
-      min-width: 1.2rem;
-      font-weight: 600;
-    }
-    
-    .topic-icon:not(.pending):not(.locked) {
-      color: #48bb78;
-    }
-    
-    .topic-icon.pending {
-      color: #ed8936;
-    }
-    
-    .topic-icon.locked {
-      color: #a0aec0;
-    }
-    
-    .module-actions {
-      margin-top: 2.5rem;
-    }
-    
-    .btn-primary, .btn-disabled {
-      width: 100%;
-      padding: 1.25rem 1.5rem;
-      border-radius: 12px;
-      font-weight: 600;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #4299e1, #3182ce);
-      color: white;
-      box-shadow: 0 4px 16px rgba(66,153,225,0.3);
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(66,153,225,0.4);
-    }
-    
-    .btn-disabled {
-      background: #edf2f7;
-      color: #a0aec0;
-      cursor: not-allowed;
-    }
-    
-    .action-links {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-    }
-    
-    .action-link {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.25rem;
-      color: #4299e1;
-      text-decoration: none;
-      font-size: 0.9rem;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-      background: #ebf8ff;
-      font-weight: 500;
-    }
-    
-    .action-link:hover:not(.disabled) {
-      background: #bee3f8;
-      color: #2b6cb0;
-      transform: translateY(-1px);
-    }
-    
-    .action-link.disabled {
-      color: #a0aec0;
-      cursor: not-allowed;
-      background: #f7fafc;
-    }
-    
-    /* Header and Navigation */
-    .header {
-      background: white;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 1rem 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    
-    .header-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #1a202c;
-      text-decoration: none;
-    }
-    
-    .main-nav {
-      display: flex;
-      gap: 2rem;
-    }
-    
-    .nav-link {
-      color: #4a5568;
-      text-decoration: none;
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-    }
-    
-    .nav-link:hover {
-      color: #2d3748;
-      background: #f7fafc;
-    }
-    
-    .nav-link.active {
-      color: #4299e1;
-      background: #ebf8ff;
-    }
-    
-    /* Header Styles */
-    .user-menu {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    
-    .user-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid #e2e8f0;
-      transition: all 0.3s ease;
-    }
-    
-    .user-avatar:hover {
-      border-color: #4299e1;
-      transform: scale(1.05);
-    }
-    
-    .user-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .avatar-fallback {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #4299e1, #3182ce);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-    }
-    
-    .user-info-header {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-    
-    .user-name {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #1a202c;
-    }
-    
-    .btn-small {
-      padding: 0.5rem 1rem;
-      font-size: 0.85rem;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .btn-secondary {
-      background: #f7fafc;
-      color: #4a5568;
-      border: 1px solid #e2e8f0;
-    }
-    
-    .btn-secondary:hover {
-      background: #edf2f7;
-      color: #2d3748;
-      transform: translateY(-1px);
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
-      }
-      
-      .hero-section {
-        padding: 3rem 0;
-        text-align: center;
-      }
-      
-      .hero-content h1 {
-        font-size: 2.2rem;
-        line-height: 1.2;
-      }
-      
-      .hero-content p {
-        font-size: 1rem;
-        margin-bottom: 2rem;
-      }
-      
-      .welcome-stats {
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-top: 2rem;
-      }
-      
-      .stat-card {
-        padding: 1.25rem;
-      }
-      
-      .stat-value {
-        font-size: 1.8rem;
-      }
-      
-      .stat-label {
-        font-size: 0.85rem;
-      }
-      
-      .modules-section {
-        padding: 2rem 0;
-      }
-      
-      .modules-section h2 {
-        font-size: 2.2rem;
-        margin-bottom: 0.75rem;
-      }
-      
-      .section-subtitle {
-        font-size: 1rem;
-        margin-bottom: 2.5rem;
-        padding: 0 1rem;
-      }
-      
-      .modules-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      
-      .module-card {
-        padding: 1.75rem;
-        margin: 0 0.5rem;
-      }
-      
-      .module-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      
-      .module-icon {
-        width: 56px;
-        height: 56px;
-        font-size: 1.6rem;
-      }
-      
-      .module-content h3 {
-        font-size: 1.4rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .action-links {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      
-      .action-link {
-        justify-content: center;
-        padding: 0.875rem 1rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .hero-content h1 {
-        font-size: 1.9rem;
-      }
-      
-      .hero-content p {
-        font-size: 0.95rem;
-      }
-      
-      .welcome-stats {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      
-      .modules-section h2 {
-        font-size: 1.9rem;
-      }
-      
-      .module-card {
-        padding: 1.5rem;
-        margin: 0;
-      }
-      
-      .module-content h3 {
-        font-size: 1.3rem;
-      }
-      
-      .topic-item {
-        padding: 0.5rem;
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Code with Morais</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --python-blue: #3776ab;
+            --python-yellow: #ffd43b;
+            --dark-bg: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent-green: #238636;
+            --accent-purple: #8957e5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, var(--python-blue), var(--python-yellow));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .nav-icon::after {
+            content: '🐍';
+        }
+
+        .nav-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .user-email {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--python-blue);
+        }
+
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            border-color: var(--python-blue);
+            background: rgba(55, 118, 171, 0.1);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--text-primary), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--python-blue);
+            transform: translateY(-2px);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+        }
+
+        .stat-trend {
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Modules Grid */
+        .modules-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .module-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .module-card:hover {
+            border-color: var(--python-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(55, 118, 171, 0.2);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--python-blue), var(--accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .module-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .module-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .module-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .module-progress {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .module-status {
+            padding: 0.25rem 0.75rem;
+            background: rgba(35, 134, 54, 0.1);
+            border: 1px solid var(--accent-green);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        .module-status.new {
+            background: rgba(137, 87, 229, 0.1);
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--python-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body class="dashboard-body">
-  <!-- Header -->
-  <header class="main-header">
-    <div class="header-container">
-      <div class="logo">
-        <i class="fas fa-code"></i>
-        <span>Code with Morais</span>
-      </div>
-      <nav class="main-nav">
-        <a href="/dashboard" class="nav-link active">Dashboard</a>
-        <a href="/operators-mastery" class="nav-link">Practice</a>
-        <a href="/ide" class="nav-link">IDE</a>
-        <a href="/student-showcase" class="nav-link">Student Work</a>
-        <a href="#help" class="nav-link">Help</a>
-      </nav>
-      <div class="user-menu">
-        <div id="user-avatar" class="user-avatar" hidden>
-          <img id="user-photo" src="" alt="User photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-          <div class="avatar-fallback" style="display:none">
-            <i class="fas fa-user"></i>
-          </div>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="nav-icon"></div>
+            <div class="nav-title">Code with Morais</div>
         </div>
-        <div class="user-info-header">
-          <span id="user-name-header" class="user-name"></span>
-          <button id="signout" class="btn-secondary btn-small">
-            <i class="fas fa-sign-out-alt"></i>
-            Sign out
-          </button>
+        <div class="nav-user">
+            <div class="user-info">
+                <div class="user-name" id="userName">Loading...</div>
+                <div class="user-email" id="userEmail">...</div>
+            </div>
+            <img id="userAvatar" class="user-avatar" src="" alt="User Avatar" style="display: none;">
+            <button class="logout-btn" onclick="handleLogout()">Sign Out</button>
         </div>
-      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <div style="color: var(--text-secondary);">Loading your dashboard...</div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardContent" style="display: none;">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1 class="welcome-title">Welcome back, <span id="welcomeName">Student</span>! 👋</h1>
+                <p class="welcome-subtitle">Continue your Python learning journey</p>
+            </div>
+
+            <!-- Python Review Section -->
+            <div class="module-section">
+                <h2 class="section-title">🎓 Python Exam Review</h2>
+                <div class="modules-grid">
+                    <a href="/python-simulation-exam" class="module-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: 2px solid #8b5cf6;">
+                        <div class="module-header">
+                            <div class="module-icon" style="font-size: 2rem;">🎯</div>
+                            <div class="module-title" style="font-size: 1.3rem;">Simulation Exam - Full Certiport Test</div>
+                        </div>
+                        <div class="module-description" style="font-size: 1.05rem;">
+                            <strong>Complete 40-question simulation exam</strong> with 50-minute timer. Test your knowledge across all 6 domains with real certification-style questions. Auto-graded with detailed results and domain breakdown.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new" style="background: #fbbf24; color: #000;">🔥 PRACTICE EXAM</div>
+                        </div>
+                    </a>
+
+                    <a href="/python-class-1" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">📚</div>
+                            <div class="module-title">Data Types & Operators</div>
+                        </div>
+                        <div class="module-description">
+                            Master Python data types, operators, expressions, and precedence. Objectives 1.1-1.4.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+
+                    <a href="/python-class-2" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🔁</div>
+                            <div class="module-title">Flow Control</div>
+                        </div>
+                        <div class="module-description">
+                            Learn branching statements, loops, and control structures. Objectives 2.1-2.2.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+
+                    <a href="/python-class-3" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">💾</div>
+                            <div class="module-title">I/O & Functions</div>
+                        </div>
+                        <div class="module-description">
+                            File operations, console I/O, and function definitions. Objectives 3.1-3.2, 4.1-4.2.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+
+                    <a href="/python-class-4" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🚫</div>
+                            <div class="module-title">Error Handling</div>
+                        </div>
+                        <div class="module-description">
+                            Troubleshoot errors, handle exceptions, and perform unit testing. Objectives 5.1-5.3.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+
+                    <a href="/python-class-5" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">📦</div>
+                            <div class="module-title">Modules & Tools</div>
+                        </div>
+                        <div class="module-description">
+                            Master os, sys, math, datetime, and random modules. Objectives 6.1-6.2.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Modules Section -->
+            <div class="modules-section">
+                <h2 class="section-title">Your Learning Modules</h2>
+                <div class="modules-grid">
+                    <!-- Module 1: Python Fundamentals -->
+                    <a href="/module-1-1" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">📘</div>
+                            <div class="module-title">Module 1: Python Fundamentals</div>
+                        </div>
+                        <div class="module-description">
+                            Master data types, operators, and type operations. Includes 4 submodules with interactive exercises and quizzes.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+
+                    <a href="/io" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">📁</div>
+                            <div class="module-title">File I/O Operations</div>
+                        </div>
+                        <div class="module-description">
+                            Master reading and writing files in Python. Learn to handle text files, CSV, JSON, and more.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status">Active</div>
+                        </div>
+                    </a>
+
+                    <a href="/reviewio" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">📝</div>
+                            <div class="module-title">File I/O Review - Simple Guide</div>
+                        </div>
+                        <div class="module-description">
+                            Easy-to-follow guide to reading and writing files. Learn the three file modes (W-R-A) with simple examples and a hands-on shopping list activity.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+
+                    <a href="/review-io" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🎓</div>
+                            <div class="module-title">File I/O Review - Advanced</div>
+                        </div>
+                        <div class="module-description">
+                            Advanced review with safety routines, error handling, and formatting. Includes os.path.exists(), try/except blocks, and the Financial Manager project.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status">Advanced</div>
+                        </div>
+                    </a>
+
+                    <a href="/unit-testing.html" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🧪</div>
+                            <div class="module-title">Unit Testing with unittest</div>
+                        </div>
+                        <div class="module-description">
+                            Learn to write reliable code with Python's unittest module. Master test-driven development and automated testing.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+
+                    <a href="/sports-videogame-hero-project.html" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🎮</div>
+                            <div class="module-title">Game Hero Project</div>
+                        </div>
+                        <div class="module-description">
+                            Build an interactive hero showcase using Python. Perfect for sports and gaming enthusiasts!
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status">Active</div>
+                        </div>
+                    </a>
+
+                    <a href="/loops" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🔄</div>
+                            <div class="module-title">Loops & Iterations</div>
+                        </div>
+                        <div class="module-description">
+                            Understand for loops, while loops, and iteration patterns to write efficient code.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status">Active</div>
+                        </div>
+                    </a>
+
+                    <a href="/character-wordle" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">💪</div>
+                            <div class="module-title">Character Wordle</div>
+                        </div>
+                        <div class="module-description">
+                            Play a fun word-guessing game featuring character strengths! Earn coins, level up, and compete on the leaderboard.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+
+                    <a href="/word-jeopardy" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🧙💻</div>
+                            <div class="module-title">MOS Word Whiz Jeopardy!</div>
+                        </div>
+                        <div class="module-description">
+                            Test your Microsoft Word expert knowledge with this fun Jeopardy-style game. Answer questions to earn points!
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+
+                    <a href="/python-practice-activities" class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">🐍</div>
+                            <div class="module-title">10 Practice Activities</div>
+                        </div>
+                        <div class="module-description">
+                            Practice Python skills with slicing, loops, testing & debugging challenges.
+                        </div>
+                        <div class="module-footer">
+                            <div class="module-status new">NEW!</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-  </header>
 
-  <!-- Notifications Bar -->
-  <div class="notifications-bar">
-    <div class="container">
-      <div class="notification-item">
-        <i class="fas fa-check-circle notification-icon success"></i>
-        <span>Completed: Variables and Operators • Python Fundamentals • 2 hours ago</span>
-      </div>
-      <div class="notification-toggle">
-        <button id="notifications-btn" class="btn-icon">
-          <i class="fas fa-bell"></i>
-          <span class="notification-badge">3</span>
-        </button>
-      </div>
-    </div>
-  </div>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
-  <!-- Loading State -->
-  <div id="loading-state" class="loading-container">
-    <div class="loading-spinner"></div>
-    <p>Loading your dashboard...</p>
-  </div>
+        // Load Firebase config
+        const firebaseConfig = window.firebaseConfig || {
+            apiKey: "AIzaSyAIwwM2V2qfPCB3TLVVeb8IW3FGxdNDhiY",
+            authDomain: "codewithmorais.com",
+            projectId: "code-with-morais-405",
+            storageBucket: "code-with-morais-405.firebasestorage.app",
+            messagingSenderId: "208072504611",
+            appId: "1:208072504611:web:8ebd20260a9e16ceff8896",
+            measurementId: "G-JLH66GJNFL"
+        };
 
-  <!-- Not Signed In State -->
-  <div id="not-signed-in" class="auth-error" hidden>
-    <div class="error-content">
-      <i class="fas fa-exclamation-triangle"></i>
-      <h2>Authentication Required</h2>
-      <p>You need to sign in to access your dashboard.</p>
-      <a href="/" class="btn-primary">Return to Login</a>
-    </div>
-  </div>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
-  <!-- Main Dashboard Content -->
-  <main id="dashboard-content" class="dashboard-main" hidden>
-    <!-- Welcome Section -->
-    <section class="welcome-section">
-      <div class="container">
-        <div class="welcome-content">
-          <h1>Welcome back, <span id="user-name-welcome"></span>! 👨‍💻</h1>
-          <p class="welcome-subtitle">Master Python programming with hands-on practice and build the foundation for your coding journey</p>
-          
-          <!-- Learning Path Overview -->
-          <div class="learning-path">
-            <h3>� Your Learning Journey</h3>
-            <div class="path-steps">
-              <div class="path-step completed">
-                <div class="step-header">
-                  <div class="step-icon">✅</div>
-                  <div class="step-status">
-                    <h4>Module 1: Operations & Data Types</h4>
-                    <p>Master Python's fundamental building blocks and operations</p>
-                  </div>
-                </div>
-                <div class="step-topics">
-                  <span class="topic-tag">Data Types</span>
-                  <span class="topic-tag">Arithmetic Operators</span>
-                  <span class="topic-tag">Assignment Operators</span>
-                  <span class="topic-tag">Comparison</span>
-                </div>
-              </div>
-              
-              <div class="path-step current">
-                <div class="step-header">
-                  <div class="step-icon">🎯</div>
-                  <div class="step-status">
-                    <h4>Module 2: Flow Control & Logic</h4>
-                    <p>Learn decision making and program flow control</p>
-                  </div>
-                </div>
-                <div class="step-topics">
-                  <span class="topic-tag next">Logical Operators</span>
-                  <span class="topic-tag next">If/Elif/Else</span>
-                  <span class="topic-tag next">Loops (for/while)</span>
-                  <span class="topic-tag next">Loop Controls</span>
-                </div>
-              </div>
-              
-              <div class="path-step future">
-                <div class="step-header">
-                  <div class="step-icon">🚀</div>
-                  <div class="step-status">
-                    <h4>Module 3: Data Structures</h4>
-                    <p>Work with collections and complex data</p>
-                  </div>
-                </div>
-                <div class="step-topics">
-                  <span class="topic-tag future">Lists & Operations</span>
-                  <span class="topic-tag future">Dictionaries</span>
-                  <span class="topic-tag future">Data Manipulation</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        // Check authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                console.log('User authenticated:', user.email);
+                
+                // Update UI with user info
+                document.getElementById('userName').textContent = user.displayName || 'Student';
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('welcomeName').textContent = user.displayName?.split(' ')[0] || 'Student';
+                
+                if (user.photoURL) {
+                    const avatar = document.getElementById('userAvatar');
+                    avatar.src = user.photoURL;
+                    avatar.style.display = 'block';
+                }
 
-          <!-- Quick Actions -->
-          <div class="quick-actions">
-            <h3>⚡ Quick Actions</h3>
-            <div class="action-grid">
-              <a href="operators-mastery" class="action-card">
-                <div class="action-icon">🎯</div>
-                <div class="action-content">
-                  <h4>Continue Learning</h4>
-                  <p>Practice operators and master data types</p>
-                </div>
-              </a>
-              
-              <a href="operators-reference" class="action-card">
-                <div class="action-icon">�</div>
-                <div class="action-content">
-                  <h4>Reference Guide</h4>
-                  <p>Quick lookup for operators and syntax</p>
-                </div>
-              </a>
-              
-              <a href="gamepy" class="action-card">
-                <div class="action-icon">💻</div>
-                <div class="action-content">
-                  <h4>Practice IDE</h4>
-                  <p>Code in our interactive environment</p>
-                </div>
-              </a>
-              
-              <a href="student-showcase" class="action-card">
-                <div class="action-icon">⭐</div>
-                <div class="action-content">
-                  <h4>Student Showcase</h4>
-                  <p>See amazing programs by your classmates</p>
-                </div>
-              </a>
-              
-              <a href="test" class="action-card">
-                <div class="action-icon">🧪</div>
-                <div class="action-content">
-                  <h4>Test Knowledge</h4>
-                  <p>Validate your understanding</p>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Progress Stats -->
-        <div class="progress-stats">
-          <div class="stat-card">
-            <div class="stat-icon">🐍</div>
-            <div class="stat-content">
-              <span class="stat-number">-</span>
-              <span class="stat-label">Python Concepts</span>
-              <span class="stat-sublabel">Learned</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📈</div>
-            <div class="stat-content">
-              <span class="stat-number">-</span>
-              <span class="stat-label">Module Progress</span>
-              <span class="stat-sublabel">Completed</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">💪</div>
-            <div class="stat-content">
-              <span class="stat-number">-</span>
-              <span class="stat-label">Exercises Solved</span>
-              <span class="stat-sublabel">Hands-on Practice</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+                // Hide loading, show content
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+            } else {
+                // No user signed in, redirect to login
+                console.log('No user authenticated, redirecting to login');
+                window.location.href = '/';
+            }
+        });
 
-    <!-- Learning Modules Section -->
-    <section class="modules-section">
-      <div class="container">
-        <h2>📚 Learning Modules</h2>
-        <p class="section-subtitle">Master Python concepts step by step with hands-on practice</p>
-        
-        <div class="modules-grid">
-          <!-- Module 1: Operations & Data Types -->
-          <div class="module-card current">
-            <div class="module-header">
-              <div class="module-icon">
-                <i class="fas fa-calculator"></i>
-              </div>
-              <div class="module-status">
-                <span class="status-badge in-progress">In Progress</span>
-              </div>
-            </div>
-            
-            <div class="module-content">
-              <h3>Module 1: Operations & Data Types</h3>
-              <p>Master Python's fundamental building blocks and operations</p>
-              
-              <div class="module-progress">
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width: 0%"></div>
-                </div>
-                <span class="progress-text">0% Complete</span>
-              </div>
-              
-              <div class="module-topics">
-                <h4>📖 What You'll Learn:</h4>
-                <div class="topic-list">
-                  <div class="topic-item">
-                    <i class="fas fa-check-circle topic-icon"></i>
-                    <span>Data Types: str, int, float, bool</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-check-circle topic-icon"></i>
-                    <span>Arithmetic Operators (+, -, *, /, %, **, //)</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-check-circle topic-icon"></i>
-                    <span>Assignment Operators (=, +=, -=, *=, etc.)</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-check-circle topic-icon"></i>
-                    <span>Comparison Operators (==, !=, <, >, <=, >=)</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-circle topic-icon pending"></i>
-                    <span>Logical Operators (and, or, not)</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-circle topic-icon pending"></i>
-                    <span>Identity & Containment (is, in)</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-circle topic-icon pending"></i>
-                    <span>Operator Precedence & Execution Order</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="module-actions">
-                <a href="operators-mastery" class="btn-primary btn-full">
-                  <i class="fas fa-play"></i>
-                  Continue Learning
-                </a>
-                <div class="action-links">
-                  <a href="operators-reference" class="action-link">
-                    <i class="fas fa-book"></i>
-                    Reference Guide
-                  </a>
-                  <a href="/ide" class="action-link">
-                    <i class="fas fa-code"></i>
-                    Practice IDE
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Module 2: Flow Control -->
-          <div class="module-card next">
-            <div class="module-header">
-              <div class="module-icon">
-                <i class="fas fa-code-branch"></i>
-              </div>
-              <div class="module-status">
-                <span class="status-badge upcoming">Coming Next</span>
-              </div>
-            </div>
-            
-            <div class="module-content">
-              <h3>Module 2: Flow Control with Decisions & Loops</h3>
-              <p>Learn to make decisions and control program flow</p>
-              
-              <div class="module-progress">
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width: 0%"></div>
-                </div>
-                <span class="progress-text">Unlocks after Module 1</span>
-              </div>
-              
-              <div class="module-topics">
-                <h4>🎯 What You'll Master:</h4>
-                <div class="topic-list">
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Branching Statements (if, elif, else)</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Nested & Compound Conditional Expressions</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Iteration with while Loops</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Iteration with for Loops</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Loop Controls (break, continue, pass)</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Nested Loops & Complex Conditions</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="module-actions">
-                <button class="btn-disabled btn-full" disabled>
-                  <i class="fas fa-lock"></i>
-                  Complete Module 1 First
-                </button>
-                <div class="action-links">
-                  <a href="lesson-control-flow" class="action-link disabled">
-                    <i class="fas fa-eye"></i>
-                    Preview Lessons
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Module 3: Data Structures -->
-          <div class="module-card future">
-            <div class="module-header">
-              <div class="module-icon">
-                <i class="fas fa-list"></i>
-              </div>
-              <div class="module-status">
-                <span class="status-badge future">Future Module</span>
-              </div>
-            </div>
-            
-            <div class="module-content">
-              <h3>Module 3: Data Structures & Collections</h3>
-              <p>Work with lists, dictionaries, and complex data</p>
-              
-              <div class="module-progress">
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width: 0%"></div>
-                </div>
-                <span class="progress-text">Available Later</span>
-              </div>
-              
-              <div class="module-topics">
-                <h4>🚀 Advanced Topics:</h4>
-                <div class="topic-list">
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Lists & List Operations</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Data Manipulation & Sorting</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Dictionaries & Key-Value Pairs</span>
-                  </div>
-                  <div class="topic-item">
-                    <i class="fas fa-lock topic-icon locked"></i>
-                    <span>Tuples & Immutable Data</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="module-actions">
-                <button class="btn-disabled btn-full" disabled>
-                  <i class="fas fa-hourglass-half"></i>
-                  Coming Soon
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script type="module" src="/app.js"></script>
-  <script type="module" src="/dashboard.js"></script>
+        // Logout handler
+        window.handleLogout = async function() {
+            try {
+                await signOut(auth);
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Error signing out. Please try again.');
+            }
+        };
+    </script>
+    
+    <!-- Load Firebase config -->
+    <script src="firebase-config.js"></script>
 </body>
 </html>

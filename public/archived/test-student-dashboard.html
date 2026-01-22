@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard Test - Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dashboard Content */
+        #dashboard-content {
+            display: none;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #667eea;
+        }
+
+        .user-details h1 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .user-title {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s;
+            background: #667eea;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .activity-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .activity-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .activity-icon {
+            font-size: 1.2rem;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .activity-meta {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .learning-path {
+            display: grid;
+            gap: 15px;
+        }
+
+        .path-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .path-item.completed {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .path-item.in-progress {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+
+        .path-content {
+            flex: 1;
+        }
+
+        .path-content h4 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .path-content p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .lesson-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .lesson-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .lesson-status.in-progress {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .lesson-status.not-started {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .achievement-item.unlocked {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .achievement-item.locked {
+            opacity: 0.6;
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+        }
+
+        .achievement-info h4 {
+            margin-bottom: 5px;
+        }
+
+        .achievement-info p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .achievement-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .status-indicator {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-testing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-spinner"></div>
+        <h2>Loading your dashboard...</h2>
+        <p>Testing real data integration...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div id="dashboard-content">
+        <div class="container">
+            <!-- Header -->
+            <header class="header">
+                <div class="user-info">
+                    <img id="user-avatar" src="https://via.placeholder.com/50" alt="Profile" class="user-avatar">
+                    <div class="user-details">
+                        <h1>Welcome back, <span id="user-name">Loading...</span>!</h1>
+                        <div id="user-title" class="user-title">Loading...</div>
+                    </div>
+                </div>
+                <div class="test-controls">
+                    <button class="btn" onclick="simulateProgress()">Simulate Progress</button>
+                    <button class="btn btn-secondary" onclick="resetData()">Reset</button>
+                    <span id="api-status" class="status-indicator status-testing">Testing Mode</span>
+                </div>
+            </header>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div id="currency-amount" class="stat-number">0</div>
+                    <div class="stat-label">💰 Code Coins</div>
+                </div>
+                <div class="stat-card">
+                    <div id="points-amount" class="stat-number">0</div>
+                    <div class="stat-label">⭐ Points Earned</div>
+                </div>
+                <div class="stat-card">
+                    <div id="progress-percentage" class="stat-number">0%</div>
+                    <div class="stat-label">📊 Overall Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div id="lessons-completed" class="stat-number">0/12</div>
+                    <div class="stat-label">📚 Lessons Completed</div>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Progress Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Learning Progress</h3>
+                        <span class="card-icon">📈</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <p>Keep up the great work! You're making excellent progress.</p>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Activity</h3>
+                        <span class="card-icon">📝</span>
+                    </div>
+                    <div class="activity-list">
+                        <!-- Activity items will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Learning Path -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <h3 class="card-title">Learning Path</h3>
+                        <span class="card-icon">🛤️</span>
+                    </div>
+                    <div class="learning-path">
+                        <div class="path-item">
+                            <div class="path-content">
+                                <h4>Variables & Data Types</h4>
+                                <p>Learn the fundamentals of Python variables and data types</p>
+                            </div>
+                            <span class="lesson-status not-started">Not Started</span>
+                        </div>
+                        <div class="path-item">
+                            <div class="path-content">
+                                <h4>Working with Numbers</h4>
+                                <p>Master numeric operations and mathematical functions</p>
+                            </div>
+                            <span class="lesson-status not-started">Not Started</span>
+                        </div>
+                        <div class="path-item">
+                            <div class="path-content">
+                                <h4>String Operations</h4>
+                                <p>Explore string manipulation and text processing</p>
+                            </div>
+                            <span class="lesson-status not-started">Not Started</span>
+                        </div>
+                        <div class="path-item">
+                            <div class="path-content">
+                                <h4>Boolean Logic</h4>
+                                <p>Understand boolean values and logical operations</p>
+                            </div>
+                            <span class="lesson-status not-started">Not Started</span>
+                        </div>
+                        <div class="path-item">
+                            <div class="path-content">
+                                <h4>If Statements</h4>
+                                <p>Learn conditional logic and decision making</p>
+                            </div>
+                            <span class="lesson-status not-started">Not Started</span>
+                        </div>
+                        <div class="path-item">
+                            <div class="path-content">
+                                <h4>Loops & Iteration</h4>
+                                <p>Master for loops, while loops, and iteration</p>
+                            </div>
+                            <span class="lesson-status not-started">Not Started</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Achievements</h3>
+                        <span class="card-icon">🏆</span>
+                    </div>
+                    <div class="achievements-grid">
+                        <!-- Achievement items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real dashboard data for testing
+        let currentProgress = 0;
+        let userData = {
+            name: 'Alex Johnson',
+            title: 'Python Explorer',
+            currency: 85,
+            points: 340,
+            lessons_completed: 3,
+            total_lessons: 12
+        };
+
+        // Mock progress data
+        let progressData = [
+            { id: 'lesson_1_1', title: 'Variables & Data Types', status: 'completed', points: 25, timestamp: Date.now() - 86400000 },
+            { id: 'lesson_1_2', title: 'Working with Numbers', status: 'completed', points: 30, timestamp: Date.now() - 43200000 },
+            { id: 'lesson_1_3', title: 'String Operations', status: 'in_progress', points: 15, timestamp: Date.now() - 3600000 },
+            { id: 'lesson_1_4', title: 'Boolean Logic', status: 'not_started', points: 0 },
+            { id: 'lesson_2_1', title: 'If Statements', status: 'not_started', points: 0 },
+            { id: 'lesson_2_2', title: 'Loops & Iteration', status: 'not_started', points: 0 }
+        ];
+
+        class DashboardTester {
+            constructor() {
+                this.init();
+            }
+
+            async init() {
+                console.log('🚀 Initializing dashboard test...');
+                
+                // Simulate loading time
+                setTimeout(() => {
+                    this.loadInitialData();
+                    this.showDashboard();
+                }, 2000);
+            }
+
+            loadInitialData() {
+                // Update user info
+                document.getElementById('user-name').textContent = userData.name;
+                document.getElementById('user-title').textContent = userData.title;
+
+                // Calculate progress
+                const completedLessons = progressData.filter(p => p.status === 'completed').length;
+                const progressPercentage = Math.round((completedLessons / userData.total_lessons) * 100);
+                
+                userData.lessons_completed = completedLessons;
+                currentProgress = progressPercentage;
+
+                this.updateStats();
+                this.updateRecentActivity();
+                this.updateLearningPath();
+                this.updateAchievements();
+
+                document.getElementById('api-status').textContent = 'Real Data Simulation';
+                document.getElementById('api-status').className = 'status-indicator status-success';
+            }
+
+            showDashboard() {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('dashboard-content').style.display = 'block';
+            }
+
+            updateStats() {
+                document.getElementById('currency-amount').textContent = userData.currency;
+                document.getElementById('points-amount').textContent = userData.points;
+                document.getElementById('progress-percentage').textContent = `${currentProgress}%`;
+                document.getElementById('lessons-completed').textContent = `${userData.lessons_completed}/${userData.total_lessons}`;
+
+                // Update progress bar
+                const progressBar = document.querySelector('.progress-fill');
+                if (progressBar) {
+                    progressBar.style.width = `${currentProgress}%`;
+                }
+            }
+
+            updateRecentActivity() {
+                const activityList = document.querySelector('.activity-list');
+                const recentActivities = progressData
+                    .filter(p => p.timestamp)
+                    .sort((a, b) => b.timestamp - a.timestamp)
+                    .slice(0, 3);
+
+                activityList.innerHTML = '';
+
+                if (recentActivities.length === 0) {
+                    activityList.innerHTML = '<div class="activity-item">No recent activity. Start learning!</div>';
+                    return;
+                }
+
+                recentActivities.forEach(activity => {
+                    const timeAgo = this.getTimeAgo(activity.timestamp);
+                    const statusIcon = this.getStatusIcon(activity.status);
+
+                    const activityItem = document.createElement('div');
+                    activityItem.className = 'activity-item';
+                    activityItem.innerHTML = `
+                        <div class="activity-info">
+                            <span class="activity-icon">${statusIcon}</span>
+                            <span class="activity-title">${activity.title}</span>
+                        </div>
+                        <div class="activity-meta">
+                            <span class="activity-status">${this.formatStatus(activity.status)}</span>
+                            <div>${timeAgo}</div>
+                        </div>
+                    `;
+                    activityList.appendChild(activityItem);
+                });
+            }
+
+            updateLearningPath() {
+                const pathItems = document.querySelectorAll('.path-item');
+                pathItems.forEach((item, index) => {
+                    if (progressData[index]) {
+                        const lesson = progressData[index];
+                        const statusElement = item.querySelector('.lesson-status');
+
+                        if (statusElement) {
+                            statusElement.textContent = this.formatStatus(lesson.status);
+                            statusElement.className = `lesson-status ${lesson.status.replace('_', '-')}`;
+                        }
+
+                        // Update item classes
+                        item.classList.remove('completed', 'in-progress');
+                        if (lesson.status !== 'not_started') {
+                            item.classList.add(lesson.status.replace('_', '-'));
+                        }
+                    }
+                });
+            }
+
+            updateAchievements() {
+                const achievements = [
+                    {
+                        title: 'First Steps',
+                        description: 'Complete your first lesson',
+                        icon: '🎯',
+                        unlocked: userData.lessons_completed >= 1
+                    },
+                    {
+                        title: 'Getting Started',
+                        description: 'Complete 3 lessons',
+                        icon: '🏆',
+                        unlocked: userData.lessons_completed >= 3
+                    },
+                    {
+                        title: 'Point Collector',
+                        description: 'Earn 100 points',
+                        icon: '💎',
+                        unlocked: userData.points >= 100
+                    },
+                    {
+                        title: 'Dedicated Learner',
+                        description: 'Complete a full section',
+                        icon: '📚',
+                        unlocked: userData.lessons_completed >= 4
+                    }
+                ];
+
+                const achievementsList = document.querySelector('.achievements-grid');
+                achievementsList.innerHTML = '';
+
+                achievements.forEach(achievement => {
+                    const achievementEl = document.createElement('div');
+                    achievementEl.className = `achievement-item ${achievement.unlocked ? 'unlocked' : 'locked'}`;
+
+                    achievementEl.innerHTML = `
+                        <div class="achievement-icon">${achievement.icon}</div>
+                        <div class="achievement-info">
+                            <h4>${achievement.title}</h4>
+                            <p>${achievement.description}</p>
+                            <span class="achievement-status">
+                                ${achievement.unlocked ? 'Unlocked!' : 'Locked'}
+                            </span>
+                        </div>
+                    `;
+
+                    achievementsList.appendChild(achievementEl);
+                });
+            }
+
+            getStatusIcon(status) {
+                switch (status) {
+                    case 'completed': return '✅';
+                    case 'in_progress': return '🔄';
+                    default: return '📚';
+                }
+            }
+
+            formatStatus(status) {
+                switch (status) {
+                    case 'completed': return 'Completed';
+                    case 'in_progress': return 'In Progress';
+                    default: return 'Not Started';
+                }
+            }
+
+            getTimeAgo(timestamp) {
+                const now = Date.now();
+                const diff = now - timestamp;
+                
+                const minutes = Math.floor(diff / 60000);
+                const hours = Math.floor(minutes / 60);
+                const days = Math.floor(hours / 24);
+                
+                if (days > 0) return `${days}d ago`;
+                if (hours > 0) return `${hours}h ago`;
+                if (minutes > 0) return `${minutes}m ago`;
+                return 'Just now';
+            }
+        }
+
+        // Global functions for testing
+        function simulateProgress() {
+            console.log('🎯 Simulating progress...');
+            trackPerformance('simulateProgress');
+            
+            // Find next lesson to complete
+            const nextLesson = progressData.find(p => p.status === 'not_started');
+            if (nextLesson) {
+                nextLesson.status = 'in_progress';
+                nextLesson.timestamp = Date.now();
+                
+                showNotification(`📚 Started ${nextLesson.title}`, 'info');
+                dashboard.updateRecentActivity();
+                dashboard.updateLearningPath();
+                
+                setTimeout(() => {
+                    nextLesson.status = 'completed';
+                    nextLesson.points = Math.floor(Math.random() * 20) + 20; // 20-40 points
+                    userData.points += nextLesson.points;
+                    userData.currency += 10;
+                    
+                    dashboard.loadInitialData();
+                    
+                    // Show completion notification
+                    showNotification(`🎉 Completed ${nextLesson.title}! +${nextLesson.points} points`, 'success');
+                    
+                    // Check for achievement unlocks
+                    checkAchievements();
+                    
+                }, 2000);
+            } else {
+                showNotification('🏆 All lessons completed! Great job!', 'success');
+            }
+        }
+
+        function resetData() {
+            console.log('🔄 Resetting data...');
+            trackPerformance('resetData');
+            
+            // Reset progress data
+            progressData.forEach(lesson => {
+                lesson.status = 'not_started';
+                lesson.points = 0;
+                delete lesson.timestamp;
+            });
+            
+            // Complete first lesson by default
+            progressData[0].status = 'completed';
+            progressData[0].points = 25;
+            progressData[0].timestamp = Date.now() - 86400000; // 1 day ago
+            
+            // Reset user data
+            userData.points = 25; // Only from first lesson
+            userData.currency = 85;
+            userData.lessons_completed = 1;
+            currentProgress = Math.round((1 / userData.total_lessons) * 100); // ~8%
+            
+            dashboard.loadInitialData();
+            showNotification('🔄 Data reset to initial state', 'info');
+        }
+
+        function checkAchievements() {
+            const completedLessons = progressData.filter(p => p.status === 'completed').length;
+            
+            // Achievement thresholds
+            const achievements = [
+                { threshold: 1, name: 'First Steps', icon: '🎯' },
+                { threshold: 3, name: 'Getting Started', icon: '🏆' },
+                { threshold: 5, name: 'Making Progress', icon: '📚' },
+                { threshold: 8, name: 'Almost There', icon: '🚀' }
+            ];
+            
+            achievements.forEach(achievement => {
+                if (completedLessons === achievement.threshold) {
+                    showNotification(`${achievement.icon} Achievement Unlocked: ${achievement.name}!`, 'success');
+                    userData.points += 10; // Bonus points for achievements
+                    userData.currency += 5;
+                    
+                    // Update display
+                    setTimeout(() => {
+                        dashboard.updateStats();
+                        dashboard.updateAchievements();
+                    }, 1000);
+                }
+            });
+        }
+
+        // Advanced testing functions
+        function simulateFullProgress() {
+            console.log('🚀 Simulating full course progress...');
+            
+            let currentIndex = 0;
+            const incompleteData = progressData.filter(p => p.status !== 'completed');
+            
+            if (incompleteData.length === 0) {
+                showNotification('📚 All lessons already completed!', 'info');
+                return;
+            }
+            
+            const interval = setInterval(() => {
+                if (currentIndex >= incompleteData.length) {
+                    clearInterval(interval);
+                    showNotification('🎓 Course completed! Congratulations!', 'success');
+                    return;
+                }
+                
+                const lesson = incompleteData[currentIndex];
+                lesson.status = 'completed';
+                lesson.points = Math.floor(Math.random() * 25) + 25;
+                lesson.timestamp = Date.now() - (Math.random() * 1000); // Slightly staggered
+                
+                userData.points += lesson.points;
+                userData.currency += 12;
+                
+                dashboard.loadInitialData();
+                showNotification(`✅ Auto-completed: ${lesson.title}`, 'info');
+                
+                currentIndex++;
+            }, 800);
+        }
+
+        function simulateError() {
+            console.log('⚠️ Simulating error condition...');
+            
+            showNotification('❌ Simulated error: Connection failed', 'error');
+            
+            // Simulate API failure
+            setTimeout(() => {
+                showNotification('🔄 Retrying connection...', 'warning');
+                
+                setTimeout(() => {
+                    showNotification('✅ Connection restored', 'success');
+                }, 2000);
+            }, 1000);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 1001;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Enhanced communication for testing suite
+        function sendTestEvent(message, data = null) {
+            try {
+                window.parent.postMessage({
+                    type: 'dashboardEvent',
+                    message: message,
+                    data: data
+                }, '*');
+            } catch (error) {
+                console.log('Not in iframe, skipping parent communication');
+            }
+        }
+
+        // Listen for test commands from parent window
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.action) {
+                handleTestCommand(event.data);
+            }
+        });
+
+        function handleTestCommand(command) {
+            console.log('Received test command:', command);
+            sendTestEvent(`Executing command: ${command.action}`);
+            
+            switch (command.action) {
+                case 'reset':
+                    resetData();
+                    sendTestEvent('Dashboard reset to initial state');
+                    break;
+                    
+                case 'simulateProgress':
+                    simulateProgress();
+                    sendTestEvent('Progress simulation triggered');
+                    break;
+                    
+                case 'setScenario':
+                    setScenario(command.scenario, command.data);
+                    sendTestEvent(`Scenario set to: ${command.scenario}`);
+                    break;
+                    
+                case 'setProgress':
+                    setProgressValue(command.value);
+                    sendTestEvent(`Progress set to: ${command.value}%`);
+                    break;
+                    
+                case 'rapidUpdate':
+                    // For stress testing
+                    const randomPoints = Math.floor(Math.random() * 10) + 1;
+                    userData.points += randomPoints;
+                    dashboard.updateStats();
+                    sendTestEvent(`Rapid update ${command.iteration}: +${randomPoints} points`);
+                    break;
+                    
+                default:
+                    sendTestEvent(`Unknown command: ${command.action}`, command);
+            }
+        }
+
+        function setScenario(scenario, data) {
+            console.log('Setting scenario:', scenario, data);
+            
+            switch (scenario) {
+                case 'new_student':
+                    // Reset to completely new student
+                    progressData.forEach(lesson => {
+                        lesson.status = 'not_started';
+                        lesson.points = 0;
+                        delete lesson.timestamp;
+                    });
+                    userData.points = 0;
+                    userData.currency = 10;
+                    userData.lessons_completed = 0;
+                    break;
+                    
+                case 'active_student':
+                    // Set to active student with some progress
+                    for (let i = 0; i < Math.min(data.completed || 3, progressData.length); i++) {
+                        progressData[i].status = 'completed';
+                        progressData[i].points = Math.floor(Math.random() * 20) + 20;
+                        progressData[i].timestamp = Date.now() - (Math.random() * 86400000 * 3); // Random within last 3 days
+                    }
+                    
+                    if (data.inProgress && progressData[data.completed]) {
+                        progressData[data.completed].status = 'in_progress';
+                        progressData[data.completed].timestamp = Date.now() - (Math.random() * 3600000); // Random within last hour
+                    }
+                    
+                    userData.points = data.points || 150;
+                    userData.currency = data.currency || 75;
+                    break;
+                    
+                case 'advanced_student':
+                    // Set to advanced student with most lessons completed
+                    for (let i = 0; i < Math.min(data.completed || 8, progressData.length); i++) {
+                        progressData[i].status = 'completed';
+                        progressData[i].points = Math.floor(Math.random() * 25) + 25;
+                        progressData[i].timestamp = Date.now() - (Math.random() * 86400000 * 7); // Random within last week
+                    }
+                    
+                    userData.points = data.points || 500;
+                    userData.currency = data.currency || 200;
+                    break;
+            }
+            
+            // Update dashboard with new scenario
+            dashboard.loadInitialData();
+        }
+
+        function setProgressValue(value) {
+            currentProgress = value;
+            
+            // Update progress bar
+            const progressBar = document.querySelector('.progress-fill');
+            if (progressBar) {
+                progressBar.style.width = `${value}%`;
+            }
+            
+            // Update progress text
+            document.getElementById('progress-percentage').textContent = `${value}%`;
+        }
+
+        // Enhanced notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            
+            const bgColor = type === 'success' ? '#28a745' : 
+                           type === 'warning' ? '#ffc107' : 
+                           type === 'error' ? '#dc3545' : '#17a2b8';
+            
+            const textColor = type === 'warning' ? '#333' : 'white';
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${bgColor};
+                color: ${textColor};
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 1001;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                animation: slideIn 0.3s ease;
+                font-weight: 600;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Send to testing suite
+            sendTestEvent(`Notification shown: ${message}`, { type, message });
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Performance tracking
+        let performanceMetrics = {
+            loadTime: 0,
+            updateCount: 0,
+            lastUpdate: Date.now()
+        };
+
+        function trackPerformance(action) {
+            performanceMetrics.updateCount++;
+            performanceMetrics.lastUpdate = Date.now();
+            
+            sendTestEvent(`Performance: ${action}`, performanceMetrics);
+        }
+
+        // Initialize dashboard when page loads
+        let dashboard;
+        document.addEventListener('DOMContentLoaded', () => {
+            const startTime = performance.now();
+            dashboard = new DashboardTester();
+            
+            // Track load time
+            window.addEventListener('load', () => {
+                performanceMetrics.loadTime = Math.round(performance.now() - startTime);
+                sendTestEvent('Dashboard fully loaded', performanceMetrics);
+            });
+            
+            // Announce readiness to testing suite
+            setTimeout(() => {
+                sendTestEvent('Dashboard ready for testing');
+            }, 2500); // After initial load animation
+        });
+    </script>
+</body>
+</html>

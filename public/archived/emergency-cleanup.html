@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧹 Emergency Data Cleanup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+        .container {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .warning {
+            background: #dc3545;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Emergency Data Cleanup</h1>
+        <p>This page will permanently delete ALL student progress data from def-practice.html</p>
+        
+        <div class="warning">
+            ⚠️ WARNING: This action cannot be undone! ⚠️<br>
+            All student progress, quiz results, and leaderboard data will be permanently deleted.
+        </div>
+        
+        <div id="authSection">
+            <div class="warning">
+                🔑 You need to sign in with Google to access the database
+            </div>
+            <button class="btn btn-success" onclick="signInWithGoogle()">
+                🔑 Sign in with Google
+            </button>
+        </div>
+        
+        <div id="controls" class="hidden">
+            <button class="btn btn-danger" onclick="clearAllData()">
+                🗑️ DELETE ALL STUDENT PROGRESS
+            </button>
+            <button class="btn btn-success" onclick="checkDataCounts()">
+                📊 Check Current Data Counts
+            </button>
+        </div>
+        
+        <div class="log" id="log">
+            Ready to clear data. Click "Check Current Data Counts" to see what will be deleted.
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore, collection, getDocs, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAIwwM2V2qfPCB3TLVVeb8IW3FGxdNDhiY",
+            authDomain: "codewithmorais.com",
+            projectId: "code-with-morais-405",
+            storageBucket: "code-with-morais-405.firebasestorage.app",
+            messagingSenderId: "208072504611",
+            appId: "1:208072504611:web:8ebd20260a9e16ceff8896",
+            measurementId: "G-JLH66GJNFL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        let currentUser = null;
+
+        function log(message) {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `<br>[${timestamp}] ${message}`;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(message);
+        }
+
+        // Authentication state listener
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                log(`✅ Signed in as: ${user.displayName} (${user.email})`);
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('controls').classList.remove('hidden');
+                log('🎯 Ready to manage student data!');
+            } else {
+                log('❌ Not signed in - authentication required');
+                document.getElementById('authSection').classList.remove('hidden');
+                document.getElementById('controls').classList.add('hidden');
+            }
+        });
+
+        // Google Sign In with popup/redirect fallback
+        window.signInWithGoogle = async function() {
+            try {
+                const provider = new GoogleAuthProvider();
+                
+                log('🔑 Attempting to sign in with Google...');
+                
+                try {
+                    const result = await signInWithPopup(auth, provider);
+                    log(`✅ Popup sign-in successful: ${result.user.displayName}`);
+                } catch (popupError) {
+                    console.warn('Popup failed, trying redirect:', popupError);
+                    
+                    if (popupError.code === 'auth/popup-blocked' || 
+                        popupError.code === 'auth/popup-closed-by-user' ||
+                        popupError.message.includes('popup')) {
+                        
+                        log('⚠️ Popup blocked, using redirect method...');
+                        await signInWithRedirect(auth, provider);
+                        log('🔄 Redirecting for authentication...');
+                    } else {
+                        throw popupError;
+                    }
+                }
+            } catch (error) {
+                console.error('Sign in error:', error);
+                log(`❌ Sign in failed: ${error.message}`);
+            }
+        };
+
+        // Check for redirect result on page load
+        getRedirectResult(auth).then((result) => {
+            if (result) {
+                log(`✅ Redirect sign-in successful: ${result.user.displayName}`);
+            }
+        }).catch((error) => {
+            console.warn('Redirect result error:', error);
+        });
+
+        window.checkDataCounts = async function() {
+            if (!currentUser) {
+                log('❌ Please sign in first to check data counts');
+                return;
+            }
+            
+            log('📊 Checking current data counts...');
+            
+            const collections = [
+                'quizProgress',        // Student progress in def-practice.html
+                'quizResults',         // Quiz results from def-quiz.html  
+                'liveLeaderboard',     // Leaderboard data
+                'securityViolations'   // Security logs
+            ];
+            
+            let totalCount = 0;
+            
+            for (const collectionName of collections) {
+                try {
+                    const querySnapshot = await getDocs(collection(db, collectionName));
+                    const count = querySnapshot.size;
+                    totalCount += count;
+                    log(`📁 ${collectionName}: ${count} documents`);
+                } catch (error) {
+                    log(`❌ Error checking ${collectionName}: ${error.message}`);
+                }
+            }
+            
+            log(`📊 TOTAL DOCUMENTS TO DELETE: ${totalCount}`);
+            
+            if (totalCount === 0) {
+                log('✅ No data found - already clean!');
+            } else {
+                log('⚠️ Click "DELETE ALL STUDENT PROGRESS" to remove all data');
+            }
+        };
+
+        window.clearAllData = async function() {
+            if (!currentUser) {
+                log('❌ Please sign in first to clear data');
+                return;
+            }
+            
+            const confirmed = confirm(
+                "🚨 FINAL WARNING 🚨\n\n" +
+                "This will permanently delete ALL student data:\n" +
+                "• All practice progress from def-practice.html\n" +
+                "• All quiz results\n" +
+                "• All leaderboard data\n" +
+                "• All security logs\n\n" +
+                "This action CANNOT be undone!\n\n" +
+                "Are you absolutely sure?"
+            );
+            
+            if (!confirmed) {
+                log('❌ Cleanup cancelled by user');
+                return;
+            }
+            
+            const doubleConfirm = prompt('Type "DELETE ALL" to confirm:');
+            if (doubleConfirm !== 'DELETE ALL') {
+                log('❌ Cleanup cancelled - incorrect confirmation');
+                return;
+            }
+            
+            log('🔥 STARTING COMPLETE DATA WIPE...');
+            
+            const collections = [
+                'quizProgress',        // Student progress in def-practice.html
+                'quizResults',         // Quiz results from def-quiz.html
+                'liveLeaderboard',     // Leaderboard data
+                'securityViolations'   // Security logs
+            ];
+            
+            let totalDeleted = 0;
+            
+            for (const collectionName of collections) {
+                try {
+                    log(`🗑️ Clearing ${collectionName}...`);
+                    
+                    const querySnapshot = await getDocs(collection(db, collectionName));
+                    
+                    if (querySnapshot.empty) {
+                        log(`   ℹ️ ${collectionName} is already empty`);
+                        continue;
+                    }
+                    
+                    const deletePromises = [];
+                    querySnapshot.forEach((documentSnapshot) => {
+                        deletePromises.push(deleteDoc(doc(db, collectionName, documentSnapshot.id)));
+                    });
+                    
+                    await Promise.all(deletePromises);
+                    
+                    log(`   ✅ Deleted ${querySnapshot.size} documents from ${collectionName}`);
+                    totalDeleted += querySnapshot.size;
+                    
+                } catch (error) {
+                    log(`   ❌ Error clearing ${collectionName}: ${error.message}`);
+                }
+            }
+            
+            log(`🎯 CLEANUP COMPLETE!`);
+            log(`📊 Total documents deleted: ${totalDeleted}`);
+            log(`🧹 All student progress has been reset to zero`);
+            log(`✅ Students can now start fresh on def-practice.html`);
+            
+            alert(`✅ Cleanup successful!\n\n${totalDeleted} documents deleted.\n\nAll student progress has been reset.`);
+        };
+
+        // Initial message
+        log('🚀 Emergency cleanup tool loaded and ready');
+        log('� Please sign in with Google to access student data');
+    </script>
+</body>
+</html>

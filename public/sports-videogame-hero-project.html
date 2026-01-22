@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Sports & Gaming Hero Challenge | Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 10px;
+        }
+
+        .timeline-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .overview-section {
+            margin-bottom: 40px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .overview-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .overview-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .parts-container {
+            margin-bottom: 40px;
+        }
+
+        .part-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .part-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .part-icon {
+            font-size: 2rem;
+        }
+
+        .part-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .subsection {
+            padding: 25px 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .subsection:last-child {
+            border-bottom: none;
+        }
+
+        .subsection h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .points-badge {
+            background: #27ae60;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .step-list {
+            padding-left: 20px;
+            color: #2c3e50;
+        }
+
+        .step-list li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .tool-highlight {
+            background: #f39c12;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .requirement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .requirement-table th,
+        .requirement-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .requirement-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+        }
+
+        .requirement-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tip-card h5 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .rubric-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .rubric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .rubric-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .rubric-item h4 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #f39c12;
+        }
+
+        .navigation-footer {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .nav-button {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 10px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #e67e22;
+        }
+
+        @media (max-width: 768px) {
+            .overview-grid,
+            .tips-grid,
+            .rubric-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .part-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div id="particles-js"></div>
+            <h1>🎮⚽ Digital Sports & Gaming Hero Challenge</h1>
+            <p>Legends of the Arena & Virtual Worlds</p>
+            <div class="timeline-badge">
+                ⏱️ Timeline: Two Class Periods
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Hook & Introduction Section -->
+            <div style="background: linear-gradient(135deg, #2d3436, #636e72); color: white; padding: 40px 30px; border-radius: 20px; margin-bottom: 30px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(45, 52, 54, 0.2);">
+                <!-- Animated background elements -->
+                <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116, 185, 255, 0.1) 0%, transparent 70%); border-radius: 50%; animation: pulse 4s ease-in-out infinite;"></div>
+                <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(253, 121, 168, 0.1) 0%, transparent 70%); border-radius: 50%; animation: pulse 3s ease-in-out infinite reverse;"></div>
+                
+                <div style="position: relative; z-index: 2;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h2 style="font-size: 2.5rem; margin-bottom: 15px; background: linear-gradient(45deg, #74b9ff, #fd79a8, #00d4aa); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;">
+                            🚨 MISSION ALERT: Champions Wanted! 🚨
+                        </h2>
+                        <p style="font-size: 1.3rem; opacity: 0.95; margin-bottom: 20px;">
+                            The worlds of sports and gaming are filled with incredible heroes who changed the game forever! Your mission? <strong>Become a digital storyteller</strong> and showcase the legends who inspire millions!
+                        </p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 30px 0;">
+                        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 15px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">🏆</div>
+                            <h4 style="color: #74b9ff; margin-bottom: 10px; font-size: 1.2rem;">Step 1: Choose Your Champion</h4>
+                            <p style="opacity: 0.9; line-height: 1.5;">Research and discover the incredible story of a sports athlete or gaming legend who changed their field forever.</p>
+                        </div>
+                        
+                        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 15px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">📝</div>
+                            <h4 style="color: #00d4aa; margin-bottom: 10px; font-size: 1.2rem;">Step 2: Document Their Journey</h4>
+                            <p style="opacity: 0.9; line-height: 1.5;">Use Microsoft Word like a pro to create a detailed profile with professional formatting and powerful tools.</p>
+                        </div>
+                        
+                        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 15px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">🎬</div>
+                            <h4 style="color: #fd79a8; margin-bottom: 10px; font-size: 1.2rem;">Step 3: Present Their Legacy</h4>
+                            <p style="opacity: 0.9; line-height: 1.5;">Transform your research into an epic PowerPoint presentation that showcases their impact on sports or gaming!</p>
+                        </div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #00b894, #00a085); padding: 25px; border-radius: 15px; text-align: center; margin-top: 30px; box-shadow: 0 10px 25px rgba(0, 184, 148, 0.3);">
+                        <h3 style="margin-bottom: 15px; font-size: 1.5rem; color: #ffffff;">🎯 Why This Challenge Rocks</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 15px;">
+                            <div style="opacity: 0.95;">
+                                <strong>💼 Future-Ready Skills:</strong><br>
+                                Master Microsoft Office tools used everywhere from esports organizations to sports journalism
+                            </div>
+                            <div style="opacity: 0.95;">
+                                <strong>🧠 Research Mastery:</strong><br>
+                                Learn to analyze achievements, statistics, and impact like a professional sports analyst
+                            </div>
+                            <div style="opacity: 0.95;">
+                                <strong>❤️ Passion Connection:</strong><br>
+                                Explore the stories behind your favorite sports and games while building valuable skills
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 12px; border: 2px solid #74b9ff;">
+                        <h4 style="color: #74b9ff; margin-bottom: 10px; font-size: 1.3rem;">🚀 Ready to Level Up Your Skills?</h4>
+                        <p style="opacity: 0.95; margin-bottom: 15px; font-size: 1.1rem;">
+                            By the end of this challenge, you'll have created a professional profile and presentation that showcases both your subject's achievements and your own digital literacy!
+                        </p>
+                        <div style="background: linear-gradient(45deg, #fd79a8, #74b9ff); padding: 3px; border-radius: 25px; display: inline-block;">
+                            <div style="background: #2d3436; padding: 12px 25px; border-radius: 22px;">
+                                <strong style="color: #ffffff; font-size: 1.1rem;">Let's celebrate the legends! 🌟</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div class="overview-section">
+                <h2 style="margin-bottom: 20px; font-size: 2rem;">🎯 Assignment Overview</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 20px;">Use Microsoft Word to create a detailed profile about a sports legend or gaming pioneer, then use Microsoft PowerPoint to present their achievements and impact.</p>
+                
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h4>📝 Part 1: Microsoft Word</h4>
+                        <p>Research and write a 5-paragraph champion profile with proper formatting and Word tools</p>
+                    </div>
+                    <div class="overview-card">
+                        <h4>🎤 Part 2: Microsoft PowerPoint</h4>
+                        <p>Create a 7-slide presentation showcasing achievements, challenges, and legacy with advanced visual tools</p>
+                    </div>
+                    <div class="overview-card">
+                        <h4>🏆 Total Points</h4>
+                        <p>100 points total across both applications</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Examples Section -->
+            <div style="background: linear-gradient(135deg, #fd79a8, #e84393); color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 15px 35px rgba(253, 121, 168, 0.3);">
+                <h2 style="margin-bottom: 20px; font-size: 2rem; text-align: center;">🌟 Who Should You Choose? Sports & Gaming Legends</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 25px; text-align: center; opacity: 0.95;">Need inspiration? Here are amazing examples of champions who changed their worlds:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                    <!-- Sports Legends -->
+                    <div style="background: rgba(255, 255, 255, 0.15); padding: 25px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                        <h3 style="color: #ffffff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                            ⚽🏀🏈 Sports Legends
+                        </h3>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #00d4aa;">•</span>
+                                <strong>Basketball Icons:</strong> Michael Jordan, LeBron James, Kobe Bryant, Diana Taurasi
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #00d4aa;">•</span>
+                                <strong>Soccer/Football Legends:</strong> Pelé, Lionel Messi, Cristiano Ronaldo, Megan Rapinoe
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #00d4aa;">•</span>
+                                <strong>Tennis Champions:</strong> Serena Williams, Roger Federer, Rafael Nadal, Naomi Osaka
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #00d4aa;">•</span>
+                                <strong>Olympic Heroes:</strong> Simone Biles, Usain Bolt, Michael Phelps, Katie Ledecky
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #00d4aa;">•</span>
+                                <strong>American Football:</strong> Tom Brady, Joe Montana, Jerry Rice, Drew Brees
+                            </li>
+                            <li style="padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #00d4aa;">•</span>
+                                <strong>Breaking Barriers:</strong> Jackie Robinson, Muhammad Ali, Billie Jean King
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Gaming Legends -->
+                    <div style="background: rgba(255, 255, 255, 0.15); padding: 25px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                        <h3 style="color: #ffffff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                            🎮🕹️ Gaming Pioneers
+                        </h3>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #74b9ff;">•</span>
+                                <strong>Game Creators:</strong> Shigeru Miyamoto (Mario, Zelda), Hideo Kojima (Metal Gear)
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #74b9ff;">•</span>
+                                <strong>Esports Champions:</strong> Faker (League of Legends), Ninja (Fortnite), s1mple (CS:GO)
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #74b9ff;">•</span>
+                                <strong>Gaming Innovators:</strong> John Carmack (Doom), Gabe Newell (Steam), Will Wright (SimCity)
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #74b9ff;">•</span>
+                                <strong>Speedrunners:</strong> World record holders in popular games like Mario, Zelda, Minecraft
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #74b9ff;">•</span>
+                                <strong>Gaming Content Creators:</strong> PewDiePie, MrBeast, Markiplier
+                            </li>
+                            <li style="padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #74b9ff;">•</span>
+                                <strong>Industry Leaders:</strong> Satoru Iwata (Nintendo), Phil Spencer (Xbox)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Selection Tips -->
+                <div style="background: rgba(255, 255, 255, 0.2); padding: 25px; border-radius: 15px; margin-top: 25px; border: 2px solid rgba(255, 255, 255, 0.3);">
+                    <h4 style="color: #ffffff; margin-bottom: 15px; text-align: center; font-size: 1.4rem;">🎯 How to Choose the Perfect Champion</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 15px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">✅</div>
+                            <strong>Good Choice:</strong><br>
+                            <span style="opacity: 0.9;">Someone with documented achievements, statistics, and enough available information for research</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
+                            <strong>Data Rich:</strong><br>
+                            <span style="opacity: 0.9;">Look for champions with clear records, awards, or measurable impact on their sport/gaming field</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">⏰</div>
+                            <strong>Research Ready:</strong><br>
+                            <span style="opacity: 0.9;">Choose someone you can find reliable sources about quickly from sports sites, gaming wikis, or news articles</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px; padding: 20px; background: rgba(0, 0, 0, 0.1); border-radius: 10px;">
+                    <h5 style="color: #ffffff; margin-bottom: 10px;">💡 Pro Tip from Mr. Morais:</h5>
+                    <p style="opacity: 0.95; margin: 0; font-size: 1.05rem;">"Don't just pick the most famous person! Sometimes the speedrunner who revolutionized a gaming technique or the athlete who overcame incredible odds to succeed makes for a more compelling and personal story than writing about someone everyone already knows!"</p>
+                </div>
+            </div>
+
+            <div class="parts-container">
+                <!-- Part 1: Microsoft Word -->
+                <div class="part-section">
+                    <div class="part-header">
+                        <div class="part-icon">📝</div>
+                        <div>
+                            <div class="part-title">Part 1: Microsoft Word — The Champion Profile</div>
+                            <p style="color: #636e72; margin-top: 5px;">Create a professionally formatted athlete/gamer profile</p>
+                        </div>
+                    </div>
+
+                    <!-- Section A: Setup and Formatting -->
+                    <div class="subsection">
+                        <h4>🔧 A. Setup and Formatting <span class="points-badge">10 points</span></h4>
+                        <ol class="step-list">
+                            <li><strong>Open Microsoft Word</strong> and start a new, blank document.</li>
+                            <li><strong>Title:</strong> Type your champion's name and their sport/game at the top (e.g., "LeBron James - Basketball Legend" or "Faker - League of Legends Champion").</li>
+                            <li><strong>Font & Size:</strong> Select all text. Change the font to <span class="tool-highlight">Calibri</span> (or similar) and size to <span class="tool-highlight">12</span>.</li>
+                            <li><strong>Header:</strong> Go to <span class="tool-highlight">Insert tab → Header</span> and choose a simple style. Type your name in the header.</li>
+                            <li><strong>Save:</strong> Save your document as <strong>ChampionProfile_[Your Name]</strong>.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Section B: Content and Tools -->
+                    <div class="subsection">
+                        <h4>📚 B. Content and Tools <span class="points-badge">30 points</span></h4>
+                        <p>Research and write a detailed, 5-paragraph profile of your chosen champion (3-5 sentences per paragraph).</p>
+                        
+                        <p style="margin-top: 15px; line-height: 1.6;">Your profile should tell a compelling story about your hero's journey. Start with their background—where they came from, the challenges they faced, and how they broke into their sport or game. Include specific details like their hometown, early training, or first major competition. Make your reader understand why this person's story matters.</p>
+
+                        <p style="margin-top: 15px; line-height: 1.6;">When describing their achievements, go beyond just listing awards. Explain <em>what</em> these accomplishments mean. For example, don't just say "Won 3 championships"—explain the difficulty, the competition they faced, or records they broke. Use statistics to paint a picture of dominance: career averages, win percentages, tournament placements, or world rankings. Numbers tell the story of greatness!</p>
+                        
+                        <table class="requirement-table">
+                            <thead>
+                                <tr>
+                                    <th>Paragraph</th>
+                                    <th>Focus</th>
+                                    <th>Required Word Tool</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Paragraph 1: Background & Rise</strong></td>
+                                    <td>Who are they? When/where did they start? What was their journey to becoming a champion?</td>
+                                    <td>Use <span class="tool-highlight">Italics</span> on any team names, game titles, or sport names mentioned.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Paragraph 2: Achievements & Records</strong></td>
+                                    <td>What are their greatest accomplishments? Include specific statistics, awards, or records they've set.</td>
+                                    <td>Create a <span class="tool-highlight">Numbered List</span> (1, 2, 3) of their top 3 achievements with specific stats/dates.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Paragraph 3: Impact & Legacy</strong></td>
+                                    <td>How did they change their sport/game? What is their lasting influence on fans, other players, or the industry?</td>
+                                    <td>Use <span class="tool-highlight">Underline</span> on any statistical numbers or records mentioned (scores, years, rankings).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Paragraph 4: Challenges & Adversity</strong></td>
+                                    <td>What obstacles did they overcome? Include injuries, personal struggles, setbacks, or controversies they faced and how they persevered.</td>
+                                    <td>Use <span class="tool-highlight">Highlight Color</span> (Home → Text Highlight Color) on key challenges or turning points in their career.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Paragraph 5: Current Status & Future</strong></td>
+                                    <td>What are they doing now? Are they still competing, retired, coaching, or involved in the community? What's their future outlook?</td>
+                                    <td>Insert a <span class="tool-highlight">Table</span> (Insert → Table) with 2 columns showing "Current Activity" and "Description" for 2-3 activities.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Section C: Final Check -->
+                    <div class="subsection">
+                        <h4>✅ C. Final Check</h4>
+                        <ol class="step-list">
+                            <li><strong>Word Count Check:</strong> Your profile should be about <strong>250-300 words total</strong> (5 paragraphs with 3-5 sentences each).</li>
+                            <li><strong>Print Preview:</strong> Look at the document using <span class="tool-highlight">File → Print</span> (you do not need to print it) to ensure your Header looks right and formatting is clean.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Part 2: Microsoft PowerPoint -->
+                <div class="part-section">
+                    <div class="part-header">
+                        <div class="part-icon">🎤</div>
+                        <div>
+                            <div class="part-title">Part 2: Microsoft PowerPoint — The Championship Showcase</div>
+                            <p style="color: #636e72; margin-top: 5px;">Transform your research into an engaging sports/gaming presentation</p>
+                        </div>
+                    </div>
+
+                    <!-- Section A: Transfer Content & Theme -->
+                    <div class="subsection">
+                        <h4>🎨 A. Transfer Content & Theme <span class="points-badge">15 points</span></h4>
+                        <ol class="step-list">
+                            <li><strong>Open PowerPoint</strong> and start a new presentation.</li>
+                            <li><strong>Choose a Theme:</strong> Go to <span class="tool-highlight">Design tab</span> and choose a dynamic, colorful theme that matches your champion's energy (avoid plain white themes).</li>
+                            <li><strong>Create 7 Slides:</strong> Title, Background & Rise, Achievements, Impact & Legacy, Challenges Overcome, Current Status, and Closing/Thank You slide.</li>
+                            <li><strong>Copy-Paste Text:</strong> Use copy and paste tools to move content from your Word profile into the slides, but <strong>convert paragraphs into short bullet points</strong>. Keep text minimal and focus on visuals!</li>
+                        </ol>
+
+                        <div class="highlight-box">
+                            <strong>Different Focus:</strong> While the local hero project emphasized text formatting, this project emphasizes <strong>visual Microsoft Office skills</strong> - charts, shapes, icons, animations, and effects!
+                        </div>
+                    </div>
+
+                    <!-- Section B: Visuals and Polish -->
+                    <div class="subsection">
+                        <h4>✨ B. Visuals and Polish <span class="points-badge">35 points</span></h4>
+                        <ol class="step-list">
+                            <li><strong>Slide 1 (Title):</strong> Add your champion's full name, their sport/game, your name, and insert a high-quality action photo. Use <span class="tool-highlight">Insert tab → Shapes</span> to add a colored rectangle behind your title text to make it pop.</li>
+                            
+                            <li><strong>Slide 2 (Background & Rise):</strong> Insert at least 2 images related to their early career or sport/game. Use <span class="tool-highlight">Picture Tools → Artistic Effects</span> to apply a cool effect to one image. Add 3-4 bullet points about their origins.</li>
+                            
+                            <li><strong>Slide 3 (Achievements & Records):</strong> Go to <span class="tool-highlight">Insert tab → Chart</span>. Create a bar chart or column chart showing their top 3-4 statistics (like career points, championships won, tournament victories, win percentages). Make sure the chart has a title and labels.</li>
+                            
+                            <li><strong>Slide 4 (Impact & Legacy):</strong> Add <span class="tool-highlight">Insert tab → Icons</span> to include 3-4 relevant icons (trophy, star, gaming controller, sports equipment). Write 3-4 bullet points about their influence on the sport/game and fans.</li>
+                            
+                            <li><strong>Slide 5 (Challenges Overcome):</strong> Use <span class="tool-highlight">Insert tab → SmartArt</span> to create a visual representation of 2-3 major challenges they faced. Choose a timeline or process SmartArt graphic to show their journey through adversity.</li>
+                            
+                            <li><strong>Slide 6 (Current Status & Future):</strong> Insert a professional photo of them today. Add <span class="tool-highlight">Insert tab → Text Box</span> with interesting facts about what they're doing now (coaching, business ventures, media work, philanthropy). Use at least 2 text boxes with different formatting.</li>
+                            
+                            <li><strong>Slide 7 (Closing/Thank You):</strong> Create an inspiring closing slide with a memorable quote from your champion (use <span class="tool-highlight">quotation marks</span> and cite the source). Add a "Thank You for Watching!" message and include one final impactful image.</li>
+                            
+                            <li><strong>Animations:</strong> Go to <span class="tool-highlight">Animations tab</span> and add entrance animations (like "Fly In," "Zoom," or "Fade") to at least 5 elements across your slides. Make sure the animations enhance the presentation, not distract from it.</li>
+                            
+                            <li><strong>Transitions:</strong> Go to <span class="tool-highlight">Transitions tab</span> and apply slide transitions between all slides. Use consistent transitions (choose one or two types) for a professional look.</li>
+                        </ol>
+
+                        <div class="highlight-box">
+                            <strong>Make it Visual:</strong> Sports and gaming presentations should be dynamic! Use charts for statistics, SmartArt for challenges, shapes for emphasis, artistic effects on photos, and icons to represent concepts visually. Remember: Less text, more visuals!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="tips-section">
+                <h3 style="margin-bottom: 20px;">💡 Success Tips</h3>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h5>🔍 Research Smart</h5>
+                        <p>Use reliable sources like ESPN, official team websites, gaming wikis, tournament databases, and verified news articles.</p>
+                    </div>
+                    <div class="tip-card">
+                        <h5>⏰ Time Management</h5>
+                        <p>Spend Day 1 on Word research and formatting tools, Day 2 on PowerPoint charts, animations, and visual effects.</p>
+                    </div>
+                    <div class="tip-card">
+                        <h5>📊 Use Visual Tools</h5>
+                        <p>This project focuses on visual Microsoft Office skills! Practice using charts, shapes, icons, animations, and artistic effects.</p>
+                    </div>
+                    <div class="tip-card">
+                        <h5>🎨 Make it Dynamic</h5>
+                        <p>Sports and gaming subjects should have energetic presentations. Use colors, effects, and animations to match the excitement!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rubric Section -->
+            <div class="rubric-section">
+                <h3 style="margin-bottom: 20px; text-align: center; font-size: 2rem;">📊 Scoring Breakdown (100 Points)</h3>
+                <div class="rubric-grid">
+                    <div class="rubric-item">
+                        <h4>40</h4>
+                        <p><strong>Microsoft Word Tools</strong><br>Setup (10) + Italics, Numbers, Underline (30)</p>
+                    </div>
+                    <div class="rubric-item">
+                        <h4>50</h4>
+                        <p><strong>PowerPoint Visual Skills</strong><br>Content (25) + Charts, Shapes, Icons, Animations (25)</p>
+                    </div>
+                    <div class="rubric-item">
+                        <h4>10</h4>
+                        <p><strong>Visual Impact</strong><br>Creative Use of Effects & Professional Design</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Footer -->
+        <div class="navigation-footer">
+            <h3 style="margin-bottom: 20px;">Ready to Showcase Your Champion?</h3>
+            <p style="margin-bottom: 20px; opacity: 0.9;">Choose your sports legend or gaming hero and start creating your professional showcase!</p>
+            <a href="/" class="nav-button">🏠 Back to Home</a>
+            <a href="/dashboard.html" class="nav-button">📊 View Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Particles.js configuration
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 60,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.4,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>

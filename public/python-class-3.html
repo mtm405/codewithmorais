@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💾 Class 3: Input/Output and Code Structure | Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #f0f0f0;
+        }
+
+        .objectives {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .objectives h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .objectives ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .objectives li:before {
+            content: "✓";
+            position: absolute;
+            left: 5px;
+            color: #50fa7b;
+            font-weight: bold;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .section ul li {
+            font-size: 1.02rem;
+            line-height: 1.75;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            color: #ffd700;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subsection-title {
+            color: #8be9fd;
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+        }
+
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .vocab-table th {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .vocab-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vocab-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .vocab-table .term {
+            font-weight: bold;
+            color: #ff79c6;
+            width: 20%;
+        }
+
+        .code-block {
+            background: #282a36;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #50fa7b;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .code-block .keyword { color: #ff79c6; }
+        .code-block .function { color: #50fa7b; }
+        .code-block .string { color: #f1fa8c; }
+        .code-block .number { color: #bd93f9; }
+        .code-block .comment { color: #6272a4; font-style: italic; }
+        .code-block .operator { color: #ff79c6; }
+        .code-block .variable { color: #8be9fd; }
+
+        .example-box {
+            background: rgba(80, 250, 123, 0.1);
+            border-left: 4px solid #50fa7b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-title {
+            color: #50fa7b;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .activity-box {
+            background: rgba(189, 147, 249, 0.1);
+            border-left: 4px solid #bd93f9;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .activity-title {
+            color: #bd93f9;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .quiz-box {
+            background: rgba(255, 121, 198, 0.1);
+            border-left: 4px solid #ff79c6;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .quiz-question {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .quiz-question h4 {
+            color: #ff79c6;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .quiz-options li {
+            padding: 8px 0;
+            padding-left: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-options li:hover {
+            padding-left: 30px;
+            color: #ffd700;
+        }
+
+        .answer-reveal {
+            background: rgba(80, 250, 123, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .answer-reveal.show {
+            display: block;
+        }
+
+        .btn-show-answer {
+            background: #ff79c6;
+            color: #282a36;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-show-answer:hover {
+            background: #ff92d0;
+            transform: translateY(-2px);
+        }
+
+        .math-formula {
+            color: #f1fa8c;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            background: rgba(241, 250, 140, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffd700;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+        <div style="text-align: center; margin-bottom: 10px;">
+            <h3 style="color: #8be9fd; font-size: 1.1rem; font-weight: 500; margin: 0;">🎓 Python Exam Review</h3>
+        </div>
+
+        <div class="header">
+            <h1>💾 Input/Output and Code Structure</h1>
+            <p>Master file operations, console I/O, and function definitions</p>
+        </div>
+
+        <div class="objectives">
+            <h2>🎯 Learning Objectives</h2>
+            <ul>
+                <li><strong>Objective 3.1:</strong> Perform file input and output operations</li>
+                <li><strong>Objective 3.2:</strong> Construct and analyze code segments for console I/O</li>
+                <li><strong>Objective 4.1:</strong> Document code segments using comments and documentation strings</li>
+                <li><strong>Objective 4.2:</strong> Construct and analyze code segments that include function definitions</li>
+            </ul>
+        </div>
+
+        <!-- Key Vocabulary -->
+        <div class="section">
+            <h2 class="section-title">💡 Key Vocabulary</h2>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Definition</th>
+                        <th>Context/Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term">File I/O</td>
+                        <td>The operation of reading data from, or writing data to, a permanent storage file</td>
+                        <td>Using <span class="math-formula">open, close, read, write</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">with statement</td>
+                        <td>A context manager that ensures resources, like files, are properly closed, even if errors occur</td>
+                        <td><span class="math-formula">with open('file.txt', 'r') as f:</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">f-String</td>
+                        <td>A way to embed expressions inside string literals using curly braces, prefixed by an 'f'</td>
+                        <td><span class="math-formula">f"Name: {name}, Age: {age}"</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">Docstring</td>
+                        <td>A string literal that occurs as the first statement in a module, function, class, or method definition, used for in-code documentation</td>
+                        <td>Generated by <span class="math-formula">pydoc</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">Call Signature</td>
+                        <td>The parameters (and their order) required when calling a function</td>
+                        <td>The definition of a function using <span class="math-formula">def</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">Default Value</td>
+                        <td>A value assigned to a function parameter that is used if no argument is provided in the function call</td>
+                        <td><span class="math-formula">def greet(name="User"):</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detailed Information -->
+        <div class="section">
+            <h2 class="section-title">📝 Detailed Information and Examples</h2>
+
+            <h3 class="subsection-title">A. File Input and Output (Objective 3.1)</h3>
+            <p>File operations involve <span class="highlight">open, close, read, write, append</span>, checking existence, and delete. The <span class="math-formula">with</span> statement is the preferred method for file handling.</p>
+
+            <div class="example-box">
+                <div class="example-title">Example 1: File Write and Read</div>
+                <div class="code-block"><span class="variable">file_name</span> <span class="operator">=</span> <span class="string">"data.txt"</span>
+
+<span class="comment"># Writing using the 'with' statement (ensures file is closed)</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="variable">file_name</span>, <span class="string">'w'</span>) <span class="keyword">as</span> <span class="variable">f</span>:
+    <span class="variable">f</span>.<span class="function">write</span>(<span class="string">"Hello File I/O!\n"</span>)
+    <span class="variable">f</span>.<span class="function">write</span>(<span class="string">"Second Line."</span>)
+
+<span class="comment"># Reading using 'with' statement</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="variable">file_name</span>, <span class="string">'r'</span>) <span class="keyword">as</span> <span class="variable">f</span>:
+    <span class="variable">content</span> <span class="operator">=</span> <span class="variable">f</span>.<span class="function">read</span>()
+
+<span class="function">print</span>(<span class="variable">content</span>)
+
+<span class="comment"># Output:</span>
+<span class="comment"># Hello File I/O!</span>
+<span class="comment"># Second Line.</span></div>
+                <p style="margin-top: 15px;"><strong>File Modes:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>• <span class="math-formula">'r'</span> - Read (default)</li>
+                    <li>• <span class="math-formula">'w'</span> - Write (creates new file or overwrites existing)</li>
+                    <li>• <span class="math-formula">'a'</span> - Append (adds to end of file)</li>
+                    <li>• <span class="math-formula">'x'</span> - Create (fails if file exists)</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">B. Console Input and Output (Objective 3.2)</h3>
+            <p>Reading input from the console and printing formatted text are essential skills.</p>
+
+            <div class="example-box">
+                <div class="example-title">Example 2: Formatted Output</div>
+                <div class="code-block"><span class="variable">name</span> <span class="operator">=</span> <span class="string">"Python"</span>
+<span class="variable">version</span> <span class="operator">=</span> <span class="number">3</span>
+
+<span class="comment"># string.format() method</span>
+<span class="variable">message1</span> <span class="operator">=</span> <span class="string">"Language: {}, Version: {}."</span>.<span class="function">format</span>(<span class="variable">name</span>, <span class="variable">version</span>)
+<span class="function">print</span>(<span class="variable">message1</span>)
+
+<span class="comment"># f-String method (recommended - cleaner and faster)</span>
+<span class="variable">message2</span> <span class="operator">=</span> <span class="string">f"Language: <span class="variable">{name}</span>, Version: <span class="variable">{version}</span>."</span>
+<span class="function">print</span>(<span class="variable">message2</span>)
+
+<span class="comment"># Both Output: Language: Python, Version: 3.</span></div>
+            </div>
+
+            <h3 class="subsection-title">C. Code Documentation and Structure (Objectives 4.1 & 4.2)</h3>
+            <p>Good documentation uses <span class="highlight">indentation, white space, comments, and docstrings</span>. Functions are defined using <span class="math-formula">def</span> and can use <span class="math-formula">return</span>.</p>
+
+            <div class="example-box">
+                <div class="example-title">Example 3: Function Definition and Documentation</div>
+                <div class="code-block"><span class="comment"># Use comments for short explanations</span>
+<span class="keyword">def</span> <span class="function">calculate_area</span>(<span class="variable">length</span>, <span class="variable">width</span><span class="operator">=</span><span class="number">1</span>):
+    <span class="string">"""
+    Calculates the area of a rectangle. (This is a Docstring)
+    
+    :param length: The length of the rectangle.
+    :param width: The width of the rectangle (defaults to 1).
+    :return: The calculated area.
+    """</span>
+    <span class="variable">area</span> <span class="operator">=</span> <span class="variable">length</span> <span class="operator">*</span> <span class="variable">width</span>
+    <span class="keyword">return</span> <span class="variable">area</span>
+
+
+<span class="comment"># Function Calls</span>
+<span class="variable">area1</span> <span class="operator">=</span> <span class="function">calculate_area</span>(<span class="number">10</span>)
+<span class="variable">area2</span> <span class="operator">=</span> <span class="function">calculate_area</span>(<span class="number">5</span>, <span class="number">5</span>)
+
+<span class="function">print</span>(<span class="variable">area1</span>)  <span class="comment"># 10 (uses default width=1)</span>
+<span class="function">print</span>(<span class="variable">area2</span>)  <span class="comment"># 25 (5 * 5)</span></div>
+            </div>
+
+            <div style="background: rgba(139, 233, 253, 0.1); border-left: 4px solid #8be9fd; border-radius: 10px; padding: 15px; margin: 20px 0;">
+                <strong style="color: #8be9fd;">💡 Best Practices:</strong><br>
+                • Use meaningful variable and function names<br>
+                • Add comments for complex logic<br>
+                • Include docstrings for all functions<br>
+                • Follow consistent indentation (4 spaces)<br>
+                • Use white space to improve readability
+            </div>
+        </div>
+
+        <!-- Practical Activities -->
+        <div class="section">
+            <h2 class="section-title">🛠️ Practical Activities</h2>
+
+            <div class="activity-box">
+                <div class="activity-title">Activity 1: File and Console I/O Construction</div>
+                <p><strong>Instructions:</strong> Write a code segment that:</p>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Asks the user for their name using console input</li>
+                    <li>Appends a line to a file named <span class="math-formula">log.txt</span> that says: "User [Name] logged in."</li>
+                    <li>Reads the entire content of <span class="math-formula">log.txt</span> and prints it to the console</li>
+                </ol>
+                <button class="btn-show-answer" onclick="toggleAnswer('activity1-answer')">Show Solution</button>
+                <div id="activity1-answer" class="answer-reveal">
+                    <div class="code-block"><span class="comment"># Step 1: Get user input</span>
+<span class="variable">name</span> <span class="operator">=</span> <span class="function">input</span>(<span class="string">"Enter your name: "</span>)
+
+<span class="comment"># Step 2: Append to log file</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">"log.txt"</span>, <span class="string">"a"</span>) <span class="keyword">as</span> <span class="variable">f</span>:
+    <span class="variable">f</span>.<span class="function">write</span>(<span class="string">f"User <span class="variable">{name}</span> logged in.\n"</span>)
+
+<span class="comment"># Step 3: Read and print file contents</span>
+<span class="keyword">with</span> <span class="function">open</span>(<span class="string">"log.txt"</span>, <span class="string">"r"</span>) <span class="keyword">as</span> <span class="variable">f</span>:
+    <span class="variable">content</span> <span class="operator">=</span> <span class="variable">f</span>.<span class="function">read</span>()
+    <span class="function">print</span>(<span class="variable">content</span>)</div>
+                </div>
+            </div>
+
+            <div class="activity-box">
+                <div class="activity-title">Activity 2: Function Creation and Documentation</div>
+                <p><strong>Instructions:</strong> Create a function named <span class="math-formula">is_even_or_odd</span> that:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Accepts a single argument, <span class="math-formula">number</span></li>
+                    <li>Includes a concise docstring explaining its purpose</li>
+                    <li>Returns the string <span class="math-formula">"Even"</span> if the number is even, or <span class="math-formula">"Odd"</span> if it is odd</li>
+                </ul>
+                <button class="btn-show-answer" onclick="toggleAnswer('activity2-answer')">Show Solution</button>
+                <div id="activity2-answer" class="answer-reveal">
+                    <div class="code-block"><span class="keyword">def</span> <span class="function">is_even_or_odd</span>(<span class="variable">number</span>):
+    <span class="string">"""
+    Determines if a number is even or odd.
+    
+    :param number: An integer to check.
+    :return: "Even" if number is even, "Odd" if number is odd.
+    """</span>
+    <span class="keyword">if</span> <span class="variable">number</span> <span class="operator">%</span> <span class="number">2</span> <span class="operator">==</span> <span class="number">0</span>:
+        <span class="keyword">return</span> <span class="string">"Even"</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">"Odd"</span>
+
+<span class="comment"># Test the function</span>
+<span class="function">print</span>(<span class="function">is_even_or_odd</span>(<span class="number">10</span>))  <span class="comment"># Even</span>
+<span class="function">print</span>(<span class="function">is_even_or_odd</span>(<span class="number">7</span>))   <span class="comment"># Odd</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="section">
+            <h2 class="section-title">❓ Quiz: Review Check</h2>
+
+            <div class="quiz-box">
+                <div class="quiz-question">
+                    <h4>Question 1: What file mode must be used to add content to the end of an existing file?</h4>
+                    <ul class="quiz-options">
+                        <li>a) <span class="math-formula">'w'</span> (write)</li>
+                        <li>b) <span class="math-formula">'r'</span> (read)</li>
+                        <li>c) <span class="math-formula">'a'</span> (append) ✓</li>
+                        <li>d) <span class="math-formula">'x'</span> (create)</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q1-answer')">Show Explanation</button>
+                    <div id="q1-answer" class="answer-reveal">
+                        <strong>Answer: c) 'a' (append)</strong><br>
+                        The <span class="math-formula">'a'</span> mode opens a file for appending. Content is added to the end without overwriting existing data.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 2: Which Python feature is the recommended modern way to format string output?</h4>
+                    <ul class="quiz-options">
+                        <li>a) string concatenation (+)</li>
+                        <li>b) f-Strings ✓</li>
+                        <li>c) <span class="math-formula">print()</span></li>
+                        <li>d) <span class="math-formula">input()</span></li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q2-answer')">Show Explanation</button>
+                    <div id="q2-answer" class="answer-reveal">
+                        <strong>Answer: b) f-Strings</strong><br>
+                        f-Strings (formatted string literals) are the modern, recommended way: <span class="math-formula">f"Hello {name}"</span>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 3: The primary benefit of using the with statement for file operations is:</h4>
+                    <ul class="quiz-options">
+                        <li>a) It makes the code run faster</li>
+                        <li>b) It automatically handles the open and close operations ✓</li>
+                        <li>c) It deletes the file after reading</li>
+                        <li>d) It checks for file existence</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q3-answer')">Show Explanation</button>
+                    <div id="q3-answer" class="answer-reveal">
+                        <strong>Answer: b) It automatically handles the open and close operations</strong><br>
+                        The <span class="math-formula">with</span> statement ensures files are properly closed even if errors occur, preventing resource leaks.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 4: A function parameter specified as def example(x, y=10) has a:</h4>
+                    <ul class="quiz-options">
+                        <li>a) Syntax error</li>
+                        <li>b) Required argument</li>
+                        <li>c) Default value ✓</li>
+                        <li>d) return value</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q4-answer')">Show Explanation</button>
+                    <div id="q4-answer" class="answer-reveal">
+                        <strong>Answer: c) Default value</strong><br>
+                        The parameter <span class="math-formula">y</span> has a default value of 10. If no value is provided when calling the function, 10 will be used.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 5: What tool can be used to generate documentation from docstrings?</h4>
+                    <ul class="quiz-options">
+                        <li>a) <span class="math-formula">pip</span></li>
+                        <li>b) <span class="math-formula">pydoc</span> ✓</li>
+                        <li>c) <span class="math-formula">def</span></li>
+                        <li>d) <span class="math-formula">unittest</span></li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q5-answer')">Show Explanation</button>
+                    <div id="q5-answer" class="answer-reveal">
+                        <strong>Answer: b) pydoc</strong><br>
+                        <span class="math-formula">pydoc</span> is Python's documentation generator tool that extracts docstrings to create formatted documentation.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Miniproject 3: Smart Study Buddy Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            border-radius: 15px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .demo-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 3px solid #2196f3;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .demo-output {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            border: 2px solid #00ff00;
+            text-align: left;
+            white-space: pre-line;
+        }
+        
+        .mission-brief {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #ffd700;
+        }
+        
+        .section {
+            margin: 25px 0;
+            padding: 25px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border-left: 6px solid #007bff;
+        }
+        
+        .task-card {
+            background: white;
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #007bff;
+        }
+        
+        .task-header {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ai-prompt-zone {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 2px dashed #673ab7;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .ai-prompt-zone::before {
+            content: '🤖 AI CONSULTATION ZONE';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #673ab7;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .skill-requirement {
+            display: inline-block;
+            background: #6f42c1;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin: 3px;
+            font-weight: bold;
+        }
+        
+        .reveal-button {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 8px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .reveal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .hidden-content {
+            display: none;
+            background: #d1ecf1;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+            animation: slideIn 0.3s ease-in-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .interactive-element {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-element:hover {
+            background: #ffe8a1;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .deliverables {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #28a745;
+            color: #155724;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 2px solid #dc3545;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .progress-tracker {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            border: 2px solid #673ab7;
+        }
+        
+        .checkpoint {
+            margin: 12px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .checkpoint:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .task-counter {
+            display: inline-block;
+            background: #ffd700;
+            color: #000;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .example-box {
+            background: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span style="font-size: 2.5em;">🎮</span>Smart Study Buddy Calculator<span style="font-size: 2.5em;">📊</span></h1>
+            <h2>Build an AI-Enhanced Grade & Study Time Calculator</h2>
+            <p><strong>Goal:</strong> Create a calculator that helps students track grades and plan study time using AI guidance</p>
+        </div>
+
+        <!-- DEMO SECTION - Show what they're building -->
+        <div class="demo-section">
+            <h2>🎯 What You're Building - Program Demo</h2>
+            <p><strong>Your finished program will look like this when running:</strong></p>
+            
+            <div class="demo-output">📚 Smart Study Buddy Calculator 📚
+Welcome! I'll help you calculate grades and plan study time.
+
+Choose an option:
+1. Calculate current grade
+2. Plan study time for target grade  
+3. Get AI study tips
+4. Exit
+
+Enter choice (1-4): 2
+
+--- Study Time Planner ---
+Enter your current grade: 78
+Enter your target grade: 90
+How many assignments left? 3
+
+Calculating study plan...
+
+🎯 STUDY PLAN RESULTS:
+• You need an average of 96% on remaining assignments
+• Recommended study time per assignment: 4.5 hours
+• Study intensity: HIGH FOCUS NEEDED
+
+💡 AI STUDY TIP: "Break your study sessions into 25-minute focused blocks with 5-minute breaks. This technique helps maintain concentration for difficult subjects."
+
+Would you like another calculation? (y/n): n
+
+Thanks for using Smart Study Buddy! Good luck with your studies! 📚</div>
+
+            <p><strong>🎉 Your program will be interactive, helpful, and powered by AI suggestions!</strong></p>
+        </div>
+
+        <div class="mission-brief no-select">
+            <h3>📋 Project Overview</h3>
+            <p>You'll build a calculator that helps students with:</p>
+            <ul>
+                <li><strong>Grade Calculations:</strong> Current GPA, needed scores for target grades</li>
+                <li><strong>Study Planning:</strong> Time recommendations based on difficulty</li>
+                <li><strong>AI Integration:</strong> Get personalized study tips from AI</li>
+                <li><strong>Data Management:</strong> Store and compare multiple subjects</li>
+            </ul>
+            
+            <h4>🛠️ Skills You'll Use:</h4>
+            <div style="margin: 15px 0;">
+                <span class="skill-requirement">Variables & Data Types</span>
+                <span class="skill-requirement">Lists & Operations</span>
+                <span class="skill-requirement">if/elif/else Decisions</span>
+                <span class="skill-requirement">while/for Loops</span>
+                <span class="skill-requirement">Operators & Calculations</span>
+                <span class="skill-requirement">AI Prompt Engineering</span>
+            </div>
+        </div>
+
+        <div class="warning-box no-select">
+            <strong>⚠️ IMPORTANT RULE:</strong> Use AI as your <u>strategic planning assistant</u> only! Ask for logic guidance, calculation strategies, and user experience advice. Never ask AI to write complete functions for you!
+        </div>
+
+        <div class="progress-tracker">
+            <h4>🏆 Your Progress Journey</h4>
+            <div class="checkpoint">
+                <input type="checkbox" id="task1"> <label for="task1"><strong>Task 1:</strong> Basic Menu & Input System</label>
+            </div>
+            <div class="checkpoint">
+                <input type="checkbox" id="task2"> <label for="task2"><strong>Task 2:</strong> Grade Calculator Engine</label>
+            </div>
+            <div class="checkpoint">
+                <input type="checkbox" id="task3"> <label for="task3"><strong>Task 3:</strong> Study Time Planner</label>
+            </div>
+            <div class="checkpoint">
+                <input type="checkbox" id="task4"> <label for="task4"><strong>Task 4:</strong> AI Integration Layer</label>
+            </div>
+            <div class="checkpoint">
+                <input type="checkbox" id="task5"> <label for="task5"><strong>Task 5:</strong> Data Management System</label>
+            </div>
+        </div>
+
+        <!-- Task 1 -->
+        <div class="section">
+            <h3>🎮 Task 1: Basic Menu & Input System</h3>
+            
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-counter">1</span>Main Menu Loop Design
+                </div>
+                
+                <p><strong>Objective:</strong> Create a user-friendly menu system that keeps running until the user chooses to exit.</p>
+                
+                <div class="example-box">
+# Your menu should display options like:
+print("1. Calculate current grade")
+print("2. Plan study time") 
+print("3. Get AI study tips")
+print("4. Exit")
+choice = input("Enter choice (1-4): ")</div>
+                
+                <div class="ai-prompt-zone">
+                    <p><strong>🎯 AI Strategy Session:</strong></p>
+                    <button class="reveal-button" onclick="toggleContent('prompt1a')">🧠 Menu Design Guidance</button>
+                    <div id="prompt1a" class="hidden-content no-select">
+                        <p><strong>Ask AI about:</strong></p>
+                        <ul>
+                            <li>What's the best loop structure for a menu that runs until user exits?</li>
+                            <li>How should you handle invalid menu choices (letters, numbers out of range)?</li>
+                            <li>Should you use <code>while True</code> with <code>break</code> or another approach?</li>
+                            <li>Best practices for user-friendly error messages</li>
+                            <li>How to make input validation robust but simple</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="interactive-element" onclick="showHint('hint1a')">
+                    💡 Click for coding hints after AI consultation
+                </div>
+                <div id="hint1a" class="hidden-content">
+                    <p><strong>Implementation checklist:</strong></p>
+                    <ul>
+                        <li>Use a <code>while</code> loop for the main menu</li>
+                        <li>Add input validation with <code>try/except</code> or <code>if</code> statements</li>
+                        <li>Use <code>int()</code> conversion safely</li>
+                        <li>Provide clear error messages for invalid choices</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-counter">2</span>Input Validation & Error Handling
+                </div>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt1b')">🛡️ Input Safety Strategy</button>
+                    <div id="prompt1b" class="hidden-content no-select">
+                        <p><strong>Strategic questions for AI:</strong></p>
+                        <ul>
+                            <li>What happens when a user types "hello" instead of a number?</li>
+                            <li>How can you check if input is a valid number before converting?</li>
+                            <li>Should you use <code>try/except</code> or <code>.isdigit()</code> method?</li>
+                            <li>How to handle negative numbers and decimals appropriately?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="interactive-element" onclick="showHint('hint1b')">
+                    🎯 Get implementation direction
+                </div>
+                <div id="hint1b" class="hidden-content">
+                    <p><strong>Build these safety features:</strong></p>
+                    <ul>
+                        <li>Safe number input function</li>
+                        <li>Range validation for menu choices</li>
+                        <li>Grade validation (0-100 range)</li>
+                        <li>Friendly error messages with retry options</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task 2 -->
+        <div class="section">
+            <h3>📊 Task 2: Grade Calculator Engine</h3>
+            
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-counter">3</span>Current Grade Calculator
+                </div>
+                
+                <p><strong>Challenge:</strong> Calculate weighted averages and current GPA from multiple assignments.</p>
+                
+                <div class="example-box">
+# Example calculation logic:
+assignments = [85, 92, 78, 90]  # List of grades
+weights = [20, 30, 25, 25]      # Percentage weights
+# Calculate: (85*0.2 + 92*0.3 + 78*0.25 + 90*0.25) = ?</div>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt2a')">📐 Calculation Strategy</button>
+                    <div id="prompt2a" class="hidden-content no-select">
+                        <p><strong>Ask AI about:</strong></p>
+                        <ul>
+                            <li>What's the mathematical formula for weighted average?</li>
+                            <li>How should you handle different grading scales (percentages vs points)?</li>
+                            <li>Best way to store multiple assignments - lists, or ask one at a time?</li>
+                            <li>How to validate that weights add up to 100%?</li>
+                            <li>Should you round final grades, and to how many decimal places?</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="interactive-element" onclick="showHint('hint2a')">
+                    🧮 Calculation implementation guide
+                </div>
+                <div id="hint2a" class="hidden-content">
+                    <p><strong>Functions to build:</strong></p>
+                    <ul>
+                        <li>Get list of assignment grades from user</li>
+                        <li>Calculate simple average (sum/count)</li>
+                        <li>Calculate weighted average with percentages</li>
+                        <li>Convert to letter grade (A, B, C, D, F)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-counter">4</span>Target Grade Calculator
+                </div>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt2b')">🎯 Reverse Engineering Math</button>
+                    <div id="prompt2b" class="hidden-content no-select">
+                        <p><strong>Strategic thinking with AI:</strong></p>
+                        <ul>
+                            <li>If someone has 75% now and wants 85% final, how do you calculate needed score?</li>
+                            <li>How do you account for remaining assignments with different weights?</li>
+                            <li>What if the target grade is mathematically impossible to achieve?</li>
+                            <li>How to present results in a motivating vs discouraging way?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task 3 -->
+        <div class="section">
+            <h3>⏰ Task 3: Study Time Planner</h3>
+            
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-counter">5</span>Study Time Algorithm
+                </div>
+                
+                <p><strong>Goal:</strong> Create a system that recommends study hours based on grade improvement needed.</p>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt3a')">🕒 Time Planning Logic</button>
+                    <div id="prompt3a" class="hidden-content no-select">
+                        <p><strong>Consult AI about:</strong></p>
+                        <ul>
+                            <li>How should study time correlate with grade improvement needed?</li>
+                            <li>What factors affect study time (subject difficulty, current skill level)?</li>
+                            <li>How to create different study intensity levels (light, moderate, intensive)?</li>
+                            <li>Should you consider time until deadline in recommendations?</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+# Example study time calculation:
+grade_gap = target_grade - current_grade  # How much improvement needed
+if grade_gap <= 5:
+    study_hours = grade_gap * 0.5  # 30 min per point
+elif grade_gap <= 15:
+    study_hours = grade_gap * 1.0  # 1 hour per point  
+else:
+    study_hours = grade_gap * 1.5  # 1.5 hours per point</div>
+            </div>
+        </div>
+
+        <!-- Task 4 -->
+        <div class="section">
+            <h3>🤖 Task 4: AI Integration Layer</h3>
+            
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-counter">6</span>AI Study Tips Generator
+                </div>
+                
+                <p><strong>Mission:</strong> Create a system that provides personalized study advice using AI prompts.</p>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt4a')">🧠 AI Prompt Engineering</button>
+                    <div id="prompt4a" class="hidden-content no-select">
+                        <p><strong>Ask AI to help you design prompts that:</strong></p>
+                        <ul>
+                            <li>Generate study tips based on student's current grade and target</li>
+                            <li>Provide subject-specific advice (math vs English vs science)</li>
+                            <li>Suggest study techniques for different learning styles</li>
+                            <li>Give motivational encouragement based on progress needed</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+# AI prompt ideas to store in your program:
+study_prompts = [
+    "Give me 3 study techniques for improving from {current}% to {target}% in {subject}",
+    "What's the best way to prepare for exams when I need to improve {gap} percentage points?",
+    "Suggest a weekly study schedule for someone aiming to raise their grade by {gap} points"
+]</div>
+                
+                <div class="interactive-element" onclick="showHint('hint4a')">
+                    🚀 Implementation approach
+                </div>
+                <div id="hint4a" class="hidden-content">
+                    <p><strong>Build this feature:</strong></p>
+                    <ul>
+                        <li>Store a list of AI prompt templates</li>
+                        <li>Use string formatting to personalize prompts</li>
+                        <li>Display formatted prompts for students to copy to AI</li>
+                        <li>Show sample AI responses for demonstration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task 5 -->
+        <div class="section">
+            <h3>📋 Task 5: Data Management System</h3>
+            
+            <div class="task-card">
+                <div class="task-header">
+                    <span class="task-counter">7</span>Multi-Subject Tracking
+                </div>
+                
+                <div class="ai-prompt-zone">
+                    <button class="reveal-button" onclick="toggleContent('prompt5a')">📊 Data Organization</button>
+                    <div id="prompt5a" class="hidden-content no-select">
+                        <p><strong>Strategic questions:</strong></p>
+                        <ul>
+                            <li>How should you store data for multiple subjects (lists, dictionaries)?</li>
+                            <li>What's the best way to compare grades across different subjects?</li>
+                            <li>How to calculate overall GPA from individual subject grades?</li>
+                            <li>Should you save data between program runs, or keep it in memory?</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+# Example data structure:
+subjects = {
+    "Math": {"grades": [85, 90, 78], "target": 90},
+    "English": {"grades": [92, 88, 85], "target": 95},
+    "Science": {"grades": [80, 85, 82], "target": 88}
+}</div>
+            </div>
+        </div>
+
+        <!-- Deliverables -->
+        <div class="deliverables">
+            <h3>🎯 Project Deliverables</h3>
+            
+            <h4>1. 💻 Smart Study Buddy Calculator</h4>
+            <p><strong>File:</strong> <code>study_buddy_calculator.py</code></p>
+            <ul>
+                <li>Complete working calculator with all 4 menu options</li>
+                <li>Input validation and error handling</li>
+                <li>Grade calculations (current and target)</li>
+                <li>Study time recommendations</li>
+                <li>AI prompt integration</li>
+            </ul>
+            
+            <h4>2. 📋 AI Strategy Documentation</h4>
+            <p>Create a table showing your AI consultations:</p>
+            
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0; border: 2px solid #28a745;">
+                <tr style="background: #d4edda;">
+                    <th style="border: 1px solid #28a745; padding: 12px;">Task</th>
+                    <th style="border: 1px solid #28a745; padding: 12px;">Question You Asked AI</th>
+                    <th style="border: 1px solid #28a745; padding: 12px;">Key Insight</th>
+                    <th style="border: 1px solid #28a745; padding: 12px;">How You Used It</th>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #28a745; padding: 8px;">Menu Design</td>
+                    <td style="border: 1px solid #28a745; padding: 8px;">[Your exact question]</td>
+                    <td style="border: 1px solid #28a745; padding: 8px;">[Main advice from AI]</td>
+                    <td style="border: 1px solid #28a745; padding: 8px;">[Your implementation]</td>
+                </tr>
+            </table>
+            
+            <h4>3. 🧪 Testing Report</h4>
+            <ul>
+                <li>Test all calculation formulas with sample data</li>
+                <li>Show screenshots/examples of your program running</li>
+                <li>Document any bugs you found and fixed</li>
+            </ul>
+            
+            <h4>4. 🎯 Reflection Questions</h4>
+            <p><strong>Answer these in 1-2 paragraphs:</strong></p>
+            <ul>
+                <li>How did AI help you think through the logic vs just giving you code?</li>
+                <li>What was the most challenging calculation to implement and why?</li>
+                <li>How could you improve this calculator with more advanced features?</li>
+            </ul>
+        </div>
+
+        <div style="background: linear-gradient(45deg, #ff6b6b, #feca57); color: white; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0;">
+            <h3>🏆 Success Goal</h3>
+            <p>Your calculator should help a student understand their current academic standing, plan realistic improvement goals, and get AI-powered study advice - all using the fundamental Python skills you've learned!</p>
+        </div>
+    </div>
+
+    <script>
+        // Anti-copy protection
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && ['a','c','s','u','p'].includes(e.key)) e.preventDefault();
+            if (e.key === 'F12') e.preventDefault();
+        });
+
+        function toggleContent(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = element.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showHint(hintId) {
+            document.getElementById(hintId).style.display = 'block';
+        }
+
+        // Progress tracking with celebrations
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const completed = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                const total = document.querySelectorAll('input[type="checkbox"]').length;
+                
+                if (completed === 1) {
+                    showCelebration('🎯 Great start! Your menu system is the foundation!');
+                } else if (completed === 3) {
+                    showCelebration('🔥 Halfway there! Your calculations are getting solid!');
+                } else if (completed === total) {
+                    showCelebration('🎉 Calculator Complete! You\'ve built something truly useful!');
+                }
+            });
+        });
+
+        function showCelebration(message) {
+            const celebration = document.createElement('div');
+            celebration.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 1000;
+                background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                color: white; padding: 15px 25px; border-radius: 25px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                animation: slideIn 0.5s ease-out;
+            `;
+            celebration.textContent = message;
+            document.body.appendChild(celebration);
+            setTimeout(() => celebration.remove(), 4000);
+        }
+
+        // Interactive element feedback
+        document.querySelectorAll('.interactive-element').forEach(element => {
+            element.addEventListener('click', function() {
+                this.style.background = '#d4edda';
+                this.innerHTML = '✅ ' + this.innerHTML.replace('✅ ', '');
+            });
+        });
+    </script>
+</body>
+</html>
