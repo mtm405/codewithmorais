@@ -202,6 +202,50 @@
             color: var(--text-primary);
         }
 
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.75rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--python-blue);
+            box-shadow: 0 0 0 3px rgba(55, 118, 171, 0.1);
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--python-blue);
+            background: rgba(55, 118, 171, 0.1);
+        }
+
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -218,6 +262,23 @@
             text-decoration: none;
             color: inherit;
             display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--python-blue), var(--accent-purple));
+            transition: left 0.3s ease;
+        }
+
+        .module-card:hover::before {
+            left: 0;
         }
 
         .module-card:hover {
@@ -270,6 +331,23 @@
             color: var(--text-secondary);
         }
 
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--python-blue), var(--accent-purple));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
         .module-status {
             padding: 0.25rem 0.75rem;
             background: rgba(35, 134, 54, 0.1);
@@ -284,6 +362,19 @@
             background: rgba(137, 87, 229, 0.1);
             border-color: var(--accent-purple);
             color: var(--accent-purple);
+        }
+
+        /* No results message */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
 
         /* Loading State */
@@ -372,11 +463,26 @@
                 <p class="welcome-subtitle">Continue your Python learning journey</p>
             </div>
 
+            <!-- Search & Filter -->
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="🔍 Search modules by name or topic..."
+                    onkeyup="filterModules()"
+                >
+                <button class="filter-btn" id="filterAll" onclick="setFilter('all')">All</button>
+                <button class="filter-btn" id="filterNew" onclick="setFilter('new')">New</button>
+                <button class="filter-btn" id="filterActive" onclick="setFilter('active')">Active</button>
+                <button class="filter-btn" id="filterAdvanced" onclick="setFilter('advanced')">Advanced</button>
+            </div>
+
             <!-- Python Review Section -->
             <div class="module-section">
                 <h2 class="section-title">🎓 Python Exam Review</h2>
                 <div class="modules-grid">
-                    <a href="/python-simulation-exam" class="module-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: 2px solid #8b5cf6;">
+                    <a href="/python-simulation-exam" class="module-card" data-module-card data-status="new" style="grid-column: 1 / -1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: 2px solid #8b5cf6;">
                         <div class="module-header">
                             <div class="module-icon" style="font-size: 2rem;">🎯</div>
                             <div class="module-title" style="font-size: 1.3rem;">Simulation Exam - Full Certiport Test</div>
@@ -389,7 +495,7 @@
                         </div>
                     </a>
 
-                    <a href="/python-class-1" class="module-card">
+                    <a href="/python-class-1" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">📚</div>
                             <div class="module-title">Data Types & Operators</div>
@@ -402,7 +508,7 @@
                         </div>
                     </a>
 
-                    <a href="/python-class-2" class="module-card">
+                    <a href="/python-class-2" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">🔁</div>
                             <div class="module-title">Flow Control</div>
@@ -415,7 +521,7 @@
                         </div>
                     </a>
 
-                    <a href="/python-class-3" class="module-card">
+                    <a href="/python-class-3" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">💾</div>
                             <div class="module-title">I/O & Functions</div>
@@ -428,7 +534,7 @@
                         </div>
                     </a>
 
-                    <a href="/python-class-4" class="module-card">
+                    <a href="/python-class-4" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">🚫</div>
                             <div class="module-title">Error Handling</div>
@@ -441,7 +547,7 @@
                         </div>
                     </a>
 
-                    <a href="/python-class-5" class="module-card">
+                    <a href="/python-class-5" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">📦</div>
                             <div class="module-title">Modules & Tools</div>
@@ -461,7 +567,7 @@
                 <h2 class="section-title">Your Learning Modules</h2>
                 <div class="modules-grid">
                     <!-- Module 1: Python Fundamentals -->
-                    <a href="/module-1-1" class="module-card">
+                    <a href="/module-1-1" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">📘</div>
                             <div class="module-title">Module 1: Python Fundamentals</div>
@@ -474,7 +580,7 @@
                         </div>
                     </a>
 
-                    <a href="/io" class="module-card">
+                    <a href="/io" class="module-card" data-module-card data-status="active">
                         <div class="module-header">
                             <div class="module-icon">📁</div>
                             <div class="module-title">File I/O Operations</div>
@@ -487,7 +593,7 @@
                         </div>
                     </a>
 
-                    <a href="/reviewio" class="module-card">
+                    <a href="/reviewio" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">📝</div>
                             <div class="module-title">File I/O Review - Simple Guide</div>
@@ -500,7 +606,7 @@
                         </div>
                     </a>
 
-                    <a href="/review-io" class="module-card">
+                    <a href="/review-io" class="module-card" data-module-card data-status="advanced">
                         <div class="module-header">
                             <div class="module-icon">🎓</div>
                             <div class="module-title">File I/O Review - Advanced</div>
@@ -513,7 +619,7 @@
                         </div>
                     </a>
 
-                    <a href="/unit-testing.html" class="module-card">
+                    <a href="/unit-testing.html" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">🧪</div>
                             <div class="module-title">Unit Testing with unittest</div>
@@ -526,7 +632,7 @@
                         </div>
                     </a>
 
-                    <a href="/sports-videogame-hero-project.html" class="module-card">
+                    <a href="/sports-videogame-hero-project.html" class="module-card" data-module-card data-status="active">
                         <div class="module-header">
                             <div class="module-icon">🎮</div>
                             <div class="module-title">Game Hero Project</div>
@@ -539,7 +645,7 @@
                         </div>
                     </a>
 
-                    <a href="/loops" class="module-card">
+                    <a href="/loops" class="module-card" data-module-card data-status="active">
                         <div class="module-header">
                             <div class="module-icon">🔄</div>
                             <div class="module-title">Loops & Iterations</div>
@@ -552,7 +658,7 @@
                         </div>
                     </a>
 
-                    <a href="/character-wordle" class="module-card">
+                    <a href="/character-wordle" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">💪</div>
                             <div class="module-title">Character Wordle</div>
@@ -565,7 +671,7 @@
                         </div>
                     </a>
 
-                    <a href="/word-jeopardy" class="module-card">
+                    <a href="/word-jeopardy" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">🧙💻</div>
                             <div class="module-title">MOS Word Whiz Jeopardy!</div>
@@ -578,7 +684,7 @@
                         </div>
                     </a>
 
-                    <a href="/python-practice-activities" class="module-card">
+                    <a href="/python-practice-activities" class="module-card" data-module-card data-status="new">
                         <div class="module-header">
                             <div class="module-icon">🐍</div>
                             <div class="module-title">10 Practice Activities</div>
@@ -596,6 +702,69 @@
     </div>
 
     <!-- Firebase SDKs -->
+    <script>
+        // Dashboard filter and search functionality
+        let currentFilter = 'all';
+
+        function filterModules() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const modules = document.querySelectorAll('[data-module-card]');
+            let visibleCount = 0;
+
+            modules.forEach(module => {
+                const title = module.querySelector('.module-title')?.textContent.toLowerCase() || '';
+                const description = module.querySelector('.module-description')?.textContent.toLowerCase() || '';
+                const status = module.getAttribute('data-status') || '';
+
+                const matchesSearch = title.includes(searchInput) || description.includes(searchInput);
+                const matchesFilter = currentFilter === 'all' || status === currentFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    module.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    module.style.display = 'none';
+                }
+            });
+
+            // Show "no results" message if needed
+            const grid = document.querySelector('.modules-grid');
+            let noResults = document.querySelector('.no-results');
+            
+            if (visibleCount === 0) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.innerHTML = `
+                        <div class="no-results-icon">🔍</div>
+                        <p>No modules found matching your search.</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">Try adjusting your search terms or filters.</p>
+                    `;
+                    grid.appendChild(noResults);
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            
+            // Update button states
+            document.getElementById('filterAll').classList.toggle('active', filter === 'all');
+            document.getElementById('filterNew').classList.toggle('active', filter === 'new');
+            document.getElementById('filterActive').classList.toggle('active', filter === 'active');
+            document.getElementById('filterAdvanced').classList.toggle('active', filter === 'advanced');
+            
+            filterModules();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setFilter('all');
+        });
+    </script>
+
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
