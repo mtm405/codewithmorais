@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Class 1: Data Types, Operators, and Expressions | Code with Morais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .header p {
+            font-size: 1.15rem;
+            color: #f0f0f0;
+            line-height: 1.6;
+        }
+
+        .objectives {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .objectives h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .objectives ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .objectives li:before {
+            content: "✓";
+            position: absolute;
+            left: 5px;
+            color: #50fa7b;
+            font-weight: bold;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .section ul li {
+            font-size: 1.02rem;
+            line-height: 1.75;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            color: #ffd700;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subsection-title {
+            color: #8be9fd;
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+        }
+
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .vocab-table th {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .vocab-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vocab-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .vocab-table .term {
+            font-weight: bold;
+            color: #ff79c6;
+            width: 20%;
+        }
+
+        .code-block {
+            background: #282a36;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #50fa7b;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .code-block .keyword { color: #ff79c6; }
+        .code-block .function { color: #50fa7b; }
+        .code-block .string { color: #f1fa8c; }
+        .code-block .number { color: #bd93f9; }
+        .code-block .comment { color: #6272a4; font-style: italic; }
+        .code-block .operator { color: #ff79c6; }
+        .code-block .variable { color: #8be9fd; }
+
+        .example-box {
+            background: rgba(80, 250, 123, 0.1);
+            border-left: 4px solid #50fa7b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-title {
+            color: #50fa7b;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .activity-box {
+            background: rgba(189, 147, 249, 0.1);
+            border-left: 4px solid #bd93f9;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .activity-title {
+            color: #bd93f9;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .activity-table th {
+            background: rgba(189, 147, 249, 0.3);
+            color: #bd93f9;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .activity-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quiz-box {
+            background: rgba(255, 121, 198, 0.1);
+            border-left: 4px solid #ff79c6;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .quiz-question {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .quiz-question h4 {
+            color: #ff79c6;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .quiz-options li {
+            padding: 8px 0;
+            padding-left: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-options li:hover {
+            padding-left: 30px;
+            color: #ffd700;
+        }
+
+        .answer-reveal {
+            background: rgba(80, 250, 123, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .answer-reveal.show {
+            display: block;
+        }
+
+        .btn-show-answer {
+            background: #ff79c6;
+            color: #282a36;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-show-answer:hover {
+            background: #ff92d0;
+            transform: translateY(-2px);
+        }
+
+        .math-formula {
+            color: #f1fa8c;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            background: rgba(241, 250, 140, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffd700;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        .btn-start-quiz {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-start-quiz:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .quiz-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+        }
+
+        .quiz-modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            margin: 3% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 95%;
+            max-width: 1100px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .quiz-progress {
+            font-size: 1.2rem;
+            color: #8be9fd;
+        }
+
+        .quiz-close {
+            color: #ff79c6;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-close:hover {
+            color: #ff92d0;
+            transform: rotate(90deg);
+        }
+
+        .quiz-question-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-question-text {
+            color: #ffd700;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .quiz-option {
+            background: rgba(139, 233, 253, 0.1);
+            border: 2px solid rgba(139, 233, 253, 0.3);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #e0e0e0;
+        }
+
+        .quiz-option:hover {
+            background: rgba(139, 233, 253, 0.2);
+            border-color: #8be9fd;
+            transform: translateX(10px);
+        }
+
+        .quiz-option.selected {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .quiz-option.correct {
+            background: rgba(80, 250, 123, 0.3);
+            border-color: #50fa7b;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(255, 85, 85, 0.3);
+            border-color: #ff5555;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .quiz-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .quiz-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quiz-results {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .quiz-score {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .quiz-score.pass {
+            color: #50fa7b;
+        }
+
+        .quiz-score.fail {
+            color: #ff5555;
+        }
+
+        .quiz-message {
+            font-size: 1.5rem;
+            margin: 20px 0;
+        }
+
+        .quiz-review {
+            padding: 20px;
+        }
+
+        /* Loading Animation */
+        @keyframes loadBar {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        /* Progress Bar */
+        .quiz-progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(139, 233, 253, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #50fa7b 0%, #8be9fd 100%);
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .vocab-table, .activity-table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+        <div style="text-align: center; margin-bottom: 10px;">
+            <h3 style="color: #8be9fd; font-size: 1.1rem; font-weight: 500; margin: 0;">🎓 Python Exam Review</h3>
+        </div>
+
+        <div class="header">
+            <h1>📚 Data Types, Operators, and Expressions</h1>
+            <p>Master the fundamentals of Python data types, operations, and expression evaluation</p>
+        </div>
+
+        <div class="objectives">
+            <h2>🎯 Learning Objectives</h2>
+            <ul>
+                <li><strong>Objective 1.1:</strong> Evaluate expressions to identify data types</li>
+                <li><strong>Objective 1.2:</strong> Perform data and data type operations</li>
+                <li><strong>Objective 1.3:</strong> Determine operator precedence</li>
+                <li><strong>Objective 1.4:</strong> Select appropriate operators</li>
+            </ul>
+        </div>
+
+        <!-- Key Vocabulary -->
+        <div class="section">
+            <h2 class="section-title">💡 Key Vocabulary</h2>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Definition</th>
+                        <th>Context/Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term">Data Type</td>
+                        <td>A classification that specifies which type of value a variable holds and what operations can be performed on it</td>
+                        <td><span class="math-formula">str, int, float, bool</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">Operator</td>
+                        <td>A special symbol that represents a calculation or operation (like addition, comparison, or logical check)</td>
+                        <td><span class="math-formula">+, ==, and, is, in</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">Expression</td>
+                        <td>A combination of values, variables, operators, and function calls that Python evaluates to produce a result</td>
+                        <td><span class="math-formula">5 + x * 2</span> or <span class="math-formula">len("hello") > 3</span></td>
+                    </tr>
+                    <tr>
+                        <td class="term">Precedence</td>
+                        <td>The order in which operators are evaluated in an expression</td>
+                        <td>Multiplication (<span class="math-formula">*</span>) has higher precedence than addition (<span class="math-formula">+</span>)</td>
+                    </tr>
+                    <tr>
+                        <td class="term">Slicing</td>
+                        <td>A mechanism to extract a sequence of elements from a data structure (like a list or string) by specifying start and stop indices</td>
+                        <td><span class="math-formula">my_list[1:4]</span> extracts elements from index 1 up to (but not including) 4</td>
+                    </tr>
+                    <tr>
+                        <td class="term">Containment</td>
+                        <td>An operation that checks if a value is present within a sequence or collection</td>
+                        <td>The <span class="math-formula">in</span> operator</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detailed Information -->
+        <div class="section">
+            <h2 class="section-title">📝 Detailed Information and Examples</h2>
+
+            <h3 class="subsection-title">A. Core Data Types (Objective 1.1)</h3>
+            <p>Python is a <strong>dynamically-typed</strong> language, meaning variables automatically get their type based on the value assigned. You don't need to explicitly declare types like in Java or C++. Understanding data types is crucial because they determine what operations you can perform and how Python interprets your code.</p>
+            
+            <p style="margin-top: 15px;">The <strong>four fundamental data types</strong> you must master are:</p>
+            <ul style="list-style: none; padding-left: 20px; margin: 15px 0;">
+                <li>• <span class="highlight">Integer (int):</span> Whole numbers without decimals. Can be positive, negative, or zero. Example: <span class="math-formula">x = 5</span>, <span class="math-formula">age = -10</span>, <span class="math-formula">count = 0</span></li>
+                <li>• <span class="highlight">Float (float):</span> Numbers with decimal points, used for precise calculations. Example: <span class="math-formula">y = 5.0</span>, <span class="math-formula">pi = 3.14159</span>, <span class="math-formula">temp = -2.5</span></li>
+                <li>• <span class="highlight">String (str):</span> Sequence of characters enclosed in quotes (single, double, or triple). Used for text. Example: <span class="math-formula">name = "Alice"</span>, <span class="math-formula">msg = 'Hello'</span></li>
+                <li>• <span class="highlight">Boolean (bool):</span> Represents truth values - only <span class="math-formula">True</span> or <span class="math-formula">False</span>. Used in conditions and logic. Example: <span class="math-formula">is_valid = True</span>, <span class="math-formula">has_permission = False</span></li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>💡 Why Data Types Matter:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>• Different types support different operations (<span class="math-formula">"2" + "3" = "23"</span> vs <span class="math-formula">2 + 3 = 5</span>)</li>
+                <li>• Type errors are common bugs (<span class="math-formula">"age" - 5</span> will fail because you can't subtract from a string)</li>
+                <li>• The <span class="math-formula">type()</span> function helps you check what type a variable is</li>
+                <li>• You can convert between types using <span class="math-formula">int()</span>, <span class="math-formula">float()</span>, <span class="math-formula">str()</span>, and <span class="math-formula">bool()</span></li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-title">Example 1: Type Evaluation</div>
+                <div class="code-block"><span class="variable">a</span> <span class="operator">=</span> <span class="number">10</span>
+<span class="variable">b</span> <span class="operator">=</span> <span class="number">10.5</span>
+<span class="variable">c</span> <span class="operator">=</span> <span class="string">"10"</span>
+<span class="variable">d</span> <span class="operator">=</span> <span class="variable">a</span> <span class="operator">==</span> <span class="variable">b</span>
+
+<span class="comment"># Evaluate types:</span>
+<span class="function">print</span>(<span class="function">type</span>(<span class="variable">a</span>))   <span class="comment"># &lt;class 'int'&gt;</span>
+<span class="function">print</span>(<span class="function">type</span>(<span class="variable">b</span>))   <span class="comment"># &lt;class 'float'&gt;</span>
+<span class="function">print</span>(<span class="function">type</span>(<span class="variable">c</span>))   <span class="comment"># &lt;class 'str'&gt;</span>
+<span class="function">print</span>(<span class="function">type</span>(<span class="variable">d</span>))   <span class="comment"># &lt;class 'bool'&gt;</span></div>
+            </div>
+
+            <h3 class="subsection-title">B. Data and Data Type Operations (Objective 1.2)</h3>
+            <p>Once you understand data types, you need to know how to <strong>manipulate and transform</strong> them. Python provides powerful built-in operations that work differently depending on the data type. Mastering these operations is essential for the certification exam.</p>
+            
+            <p style="margin-top: 15px;"><strong>Key Operations You Must Know:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>• <strong>Type Conversion (Casting):</strong> Transform data from one type to another using <span class="math-formula">int()</span>, <span class="math-formula">float()</span>, <span class="math-formula">str()</span>, <span class="math-formula">bool()</span>. Common exam question: What happens when you convert <span class="math-formula">"123"</span> vs <span class="math-formula">"12.5"</span> to int?</li>
+                <li>• <strong>Indexing:</strong> Access individual elements by position. Remember: Python uses <strong>zero-based indexing</strong> (first item is index 0). Negative indices count from the end (<span class="math-formula">-1</span> is last item).</li>
+                <li>• <strong>Slicing:</strong> Extract portions using <span class="math-formula">[start:stop:step]</span> notation. The stop index is <strong>NOT included</strong>. Example: <span class="math-formula">"Python"[0:3]</span> gives <span class="math-formula">"Pyt"</span></li>
+                <li>• <strong>List Operations:</strong> Build and modify data structures with methods like <span class="math-formula">append()</span> (add to end), <span class="math-formula">insert()</span> (add at position), <span class="math-formula">remove()</span> (delete value), <span class="math-formula">sort()</span> (order items)</li>
+                <li>• <strong>Built-in Functions:</strong> Use <span class="math-formula">len()</span> (length), <span class="math-formula">max()</span> (largest value), <span class="math-formula">min()</span> (smallest value), <span class="math-formula">sum()</span> (total of numbers)</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>⚠️ Common Pitfalls:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>• Converting <span class="math-formula">"12.5"</span> directly to int fails - convert to float first</li>
+                <li>• Slicing <span class="math-formula">[2:5]</span> gives indices 2, 3, 4 (NOT 5!)</li>
+                <li>• Strings are <strong>immutable</strong> - you can't change them directly, only create new ones</li>
+                <li>• <span class="math-formula">remove()</span> deletes the first occurrence only, not all occurrences</li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-title">Example 2: Conversion and Slicing</div>
+                <div class="code-block"><span class="comment"># Data Type Conversion</span>
+<span class="variable">str_num</span> <span class="operator">=</span> <span class="string">"42"</span>
+<span class="variable">int_num</span> <span class="operator">=</span> <span class="function">int</span>(<span class="variable">str_num</span>)
+<span class="function">print</span>(<span class="variable">int_num</span>)  <span class="comment"># Converts '42' (str) to 42 (int)</span>
+
+<span class="comment"># Indexing and Slicing (Applies to strings and lists)</span>
+<span class="variable">my_list</span> <span class="operator">=</span> [<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>, <span class="string">'E'</span>]
+<span class="function">print</span>(<span class="variable">my_list</span>[<span class="number">0</span>])       <span class="comment"># Indexing: 'A'</span>
+<span class="function">print</span>(<span class="variable">my_list</span>[<span class="number">1</span>:<span class="number">4</span>])     <span class="comment"># Slicing: ['B', 'C', 'D']</span>
+
+<span class="comment"># List Operations (Construct data structures)</span>
+<span class="variable">my_list</span>.<span class="function">append</span>(<span class="string">'F'</span>)
+<span class="variable">my_list</span>.<span class="function">insert</span>(<span class="number">1</span>, <span class="string">'Z'</span>)
+<span class="variable">my_list</span>.<span class="function">remove</span>(<span class="string">'A'</span>)
+<span class="variable">my_list</span>.<span class="function">sort</span>()
+<span class="function">print</span>(<span class="function">max</span>(<span class="variable">my_list</span>))
+<span class="function">print</span>(<span class="variable">my_list</span>)</div>
+            </div>
+
+            <h3 class="subsection-title">C. Operator Precedence and Selection (Objectives 1.3 & 1.4)</h3>
+            <p>Operators are grouped by precedence (high to low):</p>
+            <ul style="list-style: none; padding-left: 20px; margin: 15px 0;">
+                <li>1. <span class="highlight">Arithmetic:</span> <span class="math-formula">** / * // % + -</span></li>
+                <li>2. <span class="highlight">Comparison:</span> <span class="math-formula">== >= <= != > <</span></li>
+                <li>3. <span class="highlight">Logical:</span> <span class="math-formula">not, and, or</span></li>
+                <li>4. <span class="highlight">Identity/Containment:</span> <span class="math-formula">is, in</span></li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-title">Example 3: Precedence and Operator Selection</div>
+                <div class="code-block"><span class="comment"># Operator Precedence</span>
+<span class="comment"># 1. ** (Exponentiation) -&gt; 2. * / // % -&gt; 3. + -</span>
+<span class="variable">result</span> <span class="operator">=</span> <span class="number">10</span> <span class="operator">+</span> <span class="number">4</span> <span class="operator">*</span> <span class="number">2</span> <span class="operator">**</span> <span class="number">3</span>
+<span class="function">print</span>(<span class="variable">result</span>)  <span class="comment"># 42 (4 * 8 = 32, then 10 + 32 = 42)</span>
+
+<span class="comment"># Operator Selection (Comparison and Logical)</span>
+<span class="variable">score</span> <span class="operator">=</span> <span class="number">85</span>
+<span class="variable">is_passing</span> <span class="operator">=</span> <span class="variable">score</span> <span class="operator">>=</span> <span class="number">70</span> <span class="keyword">and</span> <span class="variable">score</span> <span class="operator"><=</span> <span class="number">100</span>
+<span class="function">print</span>(<span class="variable">is_passing</span>)  <span class="comment"># True</span>
+
+<span class="comment"># Identity (is) and Containment (in)</span>
+<span class="variable">list1</span> <span class="operator">=</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]
+<span class="variable">list2</span> <span class="operator">=</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]
+<span class="function">print</span>(<span class="variable">list1</span> <span class="keyword">is</span> <span class="variable">list2</span>)  <span class="comment"># False (different objects in memory)</span>
+<span class="function">print</span>(<span class="number">3</span> <span class="keyword">in</span> <span class="variable">list1</span>)        <span class="comment"># True (3 is in the list)</span></div>
+            </div>
+        </div>
+
+        <!-- Practical Activities -->
+        <div class="section">
+            <h2 class="section-title">🛠️ Practical Activities</h2>
+
+            <div class="activity-box">
+                <div class="activity-title">Activity 1: The Operator Challenge</div>
+                <p><strong>Instructions:</strong> Predict the final value and data type of the variables without running the code.</p>
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Expression</th>
+                            <th>Predicted Value</th>
+                            <th>Predicted Data Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="math-formula">10 + 5 * 2</span></td>
+                            <td>_______</td>
+                            <td>_______</td>
+                        </tr>
+                        <tr>
+                            <td><span class="math-formula">20 == 20 // 3 + 4 % 3</span></td>
+                            <td>_______</td>
+                            <td>_______</td>
+                        </tr>
+                        <tr>
+                            <td><span class="math-formula">'Py' + 'thon' in 'Python Code'</span></td>
+                            <td>_______</td>
+                            <td>_______</td>
+                        </tr>
+                        <tr>
+                            <td><span class="math-formula">float(5) / 2</span></td>
+                            <td>_______</td>
+                            <td>_______</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn-show-answer" onclick="toggleAnswer('activity1-answer')">Show Answers</button>
+                <div id="activity1-answer" class="answer-reveal">
+                    <strong>Answers:</strong><br>
+                    1. Value: <span class="math-formula">20</span>, Type: <span class="math-formula">int</span> (5*2=10, then 10+10=20)<br>
+                    2. Value: <span class="math-formula">False</span>, Type: <span class="math-formula">bool</span> (20//3=6, 4%3=1, 6+1=7, 20==7 is False)<br>
+                    3. Value: <span class="math-formula">True</span>, Type: <span class="math-formula">bool</span> ('Py'+'thon'='Python', 'Python' in 'Python Code' is True)<br>
+                    4. Value: <span class="math-formula">2.5</span>, Type: <span class="math-formula">float</span> (5.0/2=2.5)
+                </div>
+            </div>
+
+            <div class="activity-box">
+                <div class="activity-title">Activity 2: List Manipulation Task</div>
+                <p><strong>Instructions:</strong> Write the Python code to perform the following operations on the initial list:</p>
+                <p>Start with: <span class="math-formula">my_data = [50, 10, 30, 20]</span></p>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Insert the number <span class="math-formula">40</span> at the end of the list (using the appropriate operation)</li>
+                    <li>Reverse the list</li>
+                    <li>Remove the smallest number</li>
+                    <li>Print the final list</li>
+                </ol>
+                <button class="btn-show-answer" onclick="toggleAnswer('activity2-answer')">Show Solution</button>
+                <div id="activity2-answer" class="answer-reveal">
+                    <div class="code-block"><span class="variable">my_data</span> <span class="operator">=</span> [<span class="number">50</span>, <span class="number">10</span>, <span class="number">30</span>, <span class="number">20</span>]
+<span class="variable">my_data</span>.<span class="function">append</span>(<span class="number">40</span>)
+<span class="variable">my_data</span>.<span class="function">reverse</span>()
+<span class="variable">my_data</span>.<span class="function">remove</span>(<span class="function">min</span>(<span class="variable">my_data</span>))
+<span class="function">print</span>(<span class="variable">my_data</span>) <span class="comment"># Output: [40, 30, 20, 50]</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="section">
+            <h2 class="section-title">❓ Quiz: Review Check</h2>
+            <p style="text-align: center; margin: 20px 0;">
+                <button class="btn-start-quiz" onclick="startQuiz()">🎯 Start Quiz (10 Random Questions)</button>
+            </p>
+            <p style="text-align: center; color: #8be9fd;">Pass requirement: 8 out of 10 correct</p>
+
+            <div class="quiz-box" style="display: none;">
+                <div class="quiz-question">
+                    <h4>Question 1: Which data type is assigned to the variable result in the following expression?</h4>
+                    <div class="code-block" style="margin: 10px 0;"><span class="variable">result</span> <span class="operator">=</span> <span class="string">"Count"</span> <span class="operator">+</span> <span class="function">str</span>(<span class="number">5</span>)</div>
+                    <ul class="quiz-options">
+                        <li>a) <span class="math-formula">int</span></li>
+                        <li>b) <span class="math-formula">float</span></li>
+                        <li>c) <span class="math-formula">str</span> ✓</li>
+                        <li>d) <span class="math-formula">bool</span></li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q1-answer')">Show Explanation</button>
+                    <div id="q1-answer" class="answer-reveal">
+                        <strong>Answer: c) str</strong><br>
+                        String concatenation ("Count" + "5") produces a string "Count5".
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 2: What is the value of x after the following line of code executes?</h4>
+                    <div class="code-block" style="margin: 10px 0;"><span class="variable">x</span> <span class="operator">=</span> <span class="number">100</span> <span class="operator">%</span> <span class="number">3</span> <span class="operator">**</span> <span class="number">2</span> <span class="operator">-</span> <span class="number">1</span></div>
+                    <ul class="quiz-options">
+                        <li>a) 0 ✓</li>
+                        <li>b) 1</li>
+                        <li>c) 9</li>
+                        <li>d) 10</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q2-answer')">Show Explanation</button>
+                    <div id="q2-answer" class="answer-reveal">
+                        <strong>Answer: a) 0</strong><br>
+                        1. <span class="math-formula">3 ** 2 = 9</span> (exponentiation first)<br>
+                        2. <span class="math-formula">100 % 9 = 1</span> (modulo)<br>
+                        3. <span class="math-formula">1 - 1 = 0</span> (subtraction)
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 3: Which operator is used to check for containment in a list?</h4>
+                    <ul class="quiz-options">
+                        <li>a) <span class="math-formula">is</span></li>
+                        <li>b) <span class="math-formula">==</span></li>
+                        <li>c) <span class="math-formula">in</span> ✓</li>
+                        <li>d) <span class="math-formula">^</span></li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q3-answer')">Show Explanation</button>
+                    <div id="q3-answer" class="answer-reveal">
+                        <strong>Answer: c) in</strong><br>
+                        The <span class="math-formula">in</span> operator checks if a value exists within a sequence or collection.
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 4: Given my_string = "Certiport", what is the output of the slicing operation my_string[2:5]?</h4>
+                    <ul class="quiz-options">
+                        <li>a) "rti" ✓</li>
+                        <li>b) "ert"</li>
+                        <li>c) "rri"</li>
+                        <li>d) "t"</li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q4-answer')">Show Explanation</button>
+                    <div id="q4-answer" class="answer-reveal">
+                        <strong>Answer: a) "rti"</strong><br>
+                        Slicing [2:5] extracts characters at indices 2, 3, and 4 (not including 5):<br>
+                        Index 0='C', 1='e', 2='r', 3='t', 4='i', 5='p'...<br>
+                        So [2:5] gives "rti"
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>Question 5: What is the result of the logical expression not (True and False)?</h4>
+                    <ul class="quiz-options">
+                        <li>a) <span class="math-formula">True</span> ✓</li>
+                        <li>b) <span class="math-formula">False</span></li>
+                    </ul>
+                    <button class="btn-show-answer" onclick="toggleAnswer('q5-answer')">Show Explanation</button>
+                    <div id="q5-answer" class="answer-reveal">
+                        <strong>Answer: a) True</strong><br>
+                        1. <span class="math-formula">True and False = False</span><br>
+                        2. <span class="math-formula">not False = True</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quizModal" class="quiz-modal">
+        <div class="quiz-modal-content">
+            <div class="quiz-header">
+                <div class="quiz-progress" id="quizProgress">Question 1 of 10</div>
+                <span class="quiz-close" onclick="closeQuiz()">&times;</span>
+            </div>
+            <div id="quizContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('show');
+        }
+
+        // Expanded Question Bank (20 questions for random selection)
+        const questionBank = [
+            {
+                question: "Which data type is assigned to the variable result in the following expression?<br><code>result = \"Count\" + \"5\"</code>",
+                options: ["int", "float", "str", "bool"],
+                correct: 2,
+                explanation: "String concatenation produces a string type."
+            },
+            {
+                question: "What is the value of x after: <code>x = 100 % 3 ** 2 - 1</code>",
+                options: ["0", "1", "9", "10"],
+                correct: 0,
+                explanation: "Order: 3**2=9, 100%9=1, 1-1=0"
+            },
+            {
+                question: "Which operator checks for containment in a list?",
+                options: ["is", "==", "in", "^"],
+                correct: 2,
+                explanation: "The 'in' operator checks if a value exists in a sequence."
+            },
+            {
+                question: "Given my_string = \"Certiport\", what is my_string[2:5]?",
+                options: ["rti", "ert", "rri", "t"],
+                correct: 0,
+                explanation: "Indices 2,3,4 are 'r','t','i'"
+            },
+            {
+                question: "What is the result of: <code>not (True and False)</code>",
+                options: ["True", "False"],
+                correct: 0,
+                explanation: "True and False = False, not False = True"
+            },
+            {
+                question: "What is the type of: <code>x = 5 / 2</code>",
+                options: ["int", "float", "str", "bool"],
+                correct: 1,
+                explanation: "Division always returns a float in Python 3."
+            },
+            {
+                question: "Which operator performs integer division?",
+                options: ["/", "//", "%", "**"],
+                correct: 1,
+                explanation: "// performs floor division (integer division)."
+            },
+            {
+                question: "What does the 'is' operator check?",
+                options: ["Value equality", "Identity (same object)", "Type equality", "Containment"],
+                correct: 1,
+                explanation: "'is' checks if two variables refer to the same object in memory."
+            },
+            {
+                question: "Given s = \"Python\", what is s[-1]?",
+                options: ["P", "n", "o", "Error"],
+                correct: 1,
+                explanation: "Negative indexing: -1 refers to the last character 'n'."
+            },
+            {
+                question: "What is the result of: <code>5 + 3 * 2</code>",
+                options: ["16", "11", "13", "10"],
+                correct: 1,
+                explanation: "Multiplication before addition: 3*2=6, then 5+6=11"
+            },
+            {
+                question: "Which of these is a valid variable name?",
+                options: ["2var", "_variable", "my-var", "class"],
+                correct: 1,
+                explanation: "Variables can start with underscore, not numbers, no hyphens, and 'class' is a keyword."
+            },
+            {
+                question: "What is the result of: <code>bool(0)</code>",
+                options: ["True", "False", "0", "Error"],
+                correct: 1,
+                explanation: "Zero evaluates to False in Python."
+            },
+            {
+                question: "Which operator has the highest precedence?",
+                options: ["+", "*", "**", "//"],
+                correct: 2,
+                explanation: "Exponentiation (**) has the highest precedence."
+            },
+            {
+                question: "Given s = \"hello\", what is s[1:3]?",
+                options: ["he", "el", "ell", "ll"],
+                correct: 1,
+                explanation: "s[1:3] extracts indices 1 and 2: 'e' and 'l'"
+            },
+            {
+                question: "What is the result of: <code>10 // 3</code>",
+                options: ["3.33", "3", "4", "3.0"],
+                correct: 1,
+                explanation: "Floor division returns the integer quotient: 3"
+            },
+            {
+                question: "Which converts a string to integer?",
+                options: ["str()", "int()", "float()", "bool()"],
+                correct: 1,
+                explanation: "int() converts strings to integers."
+            },
+            {
+                question: "What is the result of: <code>True or False and False</code>",
+                options: ["True", "False"],
+                correct: 0,
+                explanation: "'and' before 'or': False and False = False, then True or False = True"
+            },
+            {
+                question: "Given lst = [1,2,3], what does <code>2 in lst</code> return?",
+                options: ["True", "False", "1", "Error"],
+                correct: 0,
+                explanation: "2 is in the list, so it returns True."
+            },
+            {
+                question: "What is the result of: <code>\"Python\" * 2</code>",
+                options: ["Error", "PythonPython", "Python2", "2Python"],
+                correct: 1,
+                explanation: "String multiplication repeats the string."
+            },
+            {
+                question: "Which is NOT a Python data type?",
+                options: ["int", "float", "char", "str"],
+                correct: 2,
+                explanation: "Python doesn't have a 'char' type, uses strings instead."
+            }
+        ];
+
+        let currentQuiz = [];
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+
+        function startQuiz() {
+            // Show loading state
+            const modal = document.getElementById('quizModal');
+            const content = document.getElementById('quizContent');
+            modal.style.display = 'block';
+            content.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">📚</div>
+                    <h3 style="color: #8be9fd; margin-bottom: 10px;">Preparing Your Quiz...</h3>
+                    <p style="color: #6272a4;">Selecting 10 random questions</p>
+                    <div style="width: 200px; height: 4px; background: rgba(139, 233, 253, 0.2); margin: 20px auto; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 0%; height: 100%; background: #8be9fd; animation: loadBar 1s ease-out forwards;"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Animate loading and prepare quiz
+            setTimeout(() => {
+                // Randomly select 10 questions
+                currentQuiz = [];
+                const indices = [];
+                while (indices.length < 10) {
+                    const rand = Math.floor(Math.random() * questionBank.length);
+                    if (!indices.includes(rand)) {
+                        indices.push(rand);
+                        currentQuiz.push(questionBank[rand]);
+                    }
+                }
+                
+                currentQuestion = 0;
+                score = 0;
+                userAnswers = new Array(10).fill(null);
+                
+                showQuestion();
+            }, 1000);
+        }
+
+        function showQuestion() {
+            const q = currentQuiz[currentQuestion];
+            const content = document.getElementById('quizContent');
+            const answered = userAnswers.filter(a => a !== null).length;
+            const progress = (answered / 10 * 100).toFixed(0);
+            
+            document.getElementById('quizProgress').textContent = `Question ${currentQuestion + 1} of 10`;
+            
+            let optionsHTML = '';
+            q.options.forEach((option, index) => {
+                const selected = userAnswers[currentQuestion] === index ? 'selected' : '';
+                optionsHTML += `<div class="quiz-option ${selected}" onclick="selectOption(${index})">${option}</div>`;
+            });
+            
+            content.innerHTML = `
+                <div class="quiz-question-container">
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="color: #8be9fd; font-size: 0.9rem;">Progress: ${answered}/10 answered</span>
+                            <span style="color: #50fa7b; font-size: 0.9rem;">${progress}%</span>
+                        </div>
+                        <div class="quiz-progress-bar">
+                            <div class="quiz-progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="quiz-question-text">${q.question}</div>
+                    ${optionsHTML}
+                </div>
+                <div class="quiz-navigation">
+                    <button class="quiz-btn" onclick="previousQuestion()" ${currentQuestion === 0 ? 'disabled' : ''} id="prevBtn">← Previous</button>
+                    <button class="quiz-btn" onclick="nextQuestion()" ${userAnswers[currentQuestion] === null ? 'disabled' : ''} id="nextBtn">
+                        ${currentQuestion === 9 ? 'Submit Quiz' : 'Next →'}
+                    </button>
+                </div>
+                <div style="text-align: center; margin-top: 15px; color: #6272a4; font-size: 0.85rem;">
+                    💡 Tip: Use arrow keys to navigate, number keys (1-4) to select answers
+                </div>
+            `;
+            
+            // Attach keyboard listener
+            attachKeyboardListeners();
+        }
+
+        function attachKeyboardListeners() {
+            document.onkeydown = function(e) {
+                const modal = document.getElementById('quizModal');
+                if (modal.style.display !== 'block') return;
+                
+                // Don't intercept if results are showing
+                if (document.querySelector('.quiz-results') || document.querySelector('.quiz-review')) return;
+                
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        if (currentQuestion > 0) previousQuestion();
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        if (currentQuestion < 9 && userAnswers[currentQuestion] !== null) nextQuestion();
+                        break;
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                        e.preventDefault();
+                        const optionIndex = parseInt(e.key) - 1;
+                        if (optionIndex < currentQuiz[currentQuestion].options.length) {
+                            selectOption(optionIndex);
+                        }
+                        break;
+                }
+            };
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            document.getElementById('nextBtn').disabled = false;
+            
+            // Update visual selection
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((opt, i) => {
+                opt.classList.toggle('selected', i === index);
+            });
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < 9) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            // Calculate score
+            score = 0;
+            let incorrectQuestions = [];
+            currentQuiz.forEach((q, index) => {
+                if (userAnswers[index] === q.correct) {
+                    score++;
+                } else {
+                    incorrectQuestions.push({index, question: q, userAnswer: userAnswers[index]});
+                }
+            });
+            
+            const passed = score >= 8;
+            const percentage = (score / 10 * 100).toFixed(0);
+            
+            // Save best score to localStorage
+            const bestScore = localStorage.getItem('pythonClass1BestScore') || 0;
+            if (score > bestScore) {
+                localStorage.setItem('pythonClass1BestScore', score);
+            }
+            
+            const content = document.getElementById('quizContent');
+            content.innerHTML = `
+                <div class="quiz-results">
+                    <h2 style="color: #ffd700;">✨ Quiz Complete!</h2>
+                    <div class="quiz-score ${passed ? 'pass' : 'fail'}">${score} / 10</div>
+                    <div class="quiz-message">${percentage}% - ${passed ? '🎉 Passed!' : '❌ Not Passed'}</div>
+                    <p style="color: #8be9fd; margin: 20px 0;">
+                        ${passed ? 
+                            'Excellent work! You have demonstrated mastery of this material.' : 
+                            'You need 8 out of 10 to pass. Review the material and try again.'}
+                    </p>
+                    ${bestScore > 0 ? `<p style="color: #50fa7b; font-size: 0.9rem;">🏆 Your Best Score: ${bestScore}/10</p>` : ''}
+                    <div style="margin-top: 20px;">
+                        <button class="quiz-btn" onclick="closeQuiz()" style="margin: 5px;">Close</button>
+                        <button class="quiz-btn" onclick="startQuiz()" style="margin: 5px;">Try Again</button>
+                        ${incorrectQuestions.length > 0 ? '<button class="quiz-btn" onclick="showReview()" style="margin: 5px; background: #8be9fd;">📖 Review Answers</button>' : ''}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('quizProgress').textContent = 'Results';
+            
+            // Store incorrect questions for review
+            window.incorrectQuestions = incorrectQuestions;
+        }
+
+        function showReview() {
+            const content = document.getElementById('quizContent');
+            let reviewHTML = `
+                <div class="quiz-review">
+                    <div style="text-align: center; margin-bottom: 40px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);">
+                        <h2 style="color: #ffffff; font-size: 2.5rem; margin-bottom: 12px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">📖 Answer Review</h2>
+                        <p style="color: #f1f1f1; font-size: 1.2rem; margin: 0; font-weight: 500;">Review the questions you missed and learn from them</p>
+                    </div>
+            `;
+            
+            window.incorrectQuestions.forEach(({index, question, userAnswer}, reviewIndex) => {
+                const correctAnswer = question.options[question.correct];
+                const userAnswerText = userAnswer !== undefined ? question.options[userAnswer] : 'Not answered';
+                
+                reviewHTML += `
+                    <div style="margin: 30px 0; padding: 30px; background: linear-gradient(135deg, rgba(40, 42, 54, 0.95) 0%, rgba(68, 71, 90, 0.8) 100%); border-radius: 15px; border: 3px solid #ff5555; box-shadow: 0 8px 25px rgba(255, 85, 85, 0.3);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div style="background: linear-gradient(135deg, #ff5555 0%, #ff6b6b 100%); color: white; padding: 12px 24px; border-radius: 25px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(255, 85, 85, 0.4);">
+                                ❌ Question ${index + 1}
+                            </div>
+                            <div style="background: rgba(98, 114, 164, 0.3); padding: 8px 16px; border-radius: 20px; color: #8be9fd; font-size: 0.95rem; font-weight: 600;">
+                                Mistake ${reviewIndex + 1} of ${window.incorrectQuestions.length}
+                            </div>
+                        </div>
+                        <div style="color: #ffffff; font-size: 1.15rem; margin-bottom: 25px; line-height: 1.8; padding: 20px; background: rgba(139, 233, 253, 0.08); border-radius: 10px; border-left: 4px solid #8be9fd;">
+                            ${question.question}
+                        </div>
+                        <div style="display: grid; gap: 18px; margin: 25px 0;">
+                            <div style="padding: 20px; background: rgba(255, 85, 85, 0.25); border: 2px solid #ff5555; border-radius: 10px; box-shadow: 0 4px 12px rgba(255, 85, 85, 0.2);">
+                                <div style="color: #ff79c6; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">❌ YOUR ANSWER:</div>
+                                <div style="color: #ffffff; font-size: 1.15rem; font-weight: 500;">${userAnswerText}</div>
+                            </div>
+                            <div style="padding: 20px; background: rgba(80, 250, 123, 0.25); border: 2px solid #50fa7b; border-radius: 10px; box-shadow: 0 4px 12px rgba(80, 250, 123, 0.2);">
+                                <div style="color: #50fa7b; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">✓ CORRECT ANSWER:</div>
+                                <div style="color: #ffffff; font-size: 1.15rem; font-weight: 500;">${correctAnswer}</div>
+                            </div>
+                        </div>
+                        ${question.explanation ? `
+                            <div style="margin-top: 25px; padding: 22px; background: linear-gradient(135deg, rgba(139, 233, 253, 0.3) 0%, rgba(139, 233, 253, 0.15) 100%); border-radius: 12px; border: 2px solid #8be9fd; box-shadow: 0 4px 15px rgba(139, 233, 253, 0.2);">
+                                <div style="color: #8be9fd; font-weight: bold; font-size: 1.15rem; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 1.5rem;">💡</span>
+                                    <span>Why This Matters:</span>
+                                </div>
+                                <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.8; margin: 0; font-weight: 400;">
+                                    ${question.explanation}
+                                </p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            reviewHTML += `
+                <div style="margin-top: 40px; padding: 30px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%); border-radius: 15px; text-align: center; border: 3px solid #667eea; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);">
+                    <p style="color: #ffffff; font-size: 1.25rem; margin-bottom: 25px; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                        💪 Ready to improve your score?
+                    </p>
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                        <button class="quiz-btn" onclick="showResults()" style="background: linear-gradient(135deg, #6272a4 0%, #44475a 100%); padding: 18px 40px; font-size: 1.1rem; border: 2px solid #8be9fd; box-shadow: 0 4px 15px rgba(98, 114, 164, 0.5); font-weight: 700;">
+                            ← Back to Results
+                        </button>
+                        <button class="quiz-btn" onclick="startQuiz()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 18px 45px; font-size: 1.1rem; box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6); font-weight: 700;">
+                            🔄 Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `;
+            
+            content.innerHTML = reviewHTML;
+            document.getElementById('quizProgress').textContent = 'Review';
+        }
+
+        function closeQuiz() {
+            document.getElementById('quizModal').style.display = 'none';
+            // Remove keyboard listeners
+            document.onkeydown = null;
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('quizModal');
+            if (event.target === modal) {
+                closeQuiz();
+            }
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('quizModal');
+                if (modal.style.display === 'block') {
+                    const hasResults = document.querySelector('.quiz-results');
+                    const hasReview = document.querySelector('.quiz-review');
+                    if (hasResults || hasReview) {
+                        closeQuiz();
+                    } else {
+                        if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
+                            closeQuiz();
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
